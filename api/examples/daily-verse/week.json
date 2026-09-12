@@ -1,0 +1,67 @@
+{
+  "verses": [
+    {
+      "date": "2026-09-13",
+      "reference": {
+        "bookId": "Ps",
+        "chapter": 121,
+        "verseStart": 1,
+        "verseEnd": 1
+      }
+    },
+    {
+      "date": "2026-09-14",
+      "reference": {
+        "bookId": "2Cor",
+        "chapter": 12,
+        "verseStart": 9,
+        "verseEnd": 9
+      }
+    },
+    {
+      "date": "2026-09-15",
+      "reference": {
+        "bookId": "John",
+        "chapter": 15,
+        "verseStart": 5,
+        "verseEnd": 5
+      }
+    },
+    {
+      "date": "2026-09-16",
+      "reference": {
+        "bookId": "Ps",
+        "chapter": 55,
+        "verseStart": 22,
+        "verseEnd": 22
+      }
+    },
+    {
+      "date": "2026-09-17",
+      "reference": {
+        "bookId": "Ps",
+        "chapter": 46,
+        "verseStart": 10,
+        "verseEnd": 10
+      }
+    },
+    {
+      "date": "2026-09-18",
+      "reference": {
+        "bookId": "Ps",
+        "chapter": 19,
+        "verseStart": 14,
+        "verseEnd": 14
+      }
+    },
+    {
+      "date": "2026-09-19",
+      "reference": {
+        "bookId": "1Thess",
+        "chapter": 5,
+        "verseStart": 16,
+        "verseEnd": 16
+      }
+    }
+  ]
+}

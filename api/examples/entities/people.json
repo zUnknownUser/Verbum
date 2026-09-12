@@ -1,0 +1,82 @@
+{
+  "entities": [
+    {
+      "id": "fixture.person.abraham",
+      "type": "person",
+      "name": "Abraham",
+      "summary": "Patriarch; the covenant with God begins with him."
+    },
+    {
+      "id": "fixture.person.bathsheba",
+      "type": "person",
+      "name": "Bathsheba",
+      "summary": "Wife of Uriah, then of David; mother of Solomon."
+    },
+    {
+      "id": "fixture.person.david",
+      "type": "person",
+      "name": "David",
+      "summary": "King of Israel; associated with many Psalms."
+    },
+    {
+      "id": "fixture.person.goliath",
+      "type": "person",
+      "name": "Goliath",
+      "summary": "Philistine champion from Gath, defeated by David."
+    },
+    {
+      "id": "fixture.person.jesus",
+      "type": "person",
+      "name": "Jesus",
+      "summary": "Central figure of the New Testament."
+    },
+    {
+      "id": "fixture.person.john",
+      "type": "person",
+      "name": "John",
+      "summary": "Disciple of Jesus; traditionally linked to the Gospel of John."
+    },
+    {
+      "id": "fixture.person.mary",
+      "type": "person",
+      "name": "Mary",
+      "summary": "Mother of Jesus."
+    },
+    {
+      "id": "fixture.person.moses",
+      "type": "person",
+      "name": "Moses",
+      "summary": "Led Israel out of Egypt; received the Law."
+    },
+    {
+      "id": "fixture.person.paul",
+      "type": "person",
+      "name": "Paul",
+      "summary": "Apostle; author of many New Testament letters."
+    },
+    {
+      "id": "fixture.person.peter",
+      "type": "person",
+      "name": "Peter",
+      "summary": "Disciple of Jesus; leader among the apostles."
+    },
+    {
+      "id": "fixture.person.samuel",
+      "type": "person",
+      "name": "Samuel",
+      "summary": "Prophet and judge; anointed Saul and David."
+    },
+    {
+      "id": "fixture.person.saul",
+      "type": "person",
+      "name": "Saul",
+      "summary": "First king of Israel."
+    },
+    {
+      "id": "fixture.person.solomon",
+      "type": "person",
+      "name": "Solomon",
+      "summary": "King of Israel; built the first temple."
+    }
+  ]
+}

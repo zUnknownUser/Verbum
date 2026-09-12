@@ -1,0 +1,444 @@
+{
+  "root": {
+    "id": "fixture.person.david",
+    "type": "person",
+    "name": "David",
+    "summary": "King of Israel; associated with many Psalms."
+  },
+  "nodes": [
+    {
+      "id": "passage.1Sam.16",
+      "type": "passage",
+      "name": "1 Samuel 16",
+      "summary": null
+    },
+    {
+      "id": "passage.1Sam.17",
+      "type": "passage",
+      "name": "1 Samuel 17",
+      "summary": null
+    },
+    {
+      "id": "passage.2Sam.5",
+      "type": "passage",
+      "name": "2 Samuel 5",
+      "summary": null
+    },
+    {
+      "id": "fixture.event.david-anointed",
+      "type": "event",
+      "name": "Anointing of David",
+      "summary": "Samuel anoints David in Bethlehem while Saul is still king."
+    },
+    {
+      "id": "fixture.person.bathsheba",
+      "type": "person",
+      "name": "Bathsheba",
+      "summary": "Wife of Uriah, then of David; mother of Solomon."
+    },
+    {
+      "id": "fixture.place.bethlehem",
+      "type": "place",
+      "name": "Bethlehem",
+      "summary": "Birthplace of David and of Jesus."
+    },
+    {
+      "id": "fixture.event.david-goliath",
+      "type": "event",
+      "name": "David and Goliath",
+      "summary": "David defeats the Philistine champion in the Valley of Elah."
+    },
+    {
+      "id": "fixture.event.david-takes-jerusalem",
+      "type": "event",
+      "name": "David takes Jerusalem",
+      "summary": "David captures the Jebusite stronghold and makes it his capital."
+    },
+    {
+      "id": "fixture.person.goliath",
+      "type": "person",
+      "name": "Goliath",
+      "summary": "Philistine champion from Gath, defeated by David."
+    },
+    {
+      "id": "fixture.place.jerusalem",
+      "type": "place",
+      "name": "Jerusalem",
+      "summary": "City of David; site of the temple."
+    },
+    {
+      "id": "passage.Ps.23",
+      "type": "passage",
+      "name": "Psalms 23",
+      "summary": null
+    },
+    {
+      "id": "passage.Ps.51",
+      "type": "passage",
+      "name": "Psalms 51",
+      "summary": null
+    },
+    {
+      "id": "fixture.person.samuel",
+      "type": "person",
+      "name": "Samuel",
+      "summary": "Prophet and judge; anointed Saul and David."
+    },
+    {
+      "id": "fixture.person.saul",
+      "type": "person",
+      "name": "Saul",
+      "summary": "First king of Israel."
+    },
+    {
+      "id": "fixture.person.solomon",
+      "type": "person",
+      "name": "Solomon",
+      "summary": "King of Israel; built the first temple."
+    },
+    {
+      "id": "fixture.theme.forgiveness",
+      "type": "theme",
+      "name": "Forgiveness",
+      "summary": "Release from wrongdoing, divine and human."
+    },
+    {
+      "id": "fixture.theme.prayer",
+      "type": "theme",
+      "name": "Prayer",
+      "summary": "Speaking with God; Psalms, the Lord's Prayer."
+    }
+  ],
+  "edges": [
+    {
+      "id": "fixture.edge.fixture.person.david.appearsIn.passage.1Sam.16",
+      "sourceId": "fixture.person.david",
+      "targetId": "passage.1Sam.16",
+      "type": "appearsIn",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.david.appearsIn.passage.1Sam.17",
+      "sourceId": "fixture.person.david",
+      "targetId": "passage.1Sam.17",
+      "type": "appearsIn",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.david.appearsIn.passage.2Sam.5",
+      "sourceId": "fixture.person.david",
+      "targetId": "passage.2Sam.5",
+      "type": "appearsIn",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.david.appearsIn.passage.Ps.23",
+      "sourceId": "fixture.person.david",
+      "targetId": "passage.Ps.23",
+      "type": "appearsIn",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.david.appearsIn.passage.Ps.51",
+      "sourceId": "fixture.person.david",
+      "targetId": "passage.Ps.51",
+      "type": "appearsIn",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.david.relatedTo.fixture.person.goliath",
+      "sourceId": "fixture.person.david",
+      "targetId": "fixture.person.goliath",
+      "type": "relatedTo",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.david.relatedTo.fixture.person.saul",
+      "sourceId": "fixture.person.david",
+      "targetId": "fixture.person.saul",
+      "type": "relatedTo",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.david.relatedTo.fixture.person.samuel",
+      "sourceId": "fixture.person.david",
+      "targetId": "fixture.person.samuel",
+      "type": "relatedTo",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.david.relatedTo.fixture.person.bathsheba",
+      "sourceId": "fixture.person.david",
+      "targetId": "fixture.person.bathsheba",
+      "type": "relatedTo",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.david.relatedTo.fixture.person.solomon",
+      "sourceId": "fixture.person.david",
+      "targetId": "fixture.person.solomon",
+      "type": "relatedTo",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.david.participatesIn.fixture.event.david-anointed",
+      "sourceId": "fixture.person.david",
+      "targetId": "fixture.event.david-anointed",
+      "type": "participatesIn",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.david.participatesIn.fixture.event.david-goliath",
+      "sourceId": "fixture.person.david",
+      "targetId": "fixture.event.david-goliath",
+      "type": "participatesIn",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.david.participatesIn.fixture.event.david-takes-jerusalem",
+      "sourceId": "fixture.person.david",
+      "targetId": "fixture.event.david-takes-jerusalem",
+      "type": "participatesIn",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.david.relatedTo.fixture.place.bethlehem",
+      "sourceId": "fixture.person.david",
+      "targetId": "fixture.place.bethlehem",
+      "type": "relatedTo",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.david.relatedTo.fixture.place.jerusalem",
+      "sourceId": "fixture.person.david",
+      "targetId": "fixture.place.jerusalem",
+      "type": "relatedTo",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.david.relatedToTheme.fixture.theme.forgiveness",
+      "sourceId": "fixture.person.david",
+      "targetId": "fixture.theme.forgiveness",
+      "type": "relatedToTheme",
+      "confidence": 0.8,
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.david.relatedToTheme.fixture.theme.prayer",
+      "sourceId": "fixture.person.david",
+      "targetId": "fixture.theme.prayer",
+      "type": "relatedToTheme",
+      "confidence": 0.8,
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.goliath.appearsIn.passage.1Sam.17",
+      "sourceId": "fixture.person.goliath",
+      "targetId": "passage.1Sam.17",
+      "type": "appearsIn",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.goliath.participatesIn.fixture.event.david-goliath",
+      "sourceId": "fixture.person.goliath",
+      "targetId": "fixture.event.david-goliath",
+      "type": "participatesIn",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.saul.appearsIn.passage.1Sam.16",
+      "sourceId": "fixture.person.saul",
+      "targetId": "passage.1Sam.16",
+      "type": "appearsIn",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.saul.appearsIn.passage.1Sam.17",
+      "sourceId": "fixture.person.saul",
+      "targetId": "passage.1Sam.17",
+      "type": "appearsIn",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.saul.relatedTo.fixture.person.samuel",
+      "sourceId": "fixture.person.saul",
+      "targetId": "fixture.person.samuel",
+      "type": "relatedTo",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.samuel.appearsIn.passage.1Sam.16",
+      "sourceId": "fixture.person.samuel",
+      "targetId": "passage.1Sam.16",
+      "type": "appearsIn",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.samuel.participatesIn.fixture.event.david-anointed",
+      "sourceId": "fixture.person.samuel",
+      "targetId": "fixture.event.david-anointed",
+      "type": "participatesIn",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.bathsheba.relatedTo.fixture.person.solomon",
+      "sourceId": "fixture.person.bathsheba",
+      "targetId": "fixture.person.solomon",
+      "type": "relatedTo",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.person.solomon.relatedTo.fixture.place.jerusalem",
+      "sourceId": "fixture.person.solomon",
+      "targetId": "fixture.place.jerusalem",
+      "type": "relatedTo",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.event.david-anointed.occursAt.fixture.place.bethlehem",
+      "sourceId": "fixture.event.david-anointed",
+      "targetId": "fixture.place.bethlehem",
+      "type": "occursAt",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.event.david-anointed.precedes.fixture.event.david-goliath",
+      "sourceId": "fixture.event.david-anointed",
+      "targetId": "fixture.event.david-goliath",
+      "type": "precedes",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.event.david-goliath.precedes.fixture.event.david-takes-jerusalem",
+      "sourceId": "fixture.event.david-goliath",
+      "targetId": "fixture.event.david-takes-jerusalem",
+      "type": "precedes",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.event.david-takes-jerusalem.occursAt.fixture.place.jerusalem",
+      "sourceId": "fixture.event.david-takes-jerusalem",
+      "targetId": "fixture.place.jerusalem",
+      "type": "occursAt",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.fixture.event.david-takes-jerusalem.appearsIn.passage.2Sam.5",
+      "sourceId": "fixture.event.david-takes-jerusalem",
+      "targetId": "passage.2Sam.5",
+      "type": "appearsIn",
+      "confidence": 1.0,
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "id": "fixture.edge.passage.Ps.51.relatedToTheme.fixture.theme.forgiveness",
+      "sourceId": "passage.Ps.51",
+      "targetId": "fixture.theme.forgiveness",
+      "type": "relatedToTheme",
+      "confidence": 0.8,
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "id": "fixture.edge.passage.Ps.23.relatedToTheme.fixture.theme.prayer",
+      "sourceId": "passage.Ps.23",
+      "targetId": "fixture.theme.prayer",
+      "type": "relatedToTheme",
+      "confidence": 0.8,
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    }
+  ]
+}

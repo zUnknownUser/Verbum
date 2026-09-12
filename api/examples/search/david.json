@@ -1,0 +1,31 @@
+{
+  "query": "David",
+  "passages": [],
+  "books": [],
+  "entities": [
+    {
+      "id": "fixture.person.david",
+      "type": "person",
+      "name": "David",
+      "summary": "King of Israel; associated with many Psalms."
+    },
+    {
+      "id": "fixture.event.david-anointed",
+      "type": "event",
+      "name": "Anointing of David",
+      "summary": "Samuel anoints David in Bethlehem while Saul is still king."
+    },
+    {
+      "id": "fixture.event.david-goliath",
+      "type": "event",
+      "name": "David and Goliath",
+      "summary": "David defeats the Philistine champion in the Valley of Elah."
+    },
+    {
+      "id": "fixture.event.david-takes-jerusalem",
+      "type": "event",
+      "name": "David takes Jerusalem",
+      "summary": "David captures the Jebusite stronghold and makes it his capital."
+    }
+  ]
+}

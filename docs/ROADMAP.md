@@ -191,7 +191,16 @@ except the spec and, later, the backend API contract.
 
 ## Later
 
-- Task 11 — Replace fixtures with backend API — **Scripture done** iOS ✅ · Android ✅ (2026-09-12); graph/search ⬜
+- Task 11 — Replace fixtures with backend API — **Scripture done** iOS ✅ · Android ✅ (2026-09-12); graph/search/context/timeline ⬜
+  - **Contract first (2026-09-12):** `api/openapi.yaml` — the §45 routes plus `/v1/daily-verse`,
+    written from the client interfaces the apps already have — and `api/examples/` generated from
+    the fixtures (`api/scripts/gen-examples.py`), to be the inputs of contract tests on both apps.
+  - Decided: **Go** for the API (`backend/`, net/http + pgx/sqlc + Postgres, Docker), **Python** for
+    the content pipeline (`pipeline/`, §32) — they meet only in the database. Lucas develops the
+    backend on his own server machine; same monorepo.
+  - Next: (a) Go backend serving the contract from Postgres seeded with today's fixtures;
+    (b) `.live` clients + contract tests on iOS and Android; (c) daily verse from the server;
+    (d) editorial pipeline and the real content load (§68).
   - `BibleClient.live`: bible.helloao.org (free, keyless, open-licensed; static JSON with
     headings, paragraphs, poetry). BSB for English, Bíblia Livre for Portuguese, by device
     language. Chapters cached on disk; the bundled public-domain WEB (`web.tsv`, all 1,189

@@ -1,0 +1,390 @@
+openapi: 3.1.0
+info:
+  title: Verbum API
+  version: 0.1.0
+  description: |
+    The contract between the Verbum apps (iOS, Android) and the backend (docs/PRODUCT.md §45).
+    The apps' client interfaces — `GraphClient`, `SearchClient`, `ContextClient`, `TimelineClient`,
+    `DailyVerses` — were written first; this document is their wire shape, and `examples/` holds
+    the responses both apps decode in their contract tests. Change the JSON here, and the app tests
+    break before a user does.
+
+    Conventions
+    - Read-only, keyless, cacheable (`Cache-Control` + `ETag`) for everything under /v1 that is not /me.
+    - Scripture text is NOT served here: the apps read it from bible.helloao.org (and the bundled WEB).
+      References are structured (`PassageReference`), never prose, so the apps render them in the
+      reader's translation and language.
+    - Every relationship, detail and dating claim carries `sourceReferenceIds` (§33). Content only
+      reaches this API through the editorial pipeline with human review (§32).
+    - Errors are one shape (`Problem`) with a small `code` vocabulary (§52); the apps map codes to
+      states and never show `message` to users.
+    - Ids are opaque strings. Fixture ids look like `fixture.person.david`; production ids may differ.
+security: []   # public, keyless read API; /me routes (Phase 7) will add auth here
+
+servers:
+  - url: https://api.verbum.app
+    description: production (to be created)
+  - url: http://localhost:8080
+    description: local backend
+
+tags:
+  - name: entities
+  - name: graph
+  - name: context
+  - name: timeline
+  - name: search
+  - name: daily
+
+paths:
+  /v1/entities/{id}:
+    get:
+      tags: [entities]
+      operationId: getEntityDetail
+      summary: One entity's page (§9) — the facts, key passages, sources.
+      description: Backs `GraphClient.detail(id)` and `GraphClient.entity(id)` (the apps read `.entity` from it).
+      parameters:
+        - $ref: '#/components/parameters/EntityId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EntityDetail' }
+              examples:
+                david: { externalValue: examples/entities/david.json }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /v1/entities:
+    get:
+      tags: [entities]
+      operationId: listEntities
+      summary: Every entity of one kind, for the Explore lists (§7). Passage nodes are never listed.
+      description: Backs `GraphClient.entities(type)`. Sorted by name in the requested language.
+      parameters:
+        - name: type
+          in: query
+          required: true
+          schema: { $ref: '#/components/schemas/BibleEntityType' }
+        - $ref: '#/components/parameters/Lang'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [entities]
+                properties:
+                  entities:
+                    type: array
+                    items: { $ref: '#/components/schemas/BibleEntity' }
+              examples:
+                people: { externalValue: examples/entities/people.json }
+
+  /v1/entities/{id}/graph:
+    get:
+      tags: [graph]
+      operationId: getEntityGraph
+      summary: The one-hop neighbourhood (§8, §44). Never the whole graph.
+      description: |
+        Backs `GraphClient.neighbors(id, limit)`. Undirected: an edge stored as David → Goliath is
+        returned for Goliath too. `nodes` are the neighbours (the root is not repeated in it);
+        `edges` are every stored relationship among `root + nodes`. The apps ask `limit=24` and show
+        a balanced dozen themselves (`GraphLayout.balanced`), so the server should return nodes in a
+        stable, meaningful order (by edge confidence desc, then name) rather than by kind.
+      parameters:
+        - $ref: '#/components/parameters/EntityId'
+        - name: depth
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 1, default: 1 }
+          description: Only 1 is served today; the parameter exists so the URL matches §44.
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 48, default: 12 }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GraphSnapshot' }
+              examples:
+                david: { externalValue: examples/graph/david.json }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /v1/passages/{reference}/context:
+    get:
+      tags: [context]
+      operationId: getPassageContext
+      summary: Chapter-level context (§10) — entities, related passages, sources.
+      description: |
+        Backs `ContextClient.chapter(reference)`. `reference` is `Book.Chapter` in OSIS ids
+        (`1Sam.17`, `Ps.23`); verses in the path are ignored — context is per chapter.
+        **Missing coverage is 404 with code `content_unavailable`**, which the apps show as
+        "no context yet" — never a generated explanation (§3.5).
+      parameters:
+        - name: reference
+          in: path
+          required: true
+          schema: { type: string, pattern: '^[1-3]?[A-Za-z]+\.[0-9]+$' }
+          example: 1Sam.17
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PassageContext' }
+              examples:
+                sam17: { externalValue: examples/context/1Sam.17.json }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /v1/timeline:
+    get:
+      tags: [timeline]
+      operationId: getTimeline
+      summary: Every period and event, chronological (§4.2), with dating precision.
+      description: |
+        Backs `TimelineClient.events()`; with `entity`, backs `TimelineClient.eventsFor(id)`.
+        Order: by `startYear`, then longer spans first, unknown dates last. `entityNames` saves the
+        apps one round-trip per chip (today they call /entities/{id} for each).
+      parameters:
+        - name: entity
+          in: query
+          required: false
+          schema: { type: string }
+          description: Only events whose `entityIds` contain this id.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [events, entityNames]
+                properties:
+                  events:
+                    type: array
+                    items: { $ref: '#/components/schemas/TimelineEvent' }
+                  entityNames:
+                    type: object
+                    additionalProperties: { type: string }
+                    description: Names for every id that appears in any `entityIds`.
+              examples:
+                all: { externalValue: examples/timeline/all.json }
+
+  /v1/search:
+    get:
+      tags: [search]
+      operationId: search
+      summary: References, books and entities for a query (§27–28).
+      description: |
+        Backs `SearchClient.search(query, language)`. The apps already parse references and match
+        book names on device; the server may repeat that (cheap, and keeps one ranking) but MUST
+        serve the entity groups. A direct reference match wins outright (§28): when `passages` is
+        non-empty, `books` is empty. Free-text passage search and semantic search (§27) are later
+        additions to the same shape.
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema: { type: string, minLength: 1, maxLength: 200 }
+        - $ref: '#/components/parameters/Lang'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SearchResponse' }
+              examples:
+                david: { externalValue: examples/search/david.json }
+
+  /v1/daily-verse:
+    get:
+      tags: [daily]
+      operationId: getDailyVerse
+      summary: The verse of the day — a reference only; the text comes from the reader's translation.
+      description: |
+        Not in §45; added for the Home card and the 7:00 notification. The apps compute this on
+        device today (`DailyVerses`, deterministic per day) and will keep doing so as a fallback.
+        The server answers for a date so the apps can plan 14 mornings ahead in one call.
+      parameters:
+        - name: from
+          in: query
+          schema: { type: string, format: date }
+          description: First day, inclusive. Default today (server's UTC date).
+        - name: days
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 31, default: 1 }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [verses]
+                properties:
+                  verses:
+                    type: array
+                    items:
+                      type: object
+                      required: [date, reference]
+                      properties:
+                        date: { type: string, format: date }
+                        reference: { $ref: '#/components/schemas/PassageReference' }
+              examples:
+                week: { externalValue: examples/daily-verse/week.json }
+
+components:
+  parameters:
+    EntityId:
+      name: id
+      in: path
+      required: true
+      schema: { type: string }
+      example: fixture.person.david
+    Lang:
+      name: lang
+      in: query
+      required: false
+      schema: { type: string, enum: [en, pt], default: en }
+      description: Language for names and sort order; matches `BookLanguage` in the apps.
+
+  responses:
+    NotFound:
+      description: Unknown id, or no content for it yet.
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+          example: { code: unknown_entity, message: "no entity with id 'nope'" }
+
+  schemas:
+    # ---- Errors (§52). Apps switch on `code`; `message` is for logs.
+    Problem:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+          enum: [unknown_entity, unknown_book, content_unavailable, malformed_request, internal]
+        message: { type: string }
+
+    # ---- §22.1
+    BibleEntityType:
+      type: string
+      enum: [person, place, event, theme, passage, book, prophecy, originalTerm, historicalPeriod]
+
+    BibleEntity:
+      type: object
+      required: [id, type, name]
+      properties:
+        id: { type: string }
+        type: { $ref: '#/components/schemas/BibleEntityType' }
+        name: { type: string }
+        summary: { type: [string, 'null'], description: Short and non-interpretive (§3.5). }
+
+    # ---- §22.2
+    RelationshipType:
+      type: string
+      enum: [appearsIn, participatesIn, occursAt, occursDuring, references, relatedToTheme, relatedTo, precedes, follows, fulfills, quotes]
+
+    BibleRelationship:
+      type: object
+      required: [id, sourceId, targetId, type, sourceReferenceIds]
+      properties:
+        id: { type: string }
+        sourceId: { type: string }
+        targetId: { type: string }
+        type: { $ref: '#/components/schemas/RelationshipType' }
+        confidence: { type: [number, 'null'], minimum: 0, maximum: 1, description: Editorial confidence (§58); null = unrated. }
+        sourceReferenceIds:
+          type: array
+          minItems: 1
+          items: { type: string }
+
+    # ---- A place in Scripture, translation-independent. OSIS book ids (Gen … Rev).
+    PassageReference:
+      type: object
+      required: [bookId, chapter]
+      properties:
+        bookId: { type: string, example: 1Sam }
+        chapter: { type: integer, minimum: 1 }
+        verseStart: { type: integer, minimum: 1, description: Omitted with verseEnd for a whole chapter. }
+        verseEnd: { type: integer, minimum: 1 }
+
+    # ---- §33
+    SourceReference:
+      type: object
+      required: [id, citation]
+      properties:
+        id: { type: string }
+        citation: { type: string }
+        url: { type: [string, 'null'], format: uri }
+
+    # ---- §9
+    EntityDetail:
+      type: object
+      required: [entity, aliases, keyPassages, sources]
+      properties:
+        entity: { $ref: '#/components/schemas/BibleEntity' }
+        aliases: { type: array, items: { type: string } }
+        approximateDates: { type: [string, 'null'], description: 'Always hedged: "c. 1010–970 BC (commonly dated)".' }
+        role: { type: [string, 'null'] }
+        modernGeography: { type: [string, 'null'], description: Places only. }
+        keyPassages: { type: array, items: { $ref: '#/components/schemas/PassageReference' } }
+        sources: { type: array, items: { $ref: '#/components/schemas/SourceReference' } }
+
+    # ---- §44
+    GraphSnapshot:
+      type: object
+      required: [root, nodes, edges]
+      properties:
+        root: { $ref: '#/components/schemas/BibleEntity' }
+        nodes: { type: array, items: { $ref: '#/components/schemas/BibleEntity' } }
+        edges: { type: array, items: { $ref: '#/components/schemas/BibleRelationship' } }
+
+    # ---- §10 / §22.4
+    PassageContext:
+      type: object
+      required: [reference, entities, relatedPassages, sources]
+      properties:
+        reference: { $ref: '#/components/schemas/PassageReference', description: Always a whole chapter. }
+        entities: { type: array, items: { $ref: '#/components/schemas/BibleEntity' } }
+        relatedPassages:
+          type: array
+          items: { $ref: '#/components/schemas/PassageReference' }
+          description: Share a connected entity with the chapter; not asserted to be quotations or parallels.
+        sources: { type: array, items: { $ref: '#/components/schemas/SourceReference' } }
+
+    # ---- §22.5 (+ sourceReferenceIds)
+    TimelineDatePrecision:
+      type: string
+      enum: [exact, approximate, debated, unknown]
+
+    TimelineEvent:
+      type: object
+      required: [id, title, datePrecision, entityIds, sourceReferenceIds]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        startYear: { type: [integer, 'null'], description: Negative = BC (-1010 is 1010 BC). }
+        endYear: { type: [integer, 'null'], description: Null with a startYear = a point in time. }
+        datePrecision: { $ref: '#/components/schemas/TimelineDatePrecision' }
+        summary: { type: [string, 'null'] }
+        entityIds: { type: array, items: { type: string } }
+        sourceReferenceIds: { type: array, items: { type: string } }
+
+    # ---- §27
+    SearchResponse:
+      type: object
+      required: [query, passages, books, entities]
+      properties:
+        query: { type: string }
+        passages: { type: array, items: { $ref: '#/components/schemas/PassageReference' } }
+        books:
+          type: array
+          items:
+            type: object
+            required: [id]
+            properties:
+              id: { type: string, description: OSIS id; the apps carry the canon and its names. }
+        entities: { type: array, items: { $ref: '#/components/schemas/BibleEntity' } }

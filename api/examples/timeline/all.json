@@ -1,0 +1,268 @@
+{
+  "events": [
+    {
+      "id": "fixture.timeline.abraham",
+      "title": "Abraham",
+      "startYear": -2000,
+      "endYear": -1800,
+      "datePrecision": "approximate",
+      "summary": "Abraham's journey from Ur to Canaan opens the story of Israel. The patriarchal period is dated only broadly, from the kind of life the narratives describe.",
+      "entityIds": [
+        "fixture.person.abraham"
+      ],
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "id": "fixture.timeline.exodus",
+      "title": "The Exodus",
+      "startYear": -1446,
+      "endYear": -1250,
+      "datePrecision": "debated",
+      "summary": "Israel leaves Egypt under Moses. Two chronologies are held today — a 15th-century date read from 1 Kings 6:1, and a 13th-century date tied to the city of Rameses — and the timeline shows the whole span.",
+      "entityIds": [
+        "fixture.person.moses",
+        "fixture.place.egypt",
+        "fixture.event.exodus"
+      ],
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "id": "fixture.timeline.judges",
+      "title": "Period of the Judges",
+      "startYear": -1200,
+      "endYear": -1050,
+      "datePrecision": "approximate",
+      "summary": "Between the settlement of Canaan and the first king, Israel is led by judges — Deborah, Gideon, Samson — in cycles the book of Judges describes.",
+      "entityIds": [],
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "id": "fixture.timeline.united-monarchy",
+      "title": "United Monarchy",
+      "startYear": -1050,
+      "endYear": -930,
+      "datePrecision": "approximate",
+      "summary": "Saul, David and Solomon rule one kingdom from Jerusalem. The dates rest on the reigns 1 and 2 Samuel and 1 Kings record, counted back from later fixed points.",
+      "entityIds": [
+        "fixture.person.saul",
+        "fixture.person.david",
+        "fixture.person.solomon",
+        "fixture.place.jerusalem"
+      ],
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "id": "fixture.timeline.david",
+      "title": "Reign of David",
+      "startYear": -1010,
+      "endYear": -970,
+      "datePrecision": "approximate",
+      "summary": "David unites the tribes, takes Jerusalem and makes it his capital. Commonly dated c. 1010–970 BC.",
+      "entityIds": [
+        "fixture.person.david",
+        "fixture.place.jerusalem",
+        "fixture.event.david-takes-jerusalem"
+      ],
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "id": "fixture.timeline.solomon",
+      "title": "Reign of Solomon",
+      "startYear": -970,
+      "endYear": -931,
+      "datePrecision": "approximate",
+      "summary": "Solomon builds the first temple in Jerusalem. His death is followed by the division of the kingdom.",
+      "entityIds": [
+        "fixture.person.solomon",
+        "fixture.place.jerusalem"
+      ],
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "id": "fixture.timeline.divided-kingdom",
+      "title": "Divided Kingdom",
+      "startYear": -931,
+      "endYear": -586,
+      "datePrecision": "approximate",
+      "summary": "Israel in the north and Judah in the south, with their own kings and prophets, until each falls to an empire.",
+      "entityIds": [
+        "fixture.place.jerusalem"
+      ],
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "id": "fixture.timeline.assyrian-conquest",
+      "title": "Assyrian conquest of Samaria",
+      "startYear": -722,
+      "endYear": null,
+      "datePrecision": "approximate",
+      "summary": "The northern kingdom falls to Assyria and its people are deported. Dated 722 or 721 BC from Assyrian records.",
+      "entityIds": [],
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "id": "fixture.timeline.babylonian-exile",
+      "title": "Babylonian exile",
+      "startYear": -586,
+      "endYear": -538,
+      "datePrecision": "approximate",
+      "summary": "Jerusalem and its temple are destroyed and Judah's leaders are taken to Babylon. The fall is placed in 587 or 586 BC; the return begins under Cyrus.",
+      "entityIds": [
+        "fixture.place.babylon",
+        "fixture.place.jerusalem"
+      ],
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "id": "fixture.timeline.persian-period",
+      "title": "Persian period",
+      "startYear": -538,
+      "endYear": -332,
+      "datePrecision": "approximate",
+      "summary": "Under Persian rule exiles return, the temple is rebuilt (Ezra) and the walls restored (Nehemiah).",
+      "entityIds": [
+        "fixture.place.jerusalem"
+      ],
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "id": "fixture.timeline.second-temple",
+      "title": "Second Temple period",
+      "startYear": -516,
+      "endYear": 70,
+      "datePrecision": "approximate",
+      "summary": "From the rebuilt temple to its destruction by Rome in AD 70 — the world of the Gospels and Acts.",
+      "entityIds": [
+        "fixture.place.jerusalem"
+      ],
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "id": "fixture.timeline.birth-of-jesus",
+      "title": "Birth of Jesus",
+      "startYear": -6,
+      "endYear": -4,
+      "datePrecision": "debated",
+      "summary": "Placed shortly before the death of Herod the Great (4 BC); the exact year is not known.",
+      "entityIds": [
+        "fixture.person.jesus",
+        "fixture.person.mary",
+        "fixture.place.bethlehem",
+        "fixture.place.nazareth"
+      ],
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "id": "fixture.timeline.ministry-of-jesus",
+      "title": "Ministry of Jesus",
+      "startYear": 27,
+      "endYear": 30,
+      "datePrecision": "approximate",
+      "summary": "Jesus's public ministry in Galilee and Judea, about three years by John's count of Passovers.",
+      "entityIds": [
+        "fixture.person.jesus",
+        "fixture.place.galilee",
+        "fixture.place.jerusalem"
+      ],
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "id": "fixture.timeline.early-church",
+      "title": "Early Church",
+      "startYear": 30,
+      "endYear": 100,
+      "datePrecision": "approximate",
+      "summary": "From Pentecost to the end of the apostolic generation, as told in Acts and the letters.",
+      "entityIds": [
+        "fixture.person.peter",
+        "fixture.person.paul",
+        "fixture.person.john",
+        "fixture.place.jerusalem"
+      ],
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "id": "fixture.timeline.crucifixion",
+      "title": "Crucifixion",
+      "startYear": 30,
+      "endYear": 33,
+      "datePrecision": "debated",
+      "summary": "The Gospels place it at Passover under Pontius Pilate; AD 30 and AD 33 are the two dates usually argued for.",
+      "entityIds": [
+        "fixture.person.jesus",
+        "fixture.place.jerusalem"
+      ],
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "id": "fixture.timeline.pauline-missions",
+      "title": "Pauline missions",
+      "startYear": 46,
+      "endYear": 57,
+      "datePrecision": "approximate",
+      "summary": "Paul's journeys through Asia Minor and Greece — Corinth, Ephesus — and the letters written along the way.",
+      "entityIds": [
+        "fixture.person.paul",
+        "fixture.place.corinth",
+        "fixture.place.ephesus",
+        "fixture.place.rome"
+      ],
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    }
+  ],
+  "entityNames": {
+    "fixture.person.abraham": "Abraham",
+    "fixture.person.moses": "Moses",
+    "fixture.place.egypt": "Egypt",
+    "fixture.event.exodus": "The Exodus",
+    "fixture.person.saul": "Saul",
+    "fixture.person.david": "David",
+    "fixture.person.solomon": "Solomon",
+    "fixture.place.jerusalem": "Jerusalem",
+    "fixture.event.david-takes-jerusalem": "David takes Jerusalem",
+    "fixture.place.babylon": "Babylon",
+    "fixture.person.jesus": "Jesus",
+    "fixture.person.mary": "Mary",
+    "fixture.place.bethlehem": "Bethlehem",
+    "fixture.place.nazareth": "Nazareth",
+    "fixture.place.galilee": "Galilee",
+    "fixture.person.peter": "Peter",
+    "fixture.person.paul": "Paul",
+    "fixture.person.john": "John",
+    "fixture.place.corinth": "Corinth",
+    "fixture.place.ephesus": "Ephesus",
+    "fixture.place.rome": "Rome"
+  }
+}

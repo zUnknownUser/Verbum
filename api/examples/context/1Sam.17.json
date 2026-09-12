@@ -1,0 +1,78 @@
+{
+  "reference": {
+    "bookId": "1Sam",
+    "chapter": 17
+  },
+  "entities": [
+    {
+      "id": "fixture.person.david",
+      "type": "person",
+      "name": "David",
+      "summary": "King of Israel; associated with many Psalms."
+    },
+    {
+      "id": "fixture.person.saul",
+      "type": "person",
+      "name": "Saul",
+      "summary": "First king of Israel."
+    },
+    {
+      "id": "fixture.person.goliath",
+      "type": "person",
+      "name": "Goliath",
+      "summary": "Philistine champion from Gath, defeated by David."
+    },
+    {
+      "id": "fixture.place.elah",
+      "type": "place",
+      "name": "Valley of Elah",
+      "summary": "Where Israel and the Philistines faced each other in 1 Samuel 17."
+    },
+    {
+      "id": "fixture.theme.faith",
+      "type": "theme",
+      "name": "Faith",
+      "summary": "Trust in God; a recurring theme across both testaments."
+    },
+    {
+      "id": "fixture.event.david-goliath",
+      "type": "event",
+      "name": "David and Goliath",
+      "summary": "David defeats the Philistine champion in the Valley of Elah."
+    }
+  ],
+  "relatedPassages": [
+    {
+      "bookId": "1Sam",
+      "chapter": 16
+    },
+    {
+      "bookId": "2Sam",
+      "chapter": 5
+    },
+    {
+      "bookId": "Ps",
+      "chapter": 23
+    },
+    {
+      "bookId": "Ps",
+      "chapter": 51
+    },
+    {
+      "bookId": "John",
+      "chapter": 3
+    }
+  ],
+  "sources": [
+    {
+      "id": "fixture.source.web",
+      "citation": "World English Bible (public domain) — the passages cited",
+      "url": "https://worldenglish.bible"
+    },
+    {
+      "id": "fixture.source.editorial",
+      "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+      "url": null
+    }
+  ]
+}

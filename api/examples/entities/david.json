@@ -1,0 +1,46 @@
+{
+  "entity": {
+    "id": "fixture.person.david",
+    "type": "person",
+    "name": "David",
+    "summary": "King of Israel; associated with many Psalms."
+  },
+  "aliases": [],
+  "approximateDates": "c. 1010–970 BC (commonly dated; the chronology is approximate)",
+  "role": "Second king of Israel",
+  "modernGeography": null,
+  "keyPassages": [
+    {
+      "bookId": "1Sam",
+      "chapter": 16
+    },
+    {
+      "bookId": "1Sam",
+      "chapter": 17
+    },
+    {
+      "bookId": "2Sam",
+      "chapter": 5
+    },
+    {
+      "bookId": "Ps",
+      "chapter": 23
+    },
+    {
+      "bookId": "Ps",
+      "chapter": 51
+    }
+  ],
+  "sources": [
+    {
+      "id": "fixture.source.web",
+      "citation": "World English Bible (public domain) — the passages cited",
+      "url": "https://worldenglish.bible"
+    },
+    {
+      "id": "fixture.source.editorial",
+      "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+      "url": null
+    }
+  ]
+}
