@@ -1,0 +1,32 @@
+# macOS
+.DS_Store
+
+# Xcode / Swift Package Manager
+xcuserdata/
+*.xcuserstate
+DerivedData/
+.build/
+.swiftpm/
+*.xcscmblueprint
+*.xccheckout
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Android (android/.gitignore covers module-level build/ and local.properties)
+android/.gradle/
+android/.idea/
+android/.kotlin/
+android/build/
+android/**/build/
+android/local.properties
+
+# Backend / pipeline (Task 11+)
+backend/bin/
+backend/.env
+pipeline/.venv/
+pipeline/__pycache__/
+pipeline/**/__pycache__/
+.env

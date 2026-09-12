@@ -6,6 +6,11 @@
 	objectVersion = 110;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A0VK000000000000000000A1 /* Features in Frameworks */ = {isa = PBXBuildFile; productRef = A0VK000000000000000000B1 /* Features */; };
+		A0VK000000000000000000A2 /* DesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = A0VK000000000000000000B2 /* DesignSystem */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		A01DF48F3054399000F27EC7 /* Verbum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Verbum.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -16,12 +21,19 @@
 			path = Verbum;
 			sourceTree = "<group>";
 		};
+		A0VK000000000000000000D1 /* docs */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = docs;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		A01DF48C3054399000F27EC7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				A0VK000000000000000000A1 /* Features in Frameworks */,
+				A0VK000000000000000000A2 /* DesignSystem in Frameworks */,
 			);
 		};
 /* End PBXFrameworksBuildPhase section */
@@ -31,6 +43,7 @@
 			isa = PBXGroup;
 			children = (
 				A01DF4913054399000F27EC7 /* Verbum */,
+				A0VK000000000000000000D1 /* docs */,
 				A01DF4903054399000F27EC7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -60,6 +73,10 @@
 				A01DF4913054399000F27EC7 /* Verbum */,
 			);
 			name = Verbum;
+			packageProductDependencies = (
+				A0VK000000000000000000B1 /* Features */,
+				A0VK000000000000000000B2 /* DesignSystem */,
+			);
 			productName = Verbum;
 			productReference = A01DF48F3054399000F27EC7 /* Verbum.app */;
 			productType = "com.apple.product-type.application";
@@ -85,9 +102,13 @@
 			knownRegions = (
 				en,
 				Base,
+				"pt-BR",
 			);
 			mainGroup = A01DF4863054399000F27EC7;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A0VK000000000000000000C1 /* XCLocalSwiftPackageReference "VerbumKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A01DF4903054399000F27EC7 /* Products */;
 			projectDirPath = "";
@@ -248,9 +269,10 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_FILE = Config/Info.plist;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -280,9 +302,10 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_FILE = Config/Info.plist;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -320,6 +343,24 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		A0VK000000000000000000C1 /* XCLocalSwiftPackageReference "VerbumKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = VerbumKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A0VK000000000000000000B1 /* Features */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Features;
+		};
+		A0VK000000000000000000B2 /* DesignSystem */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DesignSystem;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A01DF4873054399000F27EC7 /* Project object */;
 	validationLevel = 1;
