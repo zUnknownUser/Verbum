@@ -1,0 +1,4 @@
+<resources>
+    <string name="media_back">Back 15 seconds</string>
+    <string name="media_forward">Forward 15 seconds</string>
+</resources>

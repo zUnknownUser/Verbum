@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Verbum</string>
+    <string name="notification_channel_daily_verse">Verse of the day</string>
+    <string name="notification_channel_daily_verse_description">One verse every morning.</string>
+</resources>

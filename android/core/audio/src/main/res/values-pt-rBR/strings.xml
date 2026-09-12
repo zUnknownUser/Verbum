@@ -1,0 +1,4 @@
+<resources>
+    <string name="media_back">Voltar 15 segundos</string>
+    <string name="media_forward">Avançar 15 segundos</string>
+</resources>

@@ -1,0 +1,4 @@
+<resources>
+    <!-- Compose owns the theme; this only keeps the window transparent-safe before first frame. -->
+    <style name="Theme.Verbum" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>
