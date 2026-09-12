@@ -1,0 +1,15 @@
+# Local Postgres for when the Postgres store is written. `docker compose up -d`
+# then `export VERBUM_DATABASE_URL=postgres://verbum:verbum@localhost:5432/verbum?sslmode=disable`.
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: verbum
+      POSTGRES_PASSWORD: verbum
+      POSTGRES_DB: verbum
+    ports: ["5432:5432"]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/migrations:/docker-entrypoint-initdb.d:ro   # applied once, on first start
+volumes:
+  pgdata:

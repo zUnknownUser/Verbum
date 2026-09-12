@@ -127,4 +127,13 @@ for d in range(7):
     book, ch, v = pool[permutation((epoch // len(pool)) & MASK)[epoch % len(pool)]]
     week.append({"date": day.isoformat(), "reference": {"bookId": book, "chapter": int(ch), "verseStart": int(v), "verseEnd": int(v)}})
 dump(f"{OUT}/daily-verse/week.json", {"verses": week})
-print("examples regenerated")
+# ---- the whole fixture dataset, for the backend's seed (backend/db/seed/fixtures.json)
+dump(f"{ROOT}/backend/db/seed/fixtures.json", {
+    "sources": SOURCES,
+    "entities": [entities[i] for i in order],
+    "relationships": edges,
+    "details": [details[i] for i in order if i in details],
+    "timeline": events,
+    "dailyVersePool": [{"bookId": b, "chapter": int(c), "verseStart": int(v), "verseEnd": int(v)} for b, c, v in pool],
+})
+print("examples and backend seed regenerated")

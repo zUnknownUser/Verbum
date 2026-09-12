@@ -198,7 +198,11 @@ except the spec and, later, the backend API contract.
   - Decided: **Go** for the API (`backend/`, net/http + pgx/sqlc + Postgres, Docker), **Python** for
     the content pipeline (`pipeline/`, §32) — they meet only in the database. Lucas develops the
     backend on his own server machine; same monorepo.
-  - Next: (a) Go backend serving the contract from Postgres seeded with today's fixtures;
+  - **Backend skeleton (2026-09-12):** `backend/` — Go, standard library only. `cmd/api` +
+    `internal/{domain,store,httpapi,dailyverse}`; the in-memory store serves `db/seed/fixtures.json`
+    and `contract_test.go` proves every `api/examples/*.json` byte-for-byte; Postgres schema in
+    `db/migrations/`; Dockerfile (distroless), compose for a local DB, README with the next steps.
+  - Next: (a) Postgres store (`internal/store/postgres`) + `cmd/seed`, same contract tests;
     (b) `.live` clients + contract tests on iOS and Android; (c) daily verse from the server;
     (d) editorial pipeline and the real content load (§68).
   - `BibleClient.live`: bible.helloao.org (free, keyless, open-licensed; static JSON with
