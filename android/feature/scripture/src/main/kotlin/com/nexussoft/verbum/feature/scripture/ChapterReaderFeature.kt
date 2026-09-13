@@ -62,12 +62,15 @@ object ChapterReaderFeature {
         /** Parent-driven; text scale lives with the settings feature. */
         data class TextScaleChanged(val scale: ReaderTextScale) : Action
         data object ListenTapped : Action
+        data object TalkTapped : Action
         data object ContextTapped : Action
         data class Delegate(val delegate: DelegateAction) : Action
     }
 
     sealed interface DelegateAction {
         data class Listen(val reference: PassageReference) : DelegateAction
+        /** Start a spoken conversation about this chapter. */
+        data class Talk(val reference: PassageReference) : DelegateAction
         data class OpenContext(val reference: PassageReference) : DelegateAction
     }
 
@@ -104,6 +107,7 @@ object ChapterReaderFeature {
             is Action.Go -> jump(state, action.reference, bibleClient)
             is Action.TextScaleChanged -> state.copy(textScale = action.scale).only()
             Action.ListenTapped -> state.with(Effect.Send(Action.Delegate(DelegateAction.Listen(state.reference))))
+            Action.TalkTapped -> state.with(Effect.Send(Action.Delegate(DelegateAction.Talk(state.reference))))
             Action.ContextTapped -> state.with(Effect.Send(Action.Delegate(DelegateAction.OpenContext(state.reference))))
             is Action.Delegate -> state.only()
         }

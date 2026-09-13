@@ -53,6 +53,7 @@ object EntityDetailFeature {
         data class EntityTapped(val entity: BibleEntity) : Action
         data object GraphTapped : Action
         data object TimelineTapped : Action
+        data object TalkTapped : Action
         data class Delegate(val delegate: DelegateAction) : Action
     }
 
@@ -63,6 +64,8 @@ object EntityDetailFeature {
         data class OpenGraph(val entityId: EntityId) : DelegateAction
         /** The timeline, scrolled to this entity's events. */
         data class OpenTimeline(val entityId: EntityId) : DelegateAction
+        /** A spoken conversation about this page. */
+        data class Talk(val detail: EntityDetail) : DelegateAction
     }
 
     /** §8.1: default depth one, at most ~8–12 visible nodes. */
@@ -100,6 +103,7 @@ object EntityDetailFeature {
             }
             Action.GraphTapped -> state.with(Effect.Send(Action.Delegate(DelegateAction.OpenGraph(state.entityId))))
             Action.TimelineTapped -> state.with(Effect.Send(Action.Delegate(DelegateAction.OpenTimeline(state.entityId))))
+            Action.TalkTapped -> (state.content as? Content.Loaded)?.let { state.with(Effect.Send(Action.Delegate(DelegateAction.Talk(it.page.detail)))) } ?: state.only()
             is Action.Delegate -> state.only()
         }
     }

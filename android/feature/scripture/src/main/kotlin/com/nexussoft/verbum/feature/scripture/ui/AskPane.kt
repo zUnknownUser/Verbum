@@ -90,6 +90,7 @@ private fun androidx.compose.foundation.lazy.LazyListScope.answered(page: AskFea
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+        TextButton(onClick = { send(Action.TalkTapped) }) { Text(stringResource(R.string.voice_go_on)) }
     }
     if (answer.passageReferences.isNotEmpty()) {
         item { AskHeading(stringResource(R.string.key_passages)) }

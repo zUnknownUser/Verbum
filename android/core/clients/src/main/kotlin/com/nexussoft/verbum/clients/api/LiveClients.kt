@@ -3,6 +3,9 @@ package com.nexussoft.verbum.clients.api
 import com.nexussoft.verbum.clients.AskScriptureClient
 import com.nexussoft.verbum.clients.AskScriptureException
 import com.nexussoft.verbum.clients.ContextClient
+import com.nexussoft.verbum.clients.RealtimeSession
+import com.nexussoft.verbum.clients.RealtimeSessionClient
+import com.nexussoft.verbum.clients.VoiceException
 import com.nexussoft.verbum.clients.GraphClient
 import com.nexussoft.verbum.clients.GraphClientException
 import com.nexussoft.verbum.clients.SearchClient
@@ -91,5 +94,19 @@ class LiveAskScriptureClient(private val api: VerbumApi) : AskScriptureClient {
         throw AskScriptureException.NetworkUnavailable
     } catch (e: VerbumApiException.MalformedResponse) {
         throw AskScriptureException.Failed
+    }
+}
+
+/** `POST /v1/realtime/session`. 503 (no key on the server) and a backend without the route are both [VoiceException.Unavailable]. */
+class LiveRealtimeSessionClient(private val api: VerbumApi) : RealtimeSessionClient {
+    override suspend fun create(): RealtimeSession = try {
+        api.realtimeSession()
+    } catch (e: VerbumApiException.Problem) {
+        if (e.code == ProblemCode.REALTIME_UNAVAILABLE || e.status == 404 || e.status == 501) throw VoiceException.Unavailable
+        throw VoiceException.Failed
+    } catch (e: VerbumApiException.NetworkUnavailable) {
+        throw VoiceException.NetworkUnavailable
+    } catch (e: VerbumApiException.MalformedResponse) {
+        throw VoiceException.Failed
     }
 }

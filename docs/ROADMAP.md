@@ -236,6 +236,15 @@ except the spec and, later, the backend API contract.
     the request body and every failure state. Design in ARCHITECTURE.md.
   - Pending on the backend side, not blocked here: the product decision on
     `internal/ask/safety.go` (docs/BACKEND_RAG.md, Bloco 8) and pt-BR (§34 licence).
+- **Voice — talking with the study companion (§19, brought forward)** — iOS ✅ · Android ✅ (2026-09-13)
+  - `RealtimeSessionClient` → `POST /v1/realtime/session`; `VoiceClient`/`RealtimeConversation` over
+    a WebSocket with injected transport and audio (protocol tested with fakes); `VoiceScript`
+    (rules + page content + tools `ask_scripture`/`search_scripture`/`open_passage`, grounded through
+    `/v1/ask` and `/v1/search`, §73); `VoiceFeature` sheet from the reader, an entity page and an
+    Ask answer. Microphone permission on both platforms. Design in ARCHITECTURE.md.
+  - Owner QA on devices: echo cancellation on speaker, Bluetooth headsets, interrupting the
+    companion, a tool call mid-sentence, pt-BR voice quality. The server must run with
+    `OPENAI_API_KEY` for the endpoint to answer.
   - **Contract first (2026-09-12):** `api/openapi.yaml` — the §45 routes plus `/v1/daily-verse`,
     written from the client interfaces the apps already have — and `api/examples/` generated from
     the fixtures (`api/scripts/gen-examples.py`), to be the inputs of contract tests on both apps.

@@ -55,6 +55,46 @@ import Testing
         await store.receive(\.homePath[id: 0].ask.delegate.searchInstead) { $0.tab = .search }
     }
 
+    /// A conversation starts from the reader, an entity page or an Ask answer as
+    /// a sheet; when the companion opens a passage the sheet goes and the reader comes.
+    @Test func voiceStartsFromThreePlacesAndOpensPassages() async {
+        var initial = AppFeature.State()
+        initial.tab = .explore
+        initial.contentTab = .explore
+        initial.explorePath.append(.reader(ScriptureFeature.State(reference: Self.sam17)))
+        let detail = EntityDetail(entity: Self.david)
+        var entity = EntityDetailFeature.State(entityID: Self.david.id)
+        entity.content = .loaded(.init(detail: detail, neighborhood: GraphSnapshot(root: Self.david, nodes: [], edges: [])))
+        initial.explorePath.append(.entity(entity))
+        var ask = AskFeature.State(question: "why")
+        ask.content = .answered(.init(answer: .preview))
+        initial.explorePath.append(.ask(ask))
+        let store = TestStore(initialState: initial) { AppFeature() }
+        store.exhaustivity = .off(showSkippedAssertions: false)
+
+        await store.send(.explorePath(.element(id: 0, action: .reader(.reader(.talkTapped)))))
+        await store.receive(\.explorePath[id: 0].reader.delegate.talk) {
+            $0.voice = VoiceFeature.State(context: .chapter(Self.sam17))
+        }
+        let ps23 = PassageReference(bookId: "Ps", chapter: 23)
+        await store.send(.voice(.presented(.passageTapped(ps23))))
+        await store.receive(\.voice.presented.delegate.openPassage) {
+            $0.voice = nil
+            $0.explorePath[id: 3] = .reader(ScriptureFeature.State(reference: ps23))
+        }
+
+        await store.send(.explorePath(.element(id: 1, action: .entity(.talkTapped))))
+        await store.receive(\.explorePath[id: 1].entity.delegate.talk) {
+            $0.voice = VoiceFeature.State(context: .entity(detail))
+        }
+        await store.send(.voice(.dismiss)) { $0.voice = nil }
+
+        await store.send(.explorePath(.element(id: 2, action: .ask(.talkTapped))))
+        await store.receive(\.explorePath[id: 2].ask.delegate.talk) {
+            $0.voice = VoiceFeature.State(context: .answer(question: "why", .preview))
+        }
+    }
+
     @Test func homeOpensPassagesOnItsOwnStack() async throws {
         let store = TestStore(initialState: AppFeature.State()) { AppFeature() }
         let verse = store.state.home.dailyVerse.reference

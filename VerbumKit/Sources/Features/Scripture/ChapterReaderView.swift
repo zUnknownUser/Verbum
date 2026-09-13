@@ -182,6 +182,9 @@ struct ChapterReaderView: View {
             Button { store.send(.listenTapped) } label: {
                 Label(L10n.t("Listen"), systemImage: "headphones")
             }
+            Button { store.send(.talkTapped) } label: {
+                Label(L10n.t("Talk about this chapter"), systemImage: "waveform.and.mic")
+            }
             Button(action: onSettingsTapped) {
                 Label(L10n.t("Text Size"), systemImage: "textformat.size")
             }

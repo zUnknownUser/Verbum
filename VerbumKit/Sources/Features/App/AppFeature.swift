@@ -23,6 +23,8 @@ public struct AppFeature {
         public var isListening = false
         public var homePath = StackState<Path.State>()
         public var explorePath = StackState<Path.State>()
+        /// The spoken conversation sheet, over whatever page started it.
+        @Presents public var voice: VoiceFeature.State?
 
         public init() {}
     }
@@ -55,6 +57,7 @@ public struct AppFeature {
         case audio(AudioPlayerFeature.Action)
         case homePath(StackActionOf<Path>)
         case explorePath(StackActionOf<Path>)
+        case voice(PresentationAction<VoiceFeature.Action>)
     }
 
     @Dependency(\.notificationClient) var notificationClient
@@ -139,12 +142,29 @@ public struct AppFeature {
                 state.isListening = state.audio.isActive
                 return .none
 
-            case .home, .explore, .search, .homePath, .explorePath:
+            // The companion opens a passage: the sheet goes, the reader comes.
+            case .voice(.presented(.delegate(.openPassage(let reference)))):
+                state.voice = nil
+                push(.reader(ScriptureFeature.State(reference: reference)), in: &state)
+                return .none
+
+            case .voice(.dismiss):
+                state.voice = nil
+                return .none
+
+            case .home, .explore, .search, .homePath, .explorePath, .voice:
                 return .none
             }
         }
         .forEach(\.homePath, action: \.homePath)
         .forEach(\.explorePath, action: \.explorePath)
+        .ifLet(\.$voice, action: \.voice) { VoiceFeature() }
+    }
+
+    /// One conversation at a time, and never over the chapter audio.
+    private func talk(_ context: VoiceContext, state: inout State) -> Effect<Action> {
+        state.voice = VoiceFeature.State(context: context)
+        return state.audio.isPlaying ? .send(.audio(.togglePlayPause)) : .none
     }
 
     /// Search lives on its own tab; what it opens lands on the last content
@@ -190,6 +210,12 @@ public struct AppFeature {
             if state.search.query.trimmingCharacters(in: .whitespacesAndNewlines) != question {
                 return .send(.search(.binding(.set(\.query, question))))
             }
+        case .reader(.delegate(.talk(let reference))):
+            return talk(.chapter(reference), state: &state)
+        case .entity(.delegate(.talk(let detail))):
+            return talk(.entity(detail), state: &state)
+        case .ask(.delegate(.talk(let question, let answer))):
+            return talk(.answer(question: question, answer), state: &state)
         case .reader(.delegate(.listen(let reference))):
             // Already playing this chapter: the button pauses/resumes instead.
             if state.audio.reference == PassageReference(bookId: reference.bookId, chapter: reference.chapter) {

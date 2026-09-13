@@ -46,6 +46,7 @@ object AskFeature {
         data class PassageTapped(val reference: PassageReference) : Action
         data class EntityTapped(val entity: BibleEntity) : Action
         data object SearchInsteadTapped : Action
+        data object TalkTapped : Action
         data class Delegate(val delegate: DelegateAction) : Action
     }
 
@@ -54,6 +55,8 @@ object AskFeature {
         data class OpenEntity(val entity: BibleEntity) : DelegateAction
         /** §21.3: "failure gracefully falls back to search results". */
         data class SearchInstead(val question: String) : DelegateAction
+        /** Go on from this answer out loud. */
+        data class Talk(val question: String, val answer: ScriptureAnswer) : DelegateAction
     }
 
     private object AskId
@@ -97,6 +100,8 @@ object AskFeature {
             is Action.PassageTapped -> state.with(Effect.Send(Action.Delegate(DelegateAction.OpenPassage(action.reference))))
             is Action.EntityTapped -> state.with(Effect.Send(Action.Delegate(DelegateAction.OpenEntity(action.entity))))
             Action.SearchInsteadTapped -> state.with(Effect.Send(Action.Delegate(DelegateAction.SearchInstead(state.question))))
+            Action.TalkTapped -> (state.content as? Content.Answered)?.page?.answer?.takeIf { !it.isEmpty }
+                ?.let { state.with(Effect.Send(Action.Delegate(DelegateAction.Talk(state.question, it)))) } ?: state.only()
             is Action.Delegate -> state.only()
         }
     }
