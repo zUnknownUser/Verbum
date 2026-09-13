@@ -23,6 +23,10 @@ const (
 	CodeInternal            = "internal"
 	CodeRealtimeUnavailable = "realtime_unavailable"
 	CodeAskUnavailable      = "ask_unavailable"
+	CodeTTSUnavailable      = "tts_unavailable"
+	CodeTTSRateLimited      = "tts_rate_limited"
+	CodeTTSTimeout          = "tts_timeout"
+	CodeTTSFailed           = "tts_failed"
 )
 
 func writeProblem(w http.ResponseWriter, status int, code, message string) {

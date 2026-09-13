@@ -1,0 +1,15 @@
+.git
+**/.env
+**/.env.*
+**/secrets
+**/credentials
+**/*service-account*.json
+**/*service_account*.json
+**/application_default_credentials.json
+**/google-credentials*.json
+**/verbum-app1-*.json
+**/*.p12
+**/*.pem
+backend/bin
+backend/tmp
+pipeline/.venv

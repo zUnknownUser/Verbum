@@ -26,6 +26,7 @@ type handlers struct {
 	realtime realtimeBroker
 	embedder queryEmbedder
 	asker    asker
+	tts      TextToSpeech
 }
 
 // realtimeBroker is the small slice of *realtime.Broker these handlers need — a seam so tests
