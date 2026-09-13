@@ -322,9 +322,10 @@ except the spec and, later, the backend API contract.
     chapters) is the English offline fallback. `networkUnavailable` → "You're offline" (§52).
   - Not yet surfaced from helloao: section headings, paragraph breaks, footnotes, audio links —
     the model has no fields for them yet. Bible Brain dropped: keyed, unclear commercial terms.
-- Task 12 — Ask Scripture (only after Scripture, entities, context and search work — §60) — iOS ⬜ · Android ⬜
-  - **Backend done (2026-09-13): `POST /v1/ask`** — see backend-only block 7 below. This is the
-    server endpoint only; no app screen calls it yet, so the row above stays ⬜ until a client does.
+- Task 12 — Ask Scripture (only after Scripture, entities, context and search work — §60) — iOS ✅ · Android ✅ (2026-09-13)
+  - Backend: `POST /v1/ask` (backend-only block 7 below). Client side: see the "Task 12 — Ask
+    Scripture, client side" row above. End-to-end against a deployed backend still to be
+    exercised by the owner (the LAN server must run an image built from `92ee889` or later).
 - Phase 7 — Personal layer (auth, saved items, notes, journey) — iOS ⬜ · Android ⬜
 - Phase 8 — Monetization — iOS ⬜ · Android ⬜
 - Phase 9 — Collaboration (post-MVP) — iOS ⬜ · Android ⬜
@@ -332,10 +333,9 @@ except the spec and, later, the backend API contract.
 ## Golden path (§75)
 
 Search "David" → open David → explore graph → open Goliath → open 1 Samuel 17 → open Context →
-open related passage. Reader/entity/context routes exist as local previews; graph interaction
-and full acceptance validation are pending. Next primary implementation block: Task 9 GraphFeature,
-after owner validation of the current Context increment. Then Task 10 TimelineFeature; Task 12
-Ask Scripture/RAG remains gated by reliable retrieval and the earlier foundations (§60, §73).
+open related passage. Every route exists on both platforms and, since 2026-09-13, reads the
+backend (`VerbumAPI`) instead of fixtures; Ask Scripture is reachable from the same Search field.
+Full acceptance validation on devices against a deployed backend is the owner's.
 
 ## Owner validation for the current delivery
 
