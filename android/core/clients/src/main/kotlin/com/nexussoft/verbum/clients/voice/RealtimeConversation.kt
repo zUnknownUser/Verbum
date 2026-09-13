@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -78,6 +79,8 @@ class RealtimeConversation(
         const val ENDPOINT = "wss://api.openai.com/v1/realtime"
         /** How long after the last audio frame the microphone stays closed. */
         const val PLAYBACK_TAIL_MS = 600L
+        /** How long the server may take to accept `session.update`. */
+        const val CONFIGURATION_TIMEOUT_MS = 20_000L
         private val json = Json { ignoreUnknownKeys = true }
     }
 
@@ -88,6 +91,8 @@ class RealtimeConversation(
     @Volatile private var running = false
     private var responseActive = false
     private var speaking = false
+    /** `session.updated` arrived and the microphone is open. */
+    @Volatile private var listening = false
     /** When the companion's audio last ended locally; the microphone reopens after [PLAYBACK_TAIL_MS]. */
     @Volatile private var playbackEndedAt = 0L
     private val handledCalls = HashSet<String>()
@@ -107,11 +112,18 @@ class RealtimeConversation(
         mutex.withLock {
             running = true
             muted = false
+            listening = false
             responseActive = false
             speaking = false
             handledCalls.clear()
             pendingOutputs.clear()
             events = channel
+        }
+        // A session that is not configured within a reasonable time is a dead one (a refused
+        // update we did not recognise, a stalled socket): never "Connecting…" forever.
+        scope.launch {
+            delay(CONFIGURATION_TIMEOUT_MS)
+            if (running && !listening) finish(VoiceEvent.Failed(VoiceException.NetworkUnavailable))
         }
         receive = scope.launch {
             try {
@@ -152,6 +164,7 @@ class RealtimeConversation(
                     finish(VoiceEvent.Failed(VoiceException.MicrophoneDenied))
                     return
                 }
+                listening = true
                 emit(VoiceEvent.Listening)
                 val opening = configuration.opening
                 if (opening != null && !responseActive) {
@@ -198,9 +211,10 @@ class RealtimeConversation(
                 flushPendingOutputs()
             }
 
-            // Request-level problems (a malformed event, a response asked for while one runs) do
-            // not end the session; the socket closing does. Nothing is shown — nothing to do.
-            "error" -> Unit
+            // Request-level problems (a malformed event, a response asked for while one runs) do not
+            // end a running session. Before the session is configured, though, an error means our
+            // `session.update` was refused and `session.updated` will never come: fail, don't hang.
+            "error" -> if (!listening) finish(VoiceEvent.Failed(VoiceException.Failed))
             else -> Unit
         }
     }

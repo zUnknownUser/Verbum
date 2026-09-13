@@ -43,6 +43,8 @@ public protocol VoiceAudio: Sendable {
 public actor RealtimeConversation {
     /// How long after the last audio frame the microphone stays closed.
     static let playbackTail: Duration = .milliseconds(600)
+    /// How long the server may take to accept `session.update`.
+    static let configurationTimeout: Duration = .seconds(20)
     public static let endpoint = URL(string: "wss://api.openai.com/v1/realtime")!
 
     private let transport: RealtimeTransport
@@ -55,6 +57,8 @@ public actor RealtimeConversation {
     private var handledCalls = Set<String>()
     private var pendingOutputs: [(callID: String, output: String)] = []
     private var speaking = false
+    /// `session.updated` arrived and the microphone is open.
+    private var listening = false
     /// When the companion's audio last ended locally; the microphone reopens after `playbackTail`.
     private var playbackEndedAt: ContinuousClock.Instant?
 
@@ -78,12 +82,19 @@ public actor RealtimeConversation {
 
         running = true
         muted = false
+        listening = false
         responseActive = false
         handledCalls = []
         pendingOutputs = []
         let (stream, continuation) = AsyncStream.makeStream(of: VoiceEvent.self)
         self.continuation = continuation
 
+        // A session that is not configured within a reasonable time is a dead one
+        // (a refused update we did not recognise, a stalled socket): never "Connecting…" forever.
+        Task { [weak self] in
+            try? await Task.sleep(for: Self.configurationTimeout)
+            await self?.failIfNotListening()
+        }
         receiveTask = Task { [weak self] in
             do {
                 for try await frame in frames {
@@ -127,6 +138,7 @@ public actor RealtimeConversation {
                 await finish(with: .failed(.microphoneDenied))
                 return
             }
+            listening = true
             continuation?.yield(.listening)
             if let opening = configuration.opening, !responseActive {
                 responseActive = true
@@ -179,10 +191,15 @@ public actor RealtimeConversation {
             await flushPendingOutputs()
 
         case "error":
-            // The API reports request-level problems here (a malformed event, a
-            // response asked for while one runs). They do not end the session;
-            // the socket closing does. Nothing is shown — there is nothing the user can do.
-            break
+            // Request-level problems (a malformed event, a response asked for while
+            // one runs) do not end a running session. Before the session is
+            // configured, though, an error means our `session.update` was refused
+            // and `session.updated` will never come: fail instead of connecting forever.
+            let detail = ((event["error"] as? [String: Any])?["message"] as? String) ?? "unknown"
+            if !listening {
+                print("[voice] session.update refused: \(detail)")
+                await finish(with: .failed(.failed))
+            }
 
         default:
             break
@@ -248,7 +265,9 @@ public actor RealtimeConversation {
                         // Half-duplex: the microphone is closed while the companion speaks, so
                         // interruptions cannot be heard anyway; a higher threshold and a longer
                         // silence keep room noise from becoming a "question".
-                        "turn_detection": ["type": "server_vad", "threshold": 0.65, "prefix_padding_ms": 300, "silence_duration_ms": 800, "create_response": true, "interrupt_response": false],
+                        // `threshold` as a Decimal: JSONSerialization writes a Double as
+                        // 0.65000000000000002 and the API rejects it ("max decimal places exceeded").
+                        "turn_detection": ["type": "server_vad", "threshold": NSDecimalNumber(string: "0.65"), "prefix_padding_ms": 300, "silence_duration_ms": 800, "create_response": true, "interrupt_response": false],
                         "transcription": ["model": "gpt-4o-mini-transcribe", "language": configuration.language],
                     ],
                     "output": [
@@ -263,6 +282,11 @@ public actor RealtimeConversation {
                 "tool_choice": configuration.tools.isEmpty ? "none" : "auto",
             ],
         ]
+    }
+
+    private func failIfNotListening() async {
+        guard running, !listening else { return }
+        await finish(with: .failed(.networkUnavailable))
     }
 
     private func finish(with event: VoiceEvent) async {

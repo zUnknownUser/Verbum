@@ -245,12 +245,29 @@ import Testing
         await conversation.stop()
     }
 
+    /// The API refused `threshold: 0.65` as "max decimal places exceeded" because
+    /// JSONSerialization wrote the Double as 0.65000000000000002; the sheet then
+    /// sat on "Connecting…" forever. Pin the wire text and the failure path.
+    @Test func thresholdSerialisesExactlyAndARefusedUpdateFailsInsteadOfHanging() async throws {
+        let data = try JSONSerialization.data(withJSONObject: RealtimeConversation.sessionUpdate(VoiceConfiguration(instructions: "x")))
+        #expect(String(decoding: data, as: UTF8.self).contains(#""threshold":0.65,"#) || String(decoding: data, as: UTF8.self).contains(#""threshold":0.65}"#))
+
+        let transport = FakeTransport(), audio = FakeAudio()
+        let conversation = RealtimeConversation(transport: transport, audio: audio)
+        let stream = try await conversation.start(session: RealtimeSession(clientSecret: "ek_test", expiresAt: 0, model: "gpt-realtime"), configuration: VoiceConfiguration(instructions: "x")) { _, _ in "{}" }
+        var iterator = stream.makeAsyncIterator()
+        transport.receive(["type": "session.created"])
+        transport.receive(["type": "error", "error": ["type": "invalid_request_error", "message": "Invalid 'session.audio.input.turn_detection.threshold'"]])
+        #expect(await iterator.next() == .failed(.failed))
+        #expect(transport.closed)
+    }
+
     @Test func sessionAsksForNoInterruptionsAndAStricterVAD() {
         let update = RealtimeConversation.sessionUpdate(VoiceConfiguration(instructions: "x"))
         let input = ((update["session"] as? [String: Any])?["audio"] as? [String: Any])?["input"] as? [String: Any]
         let vad = input?["turn_detection"] as? [String: Any]
         #expect(vad?["interrupt_response"] as? Bool == false)
-        #expect((vad?["threshold"] as? Double ?? 0) >= 0.6)
+        #expect(((vad?["threshold"] as? NSNumber)?.doubleValue ?? 0) >= 0.6)
         #expect((vad?["silence_duration_ms"] as? Int ?? 0) >= 700)
     }
 }

@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.json.Json
@@ -115,6 +116,21 @@ class RealtimeConversationTest {
         conversation.stop(); advanceUntilIdle(); collector.cancel()
     }
 
+    /** A refused `session.update` (an `error` before `session.updated`) fails the session instead of "Connecting…" forever; the threshold goes on the wire as exactly 0.65. */
+    @Test
+    fun aRefusedUpdateFailsInsteadOfHanging() = runConversation { transport, _, conversation ->
+        assertTrue(conversation.sessionUpdate(VoiceConfiguration("x")).toString().contains("\"threshold\":0.65"))
+        val events = Channel<VoiceEvent>(Channel.UNLIMITED)
+        val flow = conversation.start(session, VoiceConfiguration("x")) { _, _ -> "{}" }
+        val collector = launch(kotlinx.coroutines.Dispatchers.Unconfined) { flow.collect { events.send(it) } }
+        transport.receive("""{"type":"session.created"}""")
+        transport.receive("""{"type":"error","error":{"type":"invalid_request_error","message":"Invalid 'session.audio.input.turn_detection.threshold'"}}""")
+        advanceUntilIdle()
+        assertEquals(VoiceEvent.Failed(VoiceException.Failed), events.next())
+        assertTrue(transport.closed)
+        collector.cancel()
+    }
+
     @Test
     fun sessionAsksForNoInterruptionsAndAStricterVad() = runConversation { _, _, conversation ->
         val input = conversation.sessionUpdate(VoiceConfiguration("x"))["session"]!!.jsonObject["audio"]!!.jsonObject["input"]!!.jsonObject
@@ -132,7 +148,7 @@ class RealtimeConversationTest {
         assertEquals("wss://api.openai.com/v1/realtime?model=gpt-realtime", transport.connected)
 
         transport.receive("""{"type":"session.created"}""")
-        advanceUntilIdle()
+        testScheduler.runCurrent() // not advanceUntilIdle: that would also run the 20 s configuration watchdog
         val update = transport.sent.first()
         assertEquals("session.update", update["type"]!!.jsonPrimitive.content)
         val sessionBody = update["session"]!!.jsonObject
