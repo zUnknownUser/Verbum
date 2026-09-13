@@ -70,12 +70,24 @@ class SearchFeatureTest {
         store.finish()
     }
 
+    /** §21.3, §52: when the content service can't be reached the field still answers with what the device knows, and says so. */
     @Test
-    fun clientFailureBecomesEmptyResults() = runTest {
+    fun clientFailureBecomesDeviceOnlyResults() = runTest {
         val store = store(client = SearchClient { throw IllegalStateException("boom") })
         store.send(Action.QueryChanged("zzz")) { it.copy(query = "zzz", phase = Phase.SEARCHING) }
-        store.receive(Action.SearchResponded(SearchResponse.empty("zzz"))) { it.copy(phase = Phase.IDLE, results = SearchResponse.empty("zzz")) }
+        store.receive(Action.SearchUnreachable(SearchResponse.empty("zzz"))) { it.copy(phase = Phase.IDLE, results = SearchResponse.empty("zzz"), isOffline = true) }
         assertTrue(store.state.showsNoResults)
+        store.finish()
+    }
+
+    @Test
+    fun unreachableServiceStillParsesAReferenceAndALaterAnswerClearsTheNotice() = runTest {
+        val store = store(client = SearchClient { throw IllegalStateException("boom") })
+        store.send(Action.QueryChanged("Jn 3:16")) { it.copy(query = "Jn 3:16", phase = Phase.SEARCHING) }
+        val local = SearchResponse("Jn 3:16", listOf(PassageReference("John", 3, 16..16)), emptyList(), emptyList())
+        store.receive(Action.SearchUnreachable(local)) { it.copy(phase = Phase.IDLE, results = local, isOffline = true) }
+        store.send(Action.SearchResponded(response("Jn 3:16"))) { it.copy(results = response("Jn 3:16"), isOffline = false) }
+        store.send(Action.QueryChanged("")) { it.copy(query = "", results = null) }
         store.finish()
     }
 

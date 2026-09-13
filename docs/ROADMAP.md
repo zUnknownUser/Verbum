@@ -1,5 +1,14 @@
 # Roadmap
 
+## Audio safety override — 2026-09-13
+
+- iOS / Android: native PT-BR synthesis disabled after an owner-reported crash;
+  live audio explicitly uses English BSB recordings until a Portuguese provider is validated.
+- Mini player labels the audio language and no longer displays native-speech preparation errors.
+  Portuguese Scripture text is unchanged. Native speech entries below are historical, not active.
+- No local Verbum crash report was found during this check; exact crash cause is unconfirmed.
+  Device playback validation remains with the owner.
+
 Execution order from PRODUCT.md §60 and §79. One line per step, one mark per platform
 (`iOS` = `Verbum.xcodeproj` + `VerbumKit`, `Android` = `android/`). A mark is ✅ only when that
 platform builds, its tests pass, and the definition of done in PRODUCT.md is met.
@@ -191,13 +200,15 @@ except the spec and, later, the backend API contract.
 
 ## Later
 
-- Task 11 — Replace fixtures with backend API — **Scripture done** iOS ✅ · Android ✅ (2026-09-12); graph/search/context/timeline **iOS ✅ (2026-09-13)** · Android ⬜
-  - **Apps go live, iOS (2026-09-13):** `VerbumAPI` in `Clients/VerbumAPI` — one function per route,
-    the `.live` values of `GraphClient`/`SearchClient`/`ContextClient`/`TimelineClient` over it;
+- Task 11 — Replace fixtures with backend API — **Scripture done** iOS ✅ · Android ✅ (2026-09-12); graph/search/context/timeline **iOS ✅ · Android ✅ (2026-09-13)**
+  - **Apps go live (2026-09-13):** `VerbumAPI` in `Clients/VerbumAPI` (iOS) / `VerbumApi` in
+    `:core:clients/api` (Android) — one function per route,
+    the live values of `GraphClient`/`SearchClient`/`ContextClient`/`TimelineClient` over it;
     typed errors from `Problem` codes (§52); on-disk cache with stale-if-error (§39); contract tests
     decoding every `api/examples/*.json` to the fixture clients' answers. Search degrades to
     device-only results with an "unreachable" line instead of an empty list. Base URL per
-    configuration (`VERBUM_API_BASE_URL`), ATS opened only in Debug. Design in ARCHITECTURE.md.
+    configuration (`VERBUM_API_BASE_URL`: an Xcode build setting / a Gradle property), plain HTTP
+    allowed only in Debug (ATS / `usesCleartextTraffic`). Design in ARCHITECTURE.md.
   - **Contract first (2026-09-12):** `api/openapi.yaml` — the §45 routes plus `/v1/daily-verse`,
     written from the client interfaces the apps already have — and `api/examples/` generated from
     the fixtures (`api/scripts/gen-examples.py`), to be the inputs of contract tests on both apps.

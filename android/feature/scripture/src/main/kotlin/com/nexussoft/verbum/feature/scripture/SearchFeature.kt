@@ -1,6 +1,7 @@
 package com.nexussoft.verbum.feature.scripture
 
 import com.nexussoft.verbum.clients.SearchClient
+import com.nexussoft.verbum.clients.api.LocalSearch
 import com.nexussoft.verbum.common.PassageReferenceParser
 import com.nexussoft.verbum.common.arch.Effect
 import com.nexussoft.verbum.common.arch.Reducer
@@ -12,6 +13,7 @@ import com.nexussoft.verbum.models.BibleEntity
 import com.nexussoft.verbum.models.BookLanguage
 import com.nexussoft.verbum.models.PassageReference
 import com.nexussoft.verbum.models.SearchResponse
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 
 /**
@@ -23,6 +25,11 @@ object SearchFeature {
         val query: String = "",
         val phase: Phase = Phase.IDLE,
         val results: SearchResponse? = null,
+        /**
+         * The last search could not reach the content service; [results] is what this device
+         * knows on its own (a reference, a book) — never shown as if it were the full answer (§52).
+         */
+        val isOffline: Boolean = false,
     ) {
         /** `true` while the user has typed something that produced nothing. */
         val showsNoResults: Boolean
@@ -34,6 +41,8 @@ object SearchFeature {
     sealed interface Action {
         data class QueryChanged(val query: String) : Action
         data class SearchResponded(val response: SearchResponse) : Action
+        /** The service could not be reached; carries the device-only results. */
+        data class SearchUnreachable(val response: SearchResponse) : Action
         data object Submitted : Action
         data class PassageTapped(val reference: PassageReference) : Action
         data class BookTapped(val book: BibleBook) : Action
@@ -61,14 +70,20 @@ object SearchFeature {
                 val query = action.query.trim()
                 if (query.isEmpty()) {
                     // Cancels any search in flight by superseding its id with a no-op.
-                    state.copy(query = action.query, phase = Phase.IDLE, results = null)
+                    state.copy(query = action.query, phase = Phase.IDLE, results = null, isOffline = false)
                         .with(runEffect(id = SearchId, cancelInFlight = true) {})
                 } else {
                     state.copy(query = action.query, phase = Phase.SEARCHING).with(
                         runEffect(id = SearchId, cancelInFlight = true) { send ->
                             delay(debounceMs)
-                            val response = runCatching { searchClient.search(query) }.getOrElse { SearchResponse.empty(query) }
-                            send(Action.SearchResponded(response))
+                            try {
+                                send(Action.SearchResponded(searchClient.search(query)))
+                            } catch (e: CancellationException) {
+                                throw e
+                            } catch (e: Exception) {
+                                // §21.3, §52: degrade to what the device knows, and say so.
+                                send(Action.SearchUnreachable(LocalSearch.of(query, language())))
+                            }
                         },
                     )
                 }
@@ -77,7 +92,11 @@ object SearchFeature {
             is Action.SearchResponded ->
                 // Ignore answers to a query the user has since moved past.
                 if (action.response.query != state.query.trim()) state.only()
-                else state.copy(results = action.response, phase = Phase.IDLE).only()
+                else state.copy(results = action.response, phase = Phase.IDLE, isOffline = false).only()
+
+            is Action.SearchUnreachable ->
+                if (action.response.query != state.query.trim()) state.only()
+                else state.copy(results = action.response, phase = Phase.IDLE, isOffline = true).only()
 
             Action.Submitted -> {
                 val reference = PassageReferenceParser.parse(state.query, language()).referenceOrNull

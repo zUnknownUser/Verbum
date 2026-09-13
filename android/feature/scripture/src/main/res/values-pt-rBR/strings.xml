@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="audio_in_english">Áudio em inglês</string>
     <string name="arrival_title">Como você está chegando hoje?</string>
     <string name="arrival_subtitle">Um ponto de partida para explorar a Bíblia, no seu ritmo.</string>
     <string name="arrival_privacy">Escolha um ponto de partida, no seu ritmo. Essa escolha é opcional e não fica salva em um perfil.</string>
@@ -64,6 +65,7 @@
     <string name="search_prompt">Referência, livro, pessoa, lugar, tema</string>
     <string name="clear">Limpar</string>
     <string name="passage">Passagem</string>
+    <string name="passages">Passagens</string>
     <string name="open_in_reader">Abrir no leitor</string>
     <string name="people">Pessoas</string>
     <string name="places">Lugares</string>
@@ -71,7 +73,9 @@
     <string name="events">Eventos</string>
     <string name="try_label">Experimente</string>
     <string name="nothing_for">Nada para “%1$s”</string>
-    <string name="search_explainer">A busca entende referências como Jo 3:16, nomes de livros e um primeiro conjunto de pessoas, lugares e temas. A busca por texto livre na Escritura chega com o serviço de conteúdo.</string>
+    <string name="search_explainer">A busca entende referências como Jo 3:16, nomes de livros, pessoas, lugares, temas — e perguntas nas suas palavras, que procuram no texto da Escritura.</string>
+    <string name="search_explainer_offline">Sem o serviço de conteúdo, a busca entende referências como Jo 3:16 e nomes de livros.</string>
+    <string name="search_offline_notice">O Verbum não pôde ser alcançado — mostrando o que este aparelho sabe.</string>
     <string name="chapters_and_division">%1$d capítulos · %2$s</string>
     <string name="back_to_books">Voltar aos livros</string>
     <string name="chapter_n">Capítulo %1$d</string>

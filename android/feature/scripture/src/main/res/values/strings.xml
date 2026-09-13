@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="audio_in_english">Audio in English</string>
     <string name="arrival_title">How are you arriving today?</string>
     <string name="arrival_subtitle">A starting point for exploring Scripture, at your own pace.</string>
     <string name="arrival_privacy">Choose a starting point, at your own pace. This choice is optional and is not saved to a profile.</string>
@@ -64,6 +65,7 @@
     <string name="search_prompt">Reference, book, person, place, theme</string>
     <string name="clear">Clear</string>
     <string name="passage">Passage</string>
+    <string name="passages">Passages</string>
     <string name="open_in_reader">Open in the reader</string>
     <string name="people">People</string>
     <string name="places">Places</string>
@@ -71,7 +73,9 @@
     <string name="events">Events</string>
     <string name="try_label">Try</string>
     <string name="nothing_for">Nothing for “%1$s”</string>
-    <string name="search_explainer">Search understands references like Jn 3:16, book names, and a first set of people, places and themes. Free-text search of Scripture arrives with the content service.</string>
+    <string name="search_explainer">Search understands references like Jn 3:16, book names, people, places, themes — and questions in your own words, which look through the text of Scripture.</string>
+    <string name="search_explainer_offline">Without the content service, search understands references like Jn 3:16 and book names.</string>
+    <string name="search_offline_notice">Verbum can\'t be reached — showing what this device knows.</string>
     <string name="chapters_and_division">%1$d chapters · %2$s</string>
     <string name="back_to_books">Back to books</string>
     <string name="chapter_n">Chapter %1$d</string>

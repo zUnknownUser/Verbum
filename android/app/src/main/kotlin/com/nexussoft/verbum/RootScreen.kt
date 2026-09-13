@@ -3,8 +3,12 @@ package com.nexussoft.verbum
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.nexussoft.verbum.clients.fixtures.FixtureGraphClient
-import com.nexussoft.verbum.clients.fixtures.FixtureSearchClient
+import com.nexussoft.verbum.clients.api.LiveContextClient
+import com.nexussoft.verbum.clients.api.LiveGraphClient
+import com.nexussoft.verbum.clients.api.LiveSearchClient
+import com.nexussoft.verbum.clients.api.LiveTimelineClient
+import com.nexussoft.verbum.clients.api.ResponseCache
+import com.nexussoft.verbum.clients.api.VerbumApi
 import com.nexussoft.verbum.clients.helloao.ChapterCache
 import com.nexussoft.verbum.audio.Media3AudioPlayerClient
 import com.nexussoft.verbum.clients.helloao.HelloAOBibleClient
@@ -20,13 +24,15 @@ import java.io.File
 
 /**
  * The app shell (docs/PRODUCT.md §6). Dependencies are assembled here, explicitly:
- * Scripture from bible.helloao.org (cached, WEB offline fallback); fixtures for the graph until Task 11.
+ * Scripture from bible.helloao.org (cached, WEB offline fallback); everything else from the Verbum
+ * backend (`BuildConfig.VERBUM_API_BASE_URL`, cached on disk for offline re-reading).
  */
 @Composable
 fun RootScreen() {
     val context = LocalContext.current.applicationContext
     val viewModel: AppViewModel = viewModel {
         val preferences = SharedPreferencesClient(context)
+        val api = VerbumApi(BuildConfig.VERBUM_API_BASE_URL, cache = ResponseCache(File(context.cacheDir, "verbum-api")))
         val bible = LiveBibleClient(
             language = BookLanguage.current,
             remote = HelloAOBibleClient(HelloAOTranslation.id(BookLanguage.current), cache = ChapterCache(File(context.cacheDir, "scripture"))),
@@ -36,11 +42,13 @@ fun RootScreen() {
                 bibleClient = bible,
                 clipboard = AndroidClipboardClient(context),
                 preferences = preferences,
-                searchClient = FixtureSearchClient(),
-                graphClient = FixtureGraphClient,
+                searchClient = LiveSearchClient(api),
+                graphClient = LiveGraphClient(api),
+                contextClient = LiveContextClient(api),
+                timelineClient = LiveTimelineClient(api),
                 // Recordings only (BSB English, labelled, when the reading translation has none).
                 // NativeScriptureAudioClient (TTS rendered to a file) is parked until spoken audio is a live player.
-                audioClient = HelloAOScriptureAudioClient(BookLanguage.current),
+                audioClient = HelloAOScriptureAudioClient(BookLanguage.ENGLISH),
                 player = Media3AudioPlayerClient(context),
                 initialTextScale = { ReaderTextScale.fromPreference(preferences.string(ReaderTextScale.PREFERENCE_KEY)) },
                 notifications = AndroidNotificationClient(context),
