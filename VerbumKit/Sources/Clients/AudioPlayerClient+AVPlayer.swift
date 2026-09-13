@@ -68,9 +68,10 @@ final class AVPlayerEngine {
         }
     }
 
-    func load(_ url: URL) {
-        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio, policy: .longFormAudio)
-        try? AVAudioSession.sharedInstance().setActive(true)
+    func load(_ url: URL) async {
+        // Activating the session can block for a while (route changes, other apps'
+        // audio); never on the main thread.
+        await AudioSessionActivation.activate()
 
         teardownItemObservers()
         let item = AVPlayerItem(url: url)
@@ -127,7 +128,7 @@ final class AVPlayerEngine {
         teardownItemObservers()
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
         MPNowPlayingInfoCenter.default().playbackState = .stopped
-        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        AudioSessionActivation.deactivate()
     }
 
     func updateNowPlaying(_ info: NowPlayingInfo) {
@@ -191,5 +192,23 @@ final class AVPlayerEngine {
         rateObservation = nil
         if let endObserver { NotificationCenter.default.removeObserver(endObserver) }
         endObserver = nil
+    }
+}
+
+/// The shared audio session, touched off the main thread: `setActive` is
+/// synchronous and can stall the UI (AVAudioSession warns about exactly this).
+enum AudioSessionActivation {
+    static func activate() async {
+        await Task.detached(priority: .userInitiated) {
+            let session = AVAudioSession.sharedInstance()
+            try? session.setCategory(.playback, mode: .spokenAudio, policy: .longFormAudio)
+            try? session.setActive(true)
+        }.value
+    }
+
+    static func deactivate() {
+        Task.detached(priority: .utility) {
+            try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        }
     }
 }
