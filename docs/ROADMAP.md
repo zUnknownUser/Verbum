@@ -245,6 +245,14 @@ except the spec and, later, the backend API contract.
   - Owner QA on devices: echo cancellation on speaker, Bluetooth headsets, interrupting the
     companion, a tool call mid-sentence, pt-BR voice quality. The server must run with
     `OPENAI_API_KEY` for the endpoint to answer.
+- **Read-along highlighting (owner-requested, parked 2026-09-13)** — iOS ⬜ · Android ⬜
+  - Words lit as the narration reaches them; tap a word to seek; follows pause, ±15 s, scrub, rate
+    and chapter chaining (position = f(time), binary search over per-word timings, 10–20 Hz ticks
+    while highlighting only). Needs a timings table the helloao MP3s do not carry: agreed design is
+    a backend endpoint `GET /v1/audio/timings/{translation}/{book}/{chapter}/{narrator}` that
+    transcribes the recording once with `whisper-1` (word timestamps, ~US$0.006/min), aligns the
+    words to the chapter text and stores the result. pt-BR text vs English audio → per-verse
+    highlighting only. Blocks: backend → iOS → Android.
   - **Contract first (2026-09-12):** `api/openapi.yaml` — the §45 routes plus `/v1/daily-verse`,
     written from the client interfaces the apps already have — and `api/examples/` generated from
     the fixtures (`api/scripts/gen-examples.py`), to be the inputs of contract tests on both apps.
