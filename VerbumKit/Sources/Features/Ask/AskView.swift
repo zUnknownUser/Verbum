@@ -62,6 +62,11 @@ public struct AskView: View {
                 .font(Typography.scripture)
                 .lineSpacing(Typography.scriptureLineSpacing)
             confidenceLine(answer.confidence)
+            Button { store.send(.talkTapped) } label: {
+                Label(L10n.t("Go on out loud"), systemImage: "waveform.and.mic")
+                    .font(Typography.subheadline.weight(.semibold))
+            }
+            .padding(.top, Spacing.xs)
         }
         if !answer.passageReferences.isEmpty {
             section(L10n.t("Key passages")) {

@@ -50,6 +50,9 @@ public struct EntityDetailView: View {
                         store.send(.timelineTapped)
                     }
                 }
+                Row(title: L10n.t("Talk about \(page.entity.name)"), subtitle: L10n.t("Ask out loud; the companion answers from Scripture."), symbol: "waveform.and.mic") {
+                    store.send(.talkTapped)
+                }
                 if !page.passages.isEmpty {
                     section(L10n.t("Key passages")) {
                         ForEach(page.passages, id: \.self) { reference in

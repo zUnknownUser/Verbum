@@ -48,6 +48,7 @@ public struct AskFeature {
         case passageTapped(PassageReference)
         case entityTapped(BibleEntity)
         case searchInsteadTapped
+        case talkTapped
         case delegate(Delegate)
 
         @CasePathable
@@ -56,6 +57,8 @@ public struct AskFeature {
             case openEntity(BibleEntity)
             /// §21.3: "failure gracefully falls back to search results".
             case searchInstead(String)
+            /// Go on from this answer out loud.
+            case talk(question: String, ScriptureAnswer)
         }
     }
 
@@ -105,6 +108,10 @@ public struct AskFeature {
 
             case .searchInsteadTapped:
                 return .send(.delegate(.searchInstead(state.question)))
+
+            case .talkTapped:
+                guard case .answered(let page) = state.content, !page.answer.isEmpty else { return .none }
+                return .send(.delegate(.talk(question: state.question, page.answer)))
 
             case .delegate:
                 return .none

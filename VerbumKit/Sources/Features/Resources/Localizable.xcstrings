@@ -159,6 +159,16 @@
         }
       }
     },
+    "Allow the microphone in Settings, then come back.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permita o microfone em Ajustes e volte aqui."
+          }
+        }
+      }
+    },
     "Alone": {
       "localizations": {
         "pt-BR": {
@@ -230,6 +240,16 @@
         }
       }
     },
+    "Ask Scripture in writing still works from Search.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Perguntar à Escritura por escrito continua funcionando pela busca."
+          }
+        }
+      }
+    },
     "Ask anything about Scripture": {
       "localizations": {
         "pt-BR": {
@@ -240,12 +260,32 @@
         }
       }
     },
+    "Ask anything about this page — what a word means, who someone is, why it matters. The companion answers from Scripture and says which passages it is drawing on.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pergunte qualquer coisa sobre esta página — o que uma palavra significa, quem é alguém, por que importa. O companheiro responde a partir da Escritura e diz de quais passagens está partindo."
+          }
+        }
+      }
+    },
     "Ask isn't available on this server yet": {
       "localizations": {
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
             "value": "Perguntar ainda não está disponível neste servidor"
+          }
+        }
+      }
+    },
+    "Ask out loud; the companion answers from Scripture.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pergunte em voz alta; o companheiro responde a partir da Escritura."
           }
         }
       }
@@ -380,6 +420,16 @@
         }
       }
     },
+    "Close": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fechar"
+          }
+        }
+      }
+    },
     "Closes chapters": {
       "localizations": {
         "pt-BR": {
@@ -410,6 +460,16 @@
         }
       }
     },
+    "Companion": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Companheiro"
+          }
+        }
+      }
+    },
     "Connect to load this chapter. Chapters you've already read stay available.": {
       "localizations": {
         "pt-BR": {
@@ -426,6 +486,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Conectado a %@"
+          }
+        }
+      }
+    },
+    "Connecting…": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conectando…"
           }
         }
       }
@@ -642,12 +712,32 @@
         }
       }
     },
+    "End": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Encerrar"
+          }
+        }
+      }
+    },
     "End of the book": {
       "localizations": {
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
             "value": "Fim do livro"
+          }
+        }
+      }
+    },
+    "Ended": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Encerrada"
           }
         }
       }
@@ -823,6 +913,16 @@
         }
       }
     },
+    "Go on out loud": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continuar em voz alta"
+          }
+        }
+      }
+    },
     "Good afternoon": {
       "localizations": {
         "pt-BR": {
@@ -869,6 +969,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Grato"
+          }
+        }
+      }
+    },
+    "Hearing you": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvindo você"
           }
         }
       }
@@ -1003,6 +1113,16 @@
         }
       }
     },
+    "Listening": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvindo"
+          }
+        }
+      }
+    },
     "Loading": {
       "localizations": {
         "pt-BR": {
@@ -1029,6 +1149,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Carregando contexto"
+          }
+        }
+      }
+    },
+    "Looking it up in Scripture": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Procurando na Escritura"
           }
         }
       }
@@ -1060,6 +1190,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Circule entre pessoas, lugares, temas, eventos e os próprios livros."
+          }
+        }
+      }
+    },
+    "Mute": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silenciar"
+          }
+        }
+      }
+    },
+    "Muted": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mudo"
           }
         }
       }
@@ -1100,6 +1250,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sem resposta confiável"
+          }
+        }
+      }
+    },
+    "Not connected": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não conectado"
           }
         }
       }
@@ -1151,6 +1311,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Abrir %@"
+          }
+        }
+      }
+    },
+    "Open Settings": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abrir Ajustes"
           }
         }
       }
@@ -1261,6 +1431,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Passagens"
+          }
+        }
+      }
+    },
+    "Passages mentioned": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passagens mencionadas"
           }
         }
       }
@@ -1638,6 +1818,16 @@
         }
       }
     },
+    "Speaking": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Falando"
+          }
+        }
+      }
+    },
     "Stop listening": {
       "localizations": {
         "pt-BR": {
@@ -1659,6 +1849,46 @@
         }
       }
     },
+    "Talk about %@": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conversar sobre %@"
+          }
+        }
+      }
+    },
+    "Talk about this chapter": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conversar sobre este capítulo"
+          }
+        }
+      }
+    },
+    "Talking about": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conversando sobre"
+          }
+        }
+      }
+    },
+    "Talking needs a connection.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conversar precisa de conexão."
+          }
+        }
+      }
+    },
     "Text Size": {
       "localizations": {
         "pt-BR": {
@@ -1675,6 +1905,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "O cânon como uma estante, por gênero."
+          }
+        }
+      }
+    },
+    "The conversation dropped": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A conversa caiu"
           }
         }
       }
@@ -1810,6 +2050,16 @@
         }
       }
     },
+    "Unmute": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ativar som"
+          }
+        }
+      }
+    },
     "Verbum can't be reached": {
       "localizations": {
         "pt-BR": {
@@ -1826,6 +2076,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "O Verbum não pôde ser alcançado — mostrando o que este aparelho sabe."
+          }
+        }
+      }
+    },
+    "Verbum needs the microphone to talk": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O Verbum precisa do microfone para conversar"
           }
         }
       }
@@ -1856,6 +2116,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ver na linha do tempo"
+          }
+        }
+      }
+    },
+    "Voice isn't available on this server yet": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Voz ainda não está disponível neste servidor"
           }
         }
       }
@@ -1977,6 +2247,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Escrita a partir das passagens acima por um modelo de linguagem e depois verificada para que toda referência seja real. É um apoio ao estudo, não uma palavra de Deus."
+          }
+        }
+      }
+    },
+    "You": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Você"
           }
         }
       }
