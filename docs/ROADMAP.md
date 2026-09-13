@@ -202,9 +202,95 @@ except the spec and, later, the backend API contract.
     `internal/{domain,store,httpapi,dailyverse}`; the in-memory store serves `db/seed/fixtures.json`
     and `contract_test.go` proves every `api/examples/*.json` byte-for-byte; Postgres schema in
     `db/migrations/`; Dockerfile (distroless), compose for a local DB, README with the next steps.
-  - Next: (a) Postgres store (`internal/store/postgres`) + `cmd/seed`, same contract tests;
+  - **Backend-only block 1 (2026-09-12): PostgreSQL complete and tested.** `internal/store/postgres`
+    implements `Store`; `VERBUM_DATABASE_URL` selects it; `cmd/seed` atomically imports the existing
+    development fixtures into empty content tables. Migration 0002 preserves editorial ordering.
+    Seven API examples, fixture-wide store parity, missing content, cancellation and seed rollback
+    validated against PostgreSQL 17 with Go 1.24 in Docker. No app code/builds/tests in this block.
+    Backend/RAG documentation map and remaining checkpoints: `docs/BACKEND_RAG.md`.
+  - Next: (a) deployment configuration for the backend;
     (b) `.live` clients + contract tests on iOS and Android; (c) daily verse from the server;
     (d) editorial pipeline and the real content load (§68).
+  - **Backend-only block 2 (2026-09-12): initial editorial pipeline implemented.** Python 3.12,
+    uv lockfile, JSON import/normalization, source-backed review queue and per-item human decisions,
+    content-bound approval checks, atomic PostgreSQL publication and audit (migration 0003).
+    Twenty Python tests include Python publication → Go HTTP examples in isolated schemas.
+    The real local queue remains pending; AI extraction, embeddings and real editorial coverage
+    are still pending. Owner chose continued local implementation before external deployment.
+  - **Backend-only block 3 (2026-09-12): AI-assisted extraction stage.** `pipeline/extract.py`
+    implements the §32 entity/relationship extraction stage: raw source text + editor-supplied
+    `Source`/`Provenance` (license stays a human decision, §34) go through OpenAI (JSON mode) and
+    come back as an ordinary `editorial` Bundle — no new trust path, the same strict Pydantic
+    validation and human review/publish gate as any hand-written batch. `run.ps1` decrypts the
+    DPAPI-stored key only for the `extract` command, passes it to the container by env var name
+    only, and clears it after. 28 Python tests (8 new) pass with a fake OpenAI client; no live
+    OpenAI call has been made and the key's validity remains unexercised. Timeline-event
+    extraction, real source text, and embeddings/hybrid retrieval remain for later blocks.
+  - **Backend-only block 4 (2026-09-12): Scripture text + embeddings for retrieval.** Owner
+    tested the OpenAI key with a real call (negligible cost) and approved `text-embedding-3-large`.
+    Source: WEB (public domain, already bundled in the repo) — English only; PT-BR stays out
+    until a real license is confirmed (§34). `pipeline/verbum_pipeline/scripture.py` loads
+    verbatim verse text + embeddings into a new `scripture_verses` table (migration
+    `0004_scripture_search.sql`, pgvector; dev Postgres image switched to `pgvector/pgvector:pg17`).
+    Deliberately outside the editorial review flow (no interpretive claim to review, same
+    reasoning as `cmd/seed`). pgvector's HNSW index caps at 2000 dimensions, so embeddings are
+    requested at 1536 (OpenAI's `dimensions` parameter) rather than 3-large's native 3072. Ran
+    for real: all 31,098 WEB verses embedded and loaded (a few cents). 37 Python tests (9 new);
+    full Go suite re-verified against migration 0004, no regressions. No Go code reads this table
+    yet — the hybrid-search query layer into `/v1/search` is the next block.
+  - **Backend-only block 5 (2026-09-12, owner-requested, outside the original plan): OpenAI
+    Realtime session broker.** `POST /v1/realtime/session` (`internal/realtime`) mints a
+    short-lived OpenAI Realtime client secret so a future app feature can connect directly to
+    OpenAI for voice without ever holding the real key. Not part of the read-only content
+    contract — it doesn't touch `store.Store`. Runs continuously off `OPENAI_API_KEY` (unlike
+    the pipeline's transient per-command use); absent key degrades to `503
+    realtime_unavailable`, not a startup failure. Verified with a real call (genuine `ek_...`
+    secret returned). 8 new Go tests (fake broker; no live calls in CI). Server-side plumbing
+    only — no client has been built or tested against it yet.
+  - **Backend-only block 6 (2026-09-12): hybrid search query layer.** `Store.SearchPassages`
+    blends Postgres full-text search with pgvector cosine similarity over `scripture_verses`
+    (block 4's data); `internal/embeddings` embeds the query at request time. `/v1/search`'s
+    `passages` field, always empty before, now returns real hits — same response shape. Found
+    and fixed a real bug via the integration tests: pgvector's `<=>` operator needs
+    `OPERATOR(public.<=>)` schema-qualification, not just the `vector` type, wherever
+    `search_path` excludes `public` (every isolated test schema). Degrades to lexical-only
+    search, not a failed request, when `OPENAI_API_KEY` is absent or the embedding call fails.
+    Verified with real queries against the full 31,098-verse corpus, including a natural-language
+    question sharing no words with the Job chapters it correctly surfaced. Ranking is a
+    documented-as-tunable heuristic (sum of both channels' scores), not a calibrated relevance
+    model; direct-reference priority (§28) still relies on the apps' on-device parser.
+  - **Backend-only block 7 (2026-09-13): Task 12 — Ask Scripture backend.** `POST /v1/ask`
+    (`internal/ask`, `internal/synthesis`) returns exactly the §30 response contract. The model
+    never names a Bible reference itself — it only picks indexes into evidence `internal/ask`
+    already retrieved via block 6's hybrid search and confirmed has real text; anything
+    out-of-range is silently dropped, and an answer citing nothing verifiable is replaced with
+    the same empty/low-confidence fallback used when retrieval finds nothing (§73: no generation
+    before reliable retrieval). Verified with real questions: a grounded answer citing Job 2:7
+    for "why did job suffer", an honest empty fallback for an off-topic question, and correct
+    `interpretiveVariance: true` on a genuinely disputed question (universal salvation).
+    Real-testing finding: the §31 professional-help guardrail was **not reliably followed by
+    prompting alone** — a direct "I feel hopeless and depressed" question got a purely
+    devotional answer twice, even after strengthening the prompt. Fixed with a second,
+    deterministic layer (`internal/ask/safety.go`): a fixed, non-generated note is appended
+    whenever the question matches a conservative keyword list, unless the model's own answer
+    already covers it. This floor has not had a broader safety review beyond the cases tested
+    here. `entityReferences` is always empty this increment (no entity-linking yet); PT-BR stays
+    blocked on the same license gap as block 4; `VERBUM_ASK_MODEL` (default `gpt-4o-mini`)
+    controls the synthesis model independently of the pipeline's extraction model.
+  - **Backend-only block 8 (2026-09-13): direct-reference search, entity linking, observability.**
+    `internal/reference.ParseVerse` gives `/v1/search` §28's "reference wins outright" for the
+    API's own book-name/OSIS-id vocabulary (narrower than the apps' parser on purpose) — a
+    verified hit skips hybrid retrieval and its embedding call entirely. `Store.EntitiesForPassages`
+    (`entity_key_passages`) links Ask citations to the entity graph, verified end-to-end ("how
+    did David defeat Goliath" → linked to the real fixture David/Goliath/Saul/Elah/faith
+    entities); a linking failure degrades to an empty list, never fails the answer. Observability
+    (§54) scoped down from OpenTelemetry to structured JSON logs + a per-request correlation id
+    (`internal/reqid`) — no tracing backend has been chosen yet, so spans/exporters would be an
+    unrequested new dependency; latency for embedding/retrieval/synthesis and citation/reference
+    failures are logged and correlate by id today, with a documented migration path to real otel
+    spans later. Owner feedback captured but not yet acted on: Ask's professional-help note
+    should end up grounded in what the answer says, not triggered by matching the question
+    against a keyword list — revisit `internal/ask/safety.go` with the owner before extending it.
   - `BibleClient.live`: bible.helloao.org (free, keyless, open-licensed; static JSON with
     headings, paragraphs, poetry). BSB for English, Bíblia Livre for Portuguese, by device
     language. Chapters cached on disk; the bundled public-domain WEB (`web.tsv`, all 1,189
@@ -212,6 +298,8 @@ except the spec and, later, the backend API contract.
   - Not yet surfaced from helloao: section headings, paragraph breaks, footnotes, audio links —
     the model has no fields for them yet. Bible Brain dropped: keyed, unclear commercial terms.
 - Task 12 — Ask Scripture (only after Scripture, entities, context and search work — §60) — iOS ⬜ · Android ⬜
+  - **Backend done (2026-09-13): `POST /v1/ask`** — see backend-only block 7 below. This is the
+    server endpoint only; no app screen calls it yet, so the row above stays ⬜ until a client does.
 - Phase 7 — Personal layer (auth, saved items, notes, journey) — iOS ⬜ · Android ⬜
 - Phase 8 — Monetization — iOS ⬜ · Android ⬜
 - Phase 9 — Collaboration (post-MVP) — iOS ⬜ · Android ⬜

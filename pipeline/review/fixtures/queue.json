@@ -1,0 +1,3497 @@
+{
+  "bundleHash": "66ef38232c84d46e0444dcd070662ec198d6980c2e9dfadedab41fe51847b17a",
+  "kind": "fixture",
+  "sources": [
+    {
+      "id": "fixture.source.web",
+      "citation": "World English Bible (public domain) — the passages cited",
+      "url": "https://worldenglish.bible"
+    },
+    {
+      "id": "fixture.source.editorial",
+      "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+      "url": null
+    }
+  ],
+  "provenance": {},
+  "items": [
+    {
+      "key": "sources:fixture.source.web",
+      "proposal": {
+        "id": "fixture.source.web",
+        "citation": "World English Bible (public domain) — the passages cited",
+        "url": "https://worldenglish.bible"
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "sources:fixture.source.editorial",
+      "proposal": {
+        "id": "fixture.source.editorial",
+        "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+        "url": null
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.person.jesus",
+      "proposal": {
+        "id": "fixture.person.jesus",
+        "type": "person",
+        "name": "Jesus",
+        "summary": "Central figure of the New Testament."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.person.paul",
+      "proposal": {
+        "id": "fixture.person.paul",
+        "type": "person",
+        "name": "Paul",
+        "summary": "Apostle; author of many New Testament letters."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.person.peter",
+      "proposal": {
+        "id": "fixture.person.peter",
+        "type": "person",
+        "name": "Peter",
+        "summary": "Disciple of Jesus; leader among the apostles."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.person.abraham",
+      "proposal": {
+        "id": "fixture.person.abraham",
+        "type": "person",
+        "name": "Abraham",
+        "summary": "Patriarch; the covenant with God begins with him."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.person.moses",
+      "proposal": {
+        "id": "fixture.person.moses",
+        "type": "person",
+        "name": "Moses",
+        "summary": "Led Israel out of Egypt; received the Law."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.person.david",
+      "proposal": {
+        "id": "fixture.person.david",
+        "type": "person",
+        "name": "David",
+        "summary": "King of Israel; associated with many Psalms."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.person.solomon",
+      "proposal": {
+        "id": "fixture.person.solomon",
+        "type": "person",
+        "name": "Solomon",
+        "summary": "King of Israel; built the first temple."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.person.saul",
+      "proposal": {
+        "id": "fixture.person.saul",
+        "type": "person",
+        "name": "Saul",
+        "summary": "First king of Israel."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.person.mary",
+      "proposal": {
+        "id": "fixture.person.mary",
+        "type": "person",
+        "name": "Mary",
+        "summary": "Mother of Jesus."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.person.john",
+      "proposal": {
+        "id": "fixture.person.john",
+        "type": "person",
+        "name": "John",
+        "summary": "Disciple of Jesus; traditionally linked to the Gospel of John."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.person.goliath",
+      "proposal": {
+        "id": "fixture.person.goliath",
+        "type": "person",
+        "name": "Goliath",
+        "summary": "Philistine champion from Gath, defeated by David."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.person.samuel",
+      "proposal": {
+        "id": "fixture.person.samuel",
+        "type": "person",
+        "name": "Samuel",
+        "summary": "Prophet and judge; anointed Saul and David."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.person.bathsheba",
+      "proposal": {
+        "id": "fixture.person.bathsheba",
+        "type": "person",
+        "name": "Bathsheba",
+        "summary": "Wife of Uriah, then of David; mother of Solomon."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.place.jerusalem",
+      "proposal": {
+        "id": "fixture.place.jerusalem",
+        "type": "place",
+        "name": "Jerusalem",
+        "summary": "City of David; site of the temple."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.place.bethlehem",
+      "proposal": {
+        "id": "fixture.place.bethlehem",
+        "type": "place",
+        "name": "Bethlehem",
+        "summary": "Birthplace of David and of Jesus."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.place.nazareth",
+      "proposal": {
+        "id": "fixture.place.nazareth",
+        "type": "place",
+        "name": "Nazareth",
+        "summary": "Town in Galilee where Jesus grew up."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.place.galilee",
+      "proposal": {
+        "id": "fixture.place.galilee",
+        "type": "place",
+        "name": "Galilee",
+        "summary": "Northern region; setting of much of Jesus' ministry."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.place.rome",
+      "proposal": {
+        "id": "fixture.place.rome",
+        "type": "place",
+        "name": "Rome",
+        "summary": "Capital of the empire; destination of Paul's letter to the Romans."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.place.corinth",
+      "proposal": {
+        "id": "fixture.place.corinth",
+        "type": "place",
+        "name": "Corinth",
+        "summary": "Greek city; recipient of two of Paul's letters."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.place.ephesus",
+      "proposal": {
+        "id": "fixture.place.ephesus",
+        "type": "place",
+        "name": "Ephesus",
+        "summary": "City in Asia Minor; recipient of Paul's letter to the Ephesians."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.place.babylon",
+      "proposal": {
+        "id": "fixture.place.babylon",
+        "type": "place",
+        "name": "Babylon",
+        "summary": "Empire and city; place of Judah's exile."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.place.egypt",
+      "proposal": {
+        "id": "fixture.place.egypt",
+        "type": "place",
+        "name": "Egypt",
+        "summary": "Where Israel was enslaved before the Exodus."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.place.elah",
+      "proposal": {
+        "id": "fixture.place.elah",
+        "type": "place",
+        "name": "Valley of Elah",
+        "summary": "Where Israel and the Philistines faced each other in 1 Samuel 17."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.theme.faith",
+      "proposal": {
+        "id": "fixture.theme.faith",
+        "type": "theme",
+        "name": "Faith",
+        "summary": "Trust in God; a recurring theme across both testaments."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.theme.grace",
+      "proposal": {
+        "id": "fixture.theme.grace",
+        "type": "theme",
+        "name": "Grace",
+        "summary": "Unearned favour; central in Paul's letters."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.theme.forgiveness",
+      "proposal": {
+        "id": "fixture.theme.forgiveness",
+        "type": "theme",
+        "name": "Forgiveness",
+        "summary": "Release from wrongdoing, divine and human."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.theme.love",
+      "proposal": {
+        "id": "fixture.theme.love",
+        "type": "theme",
+        "name": "Love",
+        "summary": "Of God, and for neighbour; the greatest commandments."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.theme.anxiety",
+      "proposal": {
+        "id": "fixture.theme.anxiety",
+        "type": "theme",
+        "name": "Anxiety",
+        "summary": "Worry and its answer; e.g. Matthew 6:25–34."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.theme.wisdom",
+      "proposal": {
+        "id": "fixture.theme.wisdom",
+        "type": "theme",
+        "name": "Wisdom",
+        "summary": "Skill in living well; Proverbs, Job, Ecclesiastes."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.theme.justice",
+      "proposal": {
+        "id": "fixture.theme.justice",
+        "type": "theme",
+        "name": "Justice",
+        "summary": "Right dealing, especially toward the vulnerable."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.theme.prayer",
+      "proposal": {
+        "id": "fixture.theme.prayer",
+        "type": "theme",
+        "name": "Prayer",
+        "summary": "Speaking with God; Psalms, the Lord's Prayer."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.theme.money",
+      "proposal": {
+        "id": "fixture.theme.money",
+        "type": "theme",
+        "name": "Money",
+        "summary": "Wealth, generosity and its dangers."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.theme.suffering",
+      "proposal": {
+        "id": "fixture.theme.suffering",
+        "type": "theme",
+        "name": "Suffering",
+        "summary": "Pain and its meaning; Job, Lamentations, the Passion."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.event.david-anointed",
+      "proposal": {
+        "id": "fixture.event.david-anointed",
+        "type": "event",
+        "name": "Anointing of David",
+        "summary": "Samuel anoints David in Bethlehem while Saul is still king."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.event.david-goliath",
+      "proposal": {
+        "id": "fixture.event.david-goliath",
+        "type": "event",
+        "name": "David and Goliath",
+        "summary": "David defeats the Philistine champion in the Valley of Elah."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.event.david-takes-jerusalem",
+      "proposal": {
+        "id": "fixture.event.david-takes-jerusalem",
+        "type": "event",
+        "name": "David takes Jerusalem",
+        "summary": "David captures the Jebusite stronghold and makes it his capital."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:fixture.event.exodus",
+      "proposal": {
+        "id": "fixture.event.exodus",
+        "type": "event",
+        "name": "The Exodus",
+        "summary": "Israel leaves Egypt under Moses."
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:passage.1Sam.16",
+      "proposal": {
+        "id": "passage.1Sam.16",
+        "type": "passage",
+        "name": "1 Samuel 16",
+        "summary": null
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:passage.1Sam.17",
+      "proposal": {
+        "id": "passage.1Sam.17",
+        "type": "passage",
+        "name": "1 Samuel 17",
+        "summary": null
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:passage.2Sam.5",
+      "proposal": {
+        "id": "passage.2Sam.5",
+        "type": "passage",
+        "name": "2 Samuel 5",
+        "summary": null
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:passage.Ps.23",
+      "proposal": {
+        "id": "passage.Ps.23",
+        "type": "passage",
+        "name": "Psalms 23",
+        "summary": null
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:passage.Ps.51",
+      "proposal": {
+        "id": "passage.Ps.51",
+        "type": "passage",
+        "name": "Psalms 51",
+        "summary": null
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:passage.John.3",
+      "proposal": {
+        "id": "passage.John.3",
+        "type": "passage",
+        "name": "John 3",
+        "summary": null
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:passage.Matt.6",
+      "proposal": {
+        "id": "passage.Matt.6",
+        "type": "passage",
+        "name": "Matthew 6",
+        "summary": null
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "entities:passage.Rom.8",
+      "proposal": {
+        "id": "passage.Rom.8",
+        "type": "passage",
+        "name": "Romans 8",
+        "summary": null
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.david.appearsIn.passage.1Sam.16",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.david.appearsIn.passage.1Sam.16",
+        "sourceId": "fixture.person.david",
+        "targetId": "passage.1Sam.16",
+        "type": "appearsIn",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.david.appearsIn.passage.1Sam.17",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.david.appearsIn.passage.1Sam.17",
+        "sourceId": "fixture.person.david",
+        "targetId": "passage.1Sam.17",
+        "type": "appearsIn",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.david.appearsIn.passage.2Sam.5",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.david.appearsIn.passage.2Sam.5",
+        "sourceId": "fixture.person.david",
+        "targetId": "passage.2Sam.5",
+        "type": "appearsIn",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.david.appearsIn.passage.Ps.23",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.david.appearsIn.passage.Ps.23",
+        "sourceId": "fixture.person.david",
+        "targetId": "passage.Ps.23",
+        "type": "appearsIn",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.david.appearsIn.passage.Ps.51",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.david.appearsIn.passage.Ps.51",
+        "sourceId": "fixture.person.david",
+        "targetId": "passage.Ps.51",
+        "type": "appearsIn",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.david.relatedTo.fixture.person.goliath",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.david.relatedTo.fixture.person.goliath",
+        "sourceId": "fixture.person.david",
+        "targetId": "fixture.person.goliath",
+        "type": "relatedTo",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.david.relatedTo.fixture.person.saul",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.david.relatedTo.fixture.person.saul",
+        "sourceId": "fixture.person.david",
+        "targetId": "fixture.person.saul",
+        "type": "relatedTo",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.david.relatedTo.fixture.person.samuel",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.david.relatedTo.fixture.person.samuel",
+        "sourceId": "fixture.person.david",
+        "targetId": "fixture.person.samuel",
+        "type": "relatedTo",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.david.relatedTo.fixture.person.bathsheba",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.david.relatedTo.fixture.person.bathsheba",
+        "sourceId": "fixture.person.david",
+        "targetId": "fixture.person.bathsheba",
+        "type": "relatedTo",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.david.relatedTo.fixture.person.solomon",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.david.relatedTo.fixture.person.solomon",
+        "sourceId": "fixture.person.david",
+        "targetId": "fixture.person.solomon",
+        "type": "relatedTo",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.david.participatesIn.fixture.event.david-anointed",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.david.participatesIn.fixture.event.david-anointed",
+        "sourceId": "fixture.person.david",
+        "targetId": "fixture.event.david-anointed",
+        "type": "participatesIn",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.david.participatesIn.fixture.event.david-goliath",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.david.participatesIn.fixture.event.david-goliath",
+        "sourceId": "fixture.person.david",
+        "targetId": "fixture.event.david-goliath",
+        "type": "participatesIn",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.david.participatesIn.fixture.event.david-takes-jerusalem",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.david.participatesIn.fixture.event.david-takes-jerusalem",
+        "sourceId": "fixture.person.david",
+        "targetId": "fixture.event.david-takes-jerusalem",
+        "type": "participatesIn",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.david.relatedTo.fixture.place.bethlehem",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.david.relatedTo.fixture.place.bethlehem",
+        "sourceId": "fixture.person.david",
+        "targetId": "fixture.place.bethlehem",
+        "type": "relatedTo",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.david.relatedTo.fixture.place.jerusalem",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.david.relatedTo.fixture.place.jerusalem",
+        "sourceId": "fixture.person.david",
+        "targetId": "fixture.place.jerusalem",
+        "type": "relatedTo",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.david.relatedToTheme.fixture.theme.forgiveness",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.david.relatedToTheme.fixture.theme.forgiveness",
+        "sourceId": "fixture.person.david",
+        "targetId": "fixture.theme.forgiveness",
+        "type": "relatedToTheme",
+        "confidence": 0.8,
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.david.relatedToTheme.fixture.theme.prayer",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.david.relatedToTheme.fixture.theme.prayer",
+        "sourceId": "fixture.person.david",
+        "targetId": "fixture.theme.prayer",
+        "type": "relatedToTheme",
+        "confidence": 0.8,
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.goliath.appearsIn.passage.1Sam.17",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.goliath.appearsIn.passage.1Sam.17",
+        "sourceId": "fixture.person.goliath",
+        "targetId": "passage.1Sam.17",
+        "type": "appearsIn",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.goliath.participatesIn.fixture.event.david-goliath",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.goliath.participatesIn.fixture.event.david-goliath",
+        "sourceId": "fixture.person.goliath",
+        "targetId": "fixture.event.david-goliath",
+        "type": "participatesIn",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.saul.appearsIn.passage.1Sam.16",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.saul.appearsIn.passage.1Sam.16",
+        "sourceId": "fixture.person.saul",
+        "targetId": "passage.1Sam.16",
+        "type": "appearsIn",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.saul.appearsIn.passage.1Sam.17",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.saul.appearsIn.passage.1Sam.17",
+        "sourceId": "fixture.person.saul",
+        "targetId": "passage.1Sam.17",
+        "type": "appearsIn",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.saul.relatedTo.fixture.person.samuel",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.saul.relatedTo.fixture.person.samuel",
+        "sourceId": "fixture.person.saul",
+        "targetId": "fixture.person.samuel",
+        "type": "relatedTo",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.samuel.appearsIn.passage.1Sam.16",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.samuel.appearsIn.passage.1Sam.16",
+        "sourceId": "fixture.person.samuel",
+        "targetId": "passage.1Sam.16",
+        "type": "appearsIn",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.samuel.participatesIn.fixture.event.david-anointed",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.samuel.participatesIn.fixture.event.david-anointed",
+        "sourceId": "fixture.person.samuel",
+        "targetId": "fixture.event.david-anointed",
+        "type": "participatesIn",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.bathsheba.relatedTo.fixture.person.solomon",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.bathsheba.relatedTo.fixture.person.solomon",
+        "sourceId": "fixture.person.bathsheba",
+        "targetId": "fixture.person.solomon",
+        "type": "relatedTo",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.solomon.relatedTo.fixture.place.jerusalem",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.solomon.relatedTo.fixture.place.jerusalem",
+        "sourceId": "fixture.person.solomon",
+        "targetId": "fixture.place.jerusalem",
+        "type": "relatedTo",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.event.david-anointed.occursAt.fixture.place.bethlehem",
+      "proposal": {
+        "id": "fixture.edge.fixture.event.david-anointed.occursAt.fixture.place.bethlehem",
+        "sourceId": "fixture.event.david-anointed",
+        "targetId": "fixture.place.bethlehem",
+        "type": "occursAt",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.event.david-anointed.precedes.fixture.event.david-goliath",
+      "proposal": {
+        "id": "fixture.edge.fixture.event.david-anointed.precedes.fixture.event.david-goliath",
+        "sourceId": "fixture.event.david-anointed",
+        "targetId": "fixture.event.david-goliath",
+        "type": "precedes",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.event.david-goliath.occursAt.fixture.place.elah",
+      "proposal": {
+        "id": "fixture.edge.fixture.event.david-goliath.occursAt.fixture.place.elah",
+        "sourceId": "fixture.event.david-goliath",
+        "targetId": "fixture.place.elah",
+        "type": "occursAt",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.event.david-goliath.precedes.fixture.event.david-takes-jerusalem",
+      "proposal": {
+        "id": "fixture.edge.fixture.event.david-goliath.precedes.fixture.event.david-takes-jerusalem",
+        "sourceId": "fixture.event.david-goliath",
+        "targetId": "fixture.event.david-takes-jerusalem",
+        "type": "precedes",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.event.david-goliath.relatedToTheme.fixture.theme.faith",
+      "proposal": {
+        "id": "fixture.edge.fixture.event.david-goliath.relatedToTheme.fixture.theme.faith",
+        "sourceId": "fixture.event.david-goliath",
+        "targetId": "fixture.theme.faith",
+        "type": "relatedToTheme",
+        "confidence": 0.8,
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.event.david-takes-jerusalem.occursAt.fixture.place.jerusalem",
+      "proposal": {
+        "id": "fixture.edge.fixture.event.david-takes-jerusalem.occursAt.fixture.place.jerusalem",
+        "sourceId": "fixture.event.david-takes-jerusalem",
+        "targetId": "fixture.place.jerusalem",
+        "type": "occursAt",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.event.david-takes-jerusalem.appearsIn.passage.2Sam.5",
+      "proposal": {
+        "id": "fixture.edge.fixture.event.david-takes-jerusalem.appearsIn.passage.2Sam.5",
+        "sourceId": "fixture.event.david-takes-jerusalem",
+        "targetId": "passage.2Sam.5",
+        "type": "appearsIn",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.passage.Ps.51.relatedToTheme.fixture.theme.forgiveness",
+      "proposal": {
+        "id": "fixture.edge.passage.Ps.51.relatedToTheme.fixture.theme.forgiveness",
+        "sourceId": "passage.Ps.51",
+        "targetId": "fixture.theme.forgiveness",
+        "type": "relatedToTheme",
+        "confidence": 0.8,
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.passage.Ps.23.relatedToTheme.fixture.theme.prayer",
+      "proposal": {
+        "id": "fixture.edge.passage.Ps.23.relatedToTheme.fixture.theme.prayer",
+        "sourceId": "passage.Ps.23",
+        "targetId": "fixture.theme.prayer",
+        "type": "relatedToTheme",
+        "confidence": 0.8,
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.jesus.appearsIn.passage.John.3",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.jesus.appearsIn.passage.John.3",
+        "sourceId": "fixture.person.jesus",
+        "targetId": "passage.John.3",
+        "type": "appearsIn",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.jesus.appearsIn.passage.Matt.6",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.jesus.appearsIn.passage.Matt.6",
+        "sourceId": "fixture.person.jesus",
+        "targetId": "passage.Matt.6",
+        "type": "appearsIn",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.jesus.relatedTo.fixture.person.mary",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.jesus.relatedTo.fixture.person.mary",
+        "sourceId": "fixture.person.jesus",
+        "targetId": "fixture.person.mary",
+        "type": "relatedTo",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.jesus.relatedTo.fixture.person.peter",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.jesus.relatedTo.fixture.person.peter",
+        "sourceId": "fixture.person.jesus",
+        "targetId": "fixture.person.peter",
+        "type": "relatedTo",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.jesus.relatedTo.fixture.person.john",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.jesus.relatedTo.fixture.person.john",
+        "sourceId": "fixture.person.jesus",
+        "targetId": "fixture.person.john",
+        "type": "relatedTo",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.jesus.relatedTo.fixture.place.bethlehem",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.jesus.relatedTo.fixture.place.bethlehem",
+        "sourceId": "fixture.person.jesus",
+        "targetId": "fixture.place.bethlehem",
+        "type": "relatedTo",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.jesus.relatedTo.fixture.place.nazareth",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.jesus.relatedTo.fixture.place.nazareth",
+        "sourceId": "fixture.person.jesus",
+        "targetId": "fixture.place.nazareth",
+        "type": "relatedTo",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.jesus.relatedTo.fixture.place.galilee",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.jesus.relatedTo.fixture.place.galilee",
+        "sourceId": "fixture.person.jesus",
+        "targetId": "fixture.place.galilee",
+        "type": "relatedTo",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.jesus.relatedTo.fixture.place.jerusalem",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.jesus.relatedTo.fixture.place.jerusalem",
+        "sourceId": "fixture.person.jesus",
+        "targetId": "fixture.place.jerusalem",
+        "type": "relatedTo",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.passage.Matt.6.relatedToTheme.fixture.theme.anxiety",
+      "proposal": {
+        "id": "fixture.edge.passage.Matt.6.relatedToTheme.fixture.theme.anxiety",
+        "sourceId": "passage.Matt.6",
+        "targetId": "fixture.theme.anxiety",
+        "type": "relatedToTheme",
+        "confidence": 0.8,
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.passage.Matt.6.relatedToTheme.fixture.theme.money",
+      "proposal": {
+        "id": "fixture.edge.passage.Matt.6.relatedToTheme.fixture.theme.money",
+        "sourceId": "passage.Matt.6",
+        "targetId": "fixture.theme.money",
+        "type": "relatedToTheme",
+        "confidence": 0.8,
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.passage.Matt.6.relatedToTheme.fixture.theme.prayer",
+      "proposal": {
+        "id": "fixture.edge.passage.Matt.6.relatedToTheme.fixture.theme.prayer",
+        "sourceId": "passage.Matt.6",
+        "targetId": "fixture.theme.prayer",
+        "type": "relatedToTheme",
+        "confidence": 0.8,
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.passage.John.3.relatedToTheme.fixture.theme.love",
+      "proposal": {
+        "id": "fixture.edge.passage.John.3.relatedToTheme.fixture.theme.love",
+        "sourceId": "passage.John.3",
+        "targetId": "fixture.theme.love",
+        "type": "relatedToTheme",
+        "confidence": 0.8,
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.passage.John.3.relatedToTheme.fixture.theme.faith",
+      "proposal": {
+        "id": "fixture.edge.passage.John.3.relatedToTheme.fixture.theme.faith",
+        "sourceId": "passage.John.3",
+        "targetId": "fixture.theme.faith",
+        "type": "relatedToTheme",
+        "confidence": 0.8,
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.paul.appearsIn.passage.Rom.8",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.paul.appearsIn.passage.Rom.8",
+        "sourceId": "fixture.person.paul",
+        "targetId": "passage.Rom.8",
+        "type": "appearsIn",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.paul.relatedTo.fixture.place.rome",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.paul.relatedTo.fixture.place.rome",
+        "sourceId": "fixture.person.paul",
+        "targetId": "fixture.place.rome",
+        "type": "relatedTo",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.paul.relatedTo.fixture.place.corinth",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.paul.relatedTo.fixture.place.corinth",
+        "sourceId": "fixture.person.paul",
+        "targetId": "fixture.place.corinth",
+        "type": "relatedTo",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.paul.relatedTo.fixture.place.ephesus",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.paul.relatedTo.fixture.place.ephesus",
+        "sourceId": "fixture.person.paul",
+        "targetId": "fixture.place.ephesus",
+        "type": "relatedTo",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.passage.Rom.8.relatedToTheme.fixture.theme.grace",
+      "proposal": {
+        "id": "fixture.edge.passage.Rom.8.relatedToTheme.fixture.theme.grace",
+        "sourceId": "passage.Rom.8",
+        "targetId": "fixture.theme.grace",
+        "type": "relatedToTheme",
+        "confidence": 0.8,
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.passage.Rom.8.relatedToTheme.fixture.theme.suffering",
+      "proposal": {
+        "id": "fixture.edge.passage.Rom.8.relatedToTheme.fixture.theme.suffering",
+        "sourceId": "passage.Rom.8",
+        "targetId": "fixture.theme.suffering",
+        "type": "relatedToTheme",
+        "confidence": 0.8,
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.moses.participatesIn.fixture.event.exodus",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.moses.participatesIn.fixture.event.exodus",
+        "sourceId": "fixture.person.moses",
+        "targetId": "fixture.event.exodus",
+        "type": "participatesIn",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.moses.relatedTo.fixture.place.egypt",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.moses.relatedTo.fixture.place.egypt",
+        "sourceId": "fixture.person.moses",
+        "targetId": "fixture.place.egypt",
+        "type": "relatedTo",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.event.exodus.occursAt.fixture.place.egypt",
+      "proposal": {
+        "id": "fixture.edge.fixture.event.exodus.occursAt.fixture.place.egypt",
+        "sourceId": "fixture.event.exodus",
+        "targetId": "fixture.place.egypt",
+        "type": "occursAt",
+        "confidence": 1.0,
+        "sourceReferenceIds": [
+          "fixture.source.web"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web"
+      ]
+    },
+    {
+      "key": "relationships:fixture.edge.fixture.person.abraham.relatedToTheme.fixture.theme.faith",
+      "proposal": {
+        "id": "fixture.edge.fixture.person.abraham.relatedToTheme.fixture.theme.faith",
+        "sourceId": "fixture.person.abraham",
+        "targetId": "fixture.theme.faith",
+        "type": "relatedToTheme",
+        "confidence": 0.8,
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.person.jesus",
+      "proposal": {
+        "entity": {
+          "id": "fixture.person.jesus",
+          "type": "person",
+          "name": "Jesus",
+          "summary": "Central figure of the New Testament."
+        },
+        "aliases": [
+          "Jesus of Nazareth",
+          "Christ",
+          "Messiah"
+        ],
+        "approximateDates": "c. 4 BC – c. AD 30/33 (scholars vary)",
+        "role": "Central figure of the New Testament",
+        "modernGeography": null,
+        "keyPassages": [
+          {
+            "bookId": "John",
+            "chapter": 3,
+            "verseStart": null,
+            "verseEnd": null
+          },
+          {
+            "bookId": "Matt",
+            "chapter": 6,
+            "verseStart": null,
+            "verseEnd": null
+          }
+        ],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.person.paul",
+      "proposal": {
+        "entity": {
+          "id": "fixture.person.paul",
+          "type": "person",
+          "name": "Paul",
+          "summary": "Apostle; author of many New Testament letters."
+        },
+        "aliases": [
+          "Saul of Tarsus"
+        ],
+        "approximateDates": "c. AD 5 – c. 64/67 (scholars vary)",
+        "role": "Apostle to the Gentiles",
+        "modernGeography": null,
+        "keyPassages": [
+          {
+            "bookId": "Rom",
+            "chapter": 8,
+            "verseStart": null,
+            "verseEnd": null
+          }
+        ],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.person.peter",
+      "proposal": {
+        "entity": {
+          "id": "fixture.person.peter",
+          "type": "person",
+          "name": "Peter",
+          "summary": "Disciple of Jesus; leader among the apostles."
+        },
+        "aliases": [
+          "Simon",
+          "Cephas"
+        ],
+        "approximateDates": null,
+        "role": "Disciple and apostle",
+        "modernGeography": null,
+        "keyPassages": [],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.person.abraham",
+      "proposal": {
+        "entity": {
+          "id": "fixture.person.abraham",
+          "type": "person",
+          "name": "Abraham",
+          "summary": "Patriarch; the covenant with God begins with him."
+        },
+        "aliases": [
+          "Abram"
+        ],
+        "approximateDates": null,
+        "role": "Patriarch",
+        "modernGeography": null,
+        "keyPassages": [],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.person.moses",
+      "proposal": {
+        "entity": {
+          "id": "fixture.person.moses",
+          "type": "person",
+          "name": "Moses",
+          "summary": "Led Israel out of Egypt; received the Law."
+        },
+        "aliases": [],
+        "approximateDates": null,
+        "role": "Prophet; leader of the Exodus",
+        "modernGeography": null,
+        "keyPassages": [],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.person.david",
+      "proposal": {
+        "entity": {
+          "id": "fixture.person.david",
+          "type": "person",
+          "name": "David",
+          "summary": "King of Israel; associated with many Psalms."
+        },
+        "aliases": [],
+        "approximateDates": "c. 1010–970 BC (commonly dated; the chronology is approximate)",
+        "role": "Second king of Israel",
+        "modernGeography": null,
+        "keyPassages": [
+          {
+            "bookId": "1Sam",
+            "chapter": 16,
+            "verseStart": null,
+            "verseEnd": null
+          },
+          {
+            "bookId": "1Sam",
+            "chapter": 17,
+            "verseStart": null,
+            "verseEnd": null
+          },
+          {
+            "bookId": "2Sam",
+            "chapter": 5,
+            "verseStart": null,
+            "verseEnd": null
+          },
+          {
+            "bookId": "Ps",
+            "chapter": 23,
+            "verseStart": null,
+            "verseEnd": null
+          },
+          {
+            "bookId": "Ps",
+            "chapter": 51,
+            "verseStart": null,
+            "verseEnd": null
+          }
+        ],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.person.solomon",
+      "proposal": {
+        "entity": {
+          "id": "fixture.person.solomon",
+          "type": "person",
+          "name": "Solomon",
+          "summary": "King of Israel; built the first temple."
+        },
+        "aliases": [],
+        "approximateDates": "c. 970–931 BC (commonly dated)",
+        "role": "Third king of Israel",
+        "modernGeography": null,
+        "keyPassages": [],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.person.saul",
+      "proposal": {
+        "entity": {
+          "id": "fixture.person.saul",
+          "type": "person",
+          "name": "Saul",
+          "summary": "First king of Israel."
+        },
+        "aliases": [],
+        "approximateDates": "late 11th century BC (commonly dated)",
+        "role": "First king of Israel",
+        "modernGeography": null,
+        "keyPassages": [
+          {
+            "bookId": "1Sam",
+            "chapter": 16,
+            "verseStart": null,
+            "verseEnd": null
+          },
+          {
+            "bookId": "1Sam",
+            "chapter": 17,
+            "verseStart": null,
+            "verseEnd": null
+          }
+        ],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.person.goliath",
+      "proposal": {
+        "entity": {
+          "id": "fixture.person.goliath",
+          "type": "person",
+          "name": "Goliath",
+          "summary": "Philistine champion from Gath, defeated by David."
+        },
+        "aliases": [],
+        "approximateDates": null,
+        "role": "Philistine champion from Gath",
+        "modernGeography": null,
+        "keyPassages": [
+          {
+            "bookId": "1Sam",
+            "chapter": 17,
+            "verseStart": null,
+            "verseEnd": null
+          }
+        ],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.person.samuel",
+      "proposal": {
+        "entity": {
+          "id": "fixture.person.samuel",
+          "type": "person",
+          "name": "Samuel",
+          "summary": "Prophet and judge; anointed Saul and David."
+        },
+        "aliases": [],
+        "approximateDates": null,
+        "role": "Prophet and last of the judges",
+        "modernGeography": null,
+        "keyPassages": [
+          {
+            "bookId": "1Sam",
+            "chapter": 16,
+            "verseStart": null,
+            "verseEnd": null
+          }
+        ],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.place.jerusalem",
+      "proposal": {
+        "entity": {
+          "id": "fixture.place.jerusalem",
+          "type": "place",
+          "name": "Jerusalem",
+          "summary": "City of David; site of the temple."
+        },
+        "aliases": [
+          "Jebus",
+          "Salem",
+          "Zion"
+        ],
+        "approximateDates": null,
+        "role": null,
+        "modernGeography": "Jerusalem, Israel/Palestine",
+        "keyPassages": [
+          {
+            "bookId": "2Sam",
+            "chapter": 5,
+            "verseStart": null,
+            "verseEnd": null
+          }
+        ],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.place.bethlehem",
+      "proposal": {
+        "entity": {
+          "id": "fixture.place.bethlehem",
+          "type": "place",
+          "name": "Bethlehem",
+          "summary": "Birthplace of David and of Jesus."
+        },
+        "aliases": [
+          "Ephrath"
+        ],
+        "approximateDates": null,
+        "role": null,
+        "modernGeography": "Bethlehem, West Bank",
+        "keyPassages": [
+          {
+            "bookId": "1Sam",
+            "chapter": 16,
+            "verseStart": null,
+            "verseEnd": null
+          }
+        ],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.place.rome",
+      "proposal": {
+        "entity": {
+          "id": "fixture.place.rome",
+          "type": "place",
+          "name": "Rome",
+          "summary": "Capital of the empire; destination of Paul's letter to the Romans."
+        },
+        "aliases": [],
+        "approximateDates": null,
+        "role": null,
+        "modernGeography": "Rome, Italy",
+        "keyPassages": [
+          {
+            "bookId": "Rom",
+            "chapter": 8,
+            "verseStart": null,
+            "verseEnd": null
+          }
+        ],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.place.egypt",
+      "proposal": {
+        "entity": {
+          "id": "fixture.place.egypt",
+          "type": "place",
+          "name": "Egypt",
+          "summary": "Where Israel was enslaved before the Exodus."
+        },
+        "aliases": [],
+        "approximateDates": null,
+        "role": null,
+        "modernGeography": "Egypt",
+        "keyPassages": [],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.place.elah",
+      "proposal": {
+        "entity": {
+          "id": "fixture.place.elah",
+          "type": "place",
+          "name": "Valley of Elah",
+          "summary": "Where Israel and the Philistines faced each other in 1 Samuel 17."
+        },
+        "aliases": [],
+        "approximateDates": null,
+        "role": null,
+        "modernGeography": "Wadi es-Sunt, Israel (commonly identified)",
+        "keyPassages": [
+          {
+            "bookId": "1Sam",
+            "chapter": 17,
+            "verseStart": null,
+            "verseEnd": null
+          }
+        ],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.theme.faith",
+      "proposal": {
+        "entity": {
+          "id": "fixture.theme.faith",
+          "type": "theme",
+          "name": "Faith",
+          "summary": "Trust in God; a recurring theme across both testaments."
+        },
+        "aliases": [],
+        "approximateDates": null,
+        "role": null,
+        "modernGeography": null,
+        "keyPassages": [
+          {
+            "bookId": "1Sam",
+            "chapter": 17,
+            "verseStart": null,
+            "verseEnd": null
+          },
+          {
+            "bookId": "John",
+            "chapter": 3,
+            "verseStart": null,
+            "verseEnd": null
+          }
+        ],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.theme.grace",
+      "proposal": {
+        "entity": {
+          "id": "fixture.theme.grace",
+          "type": "theme",
+          "name": "Grace",
+          "summary": "Unearned favour; central in Paul's letters."
+        },
+        "aliases": [],
+        "approximateDates": null,
+        "role": null,
+        "modernGeography": null,
+        "keyPassages": [
+          {
+            "bookId": "Rom",
+            "chapter": 8,
+            "verseStart": null,
+            "verseEnd": null
+          }
+        ],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.theme.forgiveness",
+      "proposal": {
+        "entity": {
+          "id": "fixture.theme.forgiveness",
+          "type": "theme",
+          "name": "Forgiveness",
+          "summary": "Release from wrongdoing, divine and human."
+        },
+        "aliases": [],
+        "approximateDates": null,
+        "role": null,
+        "modernGeography": null,
+        "keyPassages": [
+          {
+            "bookId": "Ps",
+            "chapter": 51,
+            "verseStart": null,
+            "verseEnd": null
+          }
+        ],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.theme.love",
+      "proposal": {
+        "entity": {
+          "id": "fixture.theme.love",
+          "type": "theme",
+          "name": "Love",
+          "summary": "Of God, and for neighbour; the greatest commandments."
+        },
+        "aliases": [],
+        "approximateDates": null,
+        "role": null,
+        "modernGeography": null,
+        "keyPassages": [
+          {
+            "bookId": "John",
+            "chapter": 3,
+            "verseStart": null,
+            "verseEnd": null
+          }
+        ],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.theme.anxiety",
+      "proposal": {
+        "entity": {
+          "id": "fixture.theme.anxiety",
+          "type": "theme",
+          "name": "Anxiety",
+          "summary": "Worry and its answer; e.g. Matthew 6:25–34."
+        },
+        "aliases": [],
+        "approximateDates": null,
+        "role": null,
+        "modernGeography": null,
+        "keyPassages": [
+          {
+            "bookId": "Matt",
+            "chapter": 6,
+            "verseStart": null,
+            "verseEnd": null
+          }
+        ],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.theme.prayer",
+      "proposal": {
+        "entity": {
+          "id": "fixture.theme.prayer",
+          "type": "theme",
+          "name": "Prayer",
+          "summary": "Speaking with God; Psalms, the Lord's Prayer."
+        },
+        "aliases": [],
+        "approximateDates": null,
+        "role": null,
+        "modernGeography": null,
+        "keyPassages": [
+          {
+            "bookId": "Ps",
+            "chapter": 23,
+            "verseStart": null,
+            "verseEnd": null
+          },
+          {
+            "bookId": "Matt",
+            "chapter": 6,
+            "verseStart": null,
+            "verseEnd": null
+          }
+        ],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.event.david-anointed",
+      "proposal": {
+        "entity": {
+          "id": "fixture.event.david-anointed",
+          "type": "event",
+          "name": "Anointing of David",
+          "summary": "Samuel anoints David in Bethlehem while Saul is still king."
+        },
+        "aliases": [],
+        "approximateDates": "during Saul's reign",
+        "role": null,
+        "modernGeography": null,
+        "keyPassages": [
+          {
+            "bookId": "1Sam",
+            "chapter": 16,
+            "verseStart": null,
+            "verseEnd": null
+          }
+        ],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.event.david-goliath",
+      "proposal": {
+        "entity": {
+          "id": "fixture.event.david-goliath",
+          "type": "event",
+          "name": "David and Goliath",
+          "summary": "David defeats the Philistine champion in the Valley of Elah."
+        },
+        "aliases": [],
+        "approximateDates": "during Saul's reign (commonly dated to the late 11th century BC)",
+        "role": null,
+        "modernGeography": null,
+        "keyPassages": [
+          {
+            "bookId": "1Sam",
+            "chapter": 17,
+            "verseStart": null,
+            "verseEnd": null
+          }
+        ],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.event.david-takes-jerusalem",
+      "proposal": {
+        "entity": {
+          "id": "fixture.event.david-takes-jerusalem",
+          "type": "event",
+          "name": "David takes Jerusalem",
+          "summary": "David captures the Jebusite stronghold and makes it his capital."
+        },
+        "aliases": [],
+        "approximateDates": "early in David's reign (commonly dated c. 1000 BC)",
+        "role": null,
+        "modernGeography": null,
+        "keyPassages": [
+          {
+            "bookId": "2Sam",
+            "chapter": 5,
+            "verseStart": null,
+            "verseEnd": null
+          }
+        ],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "details:fixture.event.exodus",
+      "proposal": {
+        "entity": {
+          "id": "fixture.event.exodus",
+          "type": "event",
+          "name": "The Exodus",
+          "summary": "Israel leaves Egypt under Moses."
+        },
+        "aliases": [],
+        "approximateDates": "disputed; commonly placed in the 15th or 13th century BC",
+        "role": null,
+        "modernGeography": null,
+        "keyPassages": [],
+        "sources": [
+          {
+            "id": "fixture.source.web",
+            "citation": "World English Bible (public domain) — the passages cited",
+            "url": "https://worldenglish.bible"
+          },
+          {
+            "id": "fixture.source.editorial",
+            "citation": "Verbum editorial notes (fixture; to be replaced by sourced content)",
+            "url": null
+          }
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.web",
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "timeline:fixture.timeline.abraham",
+      "proposal": {
+        "id": "fixture.timeline.abraham",
+        "title": "Abraham",
+        "startYear": -2000,
+        "endYear": -1800,
+        "datePrecision": "approximate",
+        "summary": "Abraham's journey from Ur to Canaan opens the story of Israel. The patriarchal period is dated only broadly, from the kind of life the narratives describe.",
+        "entityIds": [
+          "fixture.person.abraham"
+        ],
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "timeline:fixture.timeline.exodus",
+      "proposal": {
+        "id": "fixture.timeline.exodus",
+        "title": "The Exodus",
+        "startYear": -1446,
+        "endYear": -1250,
+        "datePrecision": "debated",
+        "summary": "Israel leaves Egypt under Moses. Two chronologies are held today — a 15th-century date read from 1 Kings 6:1, and a 13th-century date tied to the city of Rameses — and the timeline shows the whole span.",
+        "entityIds": [
+          "fixture.person.moses",
+          "fixture.place.egypt",
+          "fixture.event.exodus"
+        ],
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "timeline:fixture.timeline.judges",
+      "proposal": {
+        "id": "fixture.timeline.judges",
+        "title": "Period of the Judges",
+        "startYear": -1200,
+        "endYear": -1050,
+        "datePrecision": "approximate",
+        "summary": "Between the settlement of Canaan and the first king, Israel is led by judges — Deborah, Gideon, Samson — in cycles the book of Judges describes.",
+        "entityIds": [],
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "timeline:fixture.timeline.united-monarchy",
+      "proposal": {
+        "id": "fixture.timeline.united-monarchy",
+        "title": "United Monarchy",
+        "startYear": -1050,
+        "endYear": -930,
+        "datePrecision": "approximate",
+        "summary": "Saul, David and Solomon rule one kingdom from Jerusalem. The dates rest on the reigns 1 and 2 Samuel and 1 Kings record, counted back from later fixed points.",
+        "entityIds": [
+          "fixture.person.saul",
+          "fixture.person.david",
+          "fixture.person.solomon",
+          "fixture.place.jerusalem"
+        ],
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "timeline:fixture.timeline.david",
+      "proposal": {
+        "id": "fixture.timeline.david",
+        "title": "Reign of David",
+        "startYear": -1010,
+        "endYear": -970,
+        "datePrecision": "approximate",
+        "summary": "David unites the tribes, takes Jerusalem and makes it his capital. Commonly dated c. 1010–970 BC.",
+        "entityIds": [
+          "fixture.person.david",
+          "fixture.place.jerusalem",
+          "fixture.event.david-takes-jerusalem"
+        ],
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "timeline:fixture.timeline.solomon",
+      "proposal": {
+        "id": "fixture.timeline.solomon",
+        "title": "Reign of Solomon",
+        "startYear": -970,
+        "endYear": -931,
+        "datePrecision": "approximate",
+        "summary": "Solomon builds the first temple in Jerusalem. His death is followed by the division of the kingdom.",
+        "entityIds": [
+          "fixture.person.solomon",
+          "fixture.place.jerusalem"
+        ],
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "timeline:fixture.timeline.divided-kingdom",
+      "proposal": {
+        "id": "fixture.timeline.divided-kingdom",
+        "title": "Divided Kingdom",
+        "startYear": -931,
+        "endYear": -586,
+        "datePrecision": "approximate",
+        "summary": "Israel in the north and Judah in the south, with their own kings and prophets, until each falls to an empire.",
+        "entityIds": [
+          "fixture.place.jerusalem"
+        ],
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "timeline:fixture.timeline.assyrian-conquest",
+      "proposal": {
+        "id": "fixture.timeline.assyrian-conquest",
+        "title": "Assyrian conquest of Samaria",
+        "startYear": -722,
+        "endYear": null,
+        "datePrecision": "approximate",
+        "summary": "The northern kingdom falls to Assyria and its people are deported. Dated 722 or 721 BC from Assyrian records.",
+        "entityIds": [],
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "timeline:fixture.timeline.babylonian-exile",
+      "proposal": {
+        "id": "fixture.timeline.babylonian-exile",
+        "title": "Babylonian exile",
+        "startYear": -586,
+        "endYear": -538,
+        "datePrecision": "approximate",
+        "summary": "Jerusalem and its temple are destroyed and Judah's leaders are taken to Babylon. The fall is placed in 587 or 586 BC; the return begins under Cyrus.",
+        "entityIds": [
+          "fixture.place.babylon",
+          "fixture.place.jerusalem"
+        ],
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "timeline:fixture.timeline.persian-period",
+      "proposal": {
+        "id": "fixture.timeline.persian-period",
+        "title": "Persian period",
+        "startYear": -538,
+        "endYear": -332,
+        "datePrecision": "approximate",
+        "summary": "Under Persian rule exiles return, the temple is rebuilt (Ezra) and the walls restored (Nehemiah).",
+        "entityIds": [
+          "fixture.place.jerusalem"
+        ],
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "timeline:fixture.timeline.second-temple",
+      "proposal": {
+        "id": "fixture.timeline.second-temple",
+        "title": "Second Temple period",
+        "startYear": -516,
+        "endYear": 70,
+        "datePrecision": "approximate",
+        "summary": "From the rebuilt temple to its destruction by Rome in AD 70 — the world of the Gospels and Acts.",
+        "entityIds": [
+          "fixture.place.jerusalem"
+        ],
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "timeline:fixture.timeline.birth-of-jesus",
+      "proposal": {
+        "id": "fixture.timeline.birth-of-jesus",
+        "title": "Birth of Jesus",
+        "startYear": -6,
+        "endYear": -4,
+        "datePrecision": "debated",
+        "summary": "Placed shortly before the death of Herod the Great (4 BC); the exact year is not known.",
+        "entityIds": [
+          "fixture.person.jesus",
+          "fixture.person.mary",
+          "fixture.place.bethlehem",
+          "fixture.place.nazareth"
+        ],
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "timeline:fixture.timeline.ministry-of-jesus",
+      "proposal": {
+        "id": "fixture.timeline.ministry-of-jesus",
+        "title": "Ministry of Jesus",
+        "startYear": 27,
+        "endYear": 30,
+        "datePrecision": "approximate",
+        "summary": "Jesus's public ministry in Galilee and Judea, about three years by John's count of Passovers.",
+        "entityIds": [
+          "fixture.person.jesus",
+          "fixture.place.galilee",
+          "fixture.place.jerusalem"
+        ],
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "timeline:fixture.timeline.early-church",
+      "proposal": {
+        "id": "fixture.timeline.early-church",
+        "title": "Early Church",
+        "startYear": 30,
+        "endYear": 100,
+        "datePrecision": "approximate",
+        "summary": "From Pentecost to the end of the apostolic generation, as told in Acts and the letters.",
+        "entityIds": [
+          "fixture.person.peter",
+          "fixture.person.paul",
+          "fixture.person.john",
+          "fixture.place.jerusalem"
+        ],
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "timeline:fixture.timeline.crucifixion",
+      "proposal": {
+        "id": "fixture.timeline.crucifixion",
+        "title": "Crucifixion",
+        "startYear": 30,
+        "endYear": 33,
+        "datePrecision": "debated",
+        "summary": "The Gospels place it at Passover under Pontius Pilate; AD 30 and AD 33 are the two dates usually argued for.",
+        "entityIds": [
+          "fixture.person.jesus",
+          "fixture.place.jerusalem"
+        ],
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "timeline:fixture.timeline.pauline-missions",
+      "proposal": {
+        "id": "fixture.timeline.pauline-missions",
+        "title": "Pauline missions",
+        "startYear": 46,
+        "endYear": 57,
+        "datePrecision": "approximate",
+        "summary": "Paul's journeys through Asia Minor and Greece — Corinth, Ephesus — and the letters written along the way.",
+        "entityIds": [
+          "fixture.person.paul",
+          "fixture.place.corinth",
+          "fixture.place.ephesus",
+          "fixture.place.rome"
+        ],
+        "sourceReferenceIds": [
+          "fixture.source.editorial"
+        ]
+      },
+      "sourceReferenceIds": [
+        "fixture.source.editorial"
+      ]
+    },
+    {
+      "key": "dailyVersePool",
+      "proposal": [
+        {
+          "bookId": "Gen",
+          "chapter": 1,
+          "verseStart": 1,
+          "verseEnd": 1
+        },
+        {
+          "bookId": "Gen",
+          "chapter": 28,
+          "verseStart": 15,
+          "verseEnd": 15
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 14,
+          "verseStart": 14,
+          "verseEnd": 14
+        },
+        {
+          "bookId": "Num",
+          "chapter": 6,
+          "verseStart": 24,
+          "verseEnd": 24
+        },
+        {
+          "bookId": "Deut",
+          "chapter": 31,
+          "verseStart": 6,
+          "verseEnd": 6
+        },
+        {
+          "bookId": "Josh",
+          "chapter": 1,
+          "verseStart": 9,
+          "verseEnd": 9
+        },
+        {
+          "bookId": "1Sam",
+          "chapter": 16,
+          "verseStart": 7,
+          "verseEnd": 7
+        },
+        {
+          "bookId": "2Sam",
+          "chapter": 22,
+          "verseStart": 31,
+          "verseEnd": 31
+        },
+        {
+          "bookId": "1Chr",
+          "chapter": 16,
+          "verseStart": 34,
+          "verseEnd": 34
+        },
+        {
+          "bookId": "2Chr",
+          "chapter": 7,
+          "verseStart": 14,
+          "verseEnd": 14
+        },
+        {
+          "bookId": "Neh",
+          "chapter": 8,
+          "verseStart": 10,
+          "verseEnd": 10
+        },
+        {
+          "bookId": "Job",
+          "chapter": 19,
+          "verseStart": 25,
+          "verseEnd": 25
+        },
+        {
+          "bookId": "Ps",
+          "chapter": 16,
+          "verseStart": 11,
+          "verseEnd": 11
+        },
+        {
+          "bookId": "Ps",
+          "chapter": 18,
+          "verseStart": 2,
+          "verseEnd": 2
+        },
+        {
+          "bookId": "Ps",
+          "chapter": 19,
+          "verseStart": 14,
+          "verseEnd": 14
+        },
+        {
+          "bookId": "Ps",
+          "chapter": 23,
+          "verseStart": 1,
+          "verseEnd": 1
+        },
+        {
+          "bookId": "Ps",
+          "chapter": 27,
+          "verseStart": 1,
+          "verseEnd": 1
+        },
+        {
+          "bookId": "Ps",
+          "chapter": 34,
+          "verseStart": 8,
+          "verseEnd": 8
+        },
+        {
+          "bookId": "Ps",
+          "chapter": 37,
+          "verseStart": 4,
+          "verseEnd": 4
+        },
+        {
+          "bookId": "Ps",
+          "chapter": 46,
+          "verseStart": 1,
+          "verseEnd": 1
+        },
+        {
+          "bookId": "Ps",
+          "chapter": 46,
+          "verseStart": 10,
+          "verseEnd": 10
+        },
+        {
+          "bookId": "Ps",
+          "chapter": 51,
+          "verseStart": 10,
+          "verseEnd": 10
+        },
+        {
+          "bookId": "Ps",
+          "chapter": 55,
+          "verseStart": 22,
+          "verseEnd": 22
+        },
+        {
+          "bookId": "Ps",
+          "chapter": 56,
+          "verseStart": 3,
+          "verseEnd": 3
+        },
+        {
+          "bookId": "Ps",
+          "chapter": 62,
+          "verseStart": 1,
+          "verseEnd": 1
+        },
+        {
+          "bookId": "Ps",
+          "chapter": 73,
+          "verseStart": 26,
+          "verseEnd": 26
+        },
+        {
+          "bookId": "Ps",
+          "chapter": 90,
+          "verseStart": 12,
+          "verseEnd": 12
+        },
+        {
+          "bookId": "Ps",
+          "chapter": 91,
+          "verseStart": 1,
+          "verseEnd": 1
+        },
+        {
+          "bookId": "Ps",
+          "chapter": 103,
+          "verseStart": 2,
+          "verseEnd": 2
+        },
+        {
+          "bookId": "Ps",
+          "chapter": 118,
+          "verseStart": 24,
+          "verseEnd": 24
+        },
+        {
+          "bookId": "Ps",
+          "chapter": 119,
+          "verseStart": 105,
+          "verseEnd": 105
+        },
+        {
+          "bookId": "Ps",
+          "chapter": 121,
+          "verseStart": 1,
+          "verseEnd": 1
+        },
+        {
+          "bookId": "Ps",
+          "chapter": 139,
+          "verseStart": 14,
+          "verseEnd": 14
+        },
+        {
+          "bookId": "Ps",
+          "chapter": 143,
+          "verseStart": 8,
+          "verseEnd": 8
+        },
+        {
+          "bookId": "Ps",
+          "chapter": 147,
+          "verseStart": 3,
+          "verseEnd": 3
+        },
+        {
+          "bookId": "Prov",
+          "chapter": 3,
+          "verseStart": 5,
+          "verseEnd": 5
+        },
+        {
+          "bookId": "Prov",
+          "chapter": 3,
+          "verseStart": 6,
+          "verseEnd": 6
+        },
+        {
+          "bookId": "Prov",
+          "chapter": 4,
+          "verseStart": 23,
+          "verseEnd": 23
+        },
+        {
+          "bookId": "Prov",
+          "chapter": 16,
+          "verseStart": 9,
+          "verseEnd": 9
+        },
+        {
+          "bookId": "Prov",
+          "chapter": 18,
+          "verseStart": 10,
+          "verseEnd": 10
+        },
+        {
+          "bookId": "Eccl",
+          "chapter": 3,
+          "verseStart": 1,
+          "verseEnd": 1
+        },
+        {
+          "bookId": "Isa",
+          "chapter": 26,
+          "verseStart": 3,
+          "verseEnd": 3
+        },
+        {
+          "bookId": "Isa",
+          "chapter": 40,
+          "verseStart": 31,
+          "verseEnd": 31
+        },
+        {
+          "bookId": "Isa",
+          "chapter": 41,
+          "verseStart": 10,
+          "verseEnd": 10
+        },
+        {
+          "bookId": "Isa",
+          "chapter": 43,
+          "verseStart": 2,
+          "verseEnd": 2
+        },
+        {
+          "bookId": "Isa",
+          "chapter": 53,
+          "verseStart": 5,
+          "verseEnd": 5
+        },
+        {
+          "bookId": "Isa",
+          "chapter": 55,
+          "verseStart": 8,
+          "verseEnd": 8
+        },
+        {
+          "bookId": "Jer",
+          "chapter": 29,
+          "verseStart": 11,
+          "verseEnd": 11
+        },
+        {
+          "bookId": "Lam",
+          "chapter": 3,
+          "verseStart": 22,
+          "verseEnd": 22
+        },
+        {
+          "bookId": "Lam",
+          "chapter": 3,
+          "verseStart": 23,
+          "verseEnd": 23
+        },
+        {
+          "bookId": "Mic",
+          "chapter": 6,
+          "verseStart": 8,
+          "verseEnd": 8
+        },
+        {
+          "bookId": "Nah",
+          "chapter": 1,
+          "verseStart": 7,
+          "verseEnd": 7
+        },
+        {
+          "bookId": "Hab",
+          "chapter": 3,
+          "verseStart": 19,
+          "verseEnd": 19
+        },
+        {
+          "bookId": "Zeph",
+          "chapter": 3,
+          "verseStart": 17,
+          "verseEnd": 17
+        },
+        {
+          "bookId": "Matt",
+          "chapter": 5,
+          "verseStart": 16,
+          "verseEnd": 16
+        },
+        {
+          "bookId": "Matt",
+          "chapter": 6,
+          "verseStart": 33,
+          "verseEnd": 33
+        },
+        {
+          "bookId": "Matt",
+          "chapter": 11,
+          "verseStart": 28,
+          "verseEnd": 28
+        },
+        {
+          "bookId": "Matt",
+          "chapter": 28,
+          "verseStart": 20,
+          "verseEnd": 20
+        },
+        {
+          "bookId": "Mark",
+          "chapter": 10,
+          "verseStart": 27,
+          "verseEnd": 27
+        },
+        {
+          "bookId": "Luke",
+          "chapter": 1,
+          "verseStart": 37,
+          "verseEnd": 37
+        },
+        {
+          "bookId": "John",
+          "chapter": 1,
+          "verseStart": 5,
+          "verseEnd": 5
+        },
+        {
+          "bookId": "John",
+          "chapter": 3,
+          "verseStart": 16,
+          "verseEnd": 16
+        },
+        {
+          "bookId": "John",
+          "chapter": 8,
+          "verseStart": 12,
+          "verseEnd": 12
+        },
+        {
+          "bookId": "John",
+          "chapter": 10,
+          "verseStart": 10,
+          "verseEnd": 10
+        },
+        {
+          "bookId": "John",
+          "chapter": 14,
+          "verseStart": 6,
+          "verseEnd": 6
+        },
+        {
+          "bookId": "John",
+          "chapter": 14,
+          "verseStart": 27,
+          "verseEnd": 27
+        },
+        {
+          "bookId": "John",
+          "chapter": 15,
+          "verseStart": 5,
+          "verseEnd": 5
+        },
+        {
+          "bookId": "John",
+          "chapter": 16,
+          "verseStart": 33,
+          "verseEnd": 33
+        },
+        {
+          "bookId": "Acts",
+          "chapter": 1,
+          "verseStart": 8,
+          "verseEnd": 8
+        },
+        {
+          "bookId": "Rom",
+          "chapter": 5,
+          "verseStart": 8,
+          "verseEnd": 8
+        },
+        {
+          "bookId": "Rom",
+          "chapter": 8,
+          "verseStart": 28,
+          "verseEnd": 28
+        },
+        {
+          "bookId": "Rom",
+          "chapter": 8,
+          "verseStart": 38,
+          "verseEnd": 38
+        },
+        {
+          "bookId": "Rom",
+          "chapter": 12,
+          "verseStart": 2,
+          "verseEnd": 2
+        },
+        {
+          "bookId": "Rom",
+          "chapter": 12,
+          "verseStart": 12,
+          "verseEnd": 12
+        },
+        {
+          "bookId": "Rom",
+          "chapter": 15,
+          "verseStart": 13,
+          "verseEnd": 13
+        },
+        {
+          "bookId": "1Cor",
+          "chapter": 10,
+          "verseStart": 13,
+          "verseEnd": 13
+        },
+        {
+          "bookId": "1Cor",
+          "chapter": 13,
+          "verseStart": 4,
+          "verseEnd": 4
+        },
+        {
+          "bookId": "1Cor",
+          "chapter": 16,
+          "verseStart": 14,
+          "verseEnd": 14
+        },
+        {
+          "bookId": "2Cor",
+          "chapter": 5,
+          "verseStart": 17,
+          "verseEnd": 17
+        },
+        {
+          "bookId": "2Cor",
+          "chapter": 12,
+          "verseStart": 9,
+          "verseEnd": 9
+        },
+        {
+          "bookId": "Gal",
+          "chapter": 2,
+          "verseStart": 20,
+          "verseEnd": 20
+        },
+        {
+          "bookId": "Gal",
+          "chapter": 5,
+          "verseStart": 22,
+          "verseEnd": 22
+        },
+        {
+          "bookId": "Eph",
+          "chapter": 2,
+          "verseStart": 8,
+          "verseEnd": 8
+        },
+        {
+          "bookId": "Eph",
+          "chapter": 2,
+          "verseStart": 10,
+          "verseEnd": 10
+        },
+        {
+          "bookId": "Eph",
+          "chapter": 3,
+          "verseStart": 20,
+          "verseEnd": 20
+        },
+        {
+          "bookId": "Phil",
+          "chapter": 1,
+          "verseStart": 6,
+          "verseEnd": 6
+        },
+        {
+          "bookId": "Phil",
+          "chapter": 4,
+          "verseStart": 6,
+          "verseEnd": 6
+        },
+        {
+          "bookId": "Phil",
+          "chapter": 4,
+          "verseStart": 8,
+          "verseEnd": 8
+        },
+        {
+          "bookId": "Phil",
+          "chapter": 4,
+          "verseStart": 13,
+          "verseEnd": 13
+        },
+        {
+          "bookId": "Col",
+          "chapter": 3,
+          "verseStart": 23,
+          "verseEnd": 23
+        },
+        {
+          "bookId": "1Thess",
+          "chapter": 5,
+          "verseStart": 16,
+          "verseEnd": 16
+        },
+        {
+          "bookId": "1Thess",
+          "chapter": 5,
+          "verseStart": 18,
+          "verseEnd": 18
+        },
+        {
+          "bookId": "2Tim",
+          "chapter": 1,
+          "verseStart": 7,
+          "verseEnd": 7
+        },
+        {
+          "bookId": "Heb",
+          "chapter": 4,
+          "verseStart": 16,
+          "verseEnd": 16
+        },
+        {
+          "bookId": "Heb",
+          "chapter": 11,
+          "verseStart": 1,
+          "verseEnd": 1
+        },
+        {
+          "bookId": "Heb",
+          "chapter": 12,
+          "verseStart": 2,
+          "verseEnd": 2
+        },
+        {
+          "bookId": "Heb",
+          "chapter": 13,
+          "verseStart": 8,
+          "verseEnd": 8
+        },
+        {
+          "bookId": "Jas",
+          "chapter": 1,
+          "verseStart": 5,
+          "verseEnd": 5
+        },
+        {
+          "bookId": "1Pet",
+          "chapter": 5,
+          "verseStart": 7,
+          "verseEnd": 7
+        },
+        {
+          "bookId": "1John",
+          "chapter": 4,
+          "verseStart": 19,
+          "verseEnd": 19
+        },
+        {
+          "bookId": "Rev",
+          "chapter": 21,
+          "verseStart": 4,
+          "verseEnd": 4
+        }
+      ],
+      "sourceReferenceIds": []
+    }
+  ]
+}

@@ -34,6 +34,21 @@ type Store interface {
 	// Search returns the entity group for a query (references and books are
 	// also matched on device; the server may add them later).
 	Search(ctx context.Context, query string) ([]domain.Entity, error)
+	// SearchPassages returns Scripture passage hits for free-text and/or semantic search
+	// (§27-28), most relevant first, capped at limit. queryEmbedding is nil when no embedder
+	// is configured server-side; lexical-only results are still meaningful. Ranking does not
+	// yet favor a query that is itself a direct Bible reference — the apps already parse and
+	// serve that case (§28).
+	SearchPassages(ctx context.Context, queryText string, queryEmbedding []float32, limit int) ([]domain.PassageReference, error)
+	// PassageText returns verse text for the given references, keyed "bookId.chapter.verse"
+	// (refs without stored text are simply absent from the map, never a placeholder). Used only
+	// by Ask (§29) to ground synthesis in real words — never exposed through /v1/search, which
+	// apps still read from bible.helloao.org (§3.5, backend/README.md).
+	PassageText(ctx context.Context, translation string, refs []domain.PassageReference) (map[string]string, error)
+	// EntitiesForPassages returns the ids of entities whose curated keyPassages cover any of
+	// the given verses — used only by Ask (§29) to link cited Scripture back to the entity
+	// graph. Order is unspecified; deduplicated.
+	EntitiesForPassages(ctx context.Context, refs []domain.PassageReference) ([]string, error)
 	// DailyVersePool is the curated list the daily pick draws from.
 	DailyVersePool(ctx context.Context) ([]domain.PassageReference, error)
 }

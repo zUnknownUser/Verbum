@@ -180,8 +180,15 @@ paths:
         Backs `SearchClient.search(query, language)`. The apps already parse references and match
         book names on device; the server may repeat that (cheap, and keeps one ranking) but MUST
         serve the entity groups. A direct reference match wins outright (§28): when `passages` is
-        non-empty, `books` is empty. Free-text passage search and semantic search (§27) are later
-        additions to the same shape.
+        non-empty, `books` is empty.
+
+        `passages` (2026-09-12): hybrid lexical (Postgres full-text) + semantic (pgvector cosine
+        similarity against a server-side query embedding) retrieval over a Scripture text corpus
+        (currently WEB, English only). Ranking blends both channels' scores — a first heuristic,
+        not a calibrated relevance model. Direct-reference priority above is a client-side
+        concern still; the server does not special-case a query that is itself a reference.
+        Falls back to lexical-only, silently, when no embedding model is configured or a query
+        embedding call fails — never a failed request.
       parameters:
         - name: q
           in: query
@@ -234,6 +241,72 @@ paths:
               examples:
                 week: { externalValue: examples/daily-verse/week.json }
 
+  /v1/ask:
+    post:
+      tags: [ask]
+      operationId: askScripture
+      summary: Task 12 — Ask Scripture. Retrieval-grounded synthesis with a hard citation gate (§29-31).
+      description: |
+        The model never names a Bible reference itself; it only picks from passages this server
+        already retrieved via the same hybrid search as `/v1/search` and verified exist. An
+        answer that cites nothing verifiable is never shown as if it were grounded — the
+        response falls back to `confidence: "low"` with an empty `answer` instead (§73: no
+        generation before reliable retrieval). English only (WEB) until a licensed pt-BR
+        Scripture text exists (§34). Never streamed — full retrieval always precedes synthesis.
+        503 when no OpenAI key is configured; there is no offline/fixture fallback.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [question]
+              properties:
+                question: { type: string, minLength: 1, maxLength: 500 }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AskResponse' }
+        '503':
+          description: No OpenAI key configured on this server.
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+              example: { code: ask_unavailable, message: "ask is not configured on this server" }
+
+  /v1/realtime/session:
+    post:
+      tags: [realtime]
+      operationId: createRealtimeSession
+      summary: A short-lived credential for a client to talk to OpenAI's Realtime API directly.
+      description: |
+        Not in §45 and not part of the content contract: this brokers a third-party ephemeral
+        credential so the real OpenAI API key never ships in a client app. It does not read the
+        content store, and its response must never be cached (Cache-Control: no-store). No audio,
+        transcript or model output passes through this server — once the client has the secret,
+        it connects to OpenAI over WebRTC/WebSocket on its own. 503 when the server has no
+        OpenAI key configured; there is no offline/fixture fallback for this endpoint.
+      parameters:
+        - name: model
+          in: query
+          required: false
+          schema: { type: string }
+          description: Overrides the server's default Realtime model for this session only.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/RealtimeSession' }
+        '503':
+          description: No OpenAI key configured on this server.
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+              example: { code: realtime_unavailable, message: "realtime is not configured on this server" }
+
 components:
   parameters:
     EntityId:
@@ -265,7 +338,7 @@ components:
       properties:
         code:
           type: string
-          enum: [unknown_entity, unknown_book, content_unavailable, malformed_request, internal]
+          enum: [unknown_entity, unknown_book, content_unavailable, malformed_request, internal, realtime_unavailable, ask_unavailable]
         message: { type: string }
 
     # ---- §22.1
@@ -388,3 +461,44 @@ components:
             properties:
               id: { type: string, description: OSIS id; the apps carry the canon and its names. }
         entities: { type: array, items: { $ref: '#/components/schemas/BibleEntity' } }
+
+    # ---- Realtime voice sessions (not in §45; owner-requested infrastructure ahead of a
+    # client feature, so an app can build on it later without a backend change)
+    RealtimeSession:
+      type: object
+      required: [clientSecret, expiresAt, model]
+      properties:
+        clientSecret:
+          type: string
+          description: >-
+            OpenAI's ephemeral token (`ek_...`). Pass it to the client SDK's connect call; never
+            log or persist it. It is not the server's own OpenAI API key.
+        expiresAt:
+          type: integer
+          description: Unix seconds after which this secret can no longer start a session.
+        model: { type: string }
+
+    # ---- §30 AI Response Data Contract, verbatim
+    AskResponse:
+      type: object
+      required: [answer, summary, passageReferences, entityReferences, sourceReferences, confidence, interpretiveVariance]
+      properties:
+        answer: { type: string, description: Empty when no reliable, citable answer was found. }
+        summary: { type: string }
+        passageReferences:
+          type: array
+          items: { $ref: '#/components/schemas/PassageReference' }
+          description: Only passages the server itself retrieved and the model actually cited; never model-authored.
+        entityReferences:
+          type: array
+          items: { type: string }
+          description: Always empty in this increment — entity linking for Ask is not implemented yet.
+        sourceReferences:
+          type: array
+          items: { $ref: '#/components/schemas/SourceReference' }
+        confidence:
+          type: string
+          enum: [low, medium, high]
+        interpretiveVariance:
+          type: boolean
+          description: True when Christian traditions/scholars meaningfully disagree on this question (§31).

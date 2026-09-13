@@ -1,6 +1,7 @@
 package httpapi
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -9,7 +10,11 @@ import (
 	"testing"
 	"time"
 
+	"verbum/backend/internal/seed"
+	"verbum/backend/internal/store"
 	"verbum/backend/internal/store/memory"
+	"verbum/backend/internal/store/postgres"
+	"verbum/backend/internal/testdb"
 )
 
 // Every example in api/examples/ is what this server must answer for the
@@ -20,8 +25,27 @@ func TestContractExamples(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	checkContractExamples(t, s)
+}
+
+func TestPostgresContract(t *testing.T) {
+	conn, url := testdb.Open(t, "../../db/migrations")
+	if err := seed.Load(context.Background(), conn, "../../db/seed/fixtures.json"); err != nil {
+		t.Fatal(err)
+	}
+	s, err := postgres.Open(context.Background(), url)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(s.Close)
+	checkContractExamples(t, s)
+	checkProblems(t, s)
+}
+
+func checkContractExamples(t *testing.T, s store.Store) {
+	t.Helper()
 	fixed := func() time.Time { return time.Date(2026, 9, 13, 12, 0, 0, 0, time.UTC) }
-	srv := httptest.NewServer(New(s, fixed))
+	srv := httptest.NewServer(New(s, fixed, nil, nil, nil))
 	defer srv.Close()
 
 	cases := map[string]string{
@@ -58,7 +82,12 @@ func TestContractExamples(t *testing.T) {
 
 func TestProblems(t *testing.T) {
 	s, _ := memory.Load("../../db/seed/fixtures.json")
-	srv := httptest.NewServer(New(s, time.Now))
+	checkProblems(t, s)
+}
+
+func checkProblems(t *testing.T, s store.Store) {
+	t.Helper()
+	srv := httptest.NewServer(New(s, time.Now, nil, nil, nil))
 	defer srv.Close()
 	cases := map[string]struct {
 		status int

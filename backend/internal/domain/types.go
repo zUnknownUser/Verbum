@@ -3,6 +3,8 @@
 // Keep them dumb: no methods that need a database, no framework imports.
 package domain
 
+import "fmt"
+
 // EntityType mirrors BibleEntityType (§22.1). Values are the wire strings.
 type EntityType string
 
@@ -43,6 +45,18 @@ type PassageReference struct {
 	Chapter    int    `json:"chapter"`
 	VerseStart *int   `json:"verseStart,omitempty"`
 	VerseEnd   *int   `json:"verseEnd,omitempty"`
+}
+
+// Key is the stable single-verse identity used to correlate a PassageReference with
+// Store.PassageText's map and Store.EntitiesForPassages — every caller of either must build
+// keys with this, not its own copy of the format. A chapter-only reference (nil VerseStart)
+// keys as verse 0, which never collides with a real verse.
+func (r PassageReference) Key() string {
+	verse := 0
+	if r.VerseStart != nil {
+		verse = *r.VerseStart
+	}
+	return fmt.Sprintf("%s.%d.%d", r.BookID, r.Chapter, verse)
 }
 
 // SourceReference is provenance for a claim (§33).
@@ -112,4 +126,17 @@ type BookHit struct {
 type DailyVerse struct {
 	Date      string           `json:"date"`
 	Reference PassageReference `json:"reference"`
+}
+
+// AskResponse is the §30 AI Response Data Contract, verbatim. EntityReferences only ever names
+// entities with a curated keyPassage covering a cited passage (internal/ask) — never derived
+// from the question text itself.
+type AskResponse struct {
+	Answer               string             `json:"answer"`
+	Summary              string             `json:"summary"`
+	PassageReferences    []PassageReference `json:"passageReferences"`
+	EntityReferences     []string           `json:"entityReferences"`
+	SourceReferences     []SourceReference  `json:"sourceReferences"`
+	Confidence           string             `json:"confidence"`
+	InterpretiveVariance bool               `json:"interpretiveVariance"`
 }

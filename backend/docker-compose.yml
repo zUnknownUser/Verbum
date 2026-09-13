@@ -1,8 +1,8 @@
-# Local Postgres for when the Postgres store is written. `docker compose up -d`
+# Local Postgres for the content store. `docker compose up -d`
 # then `export VERBUM_DATABASE_URL=postgres://verbum:verbum@localhost:5432/verbum?sslmode=disable`.
 services:
   db:
-    image: postgres:17
+    image: pgvector/pgvector:pg17 # postgres:17 plus the pgvector extension (§27-29 hybrid search)
     environment:
       POSTGRES_USER: verbum
       POSTGRES_PASSWORD: verbum

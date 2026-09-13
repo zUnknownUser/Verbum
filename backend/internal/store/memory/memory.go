@@ -267,6 +267,57 @@ func (s *Store) Search(_ context.Context, query string) ([]domain.Entity, error)
 	return out, nil
 }
 
+// SearchPassages: the fixtures carry no Scripture text (that lives in scripture_verses,
+// Postgres-only, loaded by the pipeline), so this is always empty — never fabricated (§3.5).
+func (s *Store) SearchPassages(_ context.Context, _ string, _ []float32, _ int) ([]domain.PassageReference, error) {
+	return []domain.PassageReference{}, nil
+}
+
+// PassageText: same reason as SearchPassages — no Scripture text in the fixtures.
+func (s *Store) PassageText(_ context.Context, _ string, _ []domain.PassageReference) (map[string]string, error) {
+	return map[string]string{}, nil
+}
+
+// EntitiesForPassages scans the fixtures' curated keyPassages in memory — small enough here
+// that there is no need for an index the way postgres.Store needs one.
+func (s *Store) EntitiesForPassages(_ context.Context, refs []domain.PassageReference) ([]string, error) {
+	seen := map[string]bool{}
+	result := []string{}
+	for _, detail := range s.data.Details {
+		for _, kp := range detail.KeyPassages {
+			for _, ref := range refs {
+				if !covers(kp, ref) {
+					continue
+				}
+				if !seen[detail.Entity.ID] {
+					seen[detail.Entity.ID] = true
+					result = append(result, detail.Entity.ID)
+				}
+			}
+		}
+	}
+	return result, nil
+}
+
+// covers reports whether keyPassage kp includes ref's verse: a chapter-only kp (no VerseStart)
+// covers the whole chapter; otherwise ref's verse must fall within kp's verse range.
+func covers(kp, ref domain.PassageReference) bool {
+	if kp.BookID != ref.BookID || kp.Chapter != ref.Chapter {
+		return false
+	}
+	if kp.VerseStart == nil {
+		return true
+	}
+	if ref.VerseStart == nil {
+		return false
+	}
+	end := *kp.VerseStart
+	if kp.VerseEnd != nil {
+		end = *kp.VerseEnd
+	}
+	return *ref.VerseStart >= *kp.VerseStart && *ref.VerseStart <= end
+}
+
 func (s *Store) DailyVersePool(_ context.Context) ([]domain.PassageReference, error) {
 	return s.data.DailyVersePool, nil
 }

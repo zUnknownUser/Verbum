@@ -12,8 +12,8 @@ This is a monorepo. Each folder builds and tests on its own; nothing at the top 
 | `Verbum.xcodeproj` + `VerbumKit/` | iOS app (SwiftUI + TCA); the app target is a thin shell over the `VerbumKit` package | Xcode 27 | `xcodebuild -scheme VerbumKit-Package -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test` |
 | `android/` | Android app (Kotlin + Compose + Material 3), a 1:1 twin of the iOS features | Android Studio | `./gradlew assembleDebug test` |
 | `api/` | The contract: `openapi.yaml` + example responses both apps decode in contract tests | any editor | `npx @redocly/cli lint api/openapi.yaml` |
-| `backend/` | The API in Go (stdlib only). Serves the contract; fixtures today, Postgres next | VS Code / GoLand | `cd backend && go test ./...` |
-| `pipeline/` | Content pipeline in Python (§32): imports, extraction, human review, embeddings. Not started | — | — |
+| `backend/` | The API in Go (net/http + pgx). Serves the contract from PostgreSQL or development fixtures | VS Code / GoLand | `cd backend && go test ./...` |
+| `pipeline/` | Offline Python pipeline (§32): JSON import, validation, human review and publication; AI extraction/embeddings next | VS Code | `cd pipeline` then `uv run --locked pytest` |
 | `docs/` | Spec, roadmap, architecture, design system | — | — |
 
 ## Where things stand (2026-09-12)
@@ -22,8 +22,10 @@ This is a monorepo. Each folder builds and tests on its own; nothing at the top 
   timeline, audio, verse of the day). Scripture text is live from bible.helloao.org; everything
   editorial (graph, context, timeline, search entities) still comes from fixtures inside the apps.
 - `api/`: the contract is written and its examples are generated from those fixtures.
-- `backend/`: serves the contract from the same fixtures, contract-tested. **Next step is the
-  Postgres store** — the order is in [`backend/README.md`](backend/README.md).
+- `backend/`: serves the contract from PostgreSQL or development fixtures, contract-tested.
+  The PostgreSQL block is implemented and validated; next steps are in
+  [`backend/README.md`](backend/README.md), with the scope mapped in
+  [`docs/BACKEND_RAG.md`](docs/BACKEND_RAG.md).
 
 ## Setting up a new machine
 

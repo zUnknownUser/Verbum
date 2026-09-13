@@ -16,11 +16,13 @@ type Problem struct {
 }
 
 const (
-	CodeUnknownEntity      = "unknown_entity"
-	CodeUnknownBook        = "unknown_book"
-	CodeContentUnavailable = "content_unavailable"
-	CodeMalformedRequest   = "malformed_request"
-	CodeInternal           = "internal"
+	CodeUnknownEntity       = "unknown_entity"
+	CodeUnknownBook         = "unknown_book"
+	CodeContentUnavailable  = "content_unavailable"
+	CodeMalformedRequest    = "malformed_request"
+	CodeInternal            = "internal"
+	CodeRealtimeUnavailable = "realtime_unavailable"
+	CodeAskUnavailable      = "ask_unavailable"
 )
 
 func writeProblem(w http.ResponseWriter, status int, code, message string) {
@@ -44,5 +46,13 @@ func writeJSON(w http.ResponseWriter, v any) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	// Content is editorial and changes rarely; let clients and CDNs keep it a while.
 	w.Header().Set("Cache-Control", "public, max-age=3600")
+	_ = json.NewEncoder(w).Encode(v)
+}
+
+// writeJSONNoStore is writeJSON for responses that must never be cached or shared — today,
+// only the realtime ephemeral credential.
+func writeJSONNoStore(w http.ResponseWriter, v any) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.Header().Set("Cache-Control", "no-store")
 	_ = json.NewEncoder(w).Encode(v)
 }
