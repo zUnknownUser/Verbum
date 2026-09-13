@@ -17,6 +17,32 @@ amplia os requisitos de `PRODUCT.md` ou o contrato de `api/openapi.yaml`.
 | [backend/README.md](../backend/README.md) | Estrutura Go, execução, validação e próximos passos explícitos. |
 | [pipeline/README.md](../pipeline/README.md) | Pipeline offline Python ≥3.12 com uv; importação JSON, normalização, revisão e publicação implementadas. Extração por IA e embeddings são os próximos incrementos. |
 
+## Ponto de retomada atual (2026-09-13) — leia isto primeiro
+
+**Backend/RAG: completo e testado com chamadas reais até o Bloco 8 (abaixo).** Postgres, pipeline
+editorial com revisão humana, extração por IA, Bíblia inteira (WEB) indexada com embeddings,
+busca híbrida, Ask Scripture (`/v1/ask`), sessão de voz (`/v1/realtime/session`), observabilidade.
+Tudo commitado e enviado para `main` (commit `92ee889`).
+
+**App: zero integração com esse backend.** Nenhum arquivo em `Verbum/Verbum` (alvo iOS),
+`VerbumKit` ou `android/` foi tocado nesta frente — por instrução explícita do proprietário
+(2026-09-12/13), não porque algo tenha travado tecnicamente. Isso significa que hoje, testando o
+app, você **não vai ver** nenhuma busca semântica, nenhum Ask, nenhuma sessão de voz — o app
+ainda lê fixtures locais, não este servidor.
+
+**Quando for pegar o lado do App**, o trabalho é: implementar os clientes `.live` (iOS/Android)
+que chamam este backend de verdade, seguindo exatamente `api/openapi.yaml` (já documenta
+`/v1/search` com `passages` real, `/v1/ask` e `/v1/realtime/session`). Pontos de atenção:
+- `/v1/ask` e `/v1/realtime/session` são endpoints **novos**, sem exemplo de contrato
+  byte-a-byte (respostas não-determinísticas) — o app precisa lidar com o formato, não comparar
+  contra um fixture fixo.
+- Antes de expor Ask/busca semântica pro usuário final, resolver a pendência de produto sobre o
+  `internal/ask/safety.go` (ver Bloco 8) — a nota de "procure ajuda profissional" ainda dispara
+  por palavra-chave da pergunta, não pelo conteúdo da resposta; o proprietário pediu revisão
+  antes de estender/expor isso.
+- Conteúdo real (§68) e licença PT-BR (§34) continuam pendentes — o RAG só cobre inglês (WEB)
+  com a fixture pequena de entidades por enquanto.
+
 ## Estado encontrado
 
 - Commits `c59f773`, `5abe18c` e `44f2aff`: contrato, esqueleto Go e instruções de retomada.
