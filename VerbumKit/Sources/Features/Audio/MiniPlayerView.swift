@@ -77,11 +77,14 @@ struct MiniPlayerView: View {
 
     private var subtitle: String {
         if store.failed { return L10n.t("No recording for this chapter") }
+        if store.isLoading { return L10n.t("Preparing audio…") }
         let time = "\(format(store.currentTime)) / \(format(store.duration))"
         if let audio = store.audio, let narrator = store.narrator {
+            // Synthesised reading of the translation on screen, or a recording in English (labelled).
+            if narrator.isSynthesised { return "\(audio.translationName) · \(time)" }
             return "\(L10n.t("Audio in English")) · \(audio.translationId) · \(narrator.name) · \(time)"
         }
-        return L10n.t("Audio in English")
+        return ""
     }
 
     private func format(_ seconds: TimeInterval) -> String {

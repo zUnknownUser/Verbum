@@ -68,11 +68,14 @@ internal fun MiniPlayer(state: AudioPlayerFeature.State, send: (Action) -> Unit)
 @Composable
 private fun subtitle(state: AudioPlayerFeature.State): String {
     if (state.failed) return stringResource(R.string.audio_none)
+    if (state.isLoading) return stringResource(R.string.audio_preparing)
     val time = "${format(state.currentTime)} / ${format(state.duration)}"
     val audio = state.audio
     val narrator = state.narrator
     val language = stringResource(R.string.audio_in_english)
-    return if (audio != null && narrator != null) "$language · ${audio.translationId} · ${narrator.name} · $time" else language
+    if (audio == null || narrator == null) return ""
+    // Synthesised reading of the translation on screen, or a recording in English (labelled).
+    return if (narrator.isSynthesised) "${audio.translationName} · $time" else "$language · ${audio.translationId} · ${narrator.name} · $time"
 }
 
 private fun format(seconds: Double): String {

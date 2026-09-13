@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="audio_in_english">Áudio em inglês</string>
+    <string name="audio_preparing">Preparando o áudio…</string>
     <string name="arrival_title">Como você está chegando hoje?</string>
     <string name="arrival_subtitle">Um ponto de partida para explorar a Bíblia, no seu ritmo.</string>
     <string name="arrival_privacy">Escolha um ponto de partida, no seu ritmo. Essa escolha é opcional e não fica salva em um perfil.</string>

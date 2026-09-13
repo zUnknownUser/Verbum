@@ -1,13 +1,22 @@
 # Roadmap
 
-## Audio safety override — 2026-09-13
+## Audio in Portuguese — reactivated 2026-09-13 (was disabled the same morning)
 
-- iOS / Android: native PT-BR synthesis disabled after an owner-reported crash;
-  live audio explicitly uses English BSB recordings until a Portuguese provider is validated.
-- Mini player labels the audio language and no longer displays native-speech preparation errors.
-  Portuguese Scripture text is unchanged. Native speech entries below are historical, not active.
-- No local Verbum crash report was found during this check; exact crash cause is unconfirmed.
-  Device playback validation remains with the owner.
+- The synthesised reading is live again on both platforms for pt-BR devices: the device reads the
+  translation on screen (Bíblia Livre) aloud through the existing player (pause, ±15 s, speed,
+  background, chaining). Without an offline Portuguese voice the English BSB recordings are
+  offered, labelled "Audio in English"; a synthesised reading is labelled "Leitura automática".
+- What was actually wrong (found by rendering chapters in the simulator test host, not guessed):
+  `AVSpeechSynthesizer.write` hands out empty buffers **between paragraphs**, and the sink took
+  the first one as the end — John 3 came out as 17 s. The end is the delegate's `didFinish` now.
+  The buffer callback is `@Sendable` (a closure born in a `@MainActor` method traps off-main in
+  Swift 6 — the same class of crash the Now Playing artwork had). Output is AAC (Psalm 119: 7 MB,
+  not 81 MB of Float32 CAF); the cache keeps 40 chapters / 150 MB; the next chapter is rendered in
+  the background after the current one so chaining does not wait. Measured: Psalm 119 renders in
+  ~16 s, John 3 in ~4 s, cache hit 0.06 s, main thread stalls ≤ 43 ms while rendering.
+- Android: same wiring (`LiveScriptureAudioClient`), `VoiceUnavailableException` → English
+  fallback, prefetch of the next chapter, WAV cache raised to 24 chapters / 200 MB. Rendering
+  itself was already chunked and could not be exercised in JVM tests — owner QA on a device.
 
 Execution order from PRODUCT.md §60 and §79. One line per step, one mark per platform
 (`iOS` = `Verbum.xcodeproj` + `VerbumKit`, `Android` = `android/`). A mark is ✅ only when that

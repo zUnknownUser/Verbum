@@ -12,6 +12,12 @@ public struct AudioNarrator: Identifiable, Codable, Equatable, Hashable, Sendabl
         self.url = url
         self.timingsPath = timingsPath
     }
+
+    /// Ids of readings the device synthesised from the translation on screen
+    /// (`native.<language>`), as opposed to a person's recording.
+    public static let synthesisedPrefix = "native."
+
+    public var isSynthesised: Bool { id.hasPrefix(Self.synthesisedPrefix) }
 }
 
 /// Everything needed to listen to a chapter: which translation was recorded,

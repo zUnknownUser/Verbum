@@ -20,7 +20,7 @@ import com.nexussoft.verbum.clients.api.VerbumApi
 import com.nexussoft.verbum.clients.helloao.ChapterCache
 import com.nexussoft.verbum.audio.Media3AudioPlayerClient
 import com.nexussoft.verbum.clients.helloao.HelloAOBibleClient
-import com.nexussoft.verbum.clients.helloao.HelloAOScriptureAudioClient
+import com.nexussoft.verbum.audio.LiveScriptureAudioClient
 import com.nexussoft.verbum.clients.helloao.HelloAOTranslation
 import com.nexussoft.verbum.clients.helloao.LiveBibleClient
 import com.nexussoft.verbum.feature.scripture.AppFeature
@@ -57,9 +57,8 @@ fun RootScreen() {
                 askClient = LiveAskScriptureClient(api),
                 realtimeSessionClient = LiveRealtimeSessionClient(api),
                 voiceClient = RealtimeConversation(OkHttpRealtimeTransport(), AndroidVoiceAudio(context) { MicrophonePermission.request() }),
-                // Recordings only (BSB English, labelled, when the reading translation has none).
-                // NativeScriptureAudioClient (TTS rendered to a file) is parked until spoken audio is a live player.
-                audioClient = HelloAOScriptureAudioClient(BookLanguage.ENGLISH),
+                // Portuguese: the device reads the translation on screen; English: helloao recordings.
+                audioClient = LiveScriptureAudioClient(BookLanguage.current, context, bible),
                 player = Media3AudioPlayerClient(context),
                 initialTextScale = { ReaderTextScale.fromPreference(preferences.string(ReaderTextScale.PREFERENCE_KEY)) },
                 notifications = AndroidNotificationClient(context),

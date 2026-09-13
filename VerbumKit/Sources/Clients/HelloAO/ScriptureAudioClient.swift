@@ -11,9 +11,8 @@ public struct ScriptureAudioClient: Sendable {
 }
 
 extension ScriptureAudioClient: DependencyKey {
-    /// English recordings only until the owner validates a Portuguese provider.
-    /// Native synthesis is disabled following a reported playback crash.
-    public static let liveValue: ScriptureAudioClient = .helloAO(language: .english)
+    /// Portuguese: the device reads the translation on screen; English: helloao recordings.
+    public static let liveValue: ScriptureAudioClient = .live(language: .current)
     public static let previewValue = ScriptureAudioClient(chapterAudio: { _, _ in nil })
 }
 

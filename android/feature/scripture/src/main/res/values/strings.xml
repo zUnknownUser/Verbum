@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="audio_in_english">Audio in English</string>
+    <string name="audio_preparing">Preparing audio…</string>
     <string name="arrival_title">How are you arriving today?</string>
     <string name="arrival_subtitle">A starting point for exploring Scripture, at your own pace.</string>
     <string name="arrival_privacy">Choose a starting point, at your own pace. This choice is optional and is not saved to a profile.</string>

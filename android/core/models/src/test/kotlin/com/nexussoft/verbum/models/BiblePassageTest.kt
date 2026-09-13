@@ -26,3 +26,11 @@ class BiblePassageTest {
         assertEquals(passage, passage.copy())
     }
 }
+
+class AudioNarratorTest {
+    @kotlin.test.Test
+    fun synthesisedReadingsAreToldFromRecordings() {
+        kotlin.test.assertTrue(AudioNarrator("native.pt-BR", "Leitura automática", "file:///x.wav", null).isSynthesised)
+        kotlin.test.assertFalse(AudioNarrator("david", "David", "https://x/david.mp3", null).isSynthesised)
+    }
+}
