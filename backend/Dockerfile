@@ -1,5 +1,5 @@
-# Two stages: build with the Go toolchain, run on a distroless base (no shell,
-# ~20 MB). Build from the repo root so the seed file is in context:
+# Build with Go; Debian runtime includes FFmpeg for continuous chapter MP3s.
+# Runs as nonroot. Build from the repo root:
 #   docker build -f backend/Dockerfile -t verbum-api .
 FROM golang:1.24 AS build
 WORKDIR /src
@@ -8,10 +8,15 @@ RUN go mod download
 COPY backend/ ./
 RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/api ./cmd/api
 
-FROM gcr.io/distroless/static-debian12:nonroot
+FROM debian:bookworm-slim
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates ffmpeg \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir -p /var/cache/verbum/tts && chown -R 65532:65532 /var/cache/verbum
+USER 65532:65532
 WORKDIR /app
 COPY --from=build /out/api /app/api
 COPY backend/db/seed/fixtures.json /app/db/seed/fixtures.json
 ENV VERBUM_ADDR=:8080
+ENV VERBUM_TTS_CACHE_DIR=/var/cache/verbum/tts
 EXPOSE 8080
 ENTRYPOINT ["/app/api"]

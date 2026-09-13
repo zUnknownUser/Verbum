@@ -45,7 +45,7 @@ func TestPostgresContract(t *testing.T) {
 func checkContractExamples(t *testing.T, s store.Store) {
 	t.Helper()
 	fixed := func() time.Time { return time.Date(2026, 9, 13, 12, 0, 0, 0, time.UTC) }
-	srv := httptest.NewServer(New(s, fixed, nil, nil, nil))
+	srv := httptest.NewServer(New(s, fixed, nil, nil, nil, nil))
 	defer srv.Close()
 
 	cases := map[string]string{
@@ -87,7 +87,7 @@ func TestProblems(t *testing.T) {
 
 func checkProblems(t *testing.T, s store.Store) {
 	t.Helper()
-	srv := httptest.NewServer(New(s, time.Now, nil, nil, nil))
+	srv := httptest.NewServer(New(s, time.Now, nil, nil, nil, nil))
 	defer srv.Close()
 	cases := map[string]struct {
 		status int

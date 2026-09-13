@@ -35,7 +35,7 @@ func askServer(t *testing.T, a asker) *httptest.Server {
 	if err != nil {
 		t.Fatal(err)
 	}
-	srv := httptest.NewServer(New(s, time.Now, nil, nil, a))
+	srv := httptest.NewServer(New(s, time.Now, nil, nil, a, nil))
 	t.Cleanup(srv.Close)
 	return srv
 }

@@ -1,5 +1,8 @@
 # backend/ — the Verbum API (Go)
 
+Google Cloud reading audio: `POST /v1/tts` (MP3, pt-BR/en-US). Configuration, sample requests,
+validation and App integration handoff: [TTS.md](TTS.md).
+
 Serves [`api/openapi.yaml`](../api/openapi.yaml). Uses `net/http` and PostgreSQL through pgx (the driver already specified by Task 11).
 With `VERBUM_DATABASE_URL` it reads PostgreSQL; without it, it reads the explicitly labelled
 development fixtures (`db/seed/fixtures.json`). The wire contract is unchanged.
@@ -51,7 +54,7 @@ Rules the code follows (from docs/PRODUCT.md):
    `cmd/seed`, selection by `VERBUM_DATABASE_URL`. The same seven API examples pass with both
    stores, plus fixture-wide parity, missing content, cancellation and atomic seed tests.
    Migration `0002_content_order.sql` preserves editorial list order in relational storage.
-2. **Deploy** — the Dockerfile builds a distroless image; any container host works
+2. **Deploy** — the Dockerfile builds a nonroot Debian image with FFmpeg; any container host works
    (Fly, Cloud Run, Railway, a VPS with Docker). Put a TLS terminator in front. Set `VERBUM_ADDR`.
 3. **Apps go live** — `.live` clients on iOS and Android against this URL, with contract tests on
    the same `api/examples/` (see `api/README.md`).
@@ -147,7 +150,7 @@ out-of-range indexes`) and reference-parse misses (`search: reference parsed but
 This is deliberately **not** OpenTelemetry spans/exporters yet — there is no chosen collector or
 vendor to send them to, so wiring one in now would be a real infrastructure dependency nobody
 asked for. `internal/reqid`'s doc comment explains the intended migration path once one is
-chosen. "Cache hit rate" from §54's list does not apply: this backend has no cache.
+chosen. The TTS chapter cache is documented in [TTS.md](TTS.md); cache hit metrics are not yet exposed.
 
 ## PostgreSQL development setup
 

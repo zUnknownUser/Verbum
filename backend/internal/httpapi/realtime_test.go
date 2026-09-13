@@ -30,7 +30,7 @@ func realtimeServer(t *testing.T, rt realtimeBroker) *httptest.Server {
 	if err != nil {
 		t.Fatal(err)
 	}
-	srv := httptest.NewServer(New(s, time.Now, rt, nil, nil))
+	srv := httptest.NewServer(New(s, time.Now, rt, nil, nil, nil))
 	t.Cleanup(srv.Close)
 	return srv
 }

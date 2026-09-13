@@ -41,7 +41,7 @@ func recordingSearchServer(t *testing.T, embedder queryEmbedder) (*httptest.Serv
 		t.Fatal(err)
 	}
 	rec := &recordingStore{Store: base}
-	srv := httptest.NewServer(New(rec, time.Now, nil, embedder, nil))
+	srv := httptest.NewServer(New(rec, time.Now, nil, embedder, nil, nil))
 	t.Cleanup(srv.Close)
 	return srv, rec
 }

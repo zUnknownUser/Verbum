@@ -34,8 +34,78 @@ tags:
   - name: timeline
   - name: search
   - name: daily
+  - name: tts
 
 paths:
+  /v1/tts:
+    post:
+      tags: [tts]
+      operationId: synthesizeSpeech
+      summary: Generate MP3 reading audio with Google Cloud Text-to-Speech.
+      description: |
+        Synthesizes the supplied plain text exactly; does not retrieve or alter Scripture.
+        Maximum 100000 UTF-8 bytes of text and 1 MiB request body. Plain text only.
+        Automatically segments at 1000 bytes (below Google's 5000-byte limit) and returns one complete MP3, cached
+        persistently by exact chapter text and normalized voice/audio settings.
+        Defaults to pt-BR-Chirp3-HD-Aoede for Portuguese and en-US-Standard-A for English.
+        Speed defaults to 1.0; pitch must be omitted or zero for Chirp 3 HD.
+        Generation can take up to 10 minutes; no response audio is sent until complete.
+        Voice availability and support for speed/pitch depend on Google; invalid combinations
+        return 400. Server-side Google credentials are never returned to clients.
+        Responses use Cache-Control: no-store; the server keeps its own persistent chapter cache
+        keyed by exact text and normalized settings, invisible to HTTP intermediaries.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpeechRequest'
+            examples:
+              portuguese:
+                externalValue: examples/tts/request-pt-BR.json
+              english:
+                externalValue: examples/tts/request-en-US.json
+      responses:
+        '200':
+          description: MP3 bytes, ready to save or play (not JSON/base64).
+          content:
+            audio/mpeg:
+              schema: { type: string, format: binary }
+        '400':
+          description: Invalid text, language, voice, speed, pitch, format or JSON.
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+        '408':
+          description: Request cancelled.
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+        '415':
+          description: Content-Type must be application/json.
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+        '429':
+          description: Google quota exhausted; tts_rate_limited.
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+        '502':
+          description: Invalid provider response; tts_failed.
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+        '503':
+          description: TTS disabled, credential/permission failure or provider unavailable; tts_unavailable.
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+        '504':
+          description: Provider timeout; tts_timeout.
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
   /v1/entities/{id}:
     get:
       tags: [entities]
@@ -331,6 +401,24 @@ components:
           example: { code: unknown_entity, message: "no entity with id 'nope'" }
 
   schemas:
+    SpeechRequest:
+      type: object
+      additionalProperties: false
+      required: [text, language]
+      properties:
+        text:
+          type: string
+          minLength: 1
+          description: Exact chapter plain text, nonblank, at most 100000 UTF-8 bytes. Automatically segmented without truncation.
+        language: { type: string, enum: [pt-BR, en-US] }
+        voice:
+          type: string
+          maxLength: 128
+          description: Google voice matching language; omitted/empty selects pt-BR-Chirp3-HD-Aoede or en-US-Standard-A.
+          example: pt-BR-Chirp3-HD-Aoede
+        speed: { type: number, minimum: 0.25, maximum: 2, default: 1 }
+        pitch: { type: number, minimum: -20, maximum: 20, default: 0, description: 'Omit or use zero for Chirp 3 HD; nonzero values return 400. Retained for compatible legacy voices.' }
+        format: { type: string, enum: [MP3], default: MP3 }
     # ---- Errors (§52). Apps switch on `code`; `message` is for logs.
     Problem:
       type: object
@@ -338,7 +426,7 @@ components:
       properties:
         code:
           type: string
-          enum: [unknown_entity, unknown_book, content_unavailable, malformed_request, internal, realtime_unavailable, ask_unavailable]
+          enum: [unknown_entity, unknown_book, content_unavailable, malformed_request, internal, realtime_unavailable, ask_unavailable, tts_unavailable, tts_rate_limited, tts_timeout, tts_failed]
         message: { type: string }
 
     # ---- §22.1

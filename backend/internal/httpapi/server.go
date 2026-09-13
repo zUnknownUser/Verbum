@@ -17,8 +17,8 @@ import (
 // panicking, and search stays lexical/entity-only (OPENAI_API_KEY is optional configuration,
 // unlike the store). Pass a literal nil at the call site for any of them, never a nil-valued
 // variable of the concrete pointer type — see cmd/api/main.go's comment on why.
-func New(s store.Store, now func() time.Time, rt realtimeBroker, embedder queryEmbedder, asker asker) http.Handler {
-	h := &handlers{store: s, now: now, realtime: rt, embedder: embedder, asker: asker}
+func New(s store.Store, now func() time.Time, rt realtimeBroker, embedder queryEmbedder, asker asker, speech TextToSpeech) http.Handler {
+	h := &handlers{store: s, now: now, realtime: rt, embedder: embedder, asker: asker, tts: speech}
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, _ *http.Request) { w.Write([]byte("ok\n")) })
 	mux.HandleFunc("GET /v1/entities", h.listEntities)
@@ -30,6 +30,7 @@ func New(s store.Store, now func() time.Time, rt realtimeBroker, embedder queryE
 	mux.HandleFunc("GET /v1/daily-verse", h.dailyVerse)
 	mux.HandleFunc("POST /v1/realtime/session", h.realtimeSession)
 	mux.HandleFunc("POST /v1/ask", h.ask)
+	mux.HandleFunc("POST /v1/tts", h.synthesizeSpeech)
 	return logging(mux)
 }
 
@@ -50,6 +51,8 @@ type statusRecorder struct {
 	http.ResponseWriter
 	status int
 }
+
+func (r *statusRecorder) Unwrap() http.ResponseWriter { return r.ResponseWriter }
 
 func (r *statusRecorder) WriteHeader(code int) {
 	r.status = code

@@ -26,6 +26,7 @@ import (
 	"verbum/backend/internal/store/memory"
 	"verbum/backend/internal/store/postgres"
 	"verbum/backend/internal/synthesis"
+	"verbum/backend/internal/tts"
 )
 
 func main() {
@@ -72,6 +73,16 @@ func main() {
 	// nil *realtime.Broker/*embeddings.Client/*ask.Service variable) in the disabled case:
 	// handing a typed nil pointer through an interface parameter would make handlers.go's
 	// `== nil` checks false, and the first request would panic instead of degrading gracefully.
+	var speech httpapi.TextToSpeech
+	if os.Getenv("GOOGLE_APPLICATION_CREDENTIALS") != "" {
+		client, err := tts.New()
+		if err != nil {
+			slog.Error("TTS disabled: check GOOGLE_APPLICATION_CREDENTIALS, writable cache directory and ffmpeg")
+		} else {
+			speech = client
+			slog.Info("Google Cloud TTS enabled")
+		}
+	}
 	var handler http.Handler
 	if key := os.Getenv("OPENAI_API_KEY"); key != "" {
 		slog.Info("realtime session broker, query embedder and ask enabled")
@@ -82,10 +93,10 @@ func main() {
 			Synthesizer: synthesis.New(key, env("VERBUM_ASK_MODEL", synthesis.DefaultModel)),
 			Translation: "WEB",
 		}
-		handler = httpapi.New(s, time.Now, realtime.New(key), embedder, asker)
+		handler = httpapi.New(s, time.Now, realtime.New(key), embedder, asker, speech)
 	} else {
 		slog.Info("realtime session broker, query embedder and ask disabled: OPENAI_API_KEY not set")
-		handler = httpapi.New(s, time.Now, nil, nil, nil)
+		handler = httpapi.New(s, time.Now, nil, nil, nil, speech)
 	}
 
 	server := &http.Server{

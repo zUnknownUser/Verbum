@@ -30,3 +30,15 @@ pipeline/.venv/
 pipeline/__pycache__/
 pipeline/**/__pycache__/
 .env
+
+# Google Cloud credentials (actual Service Account file lives outside this repo).
+**/secrets/
+**/credentials/
+*service-account*.json
+*service_account*.json
+application_default_credentials.json
+google-credentials*.json
+verbum-app1-*.json
+*.p12
+*.pem
+backend/tmp/

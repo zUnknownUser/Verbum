@@ -1,5 +1,29 @@
 # Backend e RAG — mapa e ponto de retomada
 
+## Google Cloud Text-to-Speech (2026-09-13)
+
+Solicitado pelo proprietário após os blocos existentes de backend/RAG. Implementado na branch
+`feat/google-cloud-tts`, baseada em `main`; os arquivos backend/pipeline/API eram iguais aos de
+`app-integration` na verificação do remoto. A integração segue os clientes HTTP existentes e a
+injeção em `httpapi.New`, com `Problem` e logs de requisição já usados pelo backend.
+
+Pronto: `POST /v1/tts`, MP3 em pt-BR/en-US, texto/voz/velocidade/pitch/formato, autenticação ADC por
+`GOOGLE_APPLICATION_CREDENTIALS`, validação e tratamento de erros. Credencial fora do repositório,
+montada somente para leitura no Docker. Sem alterações nos apps, banco ou pipeline Python.
+
+Validado: testes Go (incluindo regressões e contratos PostgreSQL), vet/build Docker e gerações
+reais em ambos os idiomas. A API local na porta 8080 já inclui TTS e mantém os serviços OpenAI.
+O container anterior ficou parado como `verbum-api-before-tts` para rollback.
+
+Próximo passo no App: adaptar o client de áudio existente para enviar o texto da tradução em uso,
+receber MP3 e usar o player existente, com estados de carregamento/erro/cancelamento. Chirp 3 HD
+em pt-BR, segmentação automática até 100000 bytes de texto e cache persistente por texto exato
+e configurações estão implementados. Um único MP3 por requisição; alinhamento por versículo
+continua fora deste bloco. Instruções completas: [backend/TTS.md](../backend/TTS.md).
+
+Preferência do proprietário para futuras entregas: analisar a arquitetura existente antes de
+alterar, informar o que ficou construído, como testar e o que falta fazer no lado do App.
+
 Escopo definido pelo proprietário em 2026-09-12: trabalhar por blocos somente no backend e no
 RAG. Android e iOS ficam fora desta frente. Este mapa registra a execução; não substitui nem
 amplia os requisitos de `PRODUCT.md` ou o contrato de `api/openapi.yaml`.
