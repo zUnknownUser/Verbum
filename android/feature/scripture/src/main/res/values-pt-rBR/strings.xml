@@ -190,4 +190,34 @@
     <string name="ask_offline">O Verbum não pôde ser alcançado</string>
     <string name="ask_offline_body">Perguntar precisa de conexão. A leitura e a busca do que este aparelho sabe continuam funcionando.</string>
     <string name="ask_failed">Não foi possível responder desta vez</string>
+
+    <!-- Voice conversation with the study companion -->
+    <string name="voice_talk_chapter">Conversar sobre este capítulo</string>
+    <string name="voice_talk_entity">Conversar sobre %1$s</string>
+    <string name="voice_talk_entity_subtitle">Pergunte em voz alta; o companheiro responde a partir da Escritura.</string>
+    <string name="voice_go_on">Continuar em voz alta</string>
+    <string name="voice_talking_about">Conversando sobre</string>
+    <string name="voice_connecting">Conectando…</string>
+    <string name="voice_muted">Mudo</string>
+    <string name="voice_hearing">Ouvindo você</string>
+    <string name="voice_listening">Ouvindo</string>
+    <string name="voice_speaking">Falando</string>
+    <string name="voice_thinking">Procurando na Escritura</string>
+    <string name="voice_ended">Encerrada</string>
+    <string name="voice_not_connected">Não conectado</string>
+    <string name="voice_intro">Pergunte qualquer coisa sobre esta página — o que uma palavra significa, quem é alguém, por que importa. O companheiro responde a partir da Escritura e diz de quais passagens está partindo.</string>
+    <string name="voice_you">Você</string>
+    <string name="voice_companion">Companheiro</string>
+    <string name="voice_passages">Passagens mencionadas</string>
+    <string name="voice_unavailable">Voz ainda não está disponível neste servidor</string>
+    <string name="voice_unavailable_body">Perguntar à Escritura por escrito continua funcionando pela busca.</string>
+    <string name="voice_mic_denied">O Verbum precisa do microfone para conversar</string>
+    <string name="voice_mic_denied_body">Permita o microfone em Ajustes e volte aqui.</string>
+    <string name="voice_open_settings">Abrir Ajustes</string>
+    <string name="voice_offline_body">Conversar precisa de conexão.</string>
+    <string name="voice_dropped">A conversa caiu</string>
+    <string name="voice_unmute">Ativar som</string>
+    <string name="voice_mute">Silenciar</string>
+    <string name="voice_close">Fechar</string>
+    <string name="voice_end">Encerrar</string>
 </resources>

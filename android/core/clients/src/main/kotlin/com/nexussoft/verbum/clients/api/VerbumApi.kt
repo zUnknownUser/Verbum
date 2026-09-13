@@ -1,5 +1,6 @@
 package com.nexussoft.verbum.clients.api
 
+import com.nexussoft.verbum.clients.RealtimeSession
 import com.nexussoft.verbum.models.BibleBook
 import com.nexussoft.verbum.models.BibleEntity
 import com.nexussoft.verbum.models.BibleEntityType
@@ -218,6 +219,12 @@ class VerbumApi(
     /** `POST /v1/ask {"question"}` → the §30 contract. Never cached. */
     suspend fun ask(question: String): ScriptureAnswer =
         post("/v1/ask", json.encodeToString(WireAskRequest.serializer(), WireAskRequest(question)), WireAskResponse.serializer()).toModel()
+
+    // ---- realtime
+
+    /** `POST /v1/realtime/session`. Never cached (the server says `no-store`). */
+    suspend fun realtimeSession(): RealtimeSession =
+        post("/v1/realtime/session", "{}", WireRealtimeSession.serializer()).let { RealtimeSession(it.clientSecret, it.expiresAt, it.model) }
 
     // ---- plumbing
 

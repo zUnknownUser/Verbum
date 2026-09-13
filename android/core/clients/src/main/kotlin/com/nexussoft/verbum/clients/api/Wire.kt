@@ -139,3 +139,6 @@ internal data class WireAskResponse(
         ScriptureAnswer.Confidence.fromWireValue(confidence) ?: malformed("confidence $confidence"), interpretiveVariance,
     )
 }
+
+@Serializable
+internal data class WireRealtimeSession(val clientSecret: String, val expiresAt: Long, val model: String)

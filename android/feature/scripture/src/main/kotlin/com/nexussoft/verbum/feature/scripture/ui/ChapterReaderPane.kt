@@ -45,6 +45,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Headphones
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -174,6 +175,9 @@ internal fun ChapterReaderPane(
                 actions = {
                     IconButton(onClick = { send(Action.ListenTapped) }) {
                         Icon(Icons.Filled.Headphones, contentDescription = stringResource(R.string.listen), tint = MaterialTheme.colorScheme.onSurface)
+                    }
+                    IconButton(onClick = { send(Action.TalkTapped) }) {
+                        Icon(Icons.Filled.Mic, contentDescription = stringResource(R.string.voice_talk_chapter), tint = MaterialTheme.colorScheme.onSurface)
                     }
                     TextButton(onClick = onSettingsTapped) {
                         Text("Aa", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)

@@ -5,6 +5,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nexussoft.verbum.clients.api.LiveAskScriptureClient
 import com.nexussoft.verbum.clients.api.LiveContextClient
+import com.nexussoft.verbum.clients.api.LiveRealtimeSessionClient
+import com.nexussoft.verbum.clients.voice.OkHttpRealtimeTransport
+import com.nexussoft.verbum.clients.voice.RealtimeConversation
+import com.nexussoft.verbum.audio.AndroidVoiceAudio
 import com.nexussoft.verbum.clients.api.LiveGraphClient
 import com.nexussoft.verbum.clients.api.LiveSearchClient
 import com.nexussoft.verbum.clients.api.LiveTimelineClient
@@ -48,6 +52,8 @@ fun RootScreen() {
                 contextClient = LiveContextClient(api),
                 timelineClient = LiveTimelineClient(api),
                 askClient = LiveAskScriptureClient(api),
+                realtimeSessionClient = LiveRealtimeSessionClient(api),
+                voiceClient = RealtimeConversation(OkHttpRealtimeTransport(), AndroidVoiceAudio(context) { MicrophonePermission.request() }),
                 // Recordings only (BSB English, labelled, when the reading translation has none).
                 // NativeScriptureAudioClient (TTS rendered to a file) is parked until spoken audio is a live player.
                 audioClient = HelloAOScriptureAudioClient(BookLanguage.ENGLISH),

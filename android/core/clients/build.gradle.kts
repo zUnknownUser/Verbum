@@ -12,6 +12,8 @@ dependencies {
     api(project(":core:common"))
     api(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.serialization.json)
+    // The voice conversation's WebSocket (clients/voice); nothing else here talks to a socket.
+    implementation(libs.okhttp)
     testImplementation(libs.kotlin.test)
     testImplementation(libs.kotlinx.coroutines.test)
 }

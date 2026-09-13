@@ -190,4 +190,34 @@
     <string name="ask_offline">Verbum can\'t be reached</string>
     <string name="ask_offline_body">Asking needs a connection. Reading and search of what this device knows keep working.</string>
     <string name="ask_failed">Couldn\'t answer this time</string>
+
+    <!-- Voice conversation with the study companion -->
+    <string name="voice_talk_chapter">Talk about this chapter</string>
+    <string name="voice_talk_entity">Talk about %1$s</string>
+    <string name="voice_talk_entity_subtitle">Ask out loud; the companion answers from Scripture.</string>
+    <string name="voice_go_on">Go on out loud</string>
+    <string name="voice_talking_about">Talking about</string>
+    <string name="voice_connecting">Connecting…</string>
+    <string name="voice_muted">Muted</string>
+    <string name="voice_hearing">Hearing you</string>
+    <string name="voice_listening">Listening</string>
+    <string name="voice_speaking">Speaking</string>
+    <string name="voice_thinking">Looking it up in Scripture</string>
+    <string name="voice_ended">Ended</string>
+    <string name="voice_not_connected">Not connected</string>
+    <string name="voice_intro">Ask anything about this page — what a word means, who someone is, why it matters. The companion answers from Scripture and says which passages it is drawing on.</string>
+    <string name="voice_you">You</string>
+    <string name="voice_companion">Companion</string>
+    <string name="voice_passages">Passages mentioned</string>
+    <string name="voice_unavailable">Voice isn\'t available on this server yet</string>
+    <string name="voice_unavailable_body">Ask Scripture in writing still works from Search.</string>
+    <string name="voice_mic_denied">Verbum needs the microphone to talk</string>
+    <string name="voice_mic_denied_body">Allow the microphone in Settings, then come back.</string>
+    <string name="voice_open_settings">Open Settings</string>
+    <string name="voice_offline_body">Talking needs a connection.</string>
+    <string name="voice_dropped">The conversation dropped</string>
+    <string name="voice_unmute">Unmute</string>
+    <string name="voice_mute">Mute</string>
+    <string name="voice_close">Close</string>
+    <string name="voice_end">End</string>
 </resources>
