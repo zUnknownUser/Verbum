@@ -3,6 +3,9 @@ package com.nexussoft.verbum
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.nexussoft.verbum.auth.FirebaseAccountClient
+import com.nexussoft.verbum.feature.scripture.AccountViewModel
+import com.nexussoft.verbum.feature.scripture.ui.AccountHost
 import com.nexussoft.verbum.clients.api.LiveAskScriptureClient
 import com.nexussoft.verbum.clients.api.LiveContextClient
 import com.nexussoft.verbum.clients.api.LiveGraphClient
@@ -58,5 +61,6 @@ fun RootScreen() {
             ),
         )
     }
-    AppScreen(viewModel.store)
+    val accountViewModel: AccountViewModel = viewModel { AccountViewModel(FirebaseAccountClient()) }
+    AccountHost(accountViewModel.store) { AppScreen(viewModel.store) }
 }

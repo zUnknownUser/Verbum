@@ -27,6 +27,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.outlined.MenuBook
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material3.IconButton
 import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -59,6 +61,7 @@ private val READING_MAX_WIDTH = 680.dp
 /** Spec §5: a greeting, one question, a way back in, the verse of the day. */
 @Composable
 internal fun HomeScreen(state: HomeFeature.State, send: (HomeFeature.Action) -> Unit) {
+    val openAccount = LocalOpenAccount.current
     LaunchedEffect(Unit) { send(HomeFeature.Action.Started) }
     val greeting = when (state.greeting) {
         HomeFeature.Greeting.MORNING -> R.string.good_morning
@@ -67,7 +70,12 @@ internal fun HomeScreen(state: HomeFeature.State, send: (HomeFeature.Action) -> 
     }
     Page {
         Column(verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {
-            Text(stringResource(greeting).uppercase(), style = VerbumTypography.overline, color = MaterialTheme.colorScheme.primary)
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Text(stringResource(greeting).uppercase(), style = VerbumTypography.overline, color = MaterialTheme.colorScheme.primary, modifier = Modifier.weight(1f))
+                IconButton(onClick = openAccount) {
+                    Icon(Icons.Outlined.AccountCircle, contentDescription = accountText("account"), tint = MaterialTheme.colorScheme.primary)
+                }
+            }
             Text(stringResource(R.string.home_question), style = VerbumTypography.editorialTitle, color = MaterialTheme.colorScheme.onSurface)
         }
         Spacer(Modifier.height(Spacing.xxl))

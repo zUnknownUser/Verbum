@@ -6,12 +6,21 @@ import SwiftUI
 /// Spec §5: a greeting, one question, a way back in, the verse of the day.
 struct HomeView: View {
     let store: StoreOf<HomeFeature>
+    @Environment(\.openAccount) private var openAccount
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Spacing.xxl) {
                 VStack(alignment: .leading, spacing: Spacing.sm) {
-                    Text(greeting).overline(color: Palette.accent)
+                    HStack {
+                        Text(greeting).overline(color: Palette.accent)
+                        Spacer()
+                        Button { openAccount() } label: {
+                            Image(systemName: "person.crop.circle").font(.title2)
+                                .padding(Spacing.sm)
+                        }
+                        .accessibilityLabel(AccountCopy.text("account"))
+                    }
                     Text(L10n.t("What do you want to understand?"))
                         .font(Typography.editorialTitle)
                         .foregroundStyle(Palette.ink)

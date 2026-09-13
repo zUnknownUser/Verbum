@@ -1,3 +1,4 @@
+import ComposableArchitecture
 import FirebaseAuth
 import FirebaseCore
 import Foundation
@@ -21,8 +22,10 @@ extension AccountClient {
         sessions: {
             guard let auth = try? configuredAuth() else { return AsyncStream { $0.yield(nil); $0.finish() } }
             return AsyncStream { continuation in
-                let handle = auth.addStateDidChangeListener { _, user in continuation.yield(user.map(snapshot)) }
-                continuation.onTermination = { _ in auth.removeStateDidChangeListener(handle) }
+                // SDK listener tokens are opaque NSObjectProtocol values, not Sendable.
+                // The token is only accessed under the lock for listener removal.
+                let handle = LockIsolated(auth.addStateDidChangeListener { _, user in continuation.yield(user.map(snapshot)) })
+                continuation.onTermination = { _ in handle.withValue { auth.removeStateDidChangeListener($0) } }
             }
         },
         signIn: { email, password in

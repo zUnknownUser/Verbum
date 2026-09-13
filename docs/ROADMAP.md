@@ -23,6 +23,25 @@ except the spec and, later, the backend API contract.
 
 ## Phase 0 — Foundation
 
+- **Firebase account flows (§48, owner-requested block, 2026-09-13)** — iOS 🟡 · Android 🟡
+  - Optional Home account entry; editorial/native account presentation, email/password sign-in,
+    registration, password recovery and Firebase anonymous sign-in, in English and pt-BR.
+    Scripture is never gated. No placeholder social-login buttons or claimed cloud sync.
+  - Guest registration links credentials to the existing Firebase UID. Session restoration,
+    verification email + refresh + resend cooldown, sign-out confirmation and account deletion
+    with password reauthentication. Passwords are ephemeral, cleared on dismissal/completion;
+    safe typed errors, duplicate-submit protection and password-manager semantics.
+  - Separate account reducers/stores; SDK hidden behind `AccountClient`. Android Firebase adapter
+    lives in `:core:auth`, keeping `:core:clients` and `:core:models` pure JVM. Existing design
+    tokens, reader, audio and the parallel Ask/Voice work are preserved.
+  - Firebase files are app resources: `Verbum/GoogleService-Info.plist` and
+    `android/app/google-services.json`. The Android JSON is no longer bundled into iOS.
+  - Both app builds succeed. New model/reducer test sources were added; test execution and
+    real-account/device validation remain with the owner. See `AUTHENTICATION.md` for setup and QA.
+  - iOS Debug/Release bundle ID aligned to the supplied Firebase plist, `com.nexussoft.verbum`,
+    with the owner's explicit approval. A previous `com.NexusSoft.Verbum` installation may remain
+    separate. Enabling Firebase providers and real-account QA remain owner tasks.
+
 - **Task 1 — Project architecture** — iOS ✅ · Android ✅ (2026-09-11)
   - iOS: `VerbumKit` local package with `Models`, `Core`, `DesignSystem`, `Clients`, `Features`;
     app target is a thin shell; TCA 1.26.2; test targets wired.

@@ -16,7 +16,11 @@ public struct AccountClient: Sendable {
 
 extension AccountClient: DependencyKey {
     public static let liveValue = Self.firebase
-    public static let previewValue = Self(sessions: { AsyncStream { $0.yield(nil); $0.finish() } })
+    public static let previewValue: Self = {
+        var client = Self()
+        client.sessions = { AsyncStream<AuthSession?> { $0.yield(nil); $0.finish() } }
+        return client
+    }()
 }
 extension DependencyValues {
     public var accountClient: AccountClient {

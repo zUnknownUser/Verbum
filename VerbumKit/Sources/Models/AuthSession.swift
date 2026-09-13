@@ -24,7 +24,7 @@ public enum AccountValidation {
         if reset { return nil }
         guard !password.isEmpty else { return .passwordRequired }
         if let confirmation {
-            guard password.count >= 8 else { return .passwordTooShort }
+            guard password.unicodeScalars.count >= 8 else { return .passwordTooShort }
             guard password == confirmation else { return .passwordMismatch }
         }
         return nil
