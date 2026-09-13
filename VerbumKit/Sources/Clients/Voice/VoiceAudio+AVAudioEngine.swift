@@ -8,6 +8,8 @@ import Foundation
 public actor AVAudioEngineVoiceAudio: VoiceAudio {
     private var engine: AVAudioEngine?
     private var player: AVAudioPlayerNode?
+    /// Buffers scheduled and not yet heard.
+    private var pendingBuffers = 0
     private let rate: Double = 24_000
     private let playbackFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: 24_000, channels: 1, interleaved: false)!
     private let wireFormat = AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 24_000, channels: 1, interleaved: true)!
@@ -73,17 +75,30 @@ public actor AVAudioEngineVoiceAudio: VoiceAudio {
             let int16 = raw.bindMemory(to: Int16.self)
             for i in 0..<frames { samples[i] = Float(Int16(littleEndian: int16[i])) / 32768 }
         }
-        player.scheduleBuffer(buffer, completionHandler: nil)
+        pendingBuffers += 1
+        player.scheduleBuffer(buffer, completionCallbackType: .dataPlayedBack) { [weak self] _ in
+            Task { await self?.bufferPlayedBack() }
+        }
         if !player.isPlaying { player.play() }
+    }
+
+    private func bufferPlayedBack() {
+        pendingBuffers = max(0, pendingBuffers - 1)
+    }
+
+    public func isPlaybackActive() async -> Bool {
+        pendingBuffers > 0
     }
 
     public func stopPlayback() async {
         player?.stop()
+        pendingBuffers = 0
     }
 
     public func finish() async {
         engine?.inputNode.removeTap(onBus: 0)
         player?.stop()
+        pendingBuffers = 0
         engine?.stop()
         engine = nil
         player = nil

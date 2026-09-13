@@ -34,13 +34,15 @@ import Testing
         var played: [Data] = []
         var stoppedPlayback = 0
         var finished = false
+        var playbackActive = false
         var onChunk: (@Sendable (Data) -> Void)?
 
         func requestPermission() async -> Bool { permitted }
         func startCapture(_ onChunk: @escaping @Sendable (Data) -> Void) async throws { capturing = true; self.onChunk = onChunk }
         func stopCapture() async { capturing = false }
         func play(_ pcm: Data) async { played.append(pcm) }
-        func stopPlayback() async { stoppedPlayback += 1 }
+        func isPlaybackActive() async -> Bool { playbackActive }
+        func stopPlayback() async { stoppedPlayback += 1; playbackActive = false }
         func finish() async { finished = true }
     }
 
@@ -194,5 +196,61 @@ import Testing
         init(_ value: T) { _value = value }
         var value: T { lock.withLock { _value } }
         func withValue(_ body: (inout T) -> Void) { lock.withLock { body(&_value) } }
+    }
+}
+
+@Suite struct RealtimeConversationHalfDuplexTests {
+    typealias FakeTransport = RealtimeConversationTests.FakeTransport
+    typealias FakeAudio = RealtimeConversationTests.FakeAudio
+
+    /// The speaker must not reach the server through the microphone: while the
+    /// companion is heard (and for a short tail after) captured chunks are dropped.
+    @Test func microphoneIsClosedWhileTheCompanionIsHeard() async throws {
+        let transport = FakeTransport(), audio = FakeAudio()
+        let conversation = RealtimeConversation(transport: transport, audio: audio)
+        let stream = try await conversation.start(session: RealtimeSession(clientSecret: "ek_test", expiresAt: 0, model: "gpt-realtime"), configuration: VoiceConfiguration(instructions: "x")) { _, _ in "{}" }
+        var iterator = stream.makeAsyncIterator()
+        transport.receive(["type": "session.created"])
+        transport.receive(["type": "session.updated"])
+        _ = await iterator.next()
+        try await Task.sleep(for: .milliseconds(30))
+        let before = transport.types().count
+
+        // Companion speaking (server side): dropped.
+        transport.receive(["type": "response.created"])
+        transport.receive(["type": "response.output_audio.delta", "delta": Data([0, 1]).base64EncodedString()])
+        _ = await iterator.next() // assistantSpeaking(true)
+        audio.onChunk?(Data([9]))
+        try await Task.sleep(for: .milliseconds(30))
+        #expect(transport.types().count == before)
+
+        // Server done, but audio still draining locally: still dropped.
+        audio.playbackActive = true
+        transport.receive(["type": "response.done", "response": ["output": []]])
+        _ = await iterator.next() // assistantSpeaking(false)
+        audio.onChunk?(Data([9]))
+        try await Task.sleep(for: .milliseconds(30))
+        #expect(transport.types().count == before)
+
+        // Drained, inside the tail: still dropped; after the tail: sent.
+        audio.playbackActive = false
+        audio.onChunk?(Data([9]))
+        try await Task.sleep(for: .milliseconds(30))
+        #expect(transport.types().count == before)
+        try await Task.sleep(for: RealtimeConversation.playbackTail + .milliseconds(50))
+        audio.onChunk?(Data([9]))
+        try await Task.sleep(for: .milliseconds(30))
+        #expect(transport.types().last == "input_audio_buffer.append")
+
+        await conversation.stop()
+    }
+
+    @Test func sessionAsksForNoInterruptionsAndAStricterVAD() {
+        let update = RealtimeConversation.sessionUpdate(VoiceConfiguration(instructions: "x"))
+        let input = ((update["session"] as? [String: Any])?["audio"] as? [String: Any])?["input"] as? [String: Any]
+        let vad = input?["turn_detection"] as? [String: Any]
+        #expect(vad?["interrupt_response"] as? Bool == false)
+        #expect((vad?["threshold"] as? Double ?? 0) >= 0.6)
+        #expect((vad?["silence_duration_ms"] as? Int ?? 0) >= 700)
     }
 }

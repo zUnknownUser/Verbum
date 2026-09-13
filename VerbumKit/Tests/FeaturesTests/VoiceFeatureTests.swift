@@ -39,6 +39,7 @@ import Testing
         #expect(config?.instructions.contains("1 Samuel 17") == true)
         #expect(config?.instructions.contains("1 Now the Philistines gathered.") == true)
         #expect(config?.instructions.contains("Never claim revelation") == true)
+        #expect(config?.instructions.contains("then stop and wait") == true)
         #expect(config?.tools.map(\.name) == ["ask_scripture", "search_scripture", "open_passage"])
         #expect(config?.opening?.contains("1 Samuel 17") == true)
 

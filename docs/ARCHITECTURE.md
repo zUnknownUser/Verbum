@@ -217,6 +217,13 @@ itself over a WebSocket (`wss://api.openai.com/v1/realtime`, GA events) and stre
   `AudioRecord`+`AudioTrack` on the voice-communication route, with the platform AEC), so the
   protocol is tested with fakes on both platforms. WebSocket rather than WebRTC on purpose: no
   native binary dependency; the transport can be swapped behind the same interface later.
+- **Half-duplex.** While the companion's audio is coming out of the speaker, and for a 600 ms
+  tail after the last frame is heard, microphone chunks are not sent. Without it the speaker
+  leaks into the microphone (the simulator/emulator has no echo cancellation; a speakerphone's is
+  imperfect), the server VAD hears "speech", transcribes the companion's own words as the reader's
+  and answers itself — a runaway monologue. The price is no barge-in: the reader waits for the
+  sentence to end (or taps End). Server VAD runs at threshold 0.65 / 800 ms silence so room noise
+  is not a question, and the instructions demand one answer per turn, then silence.
 - **What it is told (`VoiceScript`).** The product's rules — stay with Scripture, distinguish text
   from interpretation, never claim revelation or foretell (§13.3, §31), point high-stakes questions
   to a professional — plus the page: the chapter's text (from `BibleClient`, cached), the entity's

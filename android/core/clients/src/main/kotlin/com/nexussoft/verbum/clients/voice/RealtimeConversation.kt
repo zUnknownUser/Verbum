@@ -45,6 +45,8 @@ interface VoiceAudio {
     suspend fun stopCapture()
     /** Queues PCM16 for playback, in order. */
     suspend fun play(pcm: ByteArray)
+    /** Whether queued audio is still coming out of the speaker. */
+    suspend fun isPlaybackActive(): Boolean
     /** Drops whatever is queued (the user interrupted). */
     suspend fun stopPlayback()
     /** Releases the audio session. */
@@ -58,14 +60,24 @@ interface VoiceAudio {
  * surface transcripts, run `function_call` items through the handler and answer with
  * `function_call_output` + `response.create`. The user speaking over the companion
  * (`speech_started`) drops queued playback at once. Twin of iOS `RealtimeConversation`.
+ *
+ * **Half-duplex on purpose.** While the companion's audio is coming out of the speaker — and for
+ * a short tail after — the microphone is not sent. Otherwise the speaker leaks back into the
+ * microphone (no echo cancellation on the emulator, imperfect on a speakerphone), the server's
+ * VAD hears "speech", transcribes the companion's own words as the reader's, and answers itself
+ * in a loop. The reader can still stop it with End.
  */
 class RealtimeConversation(
     private val transport: RealtimeTransport,
     private val audio: VoiceAudio,
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default),
+    /** Monotonic milliseconds; injected so the tail is testable. */
+    private val now: () -> Long = { System.nanoTime() / 1_000_000 },
 ) : VoiceClient {
     companion object {
         const val ENDPOINT = "wss://api.openai.com/v1/realtime"
+        /** How long after the last audio frame the microphone stays closed. */
+        const val PLAYBACK_TAIL_MS = 600L
         private val json = Json { ignoreUnknownKeys = true }
     }
 
@@ -76,6 +88,8 @@ class RealtimeConversation(
     @Volatile private var running = false
     private var responseActive = false
     private var speaking = false
+    /** When the companion's audio last ended locally; the microphone reopens after [PLAYBACK_TAIL_MS]. */
+    @Volatile private var playbackEndedAt = 0L
     private val handledCalls = HashSet<String>()
     private val pendingOutputs = ArrayList<Pair<String, String>>()
 
@@ -151,7 +165,7 @@ class RealtimeConversation(
 
             "input_audio_buffer.speech_started" -> {
                 audio.stopPlayback()
-                if (speaking) { speaking = false; emit(VoiceEvent.AssistantSpeaking(false)) }
+                if (speaking) { speaking = false; playbackEndedAt = now(); emit(VoiceEvent.AssistantSpeaking(false)) }
                 emit(VoiceEvent.UserSpeaking(true))
             }
 
@@ -177,7 +191,7 @@ class RealtimeConversation(
 
             "response.done" -> {
                 responseActive = false
-                if (speaking) { speaking = false; emit(VoiceEvent.AssistantSpeaking(false)) }
+                if (speaking) { speaking = false; playbackEndedAt = now(); emit(VoiceEvent.AssistantSpeaking(false)) }
                 ((event["response"] as? JsonObject)?.get("output") as? JsonArray)?.forEach { item ->
                     (item as? JsonObject)?.let { runFunctionCall(it, tools) }
                 }
@@ -224,11 +238,18 @@ class RealtimeConversation(
 
     private suspend fun capture(chunk: ByteArray) {
         val send = mutex.withLock { running && !muted }
-        if (!send) return
+        if (!send || !microphoneIsOpen()) return
         send(buildJsonObject {
             put("type", "input_audio_buffer.append")
             put("audio", Base64.getEncoder().encodeToString(chunk))
         })
+    }
+
+    /** Closed while the companion is heard, and for [PLAYBACK_TAIL_MS] after. */
+    private suspend fun microphoneIsOpen(): Boolean {
+        if (speaking) return false
+        if (audio.isPlaybackActive()) { playbackEndedAt = now(); return false }
+        return now() - playbackEndedAt >= PLAYBACK_TAIL_MS
     }
 
     private suspend fun send(event: JsonObject) {
@@ -268,7 +289,13 @@ class RealtimeConversation(
             putJsonObject("audio") {
                 putJsonObject("input") {
                     putJsonObject("format") { put("type", "audio/pcm"); put("rate", 24000) }
-                    putJsonObject("turn_detection") { put("type", "server_vad"); put("create_response", true); put("interrupt_response", true) }
+                    // Half-duplex: the microphone is closed while the companion speaks, so interruptions
+                    // cannot be heard anyway; a higher threshold and a longer silence keep room noise
+                    // from becoming a "question".
+                    putJsonObject("turn_detection") {
+                        put("type", "server_vad"); put("threshold", 0.65); put("prefix_padding_ms", 300); put("silence_duration_ms", 800)
+                        put("create_response", true); put("interrupt_response", false)
+                    }
                     putJsonObject("transcription") { put("model", "gpt-4o-mini-transcribe"); put("language", configuration.language) }
                 }
                 putJsonObject("output") {

@@ -84,6 +84,7 @@ class VoiceFeatureTest {
         assertTrue(config.instructions.contains("1 Samuel 17"))
         assertTrue(config.instructions.contains("1 Now the Philistines gathered."))
         assertTrue(config.instructions.contains("Never claim revelation"))
+        assertTrue(config.instructions.contains("then stop and wait"))
         assertEquals(listOf("ask_scripture", "search_scripture", "open_passage"), config.tools.map { it.name })
         assertTrue(config.opening!!.contains("1 Samuel 17"))
 

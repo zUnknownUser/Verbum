@@ -41,6 +41,8 @@ class AndroidVoiceAudio(
     private val playbackQueue = LinkedBlockingQueue<ByteArray>()
     @Volatile private var capturing = false
     @Volatile private var playing = false
+    /** PCM16 frames handed to the track so far; compared with its playback head to know when the speaker is done. */
+    @Volatile private var framesWritten = 0L
     private var echo: AcousticEchoCanceler? = null
     private var noise: NoiseSuppressor? = null
     private var previousMode = AudioManager.MODE_NORMAL
@@ -94,6 +96,7 @@ class AndroidVoiceAudio(
                     val written = player.write(pcm, offset, pcm.size - offset)
                     if (written <= 0) break
                     offset += written
+                    framesWritten += written / 2
                 }
             }
         }
@@ -110,9 +113,17 @@ class AndroidVoiceAudio(
         playbackQueue.put(pcm)
     }
 
+    override suspend fun isPlaybackActive(): Boolean {
+        if (playbackQueue.isNotEmpty()) return true
+        val player = track ?: return false
+        return runCatching { (player.playbackHeadPosition.toLong() and 0xFFFFFFFFL) < framesWritten }.getOrDefault(false)
+    }
+
     override suspend fun stopPlayback() {
         playbackQueue.clear()
         runCatching { track?.pause(); track?.flush(); track?.play() }
+        // After a flush the head position no longer relates to what was written.
+        framesWritten = runCatching { (track?.playbackHeadPosition?.toLong() ?: 0L) and 0xFFFFFFFFL }.getOrDefault(0L)
     }
 
     override suspend fun finish() = withContext(Dispatchers.IO) {

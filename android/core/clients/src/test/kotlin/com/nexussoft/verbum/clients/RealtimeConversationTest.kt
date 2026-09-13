@@ -51,12 +51,14 @@ class RealtimeConversationTest {
         val played = mutableListOf<ByteArray>()
         var stoppedPlayback = 0
         var finished = false
+        var playbackActive = false
         var onChunk: ((ByteArray) -> Unit)? = null
         override suspend fun requestPermission() = permitted
         override suspend fun startCapture(onChunk: (ByteArray) -> Unit) { capturing = true; this.onChunk = onChunk }
         override suspend fun stopCapture() { capturing = false }
         override suspend fun play(pcm: ByteArray) { played += pcm }
-        override suspend fun stopPlayback() { stoppedPlayback++ }
+        override suspend fun isPlaybackActive() = playbackActive
+        override suspend fun stopPlayback() { stoppedPlayback++; playbackActive = false }
         override suspend fun finish() { finished = true }
     }
 
@@ -69,11 +71,57 @@ class RealtimeConversationTest {
 
     private suspend fun Channel<VoiceEvent>.next(): VoiceEvent = withTimeout(2_000) { receive() }
 
+    private var clockMs = 10_000L
+
     private fun runConversation(block: suspend TestScope.(FakeTransport, FakeAudio, RealtimeConversation) -> Unit) = runTest {
         val transport = FakeTransport()
         val audio = FakeAudio()
-        val conversation = RealtimeConversation(transport, audio, CoroutineScope(StandardTestDispatcher(testScheduler)))
+        val conversation = RealtimeConversation(transport, audio, CoroutineScope(StandardTestDispatcher(testScheduler))) { clockMs }
         block(transport, audio, conversation)
+    }
+
+    /** The speaker must not reach the server through the microphone: while the companion is heard (and for a short tail after) captured chunks are dropped. */
+    @Test
+    fun microphoneIsClosedWhileTheCompanionIsHeard() = runConversation { transport, audio, conversation ->
+        clockMs = 10_000
+        val events = Channel<VoiceEvent>(Channel.UNLIMITED)
+        val flow = conversation.start(session, VoiceConfiguration("x")) { _, _ -> "{}" }
+        val collector = launch(kotlinx.coroutines.Dispatchers.Unconfined) { flow.collect { events.send(it) } }
+        transport.receive("""{"type":"session.created"}""")
+        transport.receive("""{"type":"session.updated"}""")
+        advanceUntilIdle()
+        assertEquals(VoiceEvent.Listening, events.next())
+        val before = transport.sent.size
+
+        transport.receive("""{"type":"response.created"}""")
+        transport.receive("""{"type":"response.output_audio.delta","delta":"${Base64.getEncoder().encodeToString(byteArrayOf(0, 1))}"}""")
+        advanceUntilIdle()
+        audio.onChunk!!(byteArrayOf(9)); advanceUntilIdle()
+        assertEquals(before, transport.sent.size, "companion speaking: dropped")
+
+        audio.playbackActive = true
+        transport.receive("""{"type":"response.done","response":{"output":[]}}""")
+        advanceUntilIdle()
+        audio.onChunk!!(byteArrayOf(9)); advanceUntilIdle()
+        assertEquals(before, transport.sent.size, "still draining locally: dropped")
+
+        audio.playbackActive = false
+        clockMs += 100
+        audio.onChunk!!(byteArrayOf(9)); advanceUntilIdle()
+        assertEquals(before, transport.sent.size, "inside the tail: dropped")
+        clockMs += RealtimeConversation.PLAYBACK_TAIL_MS
+        audio.onChunk!!(byteArrayOf(9)); advanceUntilIdle()
+        assertEquals("input_audio_buffer.append", transport.types().last())
+        conversation.stop(); advanceUntilIdle(); collector.cancel()
+    }
+
+    @Test
+    fun sessionAsksForNoInterruptionsAndAStricterVad() = runConversation { _, _, conversation ->
+        val input = conversation.sessionUpdate(VoiceConfiguration("x"))["session"]!!.jsonObject["audio"]!!.jsonObject["input"]!!.jsonObject
+        val vad = input["turn_detection"]!!.jsonObject
+        assertEquals("false", vad["interrupt_response"]!!.jsonPrimitive.content)
+        assertTrue(vad["threshold"]!!.jsonPrimitive.content.toDouble() >= 0.6)
+        assertTrue(vad["silence_duration_ms"]!!.jsonPrimitive.content.toInt() >= 700)
     }
 
     @Test

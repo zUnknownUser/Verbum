@@ -18,6 +18,8 @@ public protocol VoiceAudio: Sendable {
     func stopCapture() async
     /// Queues PCM16 for playback, in order.
     func play(_ pcm: Data) async
+    /// Whether queued audio is still coming out of the speaker.
+    func isPlaybackActive() async -> Bool
     /// Drops whatever is queued (the user interrupted).
     func stopPlayback() async
     /// Releases the audio session.
@@ -31,7 +33,16 @@ public protocol VoiceAudio: Sendable {
 /// transcripts, run `function_call` items through the handler and answer with
 /// `function_call_output` + `response.create`. The user speaking over the
 /// companion (`speech_started`) drops queued playback at once.
+///
+/// **Half-duplex on purpose.** While the companion's audio is coming out of
+/// the speaker — and for a short tail after — the microphone is not sent.
+/// Otherwise the speaker leaks back into the microphone (no echo cancellation
+/// on the simulator, imperfect on a speakerphone), the server's VAD hears
+/// "speech", transcribes the companion's own words as the reader's, and
+/// answers itself in a loop. The reader can still stop it with End.
 public actor RealtimeConversation {
+    /// How long after the last audio frame the microphone stays closed.
+    static let playbackTail: Duration = .milliseconds(600)
     public static let endpoint = URL(string: "wss://api.openai.com/v1/realtime")!
 
     private let transport: RealtimeTransport
@@ -44,6 +55,8 @@ public actor RealtimeConversation {
     private var handledCalls = Set<String>()
     private var pendingOutputs: [(callID: String, output: String)] = []
     private var speaking = false
+    /// When the companion's audio last ended locally; the microphone reopens after `playbackTail`.
+    private var playbackEndedAt: ContinuousClock.Instant?
 
     public init(transport: RealtimeTransport, audio: VoiceAudio) {
         self.transport = transport
@@ -122,7 +135,7 @@ public actor RealtimeConversation {
 
         case "input_audio_buffer.speech_started":
             await audio.stopPlayback()
-            if speaking { speaking = false; continuation?.yield(.assistantSpeaking(false)) }
+            if speaking { speaking = false; playbackEndedAt = .now; continuation?.yield(.assistantSpeaking(false)) }
             continuation?.yield(.userSpeaking(true))
 
         case "input_audio_buffer.speech_stopped":
@@ -155,7 +168,11 @@ public actor RealtimeConversation {
 
         case "response.done":
             responseActive = false
-            if speaking { speaking = false; continuation?.yield(.assistantSpeaking(false)) }
+            if speaking {
+                speaking = false
+                playbackEndedAt = .now
+                continuation?.yield(.assistantSpeaking(false))
+            }
             if let response = event["response"] as? [String: Any], let output = response["output"] as? [[String: Any]] {
                 for item in output { await runFunctionCall(item, tools: tools) }
             }
@@ -198,8 +215,19 @@ public actor RealtimeConversation {
     // MARK: Outgoing
 
     private func capture(_ chunk: Data) async {
-        guard running, !muted else { return }
+        guard running, !muted, await microphoneIsOpen() else { return }
         await send(["type": "input_audio_buffer.append", "audio": chunk.base64EncodedString()])
+    }
+
+    /// Closed while the companion is heard, and for `playbackTail` after.
+    private func microphoneIsOpen() async -> Bool {
+        if speaking { return false }
+        if await audio.isPlaybackActive() {
+            playbackEndedAt = .now
+            return false
+        }
+        if let ended = playbackEndedAt, ended.duration(to: .now) < Self.playbackTail { return false }
+        return true
     }
 
     private func send(_ event: [String: Any]) async {
@@ -217,7 +245,10 @@ public actor RealtimeConversation {
                 "audio": [
                     "input": [
                         "format": ["type": "audio/pcm", "rate": 24000],
-                        "turn_detection": ["type": "server_vad", "create_response": true, "interrupt_response": true],
+                        // Half-duplex: the microphone is closed while the companion speaks, so
+                        // interruptions cannot be heard anyway; a higher threshold and a longer
+                        // silence keep room noise from becoming a "question".
+                        "turn_detection": ["type": "server_vad", "threshold": 0.65, "prefix_padding_ms": 300, "silence_duration_ms": 800, "create_response": true, "interrupt_response": false],
                         "transcription": ["model": "gpt-4o-mini-transcribe", "language": configuration.language],
                     ],
                     "output": [
