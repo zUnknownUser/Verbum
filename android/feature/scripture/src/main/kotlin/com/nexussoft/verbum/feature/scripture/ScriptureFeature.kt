@@ -45,6 +45,7 @@ object ScriptureFeature {
 
     sealed interface DelegateAction {
         data class Listen(val reference: PassageReference) : DelegateAction
+        data class Talk(val reference: PassageReference) : DelegateAction
         data class OpenContext(val reference: PassageReference) : DelegateAction
     }
 
@@ -78,6 +79,7 @@ object ScriptureFeature {
                     val synced = state.copy(books = state.books.copy(current = state.reader.reference))
                     when (val delegate = (action.action as? ChapterReaderFeature.Action.Delegate)?.delegate) {
                         is ChapterReaderFeature.DelegateAction.Listen -> synced.with(Effect.Send(Action.Delegate(DelegateAction.Listen(delegate.reference))))
+                        is ChapterReaderFeature.DelegateAction.Talk -> synced.with(Effect.Send(Action.Delegate(DelegateAction.Talk(delegate.reference))))
                         is ChapterReaderFeature.DelegateAction.OpenContext -> synced.with(Effect.Send(Action.Delegate(DelegateAction.OpenContext(delegate.reference))))
                         null -> synced.only()
                     }

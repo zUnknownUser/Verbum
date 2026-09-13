@@ -1,5 +1,23 @@
 # Roadmap
 
+## Audio in Portuguese — reactivated 2026-09-13 (was disabled the same morning)
+
+- The synthesised reading is live again on both platforms for pt-BR devices: the device reads the
+  translation on screen (Bíblia Livre) aloud through the existing player (pause, ±15 s, speed,
+  background, chaining). Without an offline Portuguese voice the English BSB recordings are
+  offered, labelled "Audio in English"; a synthesised reading is labelled "Leitura automática".
+- What was actually wrong (found by rendering chapters in the simulator test host, not guessed):
+  `AVSpeechSynthesizer.write` hands out empty buffers **between paragraphs**, and the sink took
+  the first one as the end — John 3 came out as 17 s. The end is the delegate's `didFinish` now.
+  The buffer callback is `@Sendable` (a closure born in a `@MainActor` method traps off-main in
+  Swift 6 — the same class of crash the Now Playing artwork had). Output is AAC (Psalm 119: 7 MB,
+  not 81 MB of Float32 CAF); the cache keeps 40 chapters / 150 MB; the next chapter is rendered in
+  the background after the current one so chaining does not wait. Measured: Psalm 119 renders in
+  ~16 s, John 3 in ~4 s, cache hit 0.06 s, main thread stalls ≤ 43 ms while rendering.
+- Android: same wiring (`LiveScriptureAudioClient`), `VoiceUnavailableException` → English
+  fallback, prefetch of the next chapter, WAV cache raised to 24 chapters / 200 MB. Rendering
+  itself was already chunked and could not be exercised in JVM tests — owner QA on a device.
+
 Execution order from PRODUCT.md §60 and §79. One line per step, one mark per platform
 (`iOS` = `Verbum.xcodeproj` + `VerbumKit`, `Android` = `android/`). A mark is ✅ only when that
 platform builds, its tests pass, and the definition of done in PRODUCT.md is met.
@@ -13,6 +31,25 @@ parallel with iOS from the same spec. Decided 2026-09-11. Nothing is shared betw
 except the spec and, later, the backend API contract.
 
 ## Phase 0 — Foundation
+
+- **Firebase account flows (§48, owner-requested block, 2026-09-13)** — iOS 🟡 · Android 🟡
+  - Optional Home account entry; editorial/native account presentation, email/password sign-in,
+    registration, password recovery and Firebase anonymous sign-in, in English and pt-BR.
+    Scripture is never gated. No placeholder social-login buttons or claimed cloud sync.
+  - Guest registration links credentials to the existing Firebase UID. Session restoration,
+    verification email + refresh + resend cooldown, sign-out confirmation and account deletion
+    with password reauthentication. Passwords are ephemeral, cleared on dismissal/completion;
+    safe typed errors, duplicate-submit protection and password-manager semantics.
+  - Separate account reducers/stores; SDK hidden behind `AccountClient`. Android Firebase adapter
+    lives in `:core:auth`, keeping `:core:clients` and `:core:models` pure JVM. Existing design
+    tokens, reader, audio and the parallel Ask/Voice work are preserved.
+  - Firebase files are app resources: `Verbum/GoogleService-Info.plist` and
+    `android/app/google-services.json`. The Android JSON is no longer bundled into iOS.
+  - Both app builds succeed. New model/reducer test sources were added; test execution and
+    real-account/device validation remain with the owner. See `AUTHENTICATION.md` for setup and QA.
+  - iOS Debug/Release bundle ID aligned to the supplied Firebase plist, `com.nexussoft.verbum`,
+    with the owner's explicit approval. A previous `com.NexusSoft.Verbum` installation may remain
+    separate. Enabling Firebase providers and real-account QA remain owner tasks.
 
 - **Task 1 — Project architecture** — iOS ✅ · Android ✅ (2026-09-11)
   - iOS: `VerbumKit` local package with `Models`, `Core`, `DesignSystem`, `Clients`, `Features`;
@@ -191,7 +228,40 @@ except the spec and, later, the backend API contract.
 
 ## Later
 
-- Task 11 — Replace fixtures with backend API — **Scripture done** iOS ✅ · Android ✅ (2026-09-12); graph/search/context/timeline ⬜
+- Task 11 — Replace fixtures with backend API — **Scripture done** iOS ✅ · Android ✅ (2026-09-12); graph/search/context/timeline **iOS ✅ · Android ✅ (2026-09-13)**
+  - **Apps go live (2026-09-13):** `VerbumAPI` in `Clients/VerbumAPI` (iOS) / `VerbumApi` in
+    `:core:clients/api` (Android) — one function per route,
+    the live values of `GraphClient`/`SearchClient`/`ContextClient`/`TimelineClient` over it;
+    typed errors from `Problem` codes (§52); on-disk cache with stale-if-error (§39); contract tests
+    decoding every `api/examples/*.json` to the fixture clients' answers. Search degrades to
+    device-only results with an "unreachable" line instead of an empty list. Base URL per
+    configuration (`VERBUM_API_BASE_URL`: an Xcode build setting / a Gradle property), plain HTTP
+    allowed only in Debug (ATS / `usesCleartextTraffic`). Design in ARCHITECTURE.md.
+- **Task 12 — Ask Scripture, client side** — iOS ✅ · Android ✅ (2026-09-13)
+  - `AskScriptureClient` → `POST /v1/ask`, `ScriptureAnswer` = §30 verbatim; `AskFeature` +
+    `AskView`/`AskPane` render §13.2 from structured fields only, with confidence and
+    interpretive variance shown (§31) and the §51 fallback to search results (§21.3). Entered from
+    Search when the query reads as a question. Tests on both platforms; contract-level tests for
+    the request body and every failure state. Design in ARCHITECTURE.md.
+  - Pending on the backend side, not blocked here: the product decision on
+    `internal/ask/safety.go` (docs/BACKEND_RAG.md, Bloco 8) and pt-BR (§34 licence).
+- **Voice — talking with the study companion (§19, brought forward)** — iOS ✅ · Android ✅ (2026-09-13)
+  - `RealtimeSessionClient` → `POST /v1/realtime/session`; `VoiceClient`/`RealtimeConversation` over
+    a WebSocket with injected transport and audio (protocol tested with fakes); `VoiceScript`
+    (rules + page content + tools `ask_scripture`/`search_scripture`/`open_passage`, grounded through
+    `/v1/ask` and `/v1/search`, §73); `VoiceFeature` sheet from the reader, an entity page and an
+    Ask answer. Microphone permission on both platforms. Design in ARCHITECTURE.md.
+  - Owner QA on devices: echo cancellation on speaker, Bluetooth headsets, interrupting the
+    companion, a tool call mid-sentence, pt-BR voice quality. The server must run with
+    `OPENAI_API_KEY` for the endpoint to answer.
+- **Read-along highlighting (owner-requested, parked 2026-09-13)** — iOS ⬜ · Android ⬜
+  - Words lit as the narration reaches them; tap a word to seek; follows pause, ±15 s, scrub, rate
+    and chapter chaining (position = f(time), binary search over per-word timings, 10–20 Hz ticks
+    while highlighting only). Needs a timings table the helloao MP3s do not carry: agreed design is
+    a backend endpoint `GET /v1/audio/timings/{translation}/{book}/{chapter}/{narrator}` that
+    transcribes the recording once with `whisper-1` (word timestamps, ~US$0.006/min), aligns the
+    words to the chapter text and stores the result. pt-BR text vs English audio → per-verse
+    highlighting only. Blocks: backend → iOS → Android.
   - **Contract first (2026-09-12):** `api/openapi.yaml` — the §45 routes plus `/v1/daily-verse`,
     written from the client interfaces the apps already have — and `api/examples/` generated from
     the fixtures (`api/scripts/gen-examples.py`), to be the inputs of contract tests on both apps.
@@ -297,9 +367,10 @@ except the spec and, later, the backend API contract.
     chapters) is the English offline fallback. `networkUnavailable` → "You're offline" (§52).
   - Not yet surfaced from helloao: section headings, paragraph breaks, footnotes, audio links —
     the model has no fields for them yet. Bible Brain dropped: keyed, unclear commercial terms.
-- Task 12 — Ask Scripture (only after Scripture, entities, context and search work — §60) — iOS ⬜ · Android ⬜
-  - **Backend done (2026-09-13): `POST /v1/ask`** — see backend-only block 7 below. This is the
-    server endpoint only; no app screen calls it yet, so the row above stays ⬜ until a client does.
+- Task 12 — Ask Scripture (only after Scripture, entities, context and search work — §60) — iOS ✅ · Android ✅ (2026-09-13)
+  - Backend: `POST /v1/ask` (backend-only block 7 below). Client side: see the "Task 12 — Ask
+    Scripture, client side" row above. End-to-end against a deployed backend still to be
+    exercised by the owner (the LAN server must run an image built from `92ee889` or later).
 - Phase 7 — Personal layer (auth, saved items, notes, journey) — iOS ⬜ · Android ⬜
 - Phase 8 — Monetization — iOS ⬜ · Android ⬜
 - Phase 9 — Collaboration (post-MVP) — iOS ⬜ · Android ⬜
@@ -307,10 +378,9 @@ except the spec and, later, the backend API contract.
 ## Golden path (§75)
 
 Search "David" → open David → explore graph → open Goliath → open 1 Samuel 17 → open Context →
-open related passage. Reader/entity/context routes exist as local previews; graph interaction
-and full acceptance validation are pending. Next primary implementation block: Task 9 GraphFeature,
-after owner validation of the current Context increment. Then Task 10 TimelineFeature; Task 12
-Ask Scripture/RAG remains gated by reliable retrieval and the earlier foundations (§60, §73).
+open related passage. Every route exists on both platforms and, since 2026-09-13, reads the
+backend (`VerbumAPI`) instead of fixtures; Ask Scripture is reachable from the same Search field.
+Full acceptance validation on devices against a deployed backend is the owner's.
 
 ## Owner validation for the current delivery
 

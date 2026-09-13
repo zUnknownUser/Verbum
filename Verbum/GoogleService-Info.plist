@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>254982854245-bd3qvpajr79f201terfrpuirsh8sk4r9.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.254982854245-bd3qvpajr79f201terfrpuirsh8sk4r9</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAnutae0YL5u6YS_2evLDqYnZbWZ1KTrIM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>254982854245</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.nexussoft.verbum</string>
+	<key>PROJECT_ID</key>
+	<string>verbum-sw</string>
+	<key>STORAGE_BUCKET</key>
+	<string>verbum-sw.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:254982854245:ios:aa0d2d699a4a082d6e188c</string>
+</dict>
+</plist>

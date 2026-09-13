@@ -76,16 +76,15 @@ struct MiniPlayerView: View {
     }
 
     private var subtitle: String {
-        if BookLanguage.current == .portuguese {
-            if store.failed { return L10n.t("Couldn't prepare Portuguese audio. Check the downloaded Brazilian Portuguese voice and chapter availability, then try again.") }
-            if store.isLoading { return L10n.t("Preparing automatic reading…") }
-        }
         if store.failed { return L10n.t("No recording for this chapter") }
+        if store.isLoading { return L10n.t("Preparing audio…") }
         let time = "\(format(store.currentTime)) / \(format(store.duration))"
         if let audio = store.audio, let narrator = store.narrator {
-            return "\(audio.translationId) · \(narrator.name) · \(time)"
+            // Synthesised reading of the translation on screen, or a recording in English (labelled).
+            if narrator.isSynthesised { return "\(audio.translationName) · \(time)" }
+            return "\(L10n.t("Audio in English")) · \(audio.translationId) · \(narrator.name) · \(time)"
         }
-        return time
+        return ""
     }
 
     private func format(_ seconds: TimeInterval) -> String {

@@ -12,7 +12,8 @@ public struct TimelineClient: Sendable {
 }
 
 extension TimelineClient: DependencyKey {
-    public static let liveValue = TimelineClient.fixtures
+    /// The backend (Task 11); fixtures remain the preview and test double.
+    public static let liveValue = TimelineClient.live(api: .shared)
     public static let previewValue = TimelineClient.fixtures
 }
 

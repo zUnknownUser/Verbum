@@ -13,8 +13,20 @@ public struct SearchFeature {
         public var query = ""
         public var phase: Phase = .idle
         public var results: SearchResponse?
+        /// The last search could not reach the content service; `results` is
+        /// what this device knows on its own (a reference, a book) — never
+        /// shown as if it were the full answer (§52).
+        public var isOffline = false
 
         public init() {}
+
+        /// The question to offer Ask Scripture for, when the query reads as one (§6:
+        /// search and ask share the field). Offered as soon as it is typed, before
+        /// results, so the answer never waits on the debounce.
+        public var askSuggestion: String? {
+            let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
+            return AskFeature.State.looksLikeQuestion(trimmed) ? trimmed : nil
+        }
 
         /// `true` while the user has typed something that produced nothing.
         public var showsNoResults: Bool {
@@ -33,16 +45,21 @@ public struct SearchFeature {
     public enum Action: Equatable, BindableAction {
         case binding(BindingAction<State>)
         case searchResponse(SearchResponse)
+        /// The service could not be reached; carries the device-only results.
+        case searchUnreachable(SearchResponse)
         case submitted
         case passageTapped(PassageReference)
         case bookTapped(BibleBook)
         case entityTapped(BibleEntity)
+        case askTapped
         case delegate(Delegate)
 
         @CasePathable
         public enum Delegate: Equatable {
             case openPassage(PassageReference)
             case openEntity(BibleEntity)
+            /// Ask Scripture with the field's question (§13).
+            case ask(String)
         }
     }
 
@@ -64,13 +81,21 @@ public struct SearchFeature {
                 guard !query.isEmpty else {
                     state.phase = .idle
                     state.results = nil
+                    state.isOffline = false
                     return .cancel(id: CancelID.search)
                 }
                 state.phase = .searching
                 return .run { [searchClient, clock] send in
                     try await clock.sleep(for: Self.debounce)
-                    let response = (try? await searchClient.search(query: query)) ?? .empty(query)
-                    await send(.searchResponse(response))
+                    do {
+                        await send(.searchResponse(try await searchClient.search(query: query)))
+                    } catch is CancellationError {
+                        return
+                    } catch {
+                        // §21.3, §52: degrade to what the device knows, and say so.
+                        @Dependency(\.locale) var locale
+                        await send(.searchUnreachable(.local(query, language: BookLanguage(locale: locale))))
+                    }
                 }
                 .cancellable(id: CancelID.search, cancelInFlight: true)
 
@@ -81,6 +106,14 @@ public struct SearchFeature {
                 // Ignore answers to a query the user has since moved past.
                 guard response.query == state.query.trimmingCharacters(in: .whitespacesAndNewlines) else { return .none }
                 state.results = response
+                state.isOffline = false
+                state.phase = .idle
+                return .none
+
+            case .searchUnreachable(let response):
+                guard response.query == state.query.trimmingCharacters(in: .whitespacesAndNewlines) else { return .none }
+                state.results = response
+                state.isOffline = true
                 state.phase = .idle
                 return .none
 
@@ -92,7 +125,15 @@ public struct SearchFeature {
                 if let book = state.results?.books.first {
                     return .send(.delegate(.openPassage(PassageReference(bookId: book.id, chapter: 1))))
                 }
+                // A question submitted is a question asked.
+                if let question = state.askSuggestion {
+                    return .send(.delegate(.ask(question)))
+                }
                 return .none
+
+            case .askTapped:
+                guard let question = state.askSuggestion else { return .none }
+                return .send(.delegate(.ask(question)))
 
             case .passageTapped(let reference):
                 return .send(.delegate(.openPassage(reference)))

@@ -15,6 +15,12 @@ public struct SearchView: View {
     public var body: some View {
         NavigationStack {
             List {
+                if store.isOffline {
+                    offlineNotice
+                }
+                if let question = store.askSuggestion {
+                    askSection(question)
+                }
                 if let results = store.results, !results.isEmpty {
                     resultSections(results)
                 } else if store.showsNoResults {
@@ -37,10 +43,19 @@ public struct SearchView: View {
 
     // MARK: Sections
 
+    /// §13: the question goes to Ask Scripture; the groups below are still search.
+    private func askSection(_ question: String) -> some View {
+        section(L10n.t("Ask Scripture")) {
+            row(title: question, subtitle: L10n.t("An answer from the passages themselves, with sources"), symbol: "text.bubble") {
+                store.send(.askTapped)
+            }
+        }
+    }
+
     @ViewBuilder
     private func resultSections(_ results: SearchResponse) -> some View {
         if !results.passages.isEmpty {
-            section(L10n.t("Passage")) {
+            section(results.passages.count == 1 ? L10n.t("Passage") : L10n.t("Passages")) {
                 ForEach(results.passages, id: \.self) { reference in
                     row(title: reference.formatted, subtitle: L10n.t("Open in the reader"), symbol: "book") {
                         store.send(.passageTapped(reference))
@@ -128,11 +143,24 @@ public struct SearchView: View {
 
     // MARK: Empty states
 
+    /// §52: the network state is named, never hidden behind thinner results.
+    private var offlineNotice: some View {
+        Section {
+            Label(L10n.t("Verbum can't be reached — showing what this device knows."), systemImage: "wifi.slash")
+                .font(Typography.footnote)
+                .foregroundStyle(Palette.inkSecondary)
+                .padding(.vertical, Spacing.sm)
+                .listRowBackground(Palette.paper)
+                .listRowSeparator(.hidden)
+                .listRowInsets(EdgeInsets(top: 0, leading: Spacing.readingMargin, bottom: 0, trailing: Spacing.readingMargin))
+        }
+    }
+
     private var suggestions: some View {
         Section {
             VStack(alignment: .leading, spacing: Spacing.md) {
                 Text(L10n.t("Try")).overline()
-                ForEach(["John 3:16", "1 Samuel 17", "David", "Jerusalem", "Forgiveness"], id: \.self) { example in
+                ForEach(["John 3:16", "1 Samuel 17", "David", "Jerusalem", "Forgiveness", "why did Job suffer"], id: \.self) { example in
                     Button(example) { store.query = example }
                         .font(.system(.body, design: .serif))
                         .foregroundStyle(Palette.ink)
@@ -151,7 +179,9 @@ public struct SearchView: View {
                 Text(L10n.t("Nothing for “\(store.query)”"))
                     .font(Typography.editorialHeadline)
                     .foregroundStyle(Palette.ink)
-                Text(L10n.t("Search understands references like Jn 3:16, book names, and a first set of people, places and themes. Free-text search of Scripture arrives with the content service."))
+                Text(store.isOffline
+                     ? L10n.t("Without the content service, search understands references like Jn 3:16 and book names.")
+                     : L10n.t("Search understands references like Jn 3:16, book names, people, places, themes — and questions in your own words, which look through the text of Scripture."))
                     .font(Typography.subheadline)
                     .foregroundStyle(Palette.inkSecondary)
             }

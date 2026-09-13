@@ -65,6 +65,65 @@ class AppFeatureTest {
         store.finish()
     }
 
+    /**
+     * §13, §21.3: a question asked from Search opens Ask on the content tab; its passages chain on
+     * the same stack; "See search results" returns to the field, which still holds the question.
+     */
+    @Test
+    fun askOpensFromSearchAndFallsBackToIt() = runTest {
+        val store = TestStore(AppFeature.State(tab = Tab.SEARCH, search = SearchFeature.State(query = "why did Job suffer")), AppFeature.reducer(deps()))
+        store.send(Action.Search(SearchFeature.Action.AskTapped))
+        store.receive(Action.Search(SearchFeature.Action.Delegate(SearchFeature.DelegateAction.Ask("why did Job suffer")))) {
+            it.copy(tab = Tab.HOME, homePath = listOf(Destination.Ask(AskFeature.State("why did Job suffer"))))
+        }
+        store.send(Action.HomePath(0, DestinationAction.Ask(AskFeature.Action.PassageTapped(sam17))))
+        store.receive(Action.HomePath(0, DestinationAction.Ask(AskFeature.Action.Delegate(AskFeature.DelegateAction.OpenPassage(sam17))))) {
+            it.copy(homePath = it.homePath + reader(sam17))
+        }
+        store.send(Action.HomePath(0, DestinationAction.Ask(AskFeature.Action.SearchInsteadTapped)))
+        store.receive(Action.HomePath(0, DestinationAction.Ask(AskFeature.Action.Delegate(AskFeature.DelegateAction.SearchInstead("why did Job suffer"))))) {
+            it.copy(tab = Tab.SEARCH)
+        }
+        store.finish()
+    }
+
+    /** A conversation starts from the reader, an entity page or an Ask answer as a sheet; when the companion opens a passage the sheet goes and the reader comes. */
+    @Test
+    fun voiceStartsFromThreePlacesAndOpensPassages() = runTest {
+        val detail = com.nexussoft.verbum.models.EntityDetail(david)
+        val entity = EntityDetailFeature.State(david.id, EntityDetailFeature.Content.Loaded(EntityDetailFeature.Page(detail, com.nexussoft.verbum.models.GraphSnapshot(david, emptyList(), emptyList()))))
+        val answer = com.nexussoft.verbum.clients.PreviewAskScriptureClient.answer
+        val ask = AskFeature.State("why", AskFeature.Content.Answered(AskFeature.Page(answer)))
+        val initial = AppFeature.State(
+            tab = Tab.EXPLORE, contentTab = Tab.EXPLORE,
+            explorePath = listOf(reader(sam17), Destination.Entity(entity), Destination.Ask(ask)),
+        )
+        val store = TestStore(initial, AppFeature.reducer(deps()))
+
+        store.send(Action.ExplorePath(0, DestinationAction.Reader(ScriptureFeature.Action.Reader(ChapterReaderFeature.Action.TalkTapped))))
+        store.receive(Action.ExplorePath(0, DestinationAction.Reader(ScriptureFeature.Action.Reader(ChapterReaderFeature.Action.Delegate(ChapterReaderFeature.DelegateAction.Talk(sam17))))))
+        store.receive(Action.ExplorePath(0, DestinationAction.Reader(ScriptureFeature.Action.Delegate(ScriptureFeature.DelegateAction.Talk(sam17))))) {
+            it.copy(voice = VoiceFeature.State(com.nexussoft.verbum.models.VoiceContext.Chapter(sam17)))
+        }
+        val ps23 = PassageReference("Ps", 23)
+        store.send(Action.Voice(VoiceFeature.Action.PassageTapped(ps23)))
+        store.receive(Action.Voice(VoiceFeature.Action.Delegate(VoiceFeature.DelegateAction.OpenPassage(ps23)))) {
+            it.copy(voice = null, explorePath = it.explorePath + reader(ps23))
+        }
+
+        store.send(Action.ExplorePath(1, DestinationAction.Entity(EntityDetailFeature.Action.TalkTapped)))
+        store.receive(Action.ExplorePath(1, DestinationAction.Entity(EntityDetailFeature.Action.Delegate(EntityDetailFeature.DelegateAction.Talk(detail))))) {
+            it.copy(voice = VoiceFeature.State(com.nexussoft.verbum.models.VoiceContext.Entity(detail)))
+        }
+        store.send(Action.VoiceDismissed) { it.copy(voice = null) }
+
+        store.send(Action.ExplorePath(2, DestinationAction.Ask(AskFeature.Action.TalkTapped)))
+        store.receive(Action.ExplorePath(2, DestinationAction.Ask(AskFeature.Action.Delegate(AskFeature.DelegateAction.Talk("why", answer))))) {
+            it.copy(voice = VoiceFeature.State(com.nexussoft.verbum.models.VoiceContext.Answer("why", answer)))
+        }
+        store.finish()
+    }
+
     @Test
     fun homeGreetsByTheClockAndOpensPassagesOnItsOwnStack() = runTest {
         val store = store()

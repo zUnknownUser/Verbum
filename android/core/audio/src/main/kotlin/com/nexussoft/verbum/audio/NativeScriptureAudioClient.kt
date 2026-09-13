@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import com.nexussoft.verbum.clients.BibleClient
+import com.nexussoft.verbum.clients.helloao.HelloAOScriptureAudioClient
 import com.nexussoft.verbum.clients.helloao.ScriptureAudioClient
 import com.nexussoft.verbum.models.*
 import kotlinx.coroutines.*
@@ -16,19 +17,57 @@ import java.security.MessageDigest
 import java.util.Locale
 import java.util.UUID
 
+/** No offline Portuguese voice is installed; the caller may offer recordings in another language, labelled. */
+class VoiceUnavailableException : IllegalStateException("Install a Portuguese (Brazil) offline voice in system speech settings")
+
+/**
+ * Production audio: in Portuguese the device reads the translation on screen aloud (no Portuguese
+ * recordings exist for these translations); in English the helloao recordings. Without a
+ * Portuguese voice the English recordings are offered, labelled as such — never passed off as
+ * the reading. Twin of iOS `ScriptureAudioClient.live`.
+ */
+class LiveScriptureAudioClient(language: BookLanguage, context: Context, bible: BibleClient) : ScriptureAudioClient {
+    private val recordings = HelloAOScriptureAudioClient(language)
+    private val native: ScriptureAudioClient? = if (language == BookLanguage.PORTUGUESE) NativeScriptureAudioClient(context, bible) else null
+
+    override suspend fun chapterAudio(bookId: BookId, chapter: Int): ChapterAudio? {
+        val native = native ?: return recordings.chapterAudio(bookId, chapter)
+        return try {
+            native.chapterAudio(bookId, chapter)
+        } catch (e: VoiceUnavailableException) {
+            recordings.chapterAudio(bookId, chapter)
+        }
+    }
+}
+
 /** Generates local speech from the exact reading translation, then uses the
- * existing MediaSession player for pause, seek, speed and background playback. */
+ * existing MediaSession player for pause, seek, speed and background playback.
+ * The next chapter is rendered in the background once this one is, so chaining does not wait. */
 class NativeScriptureAudioClient(context: Context, private val bible: BibleClient) : ScriptureAudioClient {
+    private val prefetch = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val context = context.applicationContext
     private val mutex = Mutex()
 
-    override suspend fun chapterAudio(bookId: BookId, chapter: Int): ChapterAudio? = mutex.withLock {
+    override suspend fun chapterAudio(bookId: BookId, chapter: Int): ChapterAudio? {
+        val audio = renderChapter(bookId, chapter)
+        nextChapter(bookId, chapter)?.let { next -> prefetch.launch { runCatching { renderChapter(next.bookId, next.chapter) } } }
+        return audio
+    }
+
+    private suspend fun renderChapter(bookId: BookId, chapter: Int): ChapterAudio? = mutex.withLock {
         val verses = bible.chapter(bookId, chapter)
         val first = verses.firstOrNull() ?: return@withLock null
         val text = verses.joinToString("\n") { it.text }
         val url = withContext(Dispatchers.IO) { render(text) }
         ChapterAudio(first.translationId, "Leitura automática · Português", PassageReference(bookId, chapter),
-            listOf(AudioNarrator("native.pt-BR", "Leitura automática", url.toURI().toString(), null)))
+            listOf(AudioNarrator(AudioNarrator.SYNTHESISED_PREFIX + "pt-BR", "Leitura automática", url.toURI().toString(), null)))
+    }
+
+    private fun nextChapter(bookId: BookId, chapter: Int): PassageReference? {
+        val book = BibleBook.book(bookId) ?: return null
+        if (chapter < book.chapterCount) return PassageReference(bookId, chapter + 1)
+        val nextBook = BibleBook.canon.firstOrNull { it.order == book.order + 1 } ?: return null
+        return PassageReference(nextBook.id, 1)
     }
 
     private suspend fun render(text: String): File {
@@ -45,7 +84,7 @@ class NativeScriptureAudioClient(context: Context, private val bible: BibleClien
                         TextToSpeech.Engine.KEY_FEATURE_NOT_INSTALLED !in it.features.orEmpty()
                 }
                     .maxByOrNull { it.quality }?.also { check(tts.setVoice(it) == TextToSpeech.SUCCESS) }
-                    ?: error("Install a Portuguese (Brazil) offline voice in system speech settings")
+                    ?: throw VoiceUnavailableException()
             }
             val key = MessageDigest.getInstance("SHA-256").digest((voice.name + "\n" + text).toByteArray()).joinToString("") { "%02x".format(it) }
             val output = File(directory, "$key.wav")
@@ -58,6 +97,8 @@ class NativeScriptureAudioClient(context: Context, private val bible: BibleClien
                 override fun onError(id: String?) { id?.let { pending.remove(it)?.completeExceptionally(IllegalStateException("Speech failed")) } }
                 override fun onError(id: String?, code: Int) { onError(id) }
             })
+            // A voice that is present but still downloading, or the engine failing to speak at all,
+            // must not read as "no voice": those fall through as plain failures (retry), not English.
             // Never truncate a long chapter (Psalm 119 exceeds the engine limit).
             for (chunk in speechChunks(text, TextToSpeech.getMaxSpeechInputLength() - 1)) {
                 currentCoroutineContext().ensureActive()
@@ -71,11 +112,12 @@ class NativeScriptureAudioClient(context: Context, private val bible: BibleClien
             joinSpeechWaves(temporary.dropLast(1), joined)
             currentCoroutineContext().ensureActive()
             check(joined.renameTo(output))
+            // Newest first: at most 24 chapters / ~200 MB (16-bit WAV is ~2.9 MB per minute; Psalm 119 is ~44 MB).
             var bytes = 0L
             directory.listFiles().orEmpty().filter { it.extension == "wav" && !it.name.endsWith(".partial.wav") }
                 .sortedByDescending { it.lastModified() }.forEachIndexed { index, file ->
                     bytes += file.length()
-                    if (file != output && (index >= 4 || bytes > 100_000_000L)) file.delete()
+                    if (file != output && (index >= 24 || bytes > 200_000_000L)) file.delete()
                 }
             return output
         } finally {

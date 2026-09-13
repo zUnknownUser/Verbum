@@ -1,6 +1,14 @@
 package com.nexussoft.verbum.feature.scripture
 
+import com.nexussoft.verbum.clients.AskScriptureClient
+import com.nexussoft.verbum.clients.AskScriptureException
 import com.nexussoft.verbum.clients.BibleClient
+import com.nexussoft.verbum.clients.RealtimeSessionClient
+import com.nexussoft.verbum.clients.VoiceClient
+import com.nexussoft.verbum.clients.VoiceException
+import com.nexussoft.verbum.clients.UnavailableVoiceClient
+import com.nexussoft.verbum.common.arch.pullbackOptional
+import com.nexussoft.verbum.models.VoiceContext
 import com.nexussoft.verbum.clients.ClipboardClient
 import com.nexussoft.verbum.clients.GraphClient
 import com.nexussoft.verbum.clients.NoopNotificationClient
@@ -39,6 +47,7 @@ object AppFeature {
         data class Arrival(val state: GuidedExplorationFeature.State) : Destination
         data class Graph(val state: GraphFeature.State) : Destination
         data class Timeline(val state: TimelineFeature.State) : Destination
+        data class Ask(val state: AskFeature.State) : Destination
     }
 
     /** An action for the destination at [index] of a stack. */
@@ -51,6 +60,7 @@ object AppFeature {
         data class Arrival(val action: GuidedExplorationFeature.Action) : DestinationAction
         data class Graph(val action: GraphFeature.Action) : DestinationAction
         data class Timeline(val action: TimelineFeature.Action) : DestinationAction
+        data class Ask(val action: AskFeature.Action) : DestinationAction
     }
 
     data class State(
@@ -62,6 +72,8 @@ object AppFeature {
         val audio: AudioPlayerFeature.State = AudioPlayerFeature.State(),
         val homePath: List<Destination> = emptyList(),
         val explorePath: List<Destination> = emptyList(),
+        /** The spoken conversation sheet, over whatever page started it. */
+        val voice: VoiceFeature.State? = null,
     )
 
     sealed interface Action {
@@ -77,6 +89,9 @@ object AppFeature {
         data class HomePath(val index: Int, val action: DestinationAction) : Action
         data class ExplorePath(val index: Int, val action: DestinationAction) : Action
         data class Pop(val tab: Tab) : Action
+        data class Voice(val action: VoiceFeature.Action) : Action
+        /** The sheet was swiped away. */
+        data object VoiceDismissed : Action
     }
 
     class Dependencies(
@@ -95,6 +110,9 @@ object AppFeature {
         val explorationClient: com.nexussoft.verbum.clients.GuidedExplorationClient = com.nexussoft.verbum.clients.EditorialExplorationClient,
         val notifications: NotificationClient = NoopNotificationClient,
         val timelineClient: com.nexussoft.verbum.clients.TimelineClient = com.nexussoft.verbum.clients.fixtures.FixtureTimelineClient,
+        val askClient: AskScriptureClient = AskScriptureClient { throw AskScriptureException.Unavailable },
+        val realtimeSessionClient: RealtimeSessionClient = RealtimeSessionClient { throw VoiceException.Unavailable },
+        val voiceClient: VoiceClient = UnavailableVoiceClient,
         /** Localised title for the morning notification; resolved when the plan is built. */
         val dailyVerseTitle: () -> String = { "Verse of the day" },
     )
@@ -108,8 +126,12 @@ object AppFeature {
         val context = ContextFeature.reducer(deps.contextClient)
         val arrival = GuidedExplorationFeature.reducer(deps.explorationClient)
         val graph = GraphFeature.reducer(deps.graphClient)
+        val ask = AskFeature.reducer(deps.askClient, deps.graphClient)
+        val voice = VoiceFeature.reducer(VoiceFeature.Dependencies(deps.realtimeSessionClient, deps.voiceClient, deps.askClient, deps.searchClient, deps.bibleClient, deps.language))
 
         fun reduceDestination(destination: Destination, action: DestinationAction): Pair<Destination, Effect<DestinationAction>>? = when {
+            destination is Destination.Ask && action is DestinationAction.Ask ->
+                ask.reduce(destination.state, action.action).let { Destination.Ask(it.state) to it.effect.map { a -> DestinationAction.Ask(a) } }
             destination is Destination.Arrival && action is DestinationAction.Arrival ->
                 arrival.reduce(destination.state, action.action).let { Destination.Arrival(it.state) to it.effect.map { a -> DestinationAction.Arrival(a) } }
             destination is Destination.Timeline && action is DestinationAction.Timeline ->
@@ -143,6 +165,7 @@ object AppFeature {
                     is EntityDetailFeature.DelegateAction.OpenPassage -> Destination.Reader(ScriptureFeature.State.initial(it.reference, deps.initialTextScale()))
                     is EntityDetailFeature.DelegateAction.OpenGraph -> Destination.Graph(GraphFeature.State(it.entityId))
                     is EntityDetailFeature.DelegateAction.OpenTimeline -> Destination.Timeline(TimelineFeature.State(highlight = it.entityId))
+                    is EntityDetailFeature.DelegateAction.Talk -> null
                 }
             }
             is DestinationAction.Timeline -> (action.action as? TimelineFeature.Action.Delegate)?.delegate?.let {
@@ -170,6 +193,14 @@ object AppFeature {
                     is ContextFeature.DelegateAction.OpenPassage -> Destination.Reader(ScriptureFeature.State.initial(it.reference, deps.initialTextScale()))
                 }
             }
+            is DestinationAction.Ask -> (action.action as? AskFeature.Action.Delegate)?.delegate?.let {
+                when (it) {
+                    is AskFeature.DelegateAction.OpenEntity -> Destination.Entity(EntityDetailFeature.State(it.entity.id))
+                    is AskFeature.DelegateAction.OpenPassage -> Destination.Reader(ScriptureFeature.State.initial(it.reference, deps.initialTextScale()))
+                    is AskFeature.DelegateAction.SearchInstead -> null
+                    is AskFeature.DelegateAction.Talk -> null
+                }
+            }
         }
 
         val pathReducer = Reducer<State, Action> { state, action ->
@@ -191,7 +222,24 @@ object AppFeature {
                 state.audio.reference == PassageReference(listen.reference.bookId, listen.reference.chapter) -> Effect.Send(Action.Audio(AudioPlayerFeature.Action.TogglePlayPause))
                 else -> Effect.Send(Action.Audio(AudioPlayerFeature.Action.Play(listen.reference)))
             }
-            (if (isHome) state.copy(homePath = newPath) else state.copy(explorePath = newPath)).with(Effect.Merge(listOf(embedded, audioEffect)))
+            // §21.3: Ask falls back to search results — the field still holds the question.
+            val searchInstead = ((destAction as? DestinationAction.Ask)?.action as? AskFeature.Action.Delegate)?.delegate as? AskFeature.DelegateAction.SearchInstead
+            val searchEffect: Effect<Action> = when {
+                searchInstead == null || state.search.query.trim() == searchInstead.question -> Effect.None
+                else -> Effect.Send(Action.Search(SearchFeature.Action.QueryChanged(searchInstead.question)))
+            }
+            val tab = if (searchInstead != null) Tab.SEARCH else state.tab
+            // A conversation starts over the page; one at a time, and never over the chapter audio.
+            val talk: VoiceContext? = when (destAction) {
+                is DestinationAction.Reader -> ((destAction.action as? ScriptureFeature.Action.Delegate)?.delegate as? ScriptureFeature.DelegateAction.Talk)?.let { VoiceContext.Chapter(it.reference) }
+                is DestinationAction.Entity -> ((destAction.action as? EntityDetailFeature.Action.Delegate)?.delegate as? EntityDetailFeature.DelegateAction.Talk)?.let { VoiceContext.Entity(it.detail) }
+                is DestinationAction.Ask -> ((destAction.action as? AskFeature.Action.Delegate)?.delegate as? AskFeature.DelegateAction.Talk)?.let { VoiceContext.Answer(it.question, it.answer) }
+                else -> null
+            }
+            val voiceState = talk?.let { VoiceFeature.State(it) } ?: state.voice
+            val pauseEffect: Effect<Action> = if (talk != null && state.audio.isPlaying) Effect.Send(Action.Audio(AudioPlayerFeature.Action.TogglePlayPause)) else Effect.None
+            (if (isHome) state.copy(tab = tab, homePath = newPath, voice = voiceState) else state.copy(tab = tab, explorePath = newPath, voice = voiceState))
+                .with(Effect.Merge(listOf(embedded, audioEffect, searchEffect, pauseEffect)))
         }
 
         fun push(state: State, destination: Destination): State =
@@ -216,8 +264,18 @@ object AppFeature {
                 extractAction = { (it as? Action.Explore)?.action }, embedAction = { Action.Explore(it) },
             ),
             pathReducer,
+            voice.pullbackOptional(
+                get = { it.voice }, set = { s, c -> s.copy(voice = c) },
+                extractAction = { (it as? Action.Voice)?.action }, embedAction = { Action.Voice(it) },
+            ),
             Reducer { state, action ->
                 when (action) {
+                    // The companion opens a passage: the sheet goes, the reader comes.
+                    is Action.Voice -> when (val d = (action.action as? VoiceFeature.Action.Delegate)?.delegate) {
+                        is VoiceFeature.DelegateAction.OpenPassage -> push(state.copy(voice = null), Destination.Reader(ScriptureFeature.State.initial(d.reference, deps.initialTextScale()))).with(VoiceFeature.cancelSession())
+                        null -> state.only()
+                    }
+                    Action.VoiceDismissed -> state.copy(voice = null).with(VoiceFeature.cancelSession())
                     Action.Started -> state.with(
                         runEffect(id = "openedVerses", cancelInFlight = true) { send ->
                             deps.notifications.openedVerses().collect { send(Action.OpenedVerse(it)) }
@@ -264,6 +322,7 @@ object AppFeature {
                     is Action.Search -> when (val d = (action.action as? SearchFeature.Action.Delegate)?.delegate) {
                         is SearchFeature.DelegateAction.OpenPassage -> push(state, Destination.Reader(ScriptureFeature.State.initial(d.reference, deps.initialTextScale()))).only()
                         is SearchFeature.DelegateAction.OpenEntity -> push(state, Destination.Entity(EntityDetailFeature.State(d.entity.id))).only()
+                        is SearchFeature.DelegateAction.Ask -> push(state, Destination.Ask(AskFeature.State(d.question))).only()
                         null -> state.only()
                     }
                     else -> state.only()

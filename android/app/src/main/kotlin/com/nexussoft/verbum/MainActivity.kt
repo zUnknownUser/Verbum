@@ -14,10 +14,16 @@ class MainActivity : ComponentActivity() {
         NotificationPermission.complete(granted)
     }
 
+    /** The RECORD_AUDIO dialog for the voice companion; answered through [MicrophonePermission]. */
+    private val microphonePermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        MicrophonePermission.complete(granted)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         NotificationPermission.launcher = notificationPermission
+        MicrophonePermission.launcher = microphonePermission
         if (savedInstanceState == null) openVerse(intent)
         setContent {
             VerbumTheme {
@@ -34,6 +40,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         if (NotificationPermission.launcher === notificationPermission) NotificationPermission.launcher = null
+        if (MicrophonePermission.launcher === microphonePermission) MicrophonePermission.launcher = null
         super.onDestroy()
     }
 

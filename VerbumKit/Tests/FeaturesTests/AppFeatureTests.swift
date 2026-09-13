@@ -34,6 +34,67 @@ import Testing
         }
     }
 
+    /// §13, §21.3: a question asked from Search opens Ask on the content tab; its
+    /// passages and entities chain on the same stack; "See search results" returns
+    /// to the field, which still holds the question.
+    @Test func askOpensFromSearchAndFallsBackToIt() async {
+        var initial = AppFeature.State()
+        initial.tab = .search
+        initial.search.query = "why did Job suffer"
+        let store = TestStore(initialState: initial) { AppFeature() }
+        await store.send(.search(.askTapped))
+        await store.receive(\.search.delegate.ask) {
+            $0.tab = .home
+            $0.homePath[id: 0] = .ask(AskFeature.State(question: "why did Job suffer"))
+        }
+        await store.send(.homePath(.element(id: 0, action: .ask(.passageTapped(Self.sam17)))))
+        await store.receive(\.homePath[id: 0].ask.delegate.openPassage) {
+            $0.homePath[id: 1] = .reader(ScriptureFeature.State(reference: Self.sam17))
+        }
+        await store.send(.homePath(.element(id: 0, action: .ask(.searchInsteadTapped))))
+        await store.receive(\.homePath[id: 0].ask.delegate.searchInstead) { $0.tab = .search }
+    }
+
+    /// A conversation starts from the reader, an entity page or an Ask answer as
+    /// a sheet; when the companion opens a passage the sheet goes and the reader comes.
+    @Test func voiceStartsFromThreePlacesAndOpensPassages() async {
+        var initial = AppFeature.State()
+        initial.tab = .explore
+        initial.contentTab = .explore
+        initial.explorePath.append(.reader(ScriptureFeature.State(reference: Self.sam17)))
+        let detail = EntityDetail(entity: Self.david)
+        var entity = EntityDetailFeature.State(entityID: Self.david.id)
+        entity.content = .loaded(.init(detail: detail, neighborhood: GraphSnapshot(root: Self.david, nodes: [], edges: [])))
+        initial.explorePath.append(.entity(entity))
+        var ask = AskFeature.State(question: "why")
+        ask.content = .answered(.init(answer: .preview))
+        initial.explorePath.append(.ask(ask))
+        let store = TestStore(initialState: initial) { AppFeature() }
+        store.exhaustivity = .off(showSkippedAssertions: false)
+
+        await store.send(.explorePath(.element(id: 0, action: .reader(.reader(.talkTapped)))))
+        await store.receive(\.explorePath[id: 0].reader.delegate.talk) {
+            $0.voice = VoiceFeature.State(context: .chapter(Self.sam17))
+        }
+        let ps23 = PassageReference(bookId: "Ps", chapter: 23)
+        await store.send(.voice(.presented(.passageTapped(ps23))))
+        await store.receive(\.voice.presented.delegate.openPassage) {
+            $0.voice = nil
+            $0.explorePath[id: 3] = .reader(ScriptureFeature.State(reference: ps23))
+        }
+
+        await store.send(.explorePath(.element(id: 1, action: .entity(.talkTapped))))
+        await store.receive(\.explorePath[id: 1].entity.delegate.talk) {
+            $0.voice = VoiceFeature.State(context: .entity(detail))
+        }
+        await store.send(.voice(.dismiss)) { $0.voice = nil }
+
+        await store.send(.explorePath(.element(id: 2, action: .ask(.talkTapped))))
+        await store.receive(\.explorePath[id: 2].ask.delegate.talk) {
+            $0.voice = VoiceFeature.State(context: .answer(question: "why", .preview))
+        }
+    }
+
     @Test func homeOpensPassagesOnItsOwnStack() async throws {
         let store = TestStore(initialState: AppFeature.State()) { AppFeature() }
         let verse = store.state.home.dailyVerse.reference

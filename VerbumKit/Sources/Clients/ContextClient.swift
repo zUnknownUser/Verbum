@@ -7,7 +7,8 @@ public struct ContextClient: Sendable {
 }
 
 extension ContextClient: DependencyKey {
-    public static let liveValue = Self.fixtures
+    /// The backend (Task 11); fixtures remain the preview and test double.
+    public static let liveValue = Self.live(api: .shared)
     public static let previewValue = Self.fixtures
 }
 

@@ -66,6 +66,7 @@ public struct EntityDetailFeature {
         case entityTapped(BibleEntity)
         case graphTapped
         case timelineTapped
+        case talkTapped
         case delegate(Delegate)
 
         @CasePathable
@@ -76,6 +77,8 @@ public struct EntityDetailFeature {
             case openGraph(EntityID)
             /// The timeline, scrolled to this entity's events.
             case openTimeline(EntityID)
+            /// A spoken conversation about this page.
+            case talk(EntityDetail)
         }
     }
 
@@ -132,6 +135,10 @@ public struct EntityDetailFeature {
 
             case .timelineTapped:
                 return .send(.delegate(.openTimeline(state.entityID)))
+
+            case .talkTapped:
+                guard case .loaded(let page) = state.content else { return .none }
+                return .send(.delegate(.talk(page.detail)))
 
             case .delegate:
                 return .none

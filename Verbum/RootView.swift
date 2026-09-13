@@ -8,7 +8,7 @@ struct RootView: View {
     }
 
     var body: some View {
-        AppView(store: store)
+        AccountContainer { AppView(store: store) }
     }
 }
 

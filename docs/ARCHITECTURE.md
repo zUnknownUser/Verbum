@@ -150,6 +150,95 @@ can move to push (APNs/FCM) with the same `NotificationClient` surface. Third-pa
 "verse of the day" APIs were considered and rejected: they are English-only, cannot be planned
 ahead (which breaks local scheduling), and would put a paid key inside the app binary.
 
+## The backend client (Task 11)
+
+`VerbumAPI` (iOS: `Clients/VerbumAPI`, Android: `:core:clients/api`) is the only code that knows
+the wire — one function per route of `api/openapi.yaml`, decoding into the models. The content
+clients' `.live` values (`GraphClient`, `SearchClient`, `ContextClient`, `TimelineClient`) are thin
+wrappers over it; fixtures stay the preview/test doubles. Features never see it (§37).
+
+- **One shape of a reference.** `PassageReference` encodes as the contract's
+  `{bookId, chapter, verseStart?, verseEnd?}` everywhere — on the wire, in `lastRead.json`, in the
+  notification plan.
+- **Errors are states (§52).** A `Problem` code becomes a typed error (`unknownEntity`,
+  `contentUnavailable` → `nil` context, `askUnavailable`…); a transport failure is
+  `networkUnavailable`; a body that is not the contract is `malformedResponse`. `message` never
+  reaches a user.
+- **Offline (§39).** Every `GET` answer is kept on disk keyed by URL. Fresh (the server's
+  `max-age=3600`) → served without a request; stale → revalidated; unreachable → the stale answer,
+  and only with nothing cached does the call fail. `POST /v1/ask` is never cached (§47).
+- **Search (§28).** The server ranks Scripture hits and entities; the device still parses the
+  reference (wins outright, opens on return) and matches book names, so both rankings agree and a
+  typed `Jn 3:16` never waits on the network. If the service can't be reached the field shows what
+  the device knows and says so (`SearchFeature.isOffline`).
+- **Contract tests.** Each `api/examples/*.json` is decoded through the live client and must equal
+  the fixture client's answer for the same call — the same files the backend proves it serves.
+- **Where the backend is.** iOS: the `VERBUM_API_BASE_URL` build setting → `VerbumAPIBaseURL` in
+  Info.plist (Debug: the LAN dev box; Release: `https://api.verbum.app`), overridable at runtime with
+  the launch argument `-VerbumAPIBaseURL http://<ip>:8080`. Debug's `Info-Debug.plist` opens ATS for
+  plain-HTTP dev backends; Release keeps it intact. Android: the `VERBUM_API_BASE_URL` Gradle
+  property → `BuildConfig`, cleartext allowed only in the debug manifest. No key ships in either
+  app: the API is keyless and OpenAI is reached only by the server (§56).
+
+## Ask Scripture (Task 12, client side)
+
+`AskScriptureClient` (§38) is `POST /v1/ask` and nothing else: the client never generates, never
+caches a question (§47), and maps the server's failures to three states — `unavailable` (503, or
+a backend without the route), `networkUnavailable`, `failed`. `ScriptureAnswer` is the §30
+contract verbatim; the page renders and navigates only from its structured fields, never from
+prose (§30), because the server guarantees every `passageReference` was retrieved and verified
+before the model could cite it (§31).
+
+`AskFeature` is a destination pushed from Search (§6: search and ask share one field). A query
+that reads as a question — a `?`, a question word in English or Portuguese, or four-plus words
+that are not a reference or a name (`looksLikeQuestion`, same rule on both platforms) — gets an
+"Ask Scripture" row above the results and is asked on return. The page asks once when it appears,
+resolves `entityReferences` to names through `GraphClient.entity` (best-effort, unknown ids are
+dropped), and renders §13.2 in order: short answer, answer + confidence line, key passages,
+explore further, perspectives only when `interpretiveVariance`, sources, and a fixed line saying
+what the text is (a checked synthesis, not a word from God — §13.3). An empty `answer` is not a
+failure: the page shows the §51 copy, the closest passages if any, and "See search results",
+which returns to the Search tab with the same question still in the field (§21.3).
+
+## Voice: talking with the study companion (Realtime API)
+
+Brought forward from §19 at the owner's request. The backend only mints the credential
+(`POST /v1/realtime/session` → OpenAI's ephemeral `ek_` secret, §56); the app connects to OpenAI
+itself over a WebSocket (`wss://api.openai.com/v1/realtime`, GA events) and streams PCM16 mono
+24 kHz both ways. No audio or transcript ever touches our server; nothing is persisted (§47).
+
+- **Clients.** `RealtimeSessionClient` (the secret) and `VoiceClient` (the conversation).
+  `RealtimeConversation` is the protocol — `session.update` with instructions, tools, server VAD
+  and transcription; `input_audio_buffer.append` up; `response.output_audio.delta` played as it
+  arrives; transcripts surfaced; `function_call` items run through a handler and answered with
+  `function_call_output` + `response.create` once the active response ends; the user speaking
+  over the companion drops queued playback. It runs over an injected `RealtimeTransport`
+  (`URLSessionWebSocketTask` / OkHttp) and `VoiceAudio` (`AVAudioEngine` with voice processing /
+  `AudioRecord`+`AudioTrack` on the voice-communication route, with the platform AEC), so the
+  protocol is tested with fakes on both platforms. WebSocket rather than WebRTC on purpose: no
+  native binary dependency; the transport can be swapped behind the same interface later.
+- **Half-duplex.** While the companion's audio is coming out of the speaker, and for a 600 ms
+  tail after the last frame is heard, microphone chunks are not sent. Without it the speaker
+  leaks into the microphone (the simulator/emulator has no echo cancellation; a speakerphone's is
+  imperfect), the server VAD hears "speech", transcribes the companion's own words as the reader's
+  and answers itself — a runaway monologue. The price is no barge-in: the reader waits for the
+  sentence to end (or taps End). Server VAD runs at threshold 0.65 / 800 ms silence so room noise
+  is not a question, and the instructions demand one answer per turn, then silence.
+- **What it is told (`VoiceScript`).** The product's rules — stay with Scripture, distinguish text
+  from interpretation, never claim revelation or foretell (§13.3, §31), point high-stakes questions
+  to a professional — plus the page: the chapter's text (from `BibleClient`, cached), the entity's
+  facts, or the Ask answer and its passages. It speaks the device language.
+- **Grounding (§73).** The Realtime model answers directly, so anything beyond the page goes through
+  tools that are the app's own retrieval-first calls: `ask_scripture` → `/v1/ask`, `search_scripture`
+  → `/v1/search`. Results carry references in English; an Ask failure is reported to the model as
+  "do not answer from memory". `open_passage` hands a reference to the reader after the user agrees.
+- **Where it lives.** `VoiceFeature` is a sheet over the page that started it — three entry points,
+  no more: the reader toolbar ("Talk about this chapter"), the entity page ("Talk about David") and
+  an Ask answer ("Go on out loud"). The sheet shows a status line, the transcript, the passages
+  mentioned (tappable), mute and end. Dismissing it stops the microphone and the socket; chapter
+  audio pauses when a conversation starts. Failures are named: unavailable (no key on the server),
+  microphone denied (with a Settings link), offline, dropped.
+
 ## Performance rules
 
 - Never write `@State` (or a `StateFlow`) from a per-frame callback; keep scroll bookkeeping in a

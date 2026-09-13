@@ -28,6 +28,7 @@ let package = Package(
         .library(name: "Features", targets: ["Features"]),
     ],
     dependencies: [
+        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", exact: "12.17.0"),
         .package(
             url: "https://github.com/pointfreeco/swift-composable-architecture",
             from: "1.26.2"
@@ -40,6 +41,8 @@ let package = Package(
         .target(
             name: "Clients",
             dependencies: [
+                .product(name: "FirebaseAuth", package: "firebase-ios-sdk"),
+                .product(name: "FirebaseCore", package: "firebase-ios-sdk"),
                 "Models",
                 "Core",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),

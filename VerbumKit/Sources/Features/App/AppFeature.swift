@@ -1,5 +1,6 @@
 import Clients
 import ComposableArchitecture
+import Foundation
 import Models
 
 /// The app shell (spec §6): Home · Explore · Journey · Library, plus Search
@@ -22,6 +23,8 @@ public struct AppFeature {
         public var isListening = false
         public var homePath = StackState<Path.State>()
         public var explorePath = StackState<Path.State>()
+        /// The spoken conversation sheet, over whatever page started it.
+        @Presents public var voice: VoiceFeature.State?
 
         public init() {}
     }
@@ -40,6 +43,7 @@ public struct AppFeature {
         case arrival(GuidedExplorationFeature)
         case graph(GraphFeature)
         case timeline(TimelineFeature)
+        case ask(AskFeature)
     }
 
     public enum Action: Equatable {
@@ -53,6 +57,7 @@ public struct AppFeature {
         case audio(AudioPlayerFeature.Action)
         case homePath(StackActionOf<Path>)
         case explorePath(StackActionOf<Path>)
+        case voice(PresentationAction<VoiceFeature.Action>)
     }
 
     @Dependency(\.notificationClient) var notificationClient
@@ -117,6 +122,10 @@ public struct AppFeature {
                 push(.entity(EntityDetailFeature.State(entityID: entity.id)), in: &state)
                 return .none
 
+            case .search(.delegate(.ask(let question))):
+                push(.ask(AskFeature.State(question: question)), in: &state)
+                return .none
+
             // Mini player: go back to the chapter being heard, on the content tab.
             case .audio(.delegate(.openChapter(let reference))):
                 push(.reader(ScriptureFeature.State(reference: reference)), in: &state)
@@ -133,12 +142,29 @@ public struct AppFeature {
                 state.isListening = state.audio.isActive
                 return .none
 
-            case .home, .explore, .search, .homePath, .explorePath:
+            // The companion opens a passage: the sheet goes, the reader comes.
+            case .voice(.presented(.delegate(.openPassage(let reference)))):
+                state.voice = nil
+                push(.reader(ScriptureFeature.State(reference: reference)), in: &state)
+                return .none
+
+            case .voice(.dismiss):
+                state.voice = nil
+                return .none
+
+            case .home, .explore, .search, .homePath, .explorePath, .voice:
                 return .none
             }
         }
         .forEach(\.homePath, action: \.homePath)
         .forEach(\.explorePath, action: \.explorePath)
+        .ifLet(\.$voice, action: \.voice) { VoiceFeature() }
+    }
+
+    /// One conversation at a time, and never over the chapter audio.
+    private func talk(_ context: VoiceContext, state: inout State) -> Effect<Action> {
+        state.voice = VoiceFeature.State(context: context)
+        return state.audio.isPlaying ? .send(.audio(.togglePlayPause)) : .none
     }
 
     /// Search lives on its own tab; what it opens lands on the last content
@@ -157,11 +183,13 @@ public struct AppFeature {
         case .entity(.delegate(.openEntity(let entity))),
              .context(.delegate(.openEntity(let entity))),
              .graph(.delegate(.openEntity(let entity))),
+             .ask(.delegate(.openEntity(let entity))),
              .entities(.delegate(.openEntity(let entity))):
             state[keyPath: path].append(.entity(EntityDetailFeature.State(entityID: entity.id)))
         case .entity(.delegate(.openPassage(let reference))),
              .arrival(.delegate(.openPassage(let reference))),
              .graph(.delegate(.openPassage(let reference))),
+             .ask(.delegate(.openPassage(let reference))),
              .context(.delegate(.openPassage(let reference))):
             state[keyPath: path].append(.reader(ScriptureFeature.State(reference: reference)))
         case .entity(.delegate(.openGraph(let id))):
@@ -176,6 +204,18 @@ public struct AppFeature {
             state[keyPath: path].append(.context(ContextFeature.State(reference: reference)))
         case .books(.delegate(.chapterSelected(let reference))):
             state[keyPath: path].append(.reader(ScriptureFeature.State(reference: reference)))
+        // §21.3: Ask falls back to search results — the field still holds the question.
+        case .ask(.delegate(.searchInstead(let question))):
+            state.tab = .search
+            if state.search.query.trimmingCharacters(in: .whitespacesAndNewlines) != question {
+                return .send(.search(.binding(.set(\.query, question))))
+            }
+        case .reader(.delegate(.talk(let reference))):
+            return talk(.chapter(reference), state: &state)
+        case .entity(.delegate(.talk(let detail))):
+            return talk(.entity(detail), state: &state)
+        case .ask(.delegate(.talk(let question, let answer))):
+            return talk(.answer(question: question, answer), state: &state)
         case .reader(.delegate(.listen(let reference))):
             // Already playing this chapter: the button pauses/resumes instead.
             if state.audio.reference == PassageReference(bookId: reference.bookId, chapter: reference.chapter) {

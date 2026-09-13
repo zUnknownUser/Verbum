@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="audio_in_english">Áudio em inglês</string>
+    <string name="audio_preparing">Preparando o áudio…</string>
     <string name="arrival_title">Como você está chegando hoje?</string>
     <string name="arrival_subtitle">Um ponto de partida para explorar a Bíblia, no seu ritmo.</string>
     <string name="arrival_privacy">Escolha um ponto de partida, no seu ritmo. Essa escolha é opcional e não fica salva em um perfil.</string>
@@ -64,6 +66,7 @@
     <string name="search_prompt">Referência, livro, pessoa, lugar, tema</string>
     <string name="clear">Limpar</string>
     <string name="passage">Passagem</string>
+    <string name="passages">Passagens</string>
     <string name="open_in_reader">Abrir no leitor</string>
     <string name="people">Pessoas</string>
     <string name="places">Lugares</string>
@@ -71,7 +74,9 @@
     <string name="events">Eventos</string>
     <string name="try_label">Experimente</string>
     <string name="nothing_for">Nada para “%1$s”</string>
-    <string name="search_explainer">A busca entende referências como Jo 3:16, nomes de livros e um primeiro conjunto de pessoas, lugares e temas. A busca por texto livre na Escritura chega com o serviço de conteúdo.</string>
+    <string name="search_explainer">A busca entende referências como Jo 3:16, nomes de livros, pessoas, lugares, temas — e perguntas nas suas palavras, que procuram no texto da Escritura.</string>
+    <string name="search_explainer_offline">Sem o serviço de conteúdo, a busca entende referências como Jo 3:16 e nomes de livros.</string>
+    <string name="search_offline_notice">O Verbum não pôde ser alcançado — mostrando o que este aparelho sabe.</string>
     <string name="chapters_and_division">%1$d capítulos · %2$s</string>
     <string name="back_to_books">Voltar aos livros</string>
     <string name="chapter_n">Capítulo %1$d</string>
@@ -163,4 +168,57 @@
     <string name="view_in_timeline_subtitle">Onde %1$s se situa na história bíblica.</string>
     <string name="timeline_event_open">Abre o evento</string>
     <string name="timeline_event_close">Recolhe o evento</string>
+
+    <!-- Ask Scripture (§13) -->
+    <string name="ask_scripture">Perguntar à Escritura</string>
+    <string name="ask_row_subtitle">Uma resposta a partir das próprias passagens, com fontes</string>
+    <string name="ask_loading">Lendo as passagens que esta pergunta toca antes de responder.</string>
+    <string name="ask_short_answer">Resposta curta</string>
+    <string name="ask_explore_further">Explore mais</string>
+    <string name="ask_perspectives">Perspectivas</string>
+    <string name="ask_perspectives_body">Tradições cristãs e estudiosos leem esta pergunta de formas diferentes. A resposta acima é uma leitura das passagens, não a única.</string>
+    <string name="ask_disclaimer">Escrita a partir das passagens acima por um modelo de linguagem e depois verificada para que toda referência seja real. É um apoio ao estudo, não uma palavra de Deus.</string>
+    <string name="ask_confidence_high">Bem apoiada pelas passagens citadas.</string>
+    <string name="ask_confidence_medium">Parcialmente apoiada pelas passagens citadas — leia-as.</string>
+    <string name="ask_confidence_low">Fracamente apoiada — trate como ponto de partida, não conclusão.</string>
+    <string name="ask_no_answer">Sem resposta confiável</string>
+    <string name="ask_no_answer_body">Não consegui construir uma resposta confiável a partir das fontes disponíveis.</string>
+    <string name="ask_no_answer_body_closest">Não consegui construir uma resposta confiável a partir das fontes disponíveis. Estas são as passagens mais próximas que encontrei.</string>
+    <string name="ask_see_search">Ver resultados da busca</string>
+    <string name="ask_closest_passages">Passagens mais próximas</string>
+    <string name="ask_unavailable">Perguntar ainda não está disponível neste servidor</string>
+    <string name="ask_unavailable_body">A busca continua funcionando — tente as mesmas palavras lá.</string>
+    <string name="ask_offline">O Verbum não pôde ser alcançado</string>
+    <string name="ask_offline_body">Perguntar precisa de conexão. A leitura e a busca do que este aparelho sabe continuam funcionando.</string>
+    <string name="ask_failed">Não foi possível responder desta vez</string>
+
+    <!-- Voice conversation with the study companion -->
+    <string name="voice_talk_chapter">Conversar sobre este capítulo</string>
+    <string name="voice_talk_entity">Conversar sobre %1$s</string>
+    <string name="voice_talk_entity_subtitle">Pergunte em voz alta; o companheiro responde a partir da Escritura.</string>
+    <string name="voice_go_on">Continuar em voz alta</string>
+    <string name="voice_talking_about">Conversando sobre</string>
+    <string name="voice_connecting">Conectando…</string>
+    <string name="voice_muted">Mudo</string>
+    <string name="voice_hearing">Ouvindo você</string>
+    <string name="voice_listening">Ouvindo</string>
+    <string name="voice_speaking">Falando</string>
+    <string name="voice_thinking">Procurando na Escritura</string>
+    <string name="voice_ended">Encerrada</string>
+    <string name="voice_not_connected">Não conectado</string>
+    <string name="voice_intro">Pergunte qualquer coisa sobre esta página — o que uma palavra significa, quem é alguém, por que importa. O companheiro responde a partir da Escritura e diz de quais passagens está partindo.</string>
+    <string name="voice_you">Você</string>
+    <string name="voice_companion">Companheiro</string>
+    <string name="voice_passages">Passagens mencionadas</string>
+    <string name="voice_unavailable">Voz ainda não está disponível neste servidor</string>
+    <string name="voice_unavailable_body">Perguntar à Escritura por escrito continua funcionando pela busca.</string>
+    <string name="voice_mic_denied">O Verbum precisa do microfone para conversar</string>
+    <string name="voice_mic_denied_body">Permita o microfone em Ajustes e volte aqui.</string>
+    <string name="voice_open_settings">Abrir Ajustes</string>
+    <string name="voice_offline_body">Conversar precisa de conexão.</string>
+    <string name="voice_dropped">A conversa caiu</string>
+    <string name="voice_unmute">Ativar som</string>
+    <string name="voice_mute">Silenciar</string>
+    <string name="voice_close">Fechar</string>
+    <string name="voice_end">Encerrar</string>
 </resources>

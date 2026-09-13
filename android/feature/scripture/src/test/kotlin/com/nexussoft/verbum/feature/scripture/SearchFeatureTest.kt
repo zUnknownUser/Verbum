@@ -70,12 +70,24 @@ class SearchFeatureTest {
         store.finish()
     }
 
+    /** §21.3, §52: when the content service can't be reached the field still answers with what the device knows, and says so. */
     @Test
-    fun clientFailureBecomesEmptyResults() = runTest {
+    fun clientFailureBecomesDeviceOnlyResults() = runTest {
         val store = store(client = SearchClient { throw IllegalStateException("boom") })
         store.send(Action.QueryChanged("zzz")) { it.copy(query = "zzz", phase = Phase.SEARCHING) }
-        store.receive(Action.SearchResponded(SearchResponse.empty("zzz"))) { it.copy(phase = Phase.IDLE, results = SearchResponse.empty("zzz")) }
+        store.receive(Action.SearchUnreachable(SearchResponse.empty("zzz"))) { it.copy(phase = Phase.IDLE, results = SearchResponse.empty("zzz"), isOffline = true) }
         assertTrue(store.state.showsNoResults)
+        store.finish()
+    }
+
+    @Test
+    fun unreachableServiceStillParsesAReferenceAndALaterAnswerClearsTheNotice() = runTest {
+        val store = store(client = SearchClient { throw IllegalStateException("boom") })
+        store.send(Action.QueryChanged("Jn 3:16")) { it.copy(query = "Jn 3:16", phase = Phase.SEARCHING) }
+        val local = SearchResponse("Jn 3:16", listOf(PassageReference("John", 3, 16..16)), emptyList(), emptyList())
+        store.receive(Action.SearchUnreachable(local)) { it.copy(phase = Phase.IDLE, results = local, isOffline = true) }
+        store.send(Action.SearchResponded(response("Jn 3:16"))) { it.copy(results = response("Jn 3:16"), isOffline = false) }
+        store.send(Action.QueryChanged("")) { it.copy(query = "", results = null) }
         store.finish()
     }
 
@@ -98,7 +110,8 @@ class SearchFeatureTest {
 
     @Test
     fun returnKeyWithNothingToOpenDoesNothing() = runTest {
-        val store = store(State(query = "why did Job suffer"))
+        // Not a reference, not a book, and too short to be a question for Ask.
+        val store = store(State(query = "Elah"))
         store.send(Action.Submitted)
         store.finish()
     }
@@ -113,6 +126,28 @@ class SearchFeatureTest {
         store.receive(Action.Delegate(DelegateAction.OpenPassage(PassageReference("Rom", 1))))
         store.send(Action.EntityTapped(david))
         store.receive(Action.Delegate(DelegateAction.OpenEntity(david)))
+        store.finish()
+    }
+
+    /** §6: search and ask share the field. A question is offered to Ask at once, opened on return, and the search still runs underneath. */
+    @Test
+    fun aQuestionIsOfferedToAskAndSubmittedToIt() = runTest {
+        val store = store(client = SearchClient { response(it) })
+        store.send(Action.QueryChanged("why did Job suffer")) { it.copy(query = "why did Job suffer", phase = Phase.SEARCHING) }
+        assertEquals("why did Job suffer", store.state.askSuggestion)
+        store.receive(Action.SearchResponded(response("why did Job suffer"))) { it.copy(phase = Phase.IDLE, results = response("why did Job suffer")) }
+        store.send(Action.Submitted)
+        store.receive(Action.Delegate(DelegateAction.Ask("why did Job suffer")))
+        store.send(Action.AskTapped)
+        store.receive(Action.Delegate(DelegateAction.Ask("why did Job suffer")))
+        store.finish()
+    }
+
+    @Test
+    fun aLookupIsNotOfferedToAsk() = runTest {
+        val store = store(State(query = "David"))
+        assertEquals(null, store.state.askSuggestion)
+        store.send(Action.AskTapped)
         store.finish()
     }
 }

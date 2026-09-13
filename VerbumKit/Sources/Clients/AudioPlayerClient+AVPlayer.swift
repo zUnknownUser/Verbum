@@ -68,9 +68,10 @@ final class AVPlayerEngine {
         }
     }
 
-    func load(_ url: URL) {
-        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio, policy: .longFormAudio)
-        try? AVAudioSession.sharedInstance().setActive(true)
+    func load(_ url: URL) async {
+        // Activating the session can block for a while (route changes, other apps'
+        // audio); never on the main thread.
+        await AudioSessionActivation.activate()
 
         teardownItemObservers()
         let item = AVPlayerItem(url: url)
@@ -127,7 +128,7 @@ final class AVPlayerEngine {
         teardownItemObservers()
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
         MPNowPlayingInfoCenter.default().playbackState = .stopped
-        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        AudioSessionActivation.deactivate()
     }
 
     func updateNowPlaying(_ info: NowPlayingInfo) {
@@ -141,7 +142,9 @@ final class AVPlayerEngine {
                     .withTintColor(.label, renderingMode: .alwaysOriginal)
                     .draw(in: CGRect(x: 128, y: 128, width: 256, height: 256))
             }
-            artwork = MPMediaItemArtwork(boundsSize: size) { _ in image }
+            // MediaPlayer calls this on its own queue; a closure born inside a
+            // @MainActor method would be main-isolated and trap there.
+            artwork = MPMediaItemArtwork(boundsSize: size) { @Sendable _ in image }
         }
         MPNowPlayingInfoCenter.default().nowPlayingInfo = [
             MPMediaItemPropertyTitle: info.title,
@@ -170,16 +173,21 @@ final class AVPlayerEngine {
         commandsInstalled = true
         UIApplication.shared.beginReceivingRemoteControlEvents()
         let center = MPRemoteCommandCenter.shared()
-        center.playCommand.addTarget { [weak self] _ in self?.continuation?.yield(.remote(.play)); return .success }
-        center.pauseCommand.addTarget { [weak self] _ in self?.continuation?.yield(.remote(.pause)); return .success }
-        center.togglePlayPauseCommand.addTarget { [weak self] _ in self?.continuation?.yield(.remote(.togglePlayPause)); return .success }
+        // Same rule as the artwork: MediaRemote may call these off the main
+        // thread, so the handlers are @Sendable and hop to the actor themselves.
+        func remote(_ command: AudioPlayerEvent.RemoteCommand) {
+            Task { @MainActor [weak self] in self?.continuation?.yield(.remote(command)) }
+        }
+        center.playCommand.addTarget { @Sendable _ in remote(.play); return .success }
+        center.pauseCommand.addTarget { @Sendable _ in remote(.pause); return .success }
+        center.togglePlayPauseCommand.addTarget { @Sendable _ in remote(.togglePlayPause); return .success }
         center.skipForwardCommand.preferredIntervals = [15]
-        center.skipForwardCommand.addTarget { [weak self] _ in self?.continuation?.yield(.remote(.skipForward)); return .success }
+        center.skipForwardCommand.addTarget { @Sendable _ in remote(.skipForward); return .success }
         center.skipBackwardCommand.preferredIntervals = [15]
-        center.skipBackwardCommand.addTarget { [weak self] _ in self?.continuation?.yield(.remote(.skipBackward)); return .success }
-        center.changePlaybackPositionCommand.addTarget { [weak self] event in
+        center.skipBackwardCommand.addTarget { @Sendable _ in remote(.skipBackward); return .success }
+        center.changePlaybackPositionCommand.addTarget { @Sendable event in
             guard let event = event as? MPChangePlaybackPositionCommandEvent else { return .commandFailed }
-            self?.continuation?.yield(.remote(.seek(event.positionTime)))
+            remote(.seek(event.positionTime))
             return .success
         }
     }
@@ -191,5 +199,23 @@ final class AVPlayerEngine {
         rateObservation = nil
         if let endObserver { NotificationCenter.default.removeObserver(endObserver) }
         endObserver = nil
+    }
+}
+
+/// The shared audio session, touched off the main thread: `setActive` is
+/// synchronous and can stall the UI (AVAudioSession warns about exactly this).
+enum AudioSessionActivation {
+    static func activate() async {
+        await Task.detached(priority: .userInitiated) {
+            let session = AVAudioSession.sharedInstance()
+            try? session.setCategory(.playback, mode: .spokenAudio, policy: .longFormAudio)
+            try? session.setActive(true)
+        }.value
+    }
+
+    static func deactivate() {
+        Task.detached(priority: .utility) {
+            try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        }
     }
 }

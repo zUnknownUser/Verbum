@@ -71,6 +71,7 @@ private fun PageBody(page: EntityDetailFeature.Page, send: (EntityDetailFeature.
             if (page.isOnTimeline) {
                 item { EntityRow(stringResource(R.string.view_in_timeline), stringResource(R.string.view_in_timeline_subtitle, page.entity.name)) { send(EntityDetailFeature.Action.TimelineTapped) } }
             }
+            item { EntityRow(stringResource(R.string.voice_talk_entity, page.entity.name), stringResource(R.string.voice_talk_entity_subtitle)) { send(EntityDetailFeature.Action.TalkTapped) } }
             if (page.passages.isNotEmpty()) {
                 sectionHeader(R.string.key_passages)
                 items(page.passages) { reference -> EntityRow(reference.formatted, null) { send(EntityDetailFeature.Action.PassageTapped(reference)) } }

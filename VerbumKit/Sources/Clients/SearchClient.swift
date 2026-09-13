@@ -9,8 +9,8 @@ public struct SearchClient: Sendable {
 }
 
 extension SearchClient: DependencyKey {
-    /// Fixture-backed until Task 11 wires the backend (spec §60).
-    public static let liveValue = SearchClient.fixtures
+    /// The backend (Task 11); fixtures remain the preview and test double.
+    public static let liveValue = SearchClient.live(api: .shared)
     public static let previewValue = SearchClient.fixtures
 }
 
@@ -31,24 +31,15 @@ extension SearchClient {
     public static func fixtures(language: BookLanguage) -> SearchClient {
         SearchClient(
         search: { query in
-            let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
-            guard !trimmed.isEmpty else { return .empty(query) }
-
-            let reference = try? PassageReferenceParser.parse(trimmed, language: language)
-            // A reference is the answer; listing its book beside it is noise.
-            let books = reference == nil ? BookMatcher.books(matching: trimmed) : []
-            let key = trimmed.lowercased()
+            let local = SearchResponse.local(query, language: language)
+            let key = query.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            guard !key.isEmpty else { return local }
             let entities = EntityFixtureData.entities.filter { entity in
                 guard entity.type != .passage else { return false }
                 let name = entity.name.lowercased()
                 return name.hasPrefix(key) || name.split(separator: " ").contains { $0.hasPrefix(key) }
             }
-            return SearchResponse(
-                query: query,
-                passages: reference.map { [$0] } ?? [],
-                books: books,
-                entities: entities
-            )
+            return SearchResponse(query: query, passages: local.passages, books: local.books, entities: entities)
         }
         )
     }

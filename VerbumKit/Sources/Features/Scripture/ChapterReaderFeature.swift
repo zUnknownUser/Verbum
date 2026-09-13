@@ -59,12 +59,15 @@ public struct ChapterReaderFeature {
         /// Parent-driven jump (book picker). Reloads.
         case go(to: PassageReference)
         case listenTapped
+        case talkTapped
         case contextTapped
         case delegate(Delegate)
 
         @CasePathable
         public enum Delegate: Equatable {
             case listen(PassageReference)
+            /// Start a spoken conversation about this chapter.
+            case talk(PassageReference)
             case openContext(PassageReference)
         }
     }
@@ -125,6 +128,9 @@ public struct ChapterReaderFeature {
 
             case .listenTapped:
                 return .send(.delegate(.listen(state.reference)))
+
+            case .talkTapped:
+                return .send(.delegate(.talk(state.reference)))
 
             case .contextTapped:
                 return .send(.delegate(.openContext(state.reference)))

@@ -11,11 +11,8 @@ public struct ScriptureAudioClient: Sendable {
 }
 
 extension ScriptureAudioClient: DependencyKey {
-    /// Recordings only, in every language: the reading translation's when it
-    /// has any, else BSB English labelled as such. `nativePortuguese` (on-device
-    /// speech rendered to a file) is parked — it crashes when the speech service
-    /// hands back an empty buffer — until spoken audio is done as a live player.
-    public static let liveValue: ScriptureAudioClient = .helloAO(language: .current)
+    /// Portuguese: the device reads the translation on screen; English: helloao recordings.
+    public static let liveValue: ScriptureAudioClient = .live(language: .current)
     public static let previewValue = ScriptureAudioClient(chapterAudio: { _, _ in nil })
 }
 

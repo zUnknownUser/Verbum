@@ -21,6 +21,12 @@ public struct AppView: View {
                 tabs
             }
         }
+        .sheet(item: $store.scope(state: \.voice, action: \.voice)) { voice in
+            VoiceView(store: voice)
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+                .presentationBackground(Palette.paper)
+        }
         .task { await store.send(.task).finish() }
     }
 
@@ -80,6 +86,8 @@ struct PathView: View {
             GraphView(store: store)
         case .timeline(let store):
             TimelineView(store: store)
+        case .ask(let store):
+            AskView(store: store)
         }
     }
 }

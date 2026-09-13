@@ -103,9 +103,15 @@ internal fun SearchPane(state: State, send: (Action) -> Unit) {
 
         val results = state.results
         LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = Spacing.xxxl)) {
+            if (state.isOffline) item { OfflineNotice() }
+            state.askSuggestion?.let { question ->
+                // §13: the question goes to Ask Scripture; the groups below are still search.
+                header(R.string.ask_scripture)
+                item { ResultRow(question, stringResource(R.string.ask_row_subtitle), Icons.Filled.Search, tappable = true) { send(Action.AskTapped) } }
+            }
             when {
                 results != null && !results.isEmpty -> resultSections(results, send)
-                state.showsNoResults -> item { NoResults(state.query) }
+                state.showsNoResults -> item { NoResults(state.query, state.isOffline) }
                 state.query.isEmpty() -> item { Suggestions { send(Action.QueryChanged(it)) } }
             }
         }
@@ -114,7 +120,7 @@ internal fun SearchPane(state: State, send: (Action) -> Unit) {
 
 private fun LazyListScope.resultSections(results: SearchResponse, send: (Action) -> Unit) {
     if (results.passages.isNotEmpty()) {
-        header(R.string.passage)
+        header(if (results.passages.size == 1) R.string.passage else R.string.passages)
         items(results.passages) { reference ->
             ResultRow(reference.formatted, stringResource(R.string.open_in_reader), Icons.Filled.Search, tappable = true) { send(Action.PassageTapped(reference)) }
         }
@@ -183,7 +189,7 @@ private fun ResultRow(title: String, subtitle: String, icon: ImageVector?, tappa
 private fun Suggestions(onPick: (String) -> Unit) {
     Column(Modifier.padding(horizontal = Spacing.readingMargin, vertical = Spacing.xl), verticalArrangement = Arrangement.spacedBy(Spacing.md)) {
         Text(stringResource(R.string.try_label).uppercase(), style = VerbumTypography.overline, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        for (example in listOf("John 3:16", "1 Samuel 17", "David", "Jerusalem", "Forgiveness")) {
+        for (example in listOf("John 3:16", "1 Samuel 17", "David", "Jerusalem", "Forgiveness", "why did Job suffer")) {
             Text(
                 example,
                 style = MaterialTheme.typography.bodyLarge.copy(fontFamily = FontFamily.Serif),
@@ -194,12 +200,23 @@ private fun Suggestions(onPick: (String) -> Unit) {
     }
 }
 
+/** §52: the network state is named, never hidden behind thinner results. */
 @Composable
-private fun NoResults(query: String) {
+private fun OfflineNotice() {
+    Text(
+        stringResource(R.string.search_offline_notice),
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.padding(horizontal = Spacing.readingMargin, vertical = Spacing.sm),
+    )
+}
+
+@Composable
+private fun NoResults(query: String, isOffline: Boolean) {
     Column(Modifier.padding(horizontal = Spacing.readingMargin, vertical = Spacing.xl), verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {
         Text(stringResource(R.string.nothing_for, query), style = VerbumTypography.editorialHeadline, color = MaterialTheme.colorScheme.onSurface)
         Text(
-            stringResource(R.string.search_explainer),
+            stringResource(if (isOffline) R.string.search_explainer_offline else R.string.search_explainer),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
