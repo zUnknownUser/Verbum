@@ -57,8 +57,8 @@ fun RootScreen() {
                 askClient = LiveAskScriptureClient(api),
                 realtimeSessionClient = LiveRealtimeSessionClient(api),
                 voiceClient = RealtimeConversation(OkHttpRealtimeTransport(), AndroidVoiceAudio(context) { MicrophonePermission.request() }),
-                // Portuguese: the device reads the translation on screen; English: helloao recordings.
-                audioClient = LiveScriptureAudioClient(BookLanguage.current, context, bible),
+                // Portuguese: the backend's Google Cloud voice reads the translation on screen; English: helloao recordings.
+                audioClient = LiveScriptureAudioClient(BookLanguage.current, context, bible, api),
                 player = Media3AudioPlayerClient(context),
                 initialTextScale = { ReaderTextScale.fromPreference(preferences.string(ReaderTextScale.PREFERENCE_KEY)) },
                 notifications = AndroidNotificationClient(context),

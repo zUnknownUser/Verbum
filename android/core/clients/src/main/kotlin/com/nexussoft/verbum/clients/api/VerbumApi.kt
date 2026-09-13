@@ -33,6 +33,16 @@ fun interface HttpTransport {
 data class HttpRequest(val method: String, val url: String, val body: String? = null)
 data class HttpResponse(val status: Int, val body: String)
 
+/** One HTTP exchange whose successful response is raw bytes (audio), not JSON text. */
+fun interface BinaryHttpTransport {
+    suspend fun send(request: HttpRequest): BinaryHttpResponse
+}
+
+/** [bytes] is only meaningful when [status] is 2xx; a failed request's body is JSON text
+ * (the [WireProblem] contract), carried in [problemBody] instead. Not a `data class`: a
+ * `ByteArray` would give it reference-equality `equals`/`hashCode`, which is never used here. */
+class BinaryHttpResponse(val status: Int, val bytes: ByteArray, val problemBody: String = "")
+
 /** Plain `HttpURLConnection` with short timeouts: the API answers from a database, and the reader must not hang on a dead server. */
 object UrlConnectionHttpTransport : HttpTransport {
     override suspend fun send(request: HttpRequest): HttpResponse = withContext(Dispatchers.IO) {
@@ -50,6 +60,32 @@ object UrlConnectionHttpTransport : HttpTransport {
             val status = connection.responseCode
             val stream = if (status < 400) connection.inputStream else connection.errorStream
             HttpResponse(status, stream?.bufferedReader(Charsets.UTF_8)?.use { it.readText() } ?: "")
+        } finally {
+            connection.disconnect()
+        }
+    }
+}
+
+/** Plain `HttpURLConnection` reading a binary body (audio), with the long read timeout chapter
+ * speech generation needs — matches the server's generation window plus margin. */
+object UrlConnectionBinaryHttpTransport : BinaryHttpTransport {
+    override suspend fun send(request: HttpRequest): BinaryHttpResponse = withContext(Dispatchers.IO) {
+        val connection = URL(request.url).openConnection() as HttpURLConnection
+        try {
+            connection.requestMethod = request.method
+            connection.connectTimeout = 10_000
+            connection.readTimeout = 630_000
+            request.body?.let {
+                connection.doOutput = true
+                connection.setRequestProperty("Content-Type", "application/json")
+                connection.outputStream.use { out -> out.write(it.toByteArray(Charsets.UTF_8)) }
+            }
+            val status = connection.responseCode
+            if (status < 400) {
+                BinaryHttpResponse(status, connection.inputStream.use { it.readBytes() })
+            } else {
+                BinaryHttpResponse(status, ByteArray(0), connection.errorStream?.bufferedReader(Charsets.UTF_8)?.use { it.readText() } ?: "")
+            }
         } finally {
             connection.disconnect()
         }
@@ -85,6 +121,10 @@ enum class ProblemCode(val wire: String) {
     INTERNAL("internal"),
     REALTIME_UNAVAILABLE("realtime_unavailable"),
     ASK_UNAVAILABLE("ask_unavailable"),
+    TTS_UNAVAILABLE("tts_unavailable"),
+    TTS_RATE_LIMITED("tts_rate_limited"),
+    TTS_TIMEOUT("tts_timeout"),
+    TTS_FAILED("tts_failed"),
     UNKNOWN("");
 
     companion object {
@@ -141,6 +181,7 @@ class VerbumApi(
     val baseUrl: String,
     private val transport: HttpTransport = UrlConnectionHttpTransport,
     private val cache: ResponseCache = ResponseCache(null),
+    private val binaryTransport: BinaryHttpTransport = UrlConnectionBinaryHttpTransport,
     private val now: () -> Long = System::currentTimeMillis,
 ) {
     companion object {
@@ -226,6 +267,18 @@ class VerbumApi(
     suspend fun realtimeSession(): RealtimeSession =
         post("/v1/realtime/session", "{}", WireRealtimeSession.serializer()).let { RealtimeSession(it.clientSecret, it.expiresAt, it.model) }
 
+    // ---- speech
+
+    /**
+     * `POST /v1/tts`: one complete chapter MP3 (Google Cloud Chirp 3 HD by default), cached
+     * server-side by exact text and settings. Generation can take minutes. Never cached
+     * client-side by this call — the caller decides whether/where to keep the bytes.
+     */
+    suspend fun synthesizeSpeech(text: String, language: String): ByteArray {
+        val body = json.encodeToString(WireSpeechRequest.serializer(), WireSpeechRequest(text, language))
+        return sendBinary(HttpRequest("POST", url("/v1/tts", emptyList()), body))
+    }
+
     // ---- plumbing
 
     /**
@@ -274,6 +327,24 @@ class VerbumApi(
             throw VerbumApiException.Problem(ProblemCode.of(problem?.code), response.status)
         }
         return response.body
+    }
+
+    /** [send]'s twin for a binary response (audio, not the JSON contract). */
+    private suspend fun sendBinary(request: HttpRequest): ByteArray {
+        val response = try {
+            binaryTransport.send(request)
+        } catch (e: VerbumApiException) {
+            throw e
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            throw VerbumApiException.NetworkUnavailable
+        }
+        if (response.status !in 200..299) {
+            val problem = runCatching { json.decodeFromString(WireProblem.serializer(), response.problemBody) }.getOrNull()
+            throw VerbumApiException.Problem(ProblemCode.of(problem?.code), response.status)
+        }
+        return response.bytes
     }
 
     private fun <T> decode(body: String, strategy: DeserializationStrategy<T>): T = try {

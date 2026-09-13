@@ -97,4 +97,14 @@ extension VerbumAPI {
     private static func lang(_ language: BookLanguage) -> URLQueryItem {
         URLQueryItem(name: "lang", value: language.rawValue)
     }
+
+    // MARK: speech
+
+    private struct SpeechRequest: Encodable { let text: String; let language: String }
+
+    /// `POST /v1/tts`: one complete chapter MP3 (Google Cloud Chirp 3 HD by default),
+    /// server-cached by exact text and settings. Generation can take minutes.
+    public func synthesizeSpeech(text: String, language: String) async throws -> Data {
+        try await postForData("/v1/tts", body: SpeechRequest(text: text, language: language), timeout: Self.speechTimeout)
+    }
 }

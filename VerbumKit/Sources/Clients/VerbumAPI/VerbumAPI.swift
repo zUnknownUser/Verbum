@@ -81,6 +81,20 @@ public struct VerbumAPI: Sendable {
     /// Ask retrieves and then synthesises (the server allows itself 30 s).
     static let postTimeout: TimeInterval = 45
 
+    /// `POST path` with a JSON body; the raw response bytes (audio, not the JSON contract).
+    /// Never cached — matches the server's `Cache-Control: no-store` on this route.
+    func postForData(_ path: String, body: some Encodable, timeout: TimeInterval) async throws -> Data {
+        var request = URLRequest(url: url(path), timeoutInterval: timeout)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try JSONEncoder().encode(body)
+        return try await send(request)
+    }
+
+    /// Chapter speech generation: the server allows itself up to `tts.GenerationTimeout` (10 min)
+    /// plus 30 s to reply; the client waits slightly longer still.
+    static let speechTimeout: TimeInterval = 630
+
     private func url(_ path: String, query: [URLQueryItem] = []) -> URL {
         var components = URLComponents(url: baseURL.appending(path: path), resolvingAgainstBaseURL: false)!
         if !query.isEmpty { components.queryItems = query }
@@ -138,6 +152,10 @@ public struct Problem: Decodable, Equatable, Sendable {
         case internalError = "internal"
         case realtimeUnavailable = "realtime_unavailable"
         case askUnavailable = "ask_unavailable"
+        case ttsUnavailable = "tts_unavailable"
+        case ttsRateLimited = "tts_rate_limited"
+        case ttsTimeout = "tts_timeout"
+        case ttsFailed = "tts_failed"
         /// A code this build does not know; treated as a failure, never shown.
         case unknown
 

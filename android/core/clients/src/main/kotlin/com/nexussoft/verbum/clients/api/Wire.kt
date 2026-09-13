@@ -142,3 +142,6 @@ internal data class WireAskResponse(
 
 @Serializable
 internal data class WireRealtimeSession(val clientSecret: String, val expiresAt: Long, val model: String)
+
+@Serializable
+internal data class WireSpeechRequest(val text: String, val language: String)

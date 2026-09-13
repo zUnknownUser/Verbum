@@ -1,5 +1,7 @@
 package com.nexussoft.verbum.clients
 
+import com.nexussoft.verbum.clients.api.BinaryHttpResponse
+import com.nexussoft.verbum.clients.api.BinaryHttpTransport
 import com.nexussoft.verbum.clients.api.HttpRequest
 import com.nexussoft.verbum.clients.api.HttpResponse
 import com.nexussoft.verbum.clients.api.HttpTransport
@@ -125,5 +127,41 @@ class VerbumApiTest {
         } finally {
             directory.deleteRecursively()
         }
+    }
+
+    /** A binary transport scripted per request; records what was asked. */
+    private class BinaryScript : BinaryHttpTransport {
+        val responses = ArrayDeque<BinaryHttpResponse>()
+        val requests = mutableListOf<HttpRequest>()
+        var failWith: Exception? = null
+
+        override suspend fun send(request: HttpRequest): BinaryHttpResponse {
+            requests += request
+            failWith?.let { throw it }
+            return responses.removeFirstOrNull() ?: BinaryHttpResponse(200, ByteArray(0))
+        }
+    }
+
+    @Test
+    fun synthesizeSpeechReturnsRawAudioBytes() = runTest {
+        val script = BinaryScript()
+        script.responses += BinaryHttpResponse(200, "ID3fakeaudio".toByteArray())
+        val api = VerbumApi(base, binaryTransport = script)
+        val audio = api.synthesizeSpeech("Texto", "pt-BR")
+        assertEquals("ID3fakeaudio", audio.toString(Charsets.UTF_8))
+        assertEquals("$base/v1/tts", script.requests.single().url)
+        assertEquals("POST", script.requests.single().method)
+        assertEquals("""{"text":"Texto","language":"pt-BR"}""", script.requests.single().body)
+    }
+
+    @Test
+    fun synthesizeSpeechMapsProviderErrors() = runTest {
+        val script = BinaryScript()
+        script.responses += BinaryHttpResponse(503, ByteArray(0), """{"code":"tts_unavailable","message":"speech provider unavailable"}""")
+        val api = VerbumApi(base, binaryTransport = script)
+        assertEquals(
+            VerbumApiException.Problem(ProblemCode.TTS_UNAVAILABLE, 503),
+            assertFailsWith<VerbumApiException.Problem> { api.synthesizeSpeech("x", "pt-BR") },
+        )
     }
 }
