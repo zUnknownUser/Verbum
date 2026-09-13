@@ -17,8 +17,8 @@ public enum GraphClientError: Error, Equatable, Sendable {
 }
 
 extension GraphClient: DependencyKey {
-    /// Fixture-backed until Task 11 wires the backend (spec §60).
-    public static let liveValue = GraphClient.fixtures
+    /// The backend (Task 11); fixtures remain the preview and test double.
+    public static let liveValue = GraphClient.live(api: .shared)
     public static let previewValue = GraphClient.fixtures
 }
 

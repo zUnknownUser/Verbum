@@ -13,6 +13,10 @@ public struct SearchFeature {
         public var query = ""
         public var phase: Phase = .idle
         public var results: SearchResponse?
+        /// The last search could not reach the content service; `results` is
+        /// what this device knows on its own (a reference, a book) — never
+        /// shown as if it were the full answer (§52).
+        public var isOffline = false
 
         public init() {}
 
@@ -33,6 +37,8 @@ public struct SearchFeature {
     public enum Action: Equatable, BindableAction {
         case binding(BindingAction<State>)
         case searchResponse(SearchResponse)
+        /// The service could not be reached; carries the device-only results.
+        case searchUnreachable(SearchResponse)
         case submitted
         case passageTapped(PassageReference)
         case bookTapped(BibleBook)
@@ -64,13 +70,21 @@ public struct SearchFeature {
                 guard !query.isEmpty else {
                     state.phase = .idle
                     state.results = nil
+                    state.isOffline = false
                     return .cancel(id: CancelID.search)
                 }
                 state.phase = .searching
                 return .run { [searchClient, clock] send in
                     try await clock.sleep(for: Self.debounce)
-                    let response = (try? await searchClient.search(query: query)) ?? .empty(query)
-                    await send(.searchResponse(response))
+                    do {
+                        await send(.searchResponse(try await searchClient.search(query: query)))
+                    } catch is CancellationError {
+                        return
+                    } catch {
+                        // §21.3, §52: degrade to what the device knows, and say so.
+                        @Dependency(\.locale) var locale
+                        await send(.searchUnreachable(.local(query, language: BookLanguage(locale: locale))))
+                    }
                 }
                 .cancellable(id: CancelID.search, cancelInFlight: true)
 
@@ -81,6 +95,14 @@ public struct SearchFeature {
                 // Ignore answers to a query the user has since moved past.
                 guard response.query == state.query.trimmingCharacters(in: .whitespacesAndNewlines) else { return .none }
                 state.results = response
+                state.isOffline = false
+                state.phase = .idle
+                return .none
+
+            case .searchUnreachable(let response):
+                guard response.query == state.query.trimmingCharacters(in: .whitespacesAndNewlines) else { return .none }
+                state.results = response
+                state.isOffline = true
                 state.phase = .idle
                 return .none
 

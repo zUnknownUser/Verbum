@@ -6,5 +6,8 @@
 	<array>
 		<string>audio</string>
 	</array>
+	<!-- The Verbum backend (api/openapi.yaml). Set per configuration by the VERBUM_API_BASE_URL build setting. -->
+	<key>VerbumAPIBaseURL</key>
+	<string>$(VERBUM_API_BASE_URL)</string>
 </dict>
 </plist>

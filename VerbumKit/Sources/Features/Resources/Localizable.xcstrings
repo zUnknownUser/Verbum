@@ -1102,6 +1102,16 @@
         }
       }
     },
+    "Passages": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passagens"
+          }
+        }
+      }
+    },
     "Pause": {
       "localizations": {
         "pt-BR": {
@@ -1313,12 +1323,12 @@
         }
       }
     },
-    "Search understands references like Jn 3:16, book names, and a first set of people, places and themes. Free-text search of Scripture arrives with the content service.": {
+    "Search understands references like Jn 3:16, book names, people, places, themes — and questions in your own words, which look through the text of Scripture.": {
       "localizations": {
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "A busca entende referências como Jo 3:16, nomes de livros e um primeiro conjunto de pessoas, lugares e temas. A busca por texto livre na Escritura chega com o serviço de conteúdo."
+            "value": "A busca entende referências como Jo 3:16, nomes de livros, pessoas, lugares, temas — e perguntas nas suas palavras, que procuram no texto da Escritura."
           }
         }
       }
@@ -1586,6 +1596,16 @@
         }
       }
     },
+    "Verbum can't be reached — showing what this device knows.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O Verbum não pôde ser alcançado — mostrando o que este aparelho sabe."
+          }
+        }
+      }
+    },
     "Verse %lld": {
       "localizations": {
         "pt-BR": {
@@ -1693,6 +1713,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sem esperança"
+          }
+        }
+      }
+    },
+    "Without the content service, search understands references like Jn 3:16 and book names.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sem o serviço de conteúdo, a busca entende referências como Jo 3:16 e nomes de livros."
           }
         }
       }

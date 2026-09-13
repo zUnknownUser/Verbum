@@ -87,19 +87,21 @@ import Testing
         #expect(store.state.phase == .searching)
     }
 
-    @Test func clientFailureBecomesEmptyResults() async {
+    @Test func clientFailureBecomesDeviceOnlyResults() async {
         struct Boom: Error {}
         let clock = TestClock()
         let store = TestStore(initialState: SearchFeature.State()) {
             SearchFeature()
         } withDependencies: {
             $0.continuousClock = clock
+            $0.locale = Locale(identifier: "en_US")
             $0.searchClient.search = { _ in throw Boom() }
         }
         await store.send(.binding(.set(\.query, "zzz"))) { $0.query = "zzz"; $0.phase = .searching }
         await clock.advance(by: .milliseconds(250))
-        await store.receive(\.searchResponse) {
+        await store.receive(\.searchUnreachable) {
             $0.phase = .idle
+            $0.isOffline = true
             $0.results = .empty("zzz")
         }
         #expect(store.state.showsNoResults)
@@ -157,5 +159,50 @@ import Testing
         await store.receive(\.delegate.openPassage, PassageReference(bookId: "Rom", chapter: 1))
         await store.send(.entityTapped(david))
         await store.receive(\.delegate.openEntity, david)
+    }
+}
+
+@MainActor
+@Suite struct SearchFeatureOfflineTests {
+    /// §21.3, §52: when the content service can't be reached the field still
+    /// answers with what the device knows, and says the service is out.
+    @Test func unreachableServiceDegradesToDeviceResultsAndSaysSo() async {
+        let clock = TestClock()
+        let store = TestStore(initialState: SearchFeature.State()) {
+            SearchFeature()
+        } withDependencies: {
+            $0.continuousClock = clock
+            $0.locale = Locale(identifier: "en_US")
+            $0.searchClient.search = { _ in throw VerbumAPIError.networkUnavailable }
+        }
+
+        await store.send(.binding(.set(\.query, "Jn 3:16"))) { $0.query = "Jn 3:16"; $0.phase = .searching }
+        await clock.advance(by: .milliseconds(250))
+        await store.receive(\.searchUnreachable) {
+            $0.phase = .idle
+            $0.isOffline = true
+            $0.results = SearchResponse(query: "Jn 3:16", passages: [PassageReference(bookId: "John", chapter: 3, verses: 16...16)], books: [], entities: [])
+        }
+
+        // A later answer from the service clears the notice.
+        store.dependencies.searchClient.search = { query in SearchResponse(query: query, passages: [], books: [], entities: []) }
+        await store.send(.binding(.set(\.query, "hope"))) { $0.query = "hope"; $0.phase = .searching }
+        await clock.advance(by: .milliseconds(250))
+        await store.receive(\.searchResponse) {
+            $0.phase = .idle
+            $0.isOffline = false
+            $0.results = SearchResponse(query: "hope", passages: [], books: [], entities: [])
+        }
+        #expect(store.state.showsNoResults)
+    }
+
+    @Test func clearingTheQueryClearsTheOfflineNotice() async {
+        var initial = SearchFeature.State()
+        initial.query = "x"
+        initial.isOffline = true
+        let store = TestStore(initialState: initial) {
+            SearchFeature()
+        }
+        await store.send(.binding(.set(\.query, ""))) { $0.query = ""; $0.isOffline = false }
     }
 }
