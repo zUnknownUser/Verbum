@@ -109,6 +109,9 @@ internal fun ChapterReaderPane(
         if (state.selectedVerses.isNotEmpty()) view.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
     }
     LaunchedEffect(state.reference) { chromeHidden = false }
+    // Twin of iOS's `.task { store.send(.task) }`: loads on first appearance, reloads when the
+    // reference changes (Go/next/previous), and is a no-op if the reducer already has it loaded.
+    LaunchedEffect(state.reference) { send(Action.Started) }
 
     val chooseLabel = stringResource(R.string.choose_book_and_chapter, state.title)
     Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
