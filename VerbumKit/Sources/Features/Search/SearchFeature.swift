@@ -20,6 +20,14 @@ public struct SearchFeature {
 
         public init() {}
 
+        /// The question to offer Ask Scripture for, when the query reads as one (§6:
+        /// search and ask share the field). Offered as soon as it is typed, before
+        /// results, so the answer never waits on the debounce.
+        public var askSuggestion: String? {
+            let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
+            return AskFeature.State.looksLikeQuestion(trimmed) ? trimmed : nil
+        }
+
         /// `true` while the user has typed something that produced nothing.
         public var showsNoResults: Bool {
             if case .idle = phase, let results, results.isEmpty, !query.trimmingCharacters(in: .whitespaces).isEmpty {
@@ -43,12 +51,15 @@ public struct SearchFeature {
         case passageTapped(PassageReference)
         case bookTapped(BibleBook)
         case entityTapped(BibleEntity)
+        case askTapped
         case delegate(Delegate)
 
         @CasePathable
         public enum Delegate: Equatable {
             case openPassage(PassageReference)
             case openEntity(BibleEntity)
+            /// Ask Scripture with the field's question (§13).
+            case ask(String)
         }
     }
 
@@ -114,7 +125,15 @@ public struct SearchFeature {
                 if let book = state.results?.books.first {
                     return .send(.delegate(.openPassage(PassageReference(bookId: book.id, chapter: 1))))
                 }
+                // A question submitted is a question asked.
+                if let question = state.askSuggestion {
+                    return .send(.delegate(.ask(question)))
+                }
                 return .none
+
+            case .askTapped:
+                guard let question = state.askSuggestion else { return .none }
+                return .send(.delegate(.ask(question)))
 
             case .passageTapped(let reference):
                 return .send(.delegate(.openPassage(reference)))

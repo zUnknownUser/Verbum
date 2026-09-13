@@ -6,6 +6,7 @@ public enum AppLaunch {
     /// Installs the notification delegate: the system only hands a
     /// notification tap to a delegate that was in place at launch.
     public static func prepare() {
+        FirebaseBootstrap.configure()
         NotificationClient.installNotificationDelegate()
     }
 }

@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A01156773056DFCE00789C65 /* google-services.json in Resources */ = {isa = PBXBuildFile; fileRef = A01156763056DFCE00789C65 /* google-services.json */; };
 		A0VK000000000000000000A1 /* Features in Frameworks */ = {isa = PBXBuildFile; productRef = A0VK000000000000000000B1 /* Features */; };
 		A0VK000000000000000000A2 /* DesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = A0VK000000000000000000B2 /* DesignSystem */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A01156763056DFCE00789C65 /* google-services.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "google-services.json"; sourceTree = "<group>"; };
 		A01DF48F3054399000F27EC7 /* Verbum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Verbum.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -44,6 +46,7 @@
 			children = (
 				A01DF4913054399000F27EC7 /* Verbum */,
 				A0VK000000000000000000D1 /* docs */,
+				A01156763056DFCE00789C65 /* google-services.json */,
 				A01DF4903054399000F27EC7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -123,6 +126,7 @@
 		A01DF48D3054399000F27EC7 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
+				A01156773056DFCE00789C65 /* google-services.json in Resources */,
 			);
 		};
 /* End PBXResourcesBuildPhase section */

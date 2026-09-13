@@ -3,6 +3,7 @@ package com.nexussoft.verbum
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.nexussoft.verbum.clients.api.LiveAskScriptureClient
 import com.nexussoft.verbum.clients.api.LiveContextClient
 import com.nexussoft.verbum.clients.api.LiveGraphClient
 import com.nexussoft.verbum.clients.api.LiveSearchClient
@@ -46,6 +47,7 @@ fun RootScreen() {
                 graphClient = LiveGraphClient(api),
                 contextClient = LiveContextClient(api),
                 timelineClient = LiveTimelineClient(api),
+                askClient = LiveAskScriptureClient(api),
                 // Recordings only (BSB English, labelled, when the reading translation has none).
                 // NativeScriptureAudioClient (TTS rendered to a file) is parked until spoken audio is a live player.
                 audioClient = HelloAOScriptureAudioClient(BookLanguage.ENGLISH),

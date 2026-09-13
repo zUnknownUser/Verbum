@@ -136,8 +136,9 @@ import Testing
     }
 
     @Test func returnKeyWithNothingToOpenDoesNothing() async {
+        // Not a reference, not a book, and too short to be a question for Ask.
         var state = SearchFeature.State()
-        state.query = "why did Job suffer"
+        state.query = "Elah"
         let store = TestStore(initialState: state) {
             SearchFeature()
         } withDependencies: {
@@ -204,5 +205,38 @@ import Testing
             SearchFeature()
         }
         await store.send(.binding(.set(\.query, ""))) { $0.query = ""; $0.isOffline = false }
+    }
+}
+
+@MainActor
+@Suite struct SearchFeatureAskTests {
+    /// §6: search and ask share the field. A question is offered to Ask at once,
+    /// opened on return, and the search still runs underneath.
+    @Test func aQuestionIsOfferedToAskAndSubmittedToIt() async {
+        let clock = TestClock()
+        let store = TestStore(initialState: SearchFeature.State()) {
+            SearchFeature()
+        } withDependencies: {
+            $0.continuousClock = clock
+            $0.locale = Locale(identifier: "en_US")
+            $0.searchClient.search = { query in SearchResponse(query: query, passages: [], books: [], entities: []) }
+        }
+        await store.send(.binding(.set(\.query, "why did Job suffer"))) { $0.query = "why did Job suffer"; $0.phase = .searching }
+        #expect(store.state.askSuggestion == "why did Job suffer")
+        await store.send(.submitted)
+        await store.receive(\.delegate.ask)
+        await store.send(.askTapped)
+        await store.receive(\.delegate.ask)
+        await clock.advance(by: .milliseconds(250))
+        await store.receive(\.searchResponse) {
+            $0.phase = .idle
+            $0.results = SearchResponse(query: "why did Job suffer", passages: [], books: [], entities: [])
+        }
+    }
+
+    @Test func aLookupIsNotOfferedToAsk() async {
+        let store = TestStore(initialState: SearchFeature.State()) { SearchFeature() }
+        #expect(store.state.askSuggestion == nil)
+        await store.send(.askTapped)
     }
 }

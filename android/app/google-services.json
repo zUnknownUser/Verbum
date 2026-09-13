@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "254982854245",
+    "project_id": "verbum-sw",
+    "storage_bucket": "verbum-sw.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:254982854245:android:91dd21ee4ae6e6626e188c",
+        "android_client_info": {
+          "package_name": "com.nexussoft.verbum"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "254982854245-bjqe2vto5k9pj8stu118lnhesth2p3lg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nexussoft.verbum",
+            "certificate_hash": "4a048c93ea7ab8655e44888256f94d1417576ccb"
+          }
+        },
+        {
+          "client_id": "254982854245-u1f4mt0ee61dut25tnlobadblibkgbok.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxYz-1ONCidiFZ7NE4dXg0Gou0dBWMGTc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "254982854245-u1f4mt0ee61dut25tnlobadblibkgbok.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "254982854245-bd3qvpajr79f201terfrpuirsh8sk4r9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.nexussoft.verbum"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

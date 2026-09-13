@@ -209,6 +209,14 @@ except the spec and, later, the backend API contract.
     device-only results with an "unreachable" line instead of an empty list. Base URL per
     configuration (`VERBUM_API_BASE_URL`: an Xcode build setting / a Gradle property), plain HTTP
     allowed only in Debug (ATS / `usesCleartextTraffic`). Design in ARCHITECTURE.md.
+- **Task 12 — Ask Scripture, client side** — iOS ✅ · Android ✅ (2026-09-13)
+  - `AskScriptureClient` → `POST /v1/ask`, `ScriptureAnswer` = §30 verbatim; `AskFeature` +
+    `AskView`/`AskPane` render §13.2 from structured fields only, with confidence and
+    interpretive variance shown (§31) and the §51 fallback to search results (§21.3). Entered from
+    Search when the query reads as a question. Tests on both platforms; contract-level tests for
+    the request body and every failure state. Design in ARCHITECTURE.md.
+  - Pending on the backend side, not blocked here: the product decision on
+    `internal/ask/safety.go` (docs/BACKEND_RAG.md, Bloco 8) and pt-BR (§34 licence).
   - **Contract first (2026-09-12):** `api/openapi.yaml` — the §45 routes plus `/v1/daily-verse`,
     written from the client interfaces the apps already have — and `api/examples/` generated from
     the fixtures (`api/scripts/gen-examples.py`), to be the inputs of contract tests on both apps.

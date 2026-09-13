@@ -80,6 +80,8 @@ struct PathView: View {
             GraphView(store: store)
         case .timeline(let store):
             TimelineView(store: store)
+        case .ask(let store):
+            AskView(store: store)
         }
     }
 }

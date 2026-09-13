@@ -167,4 +167,27 @@
     <string name="view_in_timeline_subtitle">Onde %1$s se situa na história bíblica.</string>
     <string name="timeline_event_open">Abre o evento</string>
     <string name="timeline_event_close">Recolhe o evento</string>
+
+    <!-- Ask Scripture (§13) -->
+    <string name="ask_scripture">Perguntar à Escritura</string>
+    <string name="ask_row_subtitle">Uma resposta a partir das próprias passagens, com fontes</string>
+    <string name="ask_loading">Lendo as passagens que esta pergunta toca antes de responder.</string>
+    <string name="ask_short_answer">Resposta curta</string>
+    <string name="ask_explore_further">Explore mais</string>
+    <string name="ask_perspectives">Perspectivas</string>
+    <string name="ask_perspectives_body">Tradições cristãs e estudiosos leem esta pergunta de formas diferentes. A resposta acima é uma leitura das passagens, não a única.</string>
+    <string name="ask_disclaimer">Escrita a partir das passagens acima por um modelo de linguagem e depois verificada para que toda referência seja real. É um apoio ao estudo, não uma palavra de Deus.</string>
+    <string name="ask_confidence_high">Bem apoiada pelas passagens citadas.</string>
+    <string name="ask_confidence_medium">Parcialmente apoiada pelas passagens citadas — leia-as.</string>
+    <string name="ask_confidence_low">Fracamente apoiada — trate como ponto de partida, não conclusão.</string>
+    <string name="ask_no_answer">Sem resposta confiável</string>
+    <string name="ask_no_answer_body">Não consegui construir uma resposta confiável a partir das fontes disponíveis.</string>
+    <string name="ask_no_answer_body_closest">Não consegui construir uma resposta confiável a partir das fontes disponíveis. Estas são as passagens mais próximas que encontrei.</string>
+    <string name="ask_see_search">Ver resultados da busca</string>
+    <string name="ask_closest_passages">Passagens mais próximas</string>
+    <string name="ask_unavailable">Perguntar ainda não está disponível neste servidor</string>
+    <string name="ask_unavailable_body">A busca continua funcionando — tente as mesmas palavras lá.</string>
+    <string name="ask_offline">O Verbum não pôde ser alcançado</string>
+    <string name="ask_offline_body">Perguntar precisa de conexão. A leitura e a busca do que este aparelho sabe continuam funcionando.</string>
+    <string name="ask_failed">Não foi possível responder desta vez</string>
 </resources>

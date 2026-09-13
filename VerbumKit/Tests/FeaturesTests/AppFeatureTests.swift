@@ -34,6 +34,27 @@ import Testing
         }
     }
 
+    /// §13, §21.3: a question asked from Search opens Ask on the content tab; its
+    /// passages and entities chain on the same stack; "See search results" returns
+    /// to the field, which still holds the question.
+    @Test func askOpensFromSearchAndFallsBackToIt() async {
+        var initial = AppFeature.State()
+        initial.tab = .search
+        initial.search.query = "why did Job suffer"
+        let store = TestStore(initialState: initial) { AppFeature() }
+        await store.send(.search(.askTapped))
+        await store.receive(\.search.delegate.ask) {
+            $0.tab = .home
+            $0.homePath[id: 0] = .ask(AskFeature.State(question: "why did Job suffer"))
+        }
+        await store.send(.homePath(.element(id: 0, action: .ask(.passageTapped(Self.sam17)))))
+        await store.receive(\.homePath[id: 0].ask.delegate.openPassage) {
+            $0.homePath[id: 1] = .reader(ScriptureFeature.State(reference: Self.sam17))
+        }
+        await store.send(.homePath(.element(id: 0, action: .ask(.searchInsteadTapped))))
+        await store.receive(\.homePath[id: 0].ask.delegate.searchInstead) { $0.tab = .search }
+    }
+
     @Test func homeOpensPassagesOnItsOwnStack() async throws {
         let store = TestStore(initialState: AppFeature.State()) { AppFeature() }
         let verse = store.state.home.dailyVerse.reference

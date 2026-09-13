@@ -18,6 +18,9 @@ public struct SearchView: View {
                 if store.isOffline {
                     offlineNotice
                 }
+                if let question = store.askSuggestion {
+                    askSection(question)
+                }
                 if let results = store.results, !results.isEmpty {
                     resultSections(results)
                 } else if store.showsNoResults {
@@ -39,6 +42,15 @@ public struct SearchView: View {
     }
 
     // MARK: Sections
+
+    /// §13: the question goes to Ask Scripture; the groups below are still search.
+    private func askSection(_ question: String) -> some View {
+        section(L10n.t("Ask Scripture")) {
+            row(title: question, subtitle: L10n.t("An answer from the passages themselves, with sources"), symbol: "text.bubble") {
+                store.send(.askTapped)
+            }
+        }
+    }
 
     @ViewBuilder
     private func resultSections(_ results: SearchResponse) -> some View {

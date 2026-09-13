@@ -1,4 +1,5 @@
 plugins {
+    id("com.google.gms.google-services") version "4.5.0"
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
 }
@@ -47,6 +48,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:auth"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:clients"))
     implementation(project(":core:audio"))

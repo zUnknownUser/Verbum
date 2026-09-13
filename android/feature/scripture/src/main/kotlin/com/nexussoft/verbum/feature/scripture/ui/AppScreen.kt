@@ -122,6 +122,7 @@ private fun DestinationScreen(destination: Destination, onBack: () -> Unit, send
         is Destination.Context -> ContextPane(destination.state, onBack) { send(DestinationAction.Context(it)) }
         is Destination.Graph -> GraphPane(destination.state, onBack) { send(DestinationAction.Graph(it)) }
         is Destination.Timeline -> TimelinePane(destination.state, onBack) { send(DestinationAction.Timeline(it)) }
+        is Destination.Ask -> AskPane(destination.state, onBack) { send(DestinationAction.Ask(it)) }
         is Destination.Reader -> ScriptureScreen(destination.state) { send(DestinationAction.Reader(it)) }
         is Destination.Entity -> Box(Modifier.statusBarsPadding()) { EntityDetailPane(destination.state) { send(DestinationAction.Entity(it)) } }
         is Destination.Entities -> EntityListScreen(destination.state) { send(DestinationAction.Entities(it)) }

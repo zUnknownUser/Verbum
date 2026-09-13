@@ -65,6 +65,28 @@ class AppFeatureTest {
         store.finish()
     }
 
+    /**
+     * §13, §21.3: a question asked from Search opens Ask on the content tab; its passages chain on
+     * the same stack; "See search results" returns to the field, which still holds the question.
+     */
+    @Test
+    fun askOpensFromSearchAndFallsBackToIt() = runTest {
+        val store = TestStore(AppFeature.State(tab = Tab.SEARCH, search = SearchFeature.State(query = "why did Job suffer")), AppFeature.reducer(deps()))
+        store.send(Action.Search(SearchFeature.Action.AskTapped))
+        store.receive(Action.Search(SearchFeature.Action.Delegate(SearchFeature.DelegateAction.Ask("why did Job suffer")))) {
+            it.copy(tab = Tab.HOME, homePath = listOf(Destination.Ask(AskFeature.State("why did Job suffer"))))
+        }
+        store.send(Action.HomePath(0, DestinationAction.Ask(AskFeature.Action.PassageTapped(sam17))))
+        store.receive(Action.HomePath(0, DestinationAction.Ask(AskFeature.Action.Delegate(AskFeature.DelegateAction.OpenPassage(sam17))))) {
+            it.copy(homePath = it.homePath + reader(sam17))
+        }
+        store.send(Action.HomePath(0, DestinationAction.Ask(AskFeature.Action.SearchInsteadTapped)))
+        store.receive(Action.HomePath(0, DestinationAction.Ask(AskFeature.Action.Delegate(AskFeature.DelegateAction.SearchInstead("why did Job suffer"))))) {
+            it.copy(tab = Tab.SEARCH)
+        }
+        store.finish()
+    }
+
     @Test
     fun homeGreetsByTheClockAndOpensPassagesOnItsOwnStack() = runTest {
         val store = store()

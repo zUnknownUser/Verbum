@@ -104,6 +104,11 @@ internal fun SearchPane(state: State, send: (Action) -> Unit) {
         val results = state.results
         LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = Spacing.xxxl)) {
             if (state.isOffline) item { OfflineNotice() }
+            state.askSuggestion?.let { question ->
+                // §13: the question goes to Ask Scripture; the groups below are still search.
+                header(R.string.ask_scripture)
+                item { ResultRow(question, stringResource(R.string.ask_row_subtitle), Icons.Filled.Search, tappable = true) { send(Action.AskTapped) } }
+            }
             when {
                 results != null && !results.isEmpty -> resultSections(results, send)
                 state.showsNoResults -> item { NoResults(state.query, state.isOffline) }

@@ -8,6 +8,7 @@ import com.nexussoft.verbum.models.GraphSnapshot
 import com.nexussoft.verbum.models.PassageContext
 import com.nexussoft.verbum.models.PassageReference
 import com.nexussoft.verbum.models.RelationshipType
+import com.nexussoft.verbum.models.ScriptureAnswer
 import com.nexussoft.verbum.models.SourceReference
 import com.nexussoft.verbum.models.TimelineDatePrecision
 import com.nexussoft.verbum.models.TimelineEvent
@@ -119,3 +120,22 @@ internal data class WireDailyVerse(val date: String, val reference: WirePassageR
 
 @Serializable
 internal data class WireDailyVerses(val verses: List<WireDailyVerse>)
+
+@Serializable
+internal data class WireAskRequest(val question: String)
+
+@Serializable
+internal data class WireAskResponse(
+    val answer: String,
+    val summary: String,
+    val passageReferences: List<WirePassageReference>,
+    val entityReferences: List<String>,
+    val sourceReferences: List<WireSourceReference>,
+    val confidence: String,
+    val interpretiveVariance: Boolean,
+) {
+    fun toModel() = ScriptureAnswer(
+        answer, summary, passageReferences.map { it.toModel() }, entityReferences, sourceReferences.map { it.toModel() },
+        ScriptureAnswer.Confidence.fromWireValue(confidence) ?: malformed("confidence $confidence"), interpretiveVariance,
+    )
+}

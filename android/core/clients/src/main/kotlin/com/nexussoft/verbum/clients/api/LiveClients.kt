@@ -1,5 +1,7 @@
 package com.nexussoft.verbum.clients.api
 
+import com.nexussoft.verbum.clients.AskScriptureClient
+import com.nexussoft.verbum.clients.AskScriptureException
 import com.nexussoft.verbum.clients.ContextClient
 import com.nexussoft.verbum.clients.GraphClient
 import com.nexussoft.verbum.clients.GraphClientException
@@ -15,6 +17,7 @@ import com.nexussoft.verbum.models.EntityId
 import com.nexussoft.verbum.models.GraphSnapshot
 import com.nexussoft.verbum.models.PassageContext
 import com.nexussoft.verbum.models.PassageReference
+import com.nexussoft.verbum.models.ScriptureAnswer
 import com.nexussoft.verbum.models.SearchResponse
 import com.nexussoft.verbum.models.TimelineEvent
 
@@ -75,4 +78,18 @@ class LiveContextClient(private val api: VerbumApi) : ContextClient {
 class LiveTimelineClient(private val api: VerbumApi) : TimelineClient {
     override suspend fun events(): List<TimelineEvent> = api.timeline().events
     override suspend fun eventsFor(entityId: EntityId): List<TimelineEvent> = api.timeline(entityId).events
+}
+
+/** `POST /v1/ask`. 503 and a route the server does not have are both [AskScriptureException.Unavailable]; the page says so instead of failing. */
+class LiveAskScriptureClient(private val api: VerbumApi) : AskScriptureClient {
+    override suspend fun ask(question: String): ScriptureAnswer = try {
+        api.ask(question.trim().take(500))
+    } catch (e: VerbumApiException.Problem) {
+        if (e.code == ProblemCode.ASK_UNAVAILABLE || e.status == 404 || e.status == 501) throw AskScriptureException.Unavailable
+        throw AskScriptureException.Failed
+    } catch (e: VerbumApiException.NetworkUnavailable) {
+        throw AskScriptureException.NetworkUnavailable
+    } catch (e: VerbumApiException.MalformedResponse) {
+        throw AskScriptureException.Failed
+    }
 }

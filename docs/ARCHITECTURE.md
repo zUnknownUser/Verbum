@@ -180,6 +180,26 @@ wrappers over it; fixtures stay the preview/test doubles. Features never see it 
   property → `BuildConfig`, cleartext allowed only in the debug manifest. No key ships in either
   app: the API is keyless and OpenAI is reached only by the server (§56).
 
+## Ask Scripture (Task 12, client side)
+
+`AskScriptureClient` (§38) is `POST /v1/ask` and nothing else: the client never generates, never
+caches a question (§47), and maps the server's failures to three states — `unavailable` (503, or
+a backend without the route), `networkUnavailable`, `failed`. `ScriptureAnswer` is the §30
+contract verbatim; the page renders and navigates only from its structured fields, never from
+prose (§30), because the server guarantees every `passageReference` was retrieved and verified
+before the model could cite it (§31).
+
+`AskFeature` is a destination pushed from Search (§6: search and ask share one field). A query
+that reads as a question — a `?`, a question word in English or Portuguese, or four-plus words
+that are not a reference or a name (`looksLikeQuestion`, same rule on both platforms) — gets an
+"Ask Scripture" row above the results and is asked on return. The page asks once when it appears,
+resolves `entityReferences` to names through `GraphClient.entity` (best-effort, unknown ids are
+dropped), and renders §13.2 in order: short answer, answer + confidence line, key passages,
+explore further, perspectives only when `interpretiveVariance`, sources, and a fixed line saying
+what the text is (a checked synthesis, not a word from God — §13.3). An empty `answer` is not a
+failure: the page shows the §51 copy, the closest passages if any, and "See search results",
+which returns to the Search tab with the same question still in the field (§21.3).
+
 ## Performance rules
 
 - Never write `@State` (or a `StateFlow`) from a per-frame callback; keep scroll bookkeeping in a

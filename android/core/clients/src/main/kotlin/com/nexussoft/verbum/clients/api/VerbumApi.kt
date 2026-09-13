@@ -9,6 +9,7 @@ import com.nexussoft.verbum.models.EntityId
 import com.nexussoft.verbum.models.GraphSnapshot
 import com.nexussoft.verbum.models.PassageContext
 import com.nexussoft.verbum.models.PassageReference
+import com.nexussoft.verbum.models.ScriptureAnswer
 import com.nexussoft.verbum.models.SearchResponse
 import com.nexussoft.verbum.models.TimelineEvent
 import kotlinx.coroutines.CancellationException
@@ -211,6 +212,12 @@ class VerbumApi(
     suspend fun dailyVerses(from: String, days: Int): List<DailyVerse> =
         get("/v1/daily-verse", WireDailyVerses.serializer(), "from" to from, "days" to days.coerceIn(1, 31).toString())
             .verses.map { DailyVerse(it.date, it.reference.toModel()) }
+
+    // ---- ask
+
+    /** `POST /v1/ask {"question"}` → the §30 contract. Never cached. */
+    suspend fun ask(question: String): ScriptureAnswer =
+        post("/v1/ask", json.encodeToString(WireAskRequest.serializer(), WireAskRequest(question)), WireAskResponse.serializer()).toModel()
 
     // ---- plumbing
 

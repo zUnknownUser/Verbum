@@ -31,6 +31,13 @@ object SearchFeature {
          */
         val isOffline: Boolean = false,
     ) {
+        /**
+         * The question to offer Ask Scripture for, when the query reads as one (§6: search and ask
+         * share the field). Offered as soon as it is typed, before results, so the answer never
+         * waits on the debounce.
+         */
+        val askSuggestion: String? get() = query.trim().takeIf { AskFeature.looksLikeQuestion(it) }
+
         /** `true` while the user has typed something that produced nothing. */
         val showsNoResults: Boolean
             get() = phase == Phase.IDLE && results?.isEmpty == true && query.isNotBlank()
@@ -47,12 +54,15 @@ object SearchFeature {
         data class PassageTapped(val reference: PassageReference) : Action
         data class BookTapped(val book: BibleBook) : Action
         data class EntityTapped(val entity: BibleEntity) : Action
+        data object AskTapped : Action
         data class Delegate(val delegate: DelegateAction) : Action
     }
 
     sealed interface DelegateAction {
         data class OpenPassage(val reference: PassageReference) : DelegateAction
         data class OpenEntity(val entity: BibleEntity) : DelegateAction
+        /** Ask Scripture with the field's question (§13). */
+        data class Ask(val question: String) : DelegateAction
     }
 
     /** How long typing may pause before we search. */
@@ -101,12 +111,17 @@ object SearchFeature {
             Action.Submitted -> {
                 val reference = PassageReferenceParser.parse(state.query, language()).referenceOrNull
                 val firstBook = state.results?.books?.firstOrNull()
+                val question = state.askSuggestion
                 when {
                     reference != null -> state.with(Effect.Send(Action.Delegate(DelegateAction.OpenPassage(reference))))
                     firstBook != null -> state.with(Effect.Send(Action.Delegate(DelegateAction.OpenPassage(PassageReference(firstBook.id, 1)))))
+                    // A question submitted is a question asked.
+                    question != null -> state.with(Effect.Send(Action.Delegate(DelegateAction.Ask(question))))
                     else -> state.only()
                 }
             }
+
+            Action.AskTapped -> state.askSuggestion?.let { state.with(Effect.Send(Action.Delegate(DelegateAction.Ask(it)))) } ?: state.only()
 
             is Action.PassageTapped -> state.with(Effect.Send(Action.Delegate(DelegateAction.OpenPassage(action.reference))))
             is Action.BookTapped -> state.with(Effect.Send(Action.Delegate(DelegateAction.OpenPassage(PassageReference(action.book.id, 1)))))

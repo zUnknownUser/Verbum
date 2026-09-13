@@ -167,4 +167,27 @@
     <string name="view_in_timeline_subtitle">Where %1$s sits in biblical history.</string>
     <string name="timeline_event_open">Opens the event</string>
     <string name="timeline_event_close">Collapses the event</string>
+
+    <!-- Ask Scripture (§13) -->
+    <string name="ask_scripture">Ask Scripture</string>
+    <string name="ask_row_subtitle">An answer from the passages themselves, with sources</string>
+    <string name="ask_loading">Reading the passages this question touches before answering.</string>
+    <string name="ask_short_answer">Short answer</string>
+    <string name="ask_explore_further">Explore further</string>
+    <string name="ask_perspectives">Perspectives</string>
+    <string name="ask_perspectives_body">Christian traditions and scholars read this question differently. The answer above is one reading of the passages, not the only one.</string>
+    <string name="ask_disclaimer">Written from the passages above by a language model, then checked so every reference is real. It is a study aid, not a word from God.</string>
+    <string name="ask_confidence_high">Well supported by the passages cited.</string>
+    <string name="ask_confidence_medium">Partly supported by the passages cited — read them.</string>
+    <string name="ask_confidence_low">Weakly supported — treat as a starting point, not a conclusion.</string>
+    <string name="ask_no_answer">No reliable answer</string>
+    <string name="ask_no_answer_body">I could not build a reliable answer from the available sources.</string>
+    <string name="ask_no_answer_body_closest">I could not build a reliable answer from the available sources. Here are the closest passages I found.</string>
+    <string name="ask_see_search">See search results</string>
+    <string name="ask_closest_passages">Closest passages</string>
+    <string name="ask_unavailable">Ask isn\'t available on this server yet</string>
+    <string name="ask_unavailable_body">Search still works — try the same words there.</string>
+    <string name="ask_offline">Verbum can\'t be reached</string>
+    <string name="ask_offline_body">Asking needs a connection. Reading and search of what this device knows keep working.</string>
+    <string name="ask_failed">Couldn\'t answer this time</string>
 </resources>

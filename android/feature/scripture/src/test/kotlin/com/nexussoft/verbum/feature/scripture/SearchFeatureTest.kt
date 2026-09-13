@@ -110,7 +110,8 @@ class SearchFeatureTest {
 
     @Test
     fun returnKeyWithNothingToOpenDoesNothing() = runTest {
-        val store = store(State(query = "why did Job suffer"))
+        // Not a reference, not a book, and too short to be a question for Ask.
+        val store = store(State(query = "Elah"))
         store.send(Action.Submitted)
         store.finish()
     }
@@ -125,6 +126,28 @@ class SearchFeatureTest {
         store.receive(Action.Delegate(DelegateAction.OpenPassage(PassageReference("Rom", 1))))
         store.send(Action.EntityTapped(david))
         store.receive(Action.Delegate(DelegateAction.OpenEntity(david)))
+        store.finish()
+    }
+
+    /** §6: search and ask share the field. A question is offered to Ask at once, opened on return, and the search still runs underneath. */
+    @Test
+    fun aQuestionIsOfferedToAskAndSubmittedToIt() = runTest {
+        val store = store(client = SearchClient { response(it) })
+        store.send(Action.QueryChanged("why did Job suffer")) { it.copy(query = "why did Job suffer", phase = Phase.SEARCHING) }
+        assertEquals("why did Job suffer", store.state.askSuggestion)
+        store.receive(Action.SearchResponded(response("why did Job suffer"))) { it.copy(phase = Phase.IDLE, results = response("why did Job suffer")) }
+        store.send(Action.Submitted)
+        store.receive(Action.Delegate(DelegateAction.Ask("why did Job suffer")))
+        store.send(Action.AskTapped)
+        store.receive(Action.Delegate(DelegateAction.Ask("why did Job suffer")))
+        store.finish()
+    }
+
+    @Test
+    fun aLookupIsNotOfferedToAsk() = runTest {
+        val store = store(State(query = "David"))
+        assertEquals(null, store.state.askSuggestion)
+        store.send(Action.AskTapped)
         store.finish()
     }
 }
