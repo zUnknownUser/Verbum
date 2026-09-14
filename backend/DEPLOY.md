@@ -7,18 +7,27 @@ hostname from the Cloudflare Tunnel to the Railway service.
 
 Config-as-code lives in `/railway.json` (repo root): Dockerfile path, watch patterns (only
 `backend/**` and `api/examples/**` trigger a build — app commits do not), `/healthz` health check.
+Railway deprecated `railway.json` in favour of `.railway/railway.ts` (works until 2026-12-01), but
+as of 2026-09-14 the new format has no field for the Dockerfile path or watch patterns
+(`railway config migrate` turns them into comments and `--apply` would drop them), so it is
+kept. `RAILWAY_DOCKERFILE_PATH=backend/Dockerfile` is also set as a service variable so the
+build does not depend on the deprecated file.
+
+**Done 2026-09-14** with the Railway CLI (`brew install railway`, `railway login`; the repo
+root is linked to project `verbum`, environment `production`). Everything below is the record
+of that, kept so it can be redone.
 
 ## 1. Postgres (pgvector)
 
-Deploy the **pgvector** template from the Railway marketplace (the plain "PostgreSQL" template
-has no `vector` extension and migration `0004_scripture_search.sql` needs it). Enable public
-networking on it (Settings → Networking → TCP proxy) so the one-off commands below can reach it
-from your machine; it exposes `DATABASE_URL` (private) and `DATABASE_PUBLIC_URL`.
+`railway deploy -t 3jJFCA` — the **pgvector** template Railway's own docs link to (the plain
+"PostgreSQL" template has no `vector` extension and migration `0004_scripture_search.sql` needs
+it). It comes with a TCP proxy and exposes `DATABASE_URL` (**public**, via the proxy) and
+`DATABASE_URL_PRIVATE` (`pgvector.railway.internal`, what the api uses).
 
-From `backend/`, with `DATABASE_PUBLIC_URL` copied from Railway:
+From `backend/`, against the public URL:
 
 ```sh
-export VERBUM_DATABASE_URL='<DATABASE_PUBLIC_URL>'
+export VERBUM_DATABASE_URL="$(railway variables --service pgvector --json | python3 -c 'import json,sys;print(json.load(sys.stdin)["DATABASE_URL"])')"
 go run ./cmd/migrate     # applies db/migrations/*.sql in order; idempotent, safe to re-run
 go run ./cmd/seed        # fixture graph; requires an EMPTY content database
 ```
@@ -27,8 +36,12 @@ Scripture retrieval for `/v1/search` passages and `/v1/ask` needs `scripture_ver
 (pipeline, needs `OPENAI_API_KEY`; ~cents of embeddings):
 
 ```sh
-cd ../pipeline && uv run --locked verbum-pipeline embed-scripture ../VerbumKit/Sources/Clients/Resources/web.tsv
+cd ../pipeline && OPENAI_API_KEY=… uv run --locked verbum-pipeline embed-scripture ../VerbumKit/Sources/Clients/Resources/web.tsv
 ```
+
+About 15 minutes from a laptop to Railway (one batched upsert per 200 verses — the per-row
+write it used to do cost a network round trip per verse and was five times slower over the
+public proxy); re-running is an idempotent upsert.
 
 Without it the API still runs: search is lexical/entity-only and Ask answers with the
 low-confidence/empty response — never an error.
@@ -43,11 +56,12 @@ Variables:
 
 | Variable | Value | Effect |
 | --- | --- | --- |
-| `VERBUM_DATABASE_URL` | `${{Postgres.DATABASE_URL}}` (reference to the pgvector service; name may differ) | Postgres store instead of fixtures |
+| `VERBUM_DATABASE_URL` | `${{pgvector.DATABASE_URL_PRIVATE}}` | Postgres store instead of fixtures, over the private network |
 | `OPENAI_API_KEY` | `sk-…` | `/v1/ask`, `/v1/realtime/session`, semantic search |
 | `GOOGLE_APPLICATION_CREDENTIALS_JSON` | the service-account JSON, one line (or its base64) | `/v1/tts` |
 | `VERBUM_TTS_CACHE_DIR` | `/var/cache/verbum/tts` | already the Dockerfile default; set explicitly to match the volume |
-| `RAILWAY_RUN_UID` | `0` | only if the log says `TTS disabled` — the image runs as UID 65532 and Railway mounts volumes as root |
+| `RAILWAY_RUN_UID` | `0` | **required**: the image runs as UID 65532, Railway mounts the volume as root, and without it the log says `TTS disabled` (confirmed 2026-09-14) |
+| `RAILWAY_DOCKERFILE_PATH` | `backend/Dockerfile` | same as `railway.json`; survives its deprecation |
 
 Do **not** set `VERBUM_ADDR`: the server listens on Railway's `PORT`. Optional:
 `VERBUM_ASK_MODEL`, `VERBUM_LOG_FORMAT=text`.
@@ -55,9 +69,14 @@ Do **not** set `VERBUM_ADDR`: the server listens on Railway's `PORT`. Optional:
 Volume: Settings → Volumes → mount path `/var/cache/verbum/tts`. Without it the MP3 cache is
 lost on every deploy and every chapter is re-synthesised (paid).
 
-Networking: Generate Domain first to test, then Custom Domain `api.vendlydigital.com.br` and
-create the CNAME Railway shows at Cloudflare (proxy off / "DNS only" while validating, or the
-tunnel record must be removed first — same hostname).
+Networking: `railway domain --service api` (test domain), then
+`railway domain --service api api.vendlydigital.com.br`. At Cloudflare the hostname was a
+**Tunnel**-type record (from the `verbum-api` tunnel on the Windows box) — those cannot be
+edited into a CNAME, so: delete it, then add `CNAME api → <id>.up.railway.app`, **DNS only**
+(grey cloud — proxied breaks Railway's certificate issuance). Because the zone is on Cloudflare,
+Railway also demands a `TXT _railway-verify.api` record with the token from
+`railway domain --service api status api.vendlydigital.com.br`; verification took ~2 minutes
+after that, then Let's Encrypt issued.
 
 ## 3. Check
 

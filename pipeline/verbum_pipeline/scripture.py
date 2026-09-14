@@ -93,19 +93,24 @@ def vector_literal(values: list[float]) -> str:
 def upsert_batch(
     cur, translation: str, batch: list[Verse], vectors: list[list[float]]
 ) -> None:
-    for verse, vector in zip(batch, vectors, strict=True):
-        cur.execute(
-            sql.SQL(
-                # public.vector, not vector: isolated test schemas don't put `public` on their
-                # search_path, and the extension/type only exists there (see migration 0004).
-                "INSERT INTO scripture_verses (translation,book_id,chapter,verse,text,embedding) "
-                "VALUES (%s,%s,%s,%s,%s,%s::public.vector) "
-                "ON CONFLICT (translation,book_id,chapter,verse) "
-                "DO UPDATE SET text=EXCLUDED.text, embedding=EXCLUDED.embedding"
-            ),
+    # One executemany per batch: psycopg pipelines it into a single round trip, which is
+    # what makes a remote database (Railway from a laptop) take seconds per batch, not
+    # minutes — the per-row execute it replaced cost one network round trip per verse.
+    cur.executemany(
+        sql.SQL(
+            # public.vector, not vector: isolated test schemas don't put `public` on their
+            # search_path, and the extension/type only exists there (see migration 0004).
+            "INSERT INTO scripture_verses (translation,book_id,chapter,verse,text,embedding) "
+            "VALUES (%s,%s,%s,%s,%s,%s::public.vector) "
+            "ON CONFLICT (translation,book_id,chapter,verse) "
+            "DO UPDATE SET text=EXCLUDED.text, embedding=EXCLUDED.embedding"
+        ),
+        [
             (translation, verse.book_id, verse.chapter, verse.verse, verse.text,
-             vector_literal(vector)),
-        )
+             vector_literal(vector))
+            for verse, vector in zip(batch, vectors, strict=True)
+        ],
+    )
 
 
 def batched(items: list, size: int):
