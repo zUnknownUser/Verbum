@@ -10,11 +10,13 @@ import SwiftUI
 struct BookPickerView: View {
     @Bindable var store: StoreOf<BookPickerFeature>
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @FocusState private var searchFocused: Bool
 
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
+                HStack {
                 Text(L10n.t("Books"))
                     .font(Typography.editorialTitle)
                     .foregroundStyle(Palette.ink)
@@ -22,14 +24,62 @@ struct BookPickerView: View {
                     .padding(.top, Spacing.xl)
                     .padding(.bottom, Spacing.lg)
                     .accessibilityAddTraits(.isHeader)
+                    Spacer()
+                    Button { store.send(.toggleSearch) } label: {
+                        Image(systemName: store.searchVisible ? "xmark" : "magnifyingglass")
+                            .padding(Spacing.md)
+                    }
+                    .foregroundStyle(Palette.inkSecondary)
+                    .accessibilityLabel(L10n.t(store.searchVisible ? "Close search" : "Search books"))
+                    .padding(.trailing, Spacing.readingMargin)
+                }
 
+                if store.searchVisible {
+                    TextField(L10n.t("Book, chapter or verse"), text: Binding(get: { store.query }, set: { store.send(.queryChanged($0)) }))
+                        .textFieldStyle(.roundedBorder)
+                        .autocorrectionDisabled()
+                        .submitLabel(.search)
+                        .focused($searchFocused)
+                        .onSubmit { searchFocused = false; store.send(.searchSubmitted) }
+                        .padding(.horizontal, Spacing.readingMargin)
+                        .padding(.bottom, Spacing.lg)
+                        .onAppear { searchFocused = true }
+                }
+                if !store.query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    VStack(alignment: .leading, spacing: Spacing.md) {
+                        if let reference = store.matchingReference {
+                            Button { searchFocused = false; store.send(.searchSubmitted) } label: {
+                                Label(reference.formatted, systemImage: "book").font(Typography.editorialHeadline)
+                                    .padding(.vertical, Spacing.md)
+                            }
+                        }
+                        ForEach(store.matchingBooks) { book in
+                            Button { searchFocused = false; store.send(.bookTapped(book)) } label: {
+                                HStack {
+                                    Text(book.localizedName).font(Typography.editorialHeadline)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                }.padding(.vertical, Spacing.md)
+                            }
+                        }
+                        if store.matchingBooks.isEmpty && store.matchingReference == nil {
+                            Text(L10n.t("No matching reference. Try John 3:16."))
+                                .font(Typography.subheadline).foregroundStyle(Palette.inkSecondary)
+                        }
+                    }.padding(.horizontal, Spacing.readingMargin)
+                } else {
                 testament(.old)
                 testament(.new)
+                }
                 }
                 .padding(.bottom, Spacing.xxxl * 2)
             }
             .scrollIndicators(.hidden)
+            .scrollDismissesKeyboard(.interactively)
             .background(Palette.paper)
+            .onChange(of: store.searchVisible) { _, visible in
+                if !visible, let book = store.selectedBook { proxy.scrollTo(book.division, anchor: .top) }
+            }
             .onChange(of: store.selectedBook, initial: true) { _, book in
                 guard let book else { return }
                 withAnimation(Motion.resolved(Motion.spatial, reduceMotion: reduceMotion)) {

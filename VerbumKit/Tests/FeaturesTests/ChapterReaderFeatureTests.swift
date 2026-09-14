@@ -161,7 +161,20 @@ import Testing
         await revelation.send(.nextChapterTapped)
     }
 
-    @Test func goToReferenceDropsVersesAndLoadsChapter() async {
+    @Test func requestedVersesAreSelectedFromLoadedText() async {
+        let reference = PassageReference(bookId: "John", chapter: 3, verses: 16...18)
+        let store = TestStore(initialState: ChapterReaderFeature.State(reference: reference)) { ChapterReaderFeature() } withDependencies: {
+            $0.bibleClient.chapter = { b, c in Self.verses(b, c, count: 20) }
+        }
+        await store.send(.task) { $0.content = .loading }
+        await store.receive(\.chapterResponse.success) {
+            $0.content = .loaded(Self.verses("John", 3, count: 20))
+            $0.selectedVerses = [16, 17, 18]
+            $0.$lastRead.withLock { $0 = PassageReference(bookId: "John", chapter: 3) }
+        }
+    }
+
+    @Test func goToReferenceRetainsVerseTargetAndLoadsChapter() async {
         let store = TestStore(initialState: ChapterReaderFeature.State(reference: PassageReference(bookId: "John", chapter: 3))) {
             ChapterReaderFeature()
         } withDependencies: {
@@ -170,6 +183,7 @@ import Testing
 
         await store.send(.go(to: PassageReference(bookId: "1Sam", chapter: 17, verses: 45...47))) {
             $0.reference = PassageReference(bookId: "1Sam", chapter: 17)
+            $0.requestedVerses = 45...47
             $0.content = .loading
         }
         await store.receive(\.chapterResponse.success) {

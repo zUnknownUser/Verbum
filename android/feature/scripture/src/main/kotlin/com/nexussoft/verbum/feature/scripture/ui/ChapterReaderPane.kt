@@ -214,6 +214,11 @@ private fun Page(
     onScrollDirection: (down: Boolean) -> Unit,
 ) {
     val listState = rememberLazyListState()
+    LaunchedEffect(state.reference, state.requestedVerses) {
+        val range = state.requestedVerses ?: return@LaunchedEffect
+        val index = verses.indexOfFirst { it.verseStart in range }
+        if (index >= 0) listState.scrollToItem(index + 1)
+    }
     LaunchedEffect(listState) {
         var last = 0
         snapshotFlow { listState.firstVisibleItemIndex * 10_000 + listState.firstVisibleItemScrollOffset }
@@ -249,6 +254,9 @@ private fun Page(
         ) {
             item {
                 ChapterOpener(state.book?.localizedName ?: state.reference.bookId, state.reference.chapter)
+                if (state.requestedVerses != null && verses.none { it.verseStart in state.requestedVerses }) {
+                    Text(stringResource(R.string.book_search_verse_missing), style = MaterialTheme.typography.bodyMedium)
+                }
                 TextButton(onClick = { send(Action.ContextTapped) }) { Text(stringResource(R.string.context_title)) }
             }
             items(verses, key = { it.id }) { verse ->

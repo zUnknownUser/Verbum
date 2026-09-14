@@ -24,6 +24,22 @@ import Models
 
     let base = URL(string: "http://test.local:8080")!
 
+    @Test func speechManifestIsCachedAndRefreshesAfterOneHour() async throws {
+        let script = Script()
+        let first = String(repeating: "a", count: 64), second = String(repeating: "b", count: 64)
+        script.responses = [(200, "{\"version\":\"\(first)\"}"), (200, "{\"version\":\"\(second)\"}")]
+        let cache = ResponseCache.inMemory
+        let api = VerbumAPI(baseURL: base, transport: script.transport, cache: cache, now: { Date(timeIntervalSince1970: 0) })
+        #expect(try await api.speechVersion(language: "pt-BR") == first)
+        #expect(try await api.speechVersion(language: "pt-BR") == first)
+        #expect(script.requests.count == 1)
+        let later = VerbumAPI(baseURL: base, transport: script.transport, cache: cache, now: { Date(timeIntervalSince1970: 3601) })
+        #expect(try await later.speechVersion(language: "pt-BR") == second)
+        script.failWith = URLError(.notConnectedToInternet)
+        let offline = VerbumAPI(baseURL: base, transport: script.transport, cache: cache, now: { Date(timeIntervalSince1970: 7202) })
+        #expect(try await offline.speechVersion(language: "pt-BR") == second)
+    }
+
     @Test func buildsTheContractURLs() async throws {
         let script = Script()
         script.responses = [

@@ -60,6 +60,25 @@ Provider JSON is bounded to 32 MiB per segment; final MP3 to 64 MiB.
 
 ## Persistent chapter cache
 
+### Mobile version discovery (2026-09-14)
+
+`GET /v1/tts/config?language=pt-BR` returns `{ "version": "<sha256>" }` without
+calling Google. The version includes the default voice/settings and `audioRevision` in
+`internal/tts/chapter.go`; bump that constant when changing assembly or provider behavior
+without changing settings. Deploy this backend endpoint to activate automatic updates.
+
+iOS and Android cache this manifest for one hour, using the last known response offline.
+Local MP3 keys now include version + language + exact text. Old unversioned files are not
+relabeled as current; normal 40-chapter/150 MB eviction removes them gradually. When an older
+backend lacks the endpoint, clients retain legacy behavior. Existing server MP3 cache keys
+remain unchanged, so the first versioned download can reuse already-generated server audio.
+
+The optional `revision` field in `POST /v1/tts` rejects a stale version before generation,
+preventing deployment races from saving new audio under an old version. Until the manifest
+refreshes, an uncached chapter in that race follows the existing English-recording fallback.
+The new revision does not interrupt audio already playing. No deployment or paid synthesis
+was performed as part of this change; device/network tests remain with the owner.
+
 The key is SHA-256 of the exact supplied chapter text plus normalized language,
 resolved voice, speed, pitch, format and a provider/assembly-version namespace.
 Different translation text or settings produce different entries; omitted and

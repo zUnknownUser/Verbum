@@ -67,15 +67,21 @@ class CloudScriptureAudioClient(context: Context, private val bible: BibleClient
         return PassageReference(nextBook.id, 1)
     }
 
-    /** One MP3 per exact chapter text, cached on disk. The backend also caches server-side by
+    /** One MP3 per exact chapter text and server voice version, cached on disk. The backend also caches server-side by
      * the same text, so a cold local cache (after reinstall, or a pruned entry) still answers
      * without paying for a new generation — only the round trip. */
     private suspend fun render(text: String): File {
         val directory = File(context.cacheDir, "cloud-speech-pt-BR-v1").also { check(it.isDirectory || it.mkdirs()) }
-        val key = MessageDigest.getInstance("SHA-256").digest(text.toByteArray()).joinToString("") { "%02x".format(it) }
+        // One manifest check/hour, with the API cache's offline fallback. Older servers
+        // keep using legacy files until the version endpoint is deployed.
+        val version = try { api.speechVersion("pt-BR") }
+            catch (e: CancellationException) { throw e }
+            catch (_: Exception) { null }
+        val identity = version?.let { "$it\npt-BR\n$text" } ?: text
+        val key = MessageDigest.getInstance("SHA-256").digest(identity.toByteArray(Charsets.UTF_8)).joinToString("") { "%02x".format(it) }
         val output = File(directory, "$key.mp3")
         if (output.exists()) { output.setLastModified(System.currentTimeMillis()); return output }
-        val audio = withContext(Dispatchers.IO) { api.synthesizeSpeech(text, "pt-BR") }
+        val audio = withContext(Dispatchers.IO) { api.synthesizeSpeech(text, "pt-BR", revision = version) }
         check(audio.isNotEmpty())
         currentCoroutineContext().ensureActive()
         val temporary = File(directory, "${UUID.randomUUID()}.partial.mp3")

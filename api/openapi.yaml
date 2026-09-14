@@ -37,6 +37,29 @@ tags:
   - name: tts
 
 paths:
+  /v1/tts/config:
+    get:
+      tags: [tts]
+      operationId: speechConfiguration
+      summary: Default speech version, without contacting the speech provider.
+      description: Cached for 3600 seconds. Changes with default voice/settings or assembly revision.
+      parameters:
+        - name: language
+          in: query
+          required: true
+          schema: { type: string, enum: [pt-BR, en-US] }
+      responses:
+        '200':
+          description: Current audio version.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [version]
+                properties:
+                  version: { type: string, pattern: '^[a-f0-9]{64}$' }
+        '400':
+          description: Unsupported or missing language.
   /v1/tts:
     post:
       tags: [tts]
@@ -407,6 +430,9 @@ components:
       additionalProperties: false
       required: [text, language]
       properties:
+        revision:
+          type: string
+          description: Optional version from GET /v1/tts/config. A changed version returns 400 before generation; omitted preserves legacy behavior.
         text:
           type: string
           minLength: 1

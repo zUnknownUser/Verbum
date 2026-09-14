@@ -1,5 +1,31 @@
 # Roadmap
 
+## Discreet book search — 2026-09-14
+
+- iOS 🟡 · Android 🟡 — app builds succeed; Android regression test sources compile.
+- Implemented on iOS/Android: a magnifier beside Books opens a compact field; live local
+  results for book names/abbreviations, chapters and verse references/ranges. Existing shelves
+  remain unchanged when the field is empty; selecting a book reveals its chapter grid.
+- Reuses the reference parser and book matcher, with Portuguese names and accent-tolerant
+  lookup (preserving the distinction between Jó and Jo). No API calls while typing; no search
+  through verse text is claimed by this book/reference finder.
+- Reader retains incoming verse targets separately from the chapter reference, selects only
+  verses present in loaded text, and scrolls to the first target. Missing verses show a notice.
+- Regression test sources added/updated. Owner retains test execution and emulator/device QA;
+  validate search, selection, keyboard, back navigation and large text on both platforms.
+
+## Audio cache versioning — 2026-09-14
+
+- iOS 🟡 · Android 🟡: both app builds and backend build succeed; Android client test sources
+  compile. Tests were not executed. No disposable logs or images were created for this block.
+- Implemented in iOS, Android and backend: lightweight `/v1/tts/config` manifest, one-hour
+  refresh with last-known offline fallback, local MP3 keys incorporating language/version/text,
+  and a POST revision guard against deployments changing the voice during a download.
+- Legacy backend compatibility retained; existing server cache preserved. Backend deployment
+  is required for version discovery. No production deploy or paid synthesis performed.
+- New test sources cover version guards and manifest refresh/offline reuse. Test execution and
+  device QA remain with the owner; no ✅ validation claimed.
+
 ## Audio in Portuguese — reactivated 2026-09-13 (was disabled the same morning)
 
 - The synthesised reading is live again on both platforms for pt-BR devices: the device reads the
@@ -174,7 +200,8 @@ except the spec and, later, the backend API contract.
 
 - **Home — voluntary exploration starting point** — iOS 🟡 · Android 🟡 (2026-09-12)
   - Owner-requested additive extension to §5/§14: one quiet card after existing Home sections,
-    "Como você está chegando hoje?". Existing sections and design tokens are unchanged.
+    "Como você está se sentindo hoje?" (copy updated on 2026-09-14, both platforms and languages).
+    Existing sections and design tokens are unchanged.
   - Nine choices; deterministic editorial-preview reading paths, two structured Scripture sources
     each, a guiding reading question, reader/context navigation, retry/change-selection states.
   - `ExplorationRequest` / `ExplorationPlan` + `GuidedExplorationClient` isolate future retrieval

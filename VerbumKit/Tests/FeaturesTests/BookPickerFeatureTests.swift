@@ -5,6 +5,17 @@ import Testing
 
 @MainActor
 @Suite struct BookPickerFeatureTests {
+    @Test func liveReferenceSearchAndClose() async {
+        let store = TestStore(initialState: BookPickerFeature.State(current: PassageReference(bookId: "Gen", chapter: 1))) { BookPickerFeature() }
+        let reference = PassageReference(bookId: "John", chapter: 3, verses: 16...18)
+        await store.send(.toggleSearch) { $0.searchVisible = true }
+        await store.send(.queryChanged("John 3:16-18")) { $0.query = "John 3:16-18"; $0.matchingReference = reference }
+        await store.send(.searchSubmitted)
+        await store.receive(\.delegate.chapterSelected, reference)
+        await store.send(.toggleSearch) { $0.searchVisible = false; $0.query = ""; $0.matchingReference = nil }
+        await store.send(.queryChanged("John 999")) { $0.query = "John 999" }
+        await store.send(.searchSubmitted)
+    }
     @Test func canonIsSplitByTestament() {
         let state = BookPickerFeature.State(current: PassageReference(bookId: "John", chapter: 3))
         #expect(state.oldTestament.count == 39)

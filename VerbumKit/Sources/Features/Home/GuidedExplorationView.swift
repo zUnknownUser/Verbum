@@ -8,7 +8,7 @@ struct GuidedExplorationView: View {
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: Spacing.xl) {
-                Text(store.feeling?.title ?? L10n.t("How are you arriving today?"))
+                Text(store.feeling?.title ?? L10n.t("How are you feeling today?"))
                     .font(Typography.editorialTitle).accessibilityAddTraits(.isHeader)
                 if store.feeling == nil {
                     Text(L10n.t("Choose a starting point, at your own pace. This choice is optional and is not saved to a profile."))

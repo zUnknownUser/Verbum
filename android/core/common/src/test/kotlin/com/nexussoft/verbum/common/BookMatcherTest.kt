@@ -5,6 +5,14 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class BookMatcherTest {
+    @Test fun portugueseNamesAndUnaccentedReferences() {
+        val language = com.nexussoft.verbum.models.BookLanguage.PORTUGUESE
+        assertEquals("Ps", BookMatcher.books("salmos", language).first().id)
+        assertEquals("Gen", BookMatcher.books("genesis", language).first().id)
+        assertEquals(com.nexussoft.verbum.models.PassageReference("John", 3, 16..16), PassageReferenceParser.parse("Joao 3:16", language).referenceOrNull)
+        assertEquals("Job", PassageReferenceParser.parse("Jó 3", language).referenceOrNull?.bookId)
+        assertEquals("John", PassageReferenceParser.parse("Jo 3", language).referenceOrNull?.bookId)
+    }
     private fun ids(query: String) = BookMatcher.books(query).map { it.id }
 
     @Test

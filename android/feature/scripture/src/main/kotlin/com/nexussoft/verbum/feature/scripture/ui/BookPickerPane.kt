@@ -36,6 +36,20 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.runtime.remember
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -70,8 +84,12 @@ private const val TOP_BREATHING_ROOM_PX = 48
 @Composable
 internal fun BookPickerPane(state: State, send: (Action) -> Unit) {
     val listState = rememberLazyListState()
+    val focus = LocalFocusManager.current
+    val requester = remember { FocusRequester() }
+    LaunchedEffect(state.searchVisible) { if (state.searchVisible) requester.requestFocus() else focus.clearFocus() }
     val divisions = Division.entries
-    LaunchedEffect(state.selectedBook) {
+    LaunchedEffect(state.selectedBook, state.searchVisible) {
+        if (state.searchVisible) return@LaunchedEffect
         val book = state.selectedBook ?: return@LaunchedEffect
         // items: 0 = title, then per testament: 1 header + its divisions
         val index = 1 + divisions.indexOf(book.division) + (if (book.division.testament == Testament.NEW) 2 else 1)
@@ -84,15 +102,46 @@ internal fun BookPickerPane(state: State, send: (Action) -> Unit) {
         contentPadding = WindowInsets.statusBars.asPaddingValues(),
     ) {
         item {
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Text(
                 stringResource(R.string.books),
                 style = VerbumTypography.editorialTitle,
                 color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier
+                modifier = Modifier.weight(1f)
                     .padding(start = Spacing.readingMargin, end = Spacing.readingMargin, top = Spacing.xl, bottom = Spacing.lg)
                     .semantics { heading() },
             )
+                IconButton(onClick = { send(Action.ToggleSearch) }, modifier = Modifier.padding(end = Spacing.readingMargin)) {
+                    Icon(if (state.searchVisible) Icons.Default.Close else Icons.Default.Search,
+                        contentDescription = stringResource(if (state.searchVisible) R.string.book_search_close else R.string.book_search_title),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+            }
+            if (state.searchVisible) {
+                OutlinedTextField(value = state.query, onValueChange = { send(Action.QueryChanged(it)) },
+                    placeholder = { Text(stringResource(R.string.book_search_placeholder)) },
+                    singleLine = true, modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.readingMargin).padding(bottom = Spacing.lg).focusRequester(requester),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                    keyboardActions = KeyboardActions(onSearch = { focus.clearFocus(); send(Action.SearchSubmitted) }))
+            }
         }
+        if (state.query.isNotBlank()) {
+            item {
+                Column(Modifier.fillMaxWidth().padding(horizontal = Spacing.readingMargin), verticalArrangement = Arrangement.spacedBy(Spacing.md)) {
+                    state.matchingReference?.let { reference ->
+                        TextButton(onClick = { focus.clearFocus(); send(Action.SearchSubmitted) }) { Text(reference.formatted, style = VerbumTypography.editorialHeadline) }
+                    }
+                    state.matchingBooks.forEach { book ->
+                        TextButton(onClick = { focus.clearFocus(); send(Action.BookTapped(book)) }, modifier = Modifier.fillMaxWidth()) {
+                            Text(book.localizedName, style = VerbumTypography.editorialHeadline, modifier = Modifier.fillMaxWidth())
+                        }
+                    }
+                    if (state.matchingReference == null && state.matchingBooks.isEmpty()) {
+                        Text(stringResource(R.string.book_search_empty), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
+            }
+        } else {
         for (testament in Testament.entries) {
             item {
                 Text(
@@ -117,6 +166,7 @@ internal fun BookPickerPane(state: State, send: (Action) -> Unit) {
             }
         }
         item { Spacer(Modifier.height(Spacing.xxxl * 2)) }
+        }
     }
 }
 

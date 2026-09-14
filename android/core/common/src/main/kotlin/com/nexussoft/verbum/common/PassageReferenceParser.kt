@@ -99,7 +99,15 @@ object PassageReferenceParser {
     private val SHAPE = Regex("""^\s*([1-3]?\s*\p{L}[\p{L}. ]*?)\s*(\d+)(?:\s*[:.]\s*(\d+)(?:\s*[-–—]\s*(\d+))?)?\s*$""")
     private val ROMAN_PREFIX = Regex("""^(I{1,3})\s+""")
 
-    private fun bookMatching(text: String, language: BookLanguage): BibleBook? = booksByKey(language)[normalizedKey(text)]
+    private fun bookMatching(text: String, language: BookLanguage): BibleBook? {
+        val key = normalizedKey(text)
+        // Exact accented names win: Jó is Job, while Jo is John.
+        booksByKey(language)[key]?.let { return it }
+        return BibleBook.canon.firstOrNull { book ->
+            (listOf(book.name, book.id, book.localizedName(language)) + book.abbreviations + book.localizedAbbreviations(language))
+                .any { BookMatcher.normalize(it) == BookMatcher.normalize(key) }
+        }
+    }
 
     /**
      * Lowercased, periods and whitespace removed, leading Roman numeral (when

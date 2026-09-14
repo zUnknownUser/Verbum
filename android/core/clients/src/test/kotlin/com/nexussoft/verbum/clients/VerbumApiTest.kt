@@ -37,6 +37,23 @@ class VerbumApiTest {
     }
 
     private val base = "http://test.local:8080"
+
+    @Test fun speechManifestIsCachedAndRefreshesAfterOneHour() = runTest {
+        val script = Script()
+        val first = "a".repeat(64); val second = "b".repeat(64)
+        script.responses += HttpResponse(200, """{"version":"$first"}""")
+        script.responses += HttpResponse(200, """{"version":"$second"}""")
+        var time = 0L
+        val api = VerbumApi(base, script, cache = ResponseCache(null), now = { time })
+        assertEquals(first, api.speechVersion("pt-BR"))
+        assertEquals(first, api.speechVersion("pt-BR"))
+        assertEquals(1, script.requests.size)
+        time = 3_600_001L
+        assertEquals(second, api.speechVersion("pt-BR"))
+        time = 7_200_002L
+        script.failWith = IOException("offline")
+        assertEquals(second, api.speechVersion("pt-BR"))
+    }
     private val emptyTimeline = """{"events":[],"entityNames":{}}"""
 
     @Test

@@ -86,7 +86,13 @@ public enum PassageReferenceParser {
     // MARK: - Book lookup
 
     private static func book(matching text: String, language: BookLanguage) -> BibleBook? {
-        booksByKey(for: language)[normalizedKey(text)]
+        let key = normalizedKey(text)
+        // Preserve accented exact names first: Jó (Job) must not become Jo (John).
+        if let exact = booksByKey(for: language)[key] { return exact }
+        return BibleBook.canon.first { book in
+            ([book.name, book.id, book.localizedName(for: language)] + book.abbreviations + book.localizedAbbreviations(for: language))
+                .contains { BookMatcher.normalize($0) == BookMatcher.normalize(key) }
+        }
     }
 
     /// Lowercased, periods and whitespace removed, leading Roman numeral (when

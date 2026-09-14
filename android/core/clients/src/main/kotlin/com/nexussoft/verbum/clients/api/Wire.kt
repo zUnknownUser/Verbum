@@ -144,4 +144,7 @@ internal data class WireAskResponse(
 internal data class WireRealtimeSession(val clientSecret: String, val expiresAt: Long, val model: String)
 
 @Serializable
-internal data class WireSpeechRequest(val text: String, val language: String)
+internal data class WireSpeechRequest(val text: String, val language: String, val revision: String? = null)
+
+@kotlinx.serialization.Serializable
+internal data class WireSpeechConfiguration(val version: String)

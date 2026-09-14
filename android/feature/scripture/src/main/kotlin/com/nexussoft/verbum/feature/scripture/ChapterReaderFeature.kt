@@ -20,9 +20,10 @@ object ChapterReaderFeature {
         val content: Content = Content.Idle,
         val selectedVerses: Set<Int> = emptySet(),
         val textScale: ReaderTextScale = ReaderTextScale.STANDARD,
+        val requestedVerses: IntRange? = reference.verses,
     ) {
         constructor(reference: PassageReference, textScale: ReaderTextScale) :
-            this(PassageReference(reference.bookId, reference.chapter), Content.Idle, emptySet(), textScale)
+            this(PassageReference(reference.bookId, reference.chapter), Content.Idle, emptySet(), textScale, reference.verses)
 
         val book: BibleBook? get() = BibleBook.book(reference.bookId)
         val title: String get() = reference.formatted
@@ -84,7 +85,8 @@ object ChapterReaderFeature {
             Action.Started -> if (state.content is Content.Loaded) state.only() else load(state, bibleClient)
             Action.RetryTapped -> load(state, bibleClient)
 
-            is Action.ChapterLoaded -> state.copy(content = Content.Loaded(action.verses)).with(
+            is Action.ChapterLoaded -> state.copy(content = Content.Loaded(action.verses),
+                selectedVerses = state.requestedVerses?.let { range -> action.verses.map { it.verseStart }.filter { it in range }.toSet() } ?: state.selectedVerses).with(
                 runEffect { preferences.setString(LAST_READ_KEY, LastRead.encode(state.reference)) },
             )
             is Action.ChapterFailed -> state.copy(content = Content.Failed(action.error)).only()
@@ -114,7 +116,7 @@ object ChapterReaderFeature {
     }
 
     private fun jump(state: State, reference: PassageReference, bibleClient: BibleClient): Reduced<State, Action> =
-        load(state.copy(reference = PassageReference(reference.bookId, reference.chapter), selectedVerses = emptySet()), bibleClient)
+        load(state.copy(reference = PassageReference(reference.bookId, reference.chapter), requestedVerses = reference.verses, selectedVerses = emptySet()), bibleClient)
 
     private fun load(state: State, bibleClient: BibleClient): Reduced<State, Action> {
         val reference = state.reference

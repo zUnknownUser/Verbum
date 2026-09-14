@@ -70,6 +70,7 @@ struct ChapterReaderView: View {
     // MARK: Page
 
     private func page(_ verses: [BiblePassage]) -> some View {
+        ScrollViewReader { proxy in
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
                 ChapterOpener(
@@ -78,6 +79,11 @@ struct ChapterReaderView: View {
                 )
                 .padding(.top, Spacing.xxxl)
                 .padding(.bottom, Spacing.xxl)
+
+                if let requested = store.requestedVerses, !verses.contains(where: { requested.contains($0.verseStart) }) {
+                    Text(L10n.t("Verse not found in this chapter."))
+                        .font(Typography.subheadline).foregroundStyle(Palette.inkSecondary)
+                }
 
                 Button { store.send(.contextTapped) } label: {
                     Label(L10n.t("Chapter context"), systemImage: "text.book.closed")
@@ -98,6 +104,7 @@ struct ChapterReaderView: View {
                         ) {
                             store.send(.verseTapped(verse.verseStart))
                         }
+                        .id(verse.verseStart)
                     }
                 }
 
@@ -138,6 +145,13 @@ struct ChapterReaderView: View {
         )
         .accessibilityAction(named: L10n.t("Next chapter")) { store.send(.nextChapterTapped) }
         .accessibilityAction(named: L10n.t("Previous chapter")) { store.send(.previousChapterTapped) }
+        .task(id: store.requestedVerses) {
+            if let requested = store.requestedVerses,
+               let verse = verses.first(where: { requested.contains($0.verseStart) }) {
+                proxy.scrollTo(verse.verseStart, anchor: .top)
+            }
+        }
+        }
     }
 
     private func unavailable(_ error: ReaderError) -> some View {

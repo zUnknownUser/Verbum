@@ -13,11 +13,13 @@ public struct ChapterReaderFeature {
         public var reference: PassageReference
         public var content: Content = .idle
         public var selectedVerses: Set<Int> = []
+        public var requestedVerses: ClosedRange<Int>?
         @Shared(.readerTextScale) public var textScale
         @Shared(.lastRead) public var lastRead
 
         public init(reference: PassageReference) {
             self.reference = PassageReference(bookId: reference.bookId, chapter: reference.chapter)
+            self.requestedVerses = reference.verses
         }
 
         public var book: BibleBook? { BibleBook.book(id: reference.bookId) }
@@ -91,6 +93,9 @@ public struct ChapterReaderFeature {
 
             case .chapterResponse(.success(let verses)):
                 state.content = .loaded(verses)
+                if let requested = state.requestedVerses {
+                    state.selectedVerses = Set(verses.map(\.verseStart).filter { requested.contains($0) })
+                }
                 let reference = state.reference
                 state.$lastRead.withLock { $0 = reference }
                 return .none
@@ -143,6 +148,7 @@ public struct ChapterReaderFeature {
 
     private func jump(_ state: inout State, to reference: PassageReference) -> Effect<Action> {
         state.reference = PassageReference(bookId: reference.bookId, chapter: reference.chapter)
+        state.requestedVerses = reference.verses
         state.selectedVerses = []
         return load(&state)
     }

@@ -113,9 +113,17 @@ class ChapterReaderFeatureTest {
     }
 
     @Test
-    fun goToReferenceDropsVersesAndLoadsChapter() = runTest {
+    fun requestedVersesAreSelectedFromLoadedText() = runTest {
+        val store = store(State(PassageReference("John", 3, 16..18), ReaderTextScale.STANDARD), StubBibleClient(chapterStub = { b, c -> verses(b, c, 20) }))
+        store.send(Action.Started) { it.copy(content = Content.Loading) }
+        store.receive(Action.ChapterLoaded(verses("John", 3, 20))) { it.copy(content = Content.Loaded(verses("John", 3, 20)), selectedVerses = setOf(16, 17, 18)) }
+        store.finish()
+    }
+
+    @Test
+    fun goToReferenceRetainsVerseTargetAndLoadsChapter() = runTest {
         val store = store(State(PassageReference("John", 3)), StubBibleClient(chapterStub = { b, c -> verses(b, c, 1) }))
-        store.send(Action.Go(PassageReference("1Sam", 17, 45..47))) { it.copy(reference = PassageReference("1Sam", 17), content = Content.Loading) }
+        store.send(Action.Go(PassageReference("1Sam", 17, 45..47))) { it.copy(reference = PassageReference("1Sam", 17), requestedVerses = 45..47, content = Content.Loading) }
         store.receive(Action.ChapterLoaded(verses("1Sam", 17, 1))) { it.copy(content = Content.Loaded(verses("1Sam", 17, 1))) }
         store.finish()
     }

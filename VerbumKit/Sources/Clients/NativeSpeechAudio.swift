@@ -65,20 +65,27 @@ private enum CloudSpeechRenderer {
         return PassageReference(bookId: nextBook.id, chapter: 1)
     }
 
-    /// One MP3 per exact chapter text, cached on disk. The backend also caches server-side by
+    /// One MP3 per exact chapter text and server voice version, cached on disk. The backend also caches server-side by
     /// the same text, so a cold local cache (after reinstall, or a pruned entry) still answers
     /// without paying for a new generation — only the round trip.
     static func render(_ text: String) async throws -> URL {
         let directory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
             .appendingPathComponent("CloudSpeech-pt-BR-v1", isDirectory: true)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        let key = SHA256.hash(data: Data(text.utf8)).map { String(format: "%02x", $0) }.joined()
+        // Cached manifest: one check/hour, last known version while offline. A backend
+        // without the new route keeps using legacy files until it is upgraded.
+        let version: String?
+        do { version = try await VerbumAPI.shared.speechVersion(language: "pt-BR") }
+        catch is CancellationError { throw CancellationError() }
+        catch { version = nil }
+        let identity = version.map { "\($0)\npt-BR\n\(text)" } ?? text
+        let key = SHA256.hash(data: Data(identity.utf8)).map { String(format: "%02x", $0) }.joined()
         let output = directory.appendingPathComponent(key + ".mp3")
         if FileManager.default.fileExists(atPath: output.path) {
             try? FileManager.default.setAttributes([.modificationDate: Date()], ofItemAtPath: output.path)
             return output
         }
-        let audio = try await VerbumAPI.shared.synthesizeSpeech(text: text, language: "pt-BR")
+        let audio = try await VerbumAPI.shared.synthesizeSpeech(text: text, language: "pt-BR", revision: version)
         guard !audio.isEmpty else { throw SpeechFailure.emptyAudio }
         try Task.checkCancellation()
         let temporary = directory.appendingPathComponent(UUID().uuidString + ".partial.mp3")

@@ -60,9 +60,20 @@ func splitText(text string) []string {
 	return parts
 }
 
+// Bump when generation/encoding changes. Default voice changes are included automatically.
+const audioRevision = "google-tts/chapter-v4/2200bytes-wav24k-crossfade60ms-mp3-128k"
+
+func AudioVersion(language string) (string, error) {
+	input, err := (Request{Text: "audio-version", Language: language}).normalized()
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSuffix(cacheKey(input), ".mp3"), nil
+}
+
 func cacheKey(input Request) string {
 	raw, _ := json.Marshal(input)
-	hash := sha256.Sum256(append([]byte("google-tts/chapter-v4/2200bytes-wav24k-crossfade60ms-mp3-128k\n"), raw...))
+	hash := sha256.Sum256(append([]byte(audioRevision+"\n"), raw...))
 	return hex.EncodeToString(hash[:]) + ".mp3"
 }
 

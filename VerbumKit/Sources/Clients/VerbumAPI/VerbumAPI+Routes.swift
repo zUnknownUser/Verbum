@@ -100,11 +100,18 @@ extension VerbumAPI {
 
     // MARK: speech
 
-    private struct SpeechRequest: Encodable { let text: String; let language: String }
+    private struct SpeechRequest: Encodable { let text: String; let language: String; let revision: String? }
+    private struct SpeechConfiguration: Decodable { let version: String }
+
+    public func speechVersion(language: String) async throws -> String {
+        let config: SpeechConfiguration = try await get("/v1/tts/config", query: [.init(name: "language", value: language)])
+        guard config.version.count == 64, config.version.allSatisfy({ $0.isHexDigit }) else { throw VerbumAPIError.malformedResponse }
+        return config.version
+    }
 
     /// `POST /v1/tts`: one complete chapter MP3 (Google Cloud Chirp 3 HD by default),
     /// server-cached by exact text and settings. Generation can take minutes.
-    public func synthesizeSpeech(text: String, language: String) async throws -> Data {
-        try await postForData("/v1/tts", body: SpeechRequest(text: text, language: language), timeout: Self.speechTimeout)
+    public func synthesizeSpeech(text: String, language: String, revision: String? = nil) async throws -> Data {
+        try await postForData("/v1/tts", body: SpeechRequest(text: text, language: language, revision: revision), timeout: Self.speechTimeout)
     }
 }

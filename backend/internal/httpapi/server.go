@@ -31,6 +31,7 @@ func New(s store.Store, now func() time.Time, rt realtimeBroker, embedder queryE
 	mux.HandleFunc("POST /v1/realtime/session", h.realtimeSession)
 	mux.HandleFunc("POST /v1/ask", h.ask)
 	mux.HandleFunc("POST /v1/tts", h.synthesizeSpeech)
+	mux.HandleFunc("GET /v1/tts/config", h.speechConfiguration)
 	return logging(mux)
 }
 

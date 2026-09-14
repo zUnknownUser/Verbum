@@ -49,6 +49,7 @@ var (
 // Request identifies a cached chapter by exact supplied text (translation-sensitive),
 // language, resolved voice, speed, pitch and format, with a provider/version namespace.
 type Request struct {
+	Revision string   `json:"revision,omitempty"`
 	Text     string   `json:"text"`
 	Language string   `json:"language"`
 	Voice    string   `json:"voice,omitempty"`
@@ -58,6 +59,13 @@ type Request struct {
 }
 
 func (r Request) normalized() (Request, error) {
+	if r.Revision != "" {
+		version, err := AudioVersion(r.Language)
+		if err != nil || version != r.Revision {
+			return r, fmt.Errorf("%w: audio version changed; refresh configuration", ErrInvalidInput)
+		}
+		r.Revision = "" // Concurrency guard, not part of the synthesis/cache identity.
+	}
 	if !utf8.ValidString(r.Text) || strings.TrimSpace(r.Text) == "" || len(r.Text) > MaxTextBytes {
 		return r, fmt.Errorf("%w: text must contain 1–100000 UTF-8 bytes", ErrInvalidInput)
 	}

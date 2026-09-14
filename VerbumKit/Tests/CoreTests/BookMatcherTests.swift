@@ -3,6 +3,13 @@ import Models
 @testable import Core
 
 @Suite struct BookMatcherTests {
+    @Test func portugueseNamesAndUnaccentedReferences() throws {
+        #expect(BookMatcher.books(matching: "salmos", language: .portuguese).first?.id == "Ps")
+        #expect(BookMatcher.books(matching: "genesis", language: .portuguese).first?.id == "Gen")
+        #expect(try PassageReferenceParser.parse("Joao 3:16", language: .portuguese) == PassageReference(bookId: "John", chapter: 3, verses: 16...16))
+        #expect(try PassageReferenceParser.parse("Jó 3", language: .portuguese).bookId == "Job")
+        #expect(try PassageReferenceParser.parse("Jo 3", language: .portuguese).bookId == "John")
+    }
     private func ids(_ query: String) -> [String] { BookMatcher.books(matching: query).map(\.id) }
 
     @Test func prefixOfName() {

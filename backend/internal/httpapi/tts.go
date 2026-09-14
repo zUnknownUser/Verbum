@@ -20,6 +20,18 @@ type TextToSpeech interface {
 	Synthesize(context.Context, tts.Request) ([]byte, error)
 }
 
+// No provider call: clients check this small manifest before reusing a chapter.
+func (h *handlers) speechConfiguration(w http.ResponseWriter, r *http.Request) {
+	version, err := tts.AudioVersion(r.URL.Query().Get("language"))
+	if err != nil {
+		writeProblem(w, 400, CodeMalformedRequest, "language must be pt-BR or en-US")
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Cache-Control", "public, max-age=3600")
+	_ = json.NewEncoder(w).Encode(map[string]string{"version": version})
+}
+
 func (h *handlers) synthesizeSpeech(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-store")
 	if h.tts == nil {

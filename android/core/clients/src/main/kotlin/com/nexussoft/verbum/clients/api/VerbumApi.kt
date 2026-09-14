@@ -274,8 +274,14 @@ class VerbumApi(
      * server-side by exact text and settings. Generation can take minutes. Never cached
      * client-side by this call — the caller decides whether/where to keep the bytes.
      */
-    suspend fun synthesizeSpeech(text: String, language: String): ByteArray {
-        val body = json.encodeToString(WireSpeechRequest.serializer(), WireSpeechRequest(text, language))
+    suspend fun speechVersion(language: String): String {
+        val version = get("/v1/tts/config", WireSpeechConfiguration.serializer(), "language" to language).version
+        require(version.matches(Regex("[a-fA-F0-9]{64}"))) { "Invalid audio version" }
+        return version
+    }
+
+    suspend fun synthesizeSpeech(text: String, language: String, revision: String? = null): ByteArray {
+        val body = json.encodeToString(WireSpeechRequest.serializer(), WireSpeechRequest(text, language, revision))
         return sendBinary(HttpRequest("POST", url("/v1/tts", emptyList()), body))
     }
 

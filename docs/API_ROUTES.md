@@ -81,6 +81,7 @@ Errors: 400 malformed input or a voice/setting Google rejects, 415 wrong `Conten
 
 ## Not routes, but worth knowing
 
+- `GET /v1/tts/config?language=pt-BR` — audio version for mobile cache invalidation, cached for one hour; no provider call. Pass its `version` as optional `revision` in `POST /v1/tts` to prevent deployment races.
 - `GET /healthz` — plain liveness check (`ok`), not in the OpenAPI spec, not versioned under `/v1`.
 - Nothing here requires auth today (`security: []`). `/me`-scoped routes (accounts, saved data) are
   planned for a later phase and will add authentication when they land.

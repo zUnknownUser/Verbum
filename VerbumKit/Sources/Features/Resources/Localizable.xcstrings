@@ -1,6 +1,11 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "Search books": {"localizations": {"pt-BR": {"stringUnit": {"state": "translated", "value": "Buscar livros"}}}},
+    "Close search": {"localizations": {"pt-BR": {"stringUnit": {"state": "translated", "value": "Fechar busca"}}}},
+    "Book, chapter or verse": {"localizations": {"pt-BR": {"stringUnit": {"state": "translated", "value": "Livro, capítulo ou versículo"}}}},
+    "No matching reference. Try John 3:16.": {"localizations": {"pt-BR": {"stringUnit": {"state": "translated", "value": "Nenhuma referência encontrada. Tente João 3:16."}}}},
+    "Verse not found in this chapter.": {"localizations": {"pt-BR": {"stringUnit": {"state": "translated", "value": "Versículo não encontrado neste capítulo."}}}},
     "%@ BC": {
       "localizations": {
         "pt-BR": {
@@ -993,12 +998,12 @@
         }
       }
     },
-    "How are you arriving today?": {
+    "How are you feeling today?": {
       "localizations": {
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Como você está chegando hoje?"
+            "value": "Como você está se sentindo hoje?"
           }
         }
       }

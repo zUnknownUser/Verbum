@@ -59,7 +59,7 @@ struct HomeView: View {
                     DailyVerseView(store: store.scope(state: \.dailyVerse, action: \.dailyVerse))
                 }
                 PassageCard(
-                    title: L10n.t("How are you arriving today?"),
+                    title: L10n.t("How are you feeling today?"),
                     subtitle: L10n.t("A starting point for exploring Scripture, at your own pace."),
                     symbol: "leaf"
                 ) { store.send(.arrivalTapped) }

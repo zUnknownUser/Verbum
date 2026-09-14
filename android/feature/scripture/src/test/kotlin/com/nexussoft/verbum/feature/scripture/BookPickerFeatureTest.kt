@@ -12,6 +12,18 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 class BookPickerFeatureTest {
+    @Test fun liveReferenceSearchAndClose() = runTest {
+        val store = TestStore(State(PassageReference("Gen", 1)), BookPickerFeature.reducer)
+        val reference = PassageReference("John", 3, 16..18)
+        store.send(Action.ToggleSearch) { it.copy(searchVisible = true) }
+        store.send(Action.QueryChanged("John 3:16-18")) { it.copy(query = "John 3:16-18", matchingReference = reference) }
+        store.send(Action.SearchSubmitted)
+        store.receive(Action.Delegate(DelegateAction.ChapterSelected(reference)))
+        store.send(Action.ToggleSearch) { it.copy(searchVisible = false, query = "", matchingReference = null) }
+        store.send(Action.QueryChanged("John 999")) { it.copy(query = "John 999") }
+        store.send(Action.SearchSubmitted)
+        store.finish()
+    }
     private val start = State(PassageReference("John", 3))
 
     @Test
