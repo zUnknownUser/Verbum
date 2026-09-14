@@ -2,7 +2,8 @@
 
 `openapi.yaml` is the wire shape of the backend the apps expect (docs/PRODUCT.md §45), written from
 the client interfaces that already exist in `VerbumKit/Sources/Clients` and `android/core/clients`.
-The backend (Go, `backend/`) implements it; the apps' live clients decode it.
+The backend (Go, `backend/`) implements it; the apps' live clients decode it. For what each route is
+*for*, in plain language, see [docs/API_ROUTES.md](../docs/API_ROUTES.md).
 
 `examples/` are responses generated from the fixtures the apps ship today (`EntityFixtureData`,
 `TimelineFixtureData`, `DailyVerses`), so they are also what the fixture clients answer. They are the

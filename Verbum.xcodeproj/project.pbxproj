@@ -287,7 +287,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VERBUM_API_BASE_URL = "http://192.168.0.10:8080";
+				VERBUM_API_BASE_URL = "https://api.vendlydigital.com.br";
 			};
 			name = Debug;
 		};
@@ -321,7 +321,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VERBUM_API_BASE_URL = "https://api.verbum.app";
+				VERBUM_API_BASE_URL = "https://api.vendlydigital.com.br";
 			};
 			name = Release;
 		};

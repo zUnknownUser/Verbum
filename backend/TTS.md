@@ -30,15 +30,22 @@ The service does not retrieve Scripture or decide which translation to read.
 
 ## Segmentation and continuous playback
 
-Texts split at a conservative 1000-byte target, below Google's 5000-byte ceiling,
-losslessly at sentence/word boundaries. Near-limit Chirp requests exceeded the
-60-second provider timeout during local validation, motivating smaller segments.
-falling back to valid UTF-8 boundaries for very long tokens. Whitespace-only
-segments need no speech call. Segments are requested sequentially as 24 kHz
-LINEAR16 WAV. FFmpeg joins their timeline and encodes a single 128 kbps MP3,
-with one duration/header and no independently encoded MP3 boundaries. Short
-texts use Google's MP3 directly. Natural pauses/prosody at sentence boundaries
-remain; subjective listening on the target device is still appropriate.
+Texts split at a 2200-byte target, below Google's 5000-byte ceiling, losslessly
+at sentence/word boundaries (falling back to valid UTF-8 boundaries for very
+long tokens). Near-limit Chirp requests exceeded the 60-second provider timeout
+during local validation, which is why this isn't Google's own ceiling; 2200 was
+re-validated against the real API without approaching that timeout. Whitespace-
+only segments need no speech call. Segments are requested sequentially as 24 kHz
+LINEAR16 WAV.
+
+Each segment is synthesized independently, so Chirp's prosody resets at every
+boundary — a hard cut between segments is audible as a mechanical restart.
+FFmpeg joins them with a 60ms crossfade at each join (blending pitch/volume
+across the seam) instead of a hard concat, then encodes a single 128 kbps MP3
+with one duration/header. Short texts (one segment) use Google's MP3 directly,
+untouched by any of this. Fewer, larger segments plus the crossfade were chosen
+over switching TTS providers: the voice model (Chirp 3 HD) was already
+Google's best available; the seam was the app's own assembly, not the model.
 
 The endpoint returns only after the entire MP3 is ready; this is continuous
 file playback, not streaming before generation completes. No verse timestamps

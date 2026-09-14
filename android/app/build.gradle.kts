@@ -32,7 +32,7 @@ android {
         }
         release {
             isMinifyEnabled = false
-            buildConfigField("String", "VERBUM_API_BASE_URL", "\"https://api.verbum.app\"")
+            buildConfigField("String", "VERBUM_API_BASE_URL", "\"https://api.vendlydigital.com.br\"")
         }
     }
 

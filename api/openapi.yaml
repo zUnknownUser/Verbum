@@ -22,8 +22,8 @@ info:
 security: []   # public, keyless read API; /me routes (Phase 7) will add auth here
 
 servers:
-  - url: https://api.verbum.app
-    description: production (to be created)
+  - url: https://api.vendlydigital.com.br
+    description: production (Cloudflare Tunnel to the dev machine)
   - url: http://localhost:8080
     description: local backend
 
@@ -45,8 +45,9 @@ paths:
       description: |
         Synthesizes the supplied plain text exactly; does not retrieve or alter Scripture.
         Maximum 100000 UTF-8 bytes of text and 1 MiB request body. Plain text only.
-        Automatically segments at 1000 bytes (below Google's 5000-byte limit) and returns one complete MP3, cached
-        persistently by exact chapter text and normalized voice/audio settings.
+        Automatically segments at 2200 bytes (below Google's 5000-byte limit) and returns one complete MP3,
+        crossfading segment joins to avoid an audible seam, cached persistently by exact chapter text and
+        normalized voice/audio settings.
         Defaults to pt-BR-Chirp3-HD-Aoede for Portuguese and en-US-Standard-A for English.
         Speed defaults to 1.0; pitch must be omitted or zero for Chirp 3 HD.
         Generation can take up to 10 minutes; no response audio is sent until complete.

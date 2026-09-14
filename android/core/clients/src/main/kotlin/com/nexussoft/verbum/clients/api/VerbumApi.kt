@@ -187,7 +187,7 @@ class VerbumApi(
     companion object {
         /** Mirrors the server's `Cache-Control: public, max-age=3600` on editorial routes. */
         const val FRESH_FOR_MS = 3_600_000L
-        const val PRODUCTION = "https://api.verbum.app"
+        const val PRODUCTION = "https://api.vendlydigital.com.br"
         /** The Android emulator's route to the host machine. */
         const val LOCAL = "http://10.0.2.2:8080"
 

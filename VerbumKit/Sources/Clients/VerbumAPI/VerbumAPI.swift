@@ -179,7 +179,7 @@ extension VerbumAPI {
     /// and OpenAI is only ever reached by the server (§56).
     public enum Configuration {
         public static let infoPlistKey = "VerbumAPIBaseURL"
-        public static let production = URL(string: "https://api.verbum.app")!
+        public static let production = URL(string: "https://api.vendlydigital.com.br")!
         public static let local = URL(string: "http://localhost:8080")!
 
         /// Resolved once, in this order: the launch argument / defaults key

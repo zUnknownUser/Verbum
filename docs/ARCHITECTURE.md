@@ -173,12 +173,15 @@ wrappers over it; fixtures stay the preview/test doubles. Features never see it 
   the device knows and says so (`SearchFeature.isOffline`).
 - **Contract tests.** Each `api/examples/*.json` is decoded through the live client and must equal
   the fixture client's answer for the same call — the same files the backend proves it serves.
-- **Where the backend is.** iOS: the `VERBUM_API_BASE_URL` build setting → `VerbumAPIBaseURL` in
-  Info.plist (Debug: the LAN dev box; Release: `https://api.verbum.app`), overridable at runtime with
-  the launch argument `-VerbumAPIBaseURL http://<ip>:8080`. Debug's `Info-Debug.plist` opens ATS for
-  plain-HTTP dev backends; Release keeps it intact. Android: the `VERBUM_API_BASE_URL` Gradle
-  property → `BuildConfig`, cleartext allowed only in the debug manifest. No key ships in either
-  app: the API is keyless and OpenAI is reached only by the server (§56).
+- **Where the backend is.** Both Debug and Release currently point to
+  `https://api.vendlydigital.com.br` — a Cloudflare Tunnel to the owner's dev machine, not a
+  deployed server; it only answers while that machine and its Docker containers are running.
+  iOS: the `VERBUM_API_BASE_URL` build setting → `VerbumAPIBaseURL` in Info.plist, overridable at
+  runtime with the launch argument `-VerbumAPIBaseURL http://<ip>:8080` (e.g. back to a LAN dev
+  box). Debug's `Info-Debug.plist` opens ATS for plain-HTTP dev backends; Release keeps it intact.
+  Android: the `VERBUM_API_BASE_URL` Gradle property → `BuildConfig`, cleartext allowed only in
+  the debug manifest. No key ships in either app: the API is keyless and OpenAI is reached only by
+  the server (§56).
 
 ## Ask Scripture (Task 12, client side)
 
