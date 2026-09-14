@@ -287,10 +287,18 @@ object AppFeature {
                         contentTab = Tab.HOME,
                         homePath = state.homePath + Destination.Reader(ScriptureFeature.State.initial(action.reference, deps.initialTextScale())),
                     ).only()
-                    is Action.TabChanged -> state.copy(
-                        tab = action.tab,
-                        contentTab = if (action.tab == Tab.HOME || action.tab == Tab.EXPLORE) action.tab else state.contentTab,
-                    ).only()
+                    is Action.TabChanged -> {
+                        // Tapping the already-selected tab pops it to root — SwiftUI's TabView
+                        // does this for free on iOS; NavigationSuiteScaffold does not, so it is
+                        // explicit here.
+                        val reselected = action.tab == state.tab
+                        state.copy(
+                            tab = action.tab,
+                            contentTab = if (action.tab == Tab.HOME || action.tab == Tab.EXPLORE) action.tab else state.contentTab,
+                            homePath = if (reselected && action.tab == Tab.HOME) emptyList() else state.homePath,
+                            explorePath = if (reselected && action.tab == Tab.EXPLORE) emptyList() else state.explorePath,
+                        ).only()
+                    }
                     is Action.Pop -> when (action.tab) {
                         Tab.HOME -> state.copy(homePath = state.homePath.dropLast(1)).only()
                         Tab.EXPLORE -> state.copy(explorePath = state.explorePath.dropLast(1)).only()

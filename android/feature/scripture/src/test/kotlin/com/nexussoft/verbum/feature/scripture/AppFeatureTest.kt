@@ -183,6 +183,24 @@ class AppFeatureTest {
     }
 
     @Test
+    fun reselectingTheCurrentTabPopsItToRoot() = runTest {
+        // Tapping the already-selected tab pops it to root, the way SwiftUI's TabView does for
+        // free on iOS — NavigationSuiteScaffold needs it spelled out.
+        val store = store()
+        store.send(Action.TabChanged(Tab.EXPLORE)) { it.copy(tab = Tab.EXPLORE, contentTab = Tab.EXPLORE) }
+        store.send(Action.Explore(ExploreFeature.Action.EntryTapped(ExploreFeature.Entry.PEOPLE)))
+        store.receive(Action.Explore(ExploreFeature.Action.Delegate(ExploreFeature.DelegateAction.Open(ExploreFeature.Entry.PEOPLE)))) {
+            it.copy(explorePath = listOf(Destination.Entities(EntityListFeature.State(BibleEntityType.PERSON))))
+        }
+        // Switching away and back does not by itself clear the stack.
+        store.send(Action.TabChanged(Tab.SEARCH)) { it.copy(tab = Tab.SEARCH) }
+        store.send(Action.TabChanged(Tab.EXPLORE)) { it.copy(tab = Tab.EXPLORE) }
+        // Reselecting the tab already on screen pops it to root.
+        store.send(Action.TabChanged(Tab.EXPLORE)) { it.copy(explorePath = emptyList()) }
+        store.finish()
+    }
+
+    @Test
     fun shelfChapterOpensTheReader() = runTest {
         val samuel = assertNotNull(BibleBook.book("1Sam"))
         val store = store()
