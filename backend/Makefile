@@ -1,4 +1,4 @@
-.PHONY: run test vet fmt build docker
+.PHONY: run test vet fmt build docker migrate seed
 
 run:      ## serve the fixtures on :8080
 	go run ./cmd/api
@@ -17,3 +17,9 @@ build:    ## static binary at bin/api
 
 docker:   ## image tagged verbum-api (run from repo root context)
 	cd .. && docker build -f backend/Dockerfile -t verbum-api .
+
+migrate:  ## apply db/migrations to VERBUM_DATABASE_URL (idempotent)
+	go run ./cmd/migrate
+
+seed:     ## load db/seed/fixtures.json into an empty, migrated database
+	go run ./cmd/seed

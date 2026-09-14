@@ -10,11 +10,14 @@ package main
 
 import (
 	"context"
+	"encoding/base64"
 	"errors"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -38,7 +41,12 @@ func main() {
 		slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stdout, nil)))
 	}
 
-	addr := env("VERBUM_ADDR", ":8080")
+	// VERBUM_ADDR wins; otherwise PORT (what Railway, Cloud Run and Fly inject) — the
+	// Dockerfile's ENV VERBUM_ADDR=:8080 is the fallback when neither is set.
+	addr := os.Getenv("VERBUM_ADDR")
+	if addr == "" {
+		addr = ":" + env("PORT", "8080")
+	}
 	fixtures := env("VERBUM_FIXTURES", "db/seed/fixtures.json")
 
 	var s store.Store
@@ -73,6 +81,12 @@ func main() {
 	// nil *realtime.Broker/*embeddings.Client/*ask.Service variable) in the disabled case:
 	// handing a typed nil pointer through an interface parameter would make handlers.go's
 	// `== nil` checks false, and the first request would panic instead of degrading gracefully.
+	// Hosts without secret files (Railway) pass the service-account JSON in
+	// GOOGLE_APPLICATION_CREDENTIALS_JSON; it is materialized to a private file so the
+	// ADC path in internal/tts stays unchanged.
+	if err := materializeGoogleCredentials(); err != nil {
+		slog.Error("TTS disabled: GOOGLE_APPLICATION_CREDENTIALS_JSON could not be written", "err", err)
+	}
 	var speech httpapi.TextToSpeech
 	if os.Getenv("GOOGLE_APPLICATION_CREDENTIALS") != "" {
 		client, err := tts.New()
@@ -124,6 +138,36 @@ func main() {
 	defer cancel()
 	_ = server.Shutdown(ctx)
 	slog.Info("stopped")
+}
+
+// materializeGoogleCredentials writes GOOGLE_APPLICATION_CREDENTIALS_JSON (raw JSON, or
+// base64 of it — easier to paste into a one-line variable editor) to a 0600 temp file and
+// points GOOGLE_APPLICATION_CREDENTIALS at it. A no-op when the file variable is already set.
+func materializeGoogleCredentials() error {
+	raw := strings.TrimSpace(os.Getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON"))
+	if raw == "" || os.Getenv("GOOGLE_APPLICATION_CREDENTIALS") != "" {
+		return nil
+	}
+	data := []byte(raw)
+	if !strings.HasPrefix(raw, "{") {
+		decoded, err := base64.StdEncoding.DecodeString(raw)
+		if err != nil {
+			return fmt.Errorf("neither JSON nor base64: %w", err)
+		}
+		data = decoded
+	}
+	f, err := os.CreateTemp("", "google-credentials-*.json")
+	if err != nil {
+		return err
+	}
+	if _, err = f.Write(data); err != nil {
+		f.Close()
+		return err
+	}
+	if err = f.Close(); err != nil {
+		return err
+	}
+	return os.Setenv("GOOGLE_APPLICATION_CREDENTIALS", f.Name())
 }
 
 func env(key, fallback string) string {

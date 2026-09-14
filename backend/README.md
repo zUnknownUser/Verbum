@@ -55,7 +55,9 @@ Rules the code follows (from docs/PRODUCT.md):
    stores, plus fixture-wide parity, missing content, cancellation and atomic seed tests.
    Migration `0002_content_order.sql` preserves editorial list order in relational storage.
 2. **Deploy** — the Dockerfile builds a nonroot Debian image with FFmpeg; any container host works
-   (Fly, Cloud Run, Railway, a VPS with Docker). Put a TLS terminator in front. Set `VERBUM_ADDR`.
+   (Fly, Cloud Run, Railway, a VPS with Docker). The server listens on `VERBUM_ADDR`, else `PORT`.
+   Railway walkthrough (Postgres + volume + variables): [DEPLOY.md](DEPLOY.md); `/railway.json`
+   at the repo root is its config-as-code. `cmd/migrate` applies `db/migrations` from anywhere.
 3. **Apps go live** — `.live` clients on iOS and Android against this URL, with contract tests on
    the same `api/examples/` (see `api/README.md`).
 4. **Search beyond names — done (2026-09-12).** `/v1/search`'s `passages` field, previously
