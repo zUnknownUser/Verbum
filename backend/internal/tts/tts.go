@@ -28,9 +28,12 @@ import (
 const endpoint = "https://texttospeech.googleapis.com/v1/text:synthesize"
 const MaxTextBytes = 100000
 
-// Conservative target below Google's 5000-byte ceiling: large Chirp segments
-// exceeded the provider timeout during local validation.
-const segmentBytes = 1000
+// Below Google's 5000-byte ceiling: near-limit Chirp segments exceeded the
+// provider timeout during local validation. Larger than the original 1000
+// (re-validated up to ~2200 without approaching that timeout) because every
+// join is an audible seam (see crossfadeSeconds): fewer, larger segments
+// mean fewer seams in a chapter's reading.
+const segmentBytes = 2200
 const maxResponseBytes = 32 << 20
 const GenerationTimeout = 10 * time.Minute
 

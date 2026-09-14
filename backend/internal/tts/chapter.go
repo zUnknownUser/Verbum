@@ -17,6 +17,16 @@ import (
 
 const maxAudioBytes = 64 << 20
 
+// Each segment is synthesized independently, so Chirp's prosody resets at every
+// join; a hard cut (the previous concat-demuxer approach) makes that audible as
+// a mechanical restart. A short crossfade blends consecutive segments' pitch/
+// volume across the join instead of cutting between them, at the cost of this
+// much overlapping audio per join — imperceptible against a spoken sentence,
+// enough to remove the seam. Segments this short don't occur: splitText only
+// produces one under segmentBytes long (the final one), and speech that brief
+// is at least a few hundred milliseconds.
+const crossfadeSeconds = 0.06
+
 // splitText preserves every UTF-8 byte, preferring sentence and word boundaries.
 func splitText(text string) []string {
 	var parts []string
@@ -52,7 +62,7 @@ func splitText(text string) []string {
 
 func cacheKey(input Request) string {
 	raw, _ := json.Marshal(input)
-	hash := sha256.Sum256(append([]byte("google-tts/chapter-v3/1000bytes-wav24k-mp3-128k\n"), raw...))
+	hash := sha256.Sum256(append([]byte("google-tts/chapter-v4/2200bytes-wav24k-crossfade60ms-mp3-128k\n"), raw...))
 	return hex.EncodeToString(hash[:]) + ".mp3"
 }
 
@@ -144,7 +154,7 @@ func (s *TextToSpeechService) generate(ctx context.Context, input Request) ([]by
 		return nil, ErrUnavailable
 	}
 	defer os.RemoveAll(dir)
-	var manifest strings.Builder
+	var names []string
 	for i, part := range parts {
 		if strings.TrimSpace(part) == "" {
 			continue
@@ -158,14 +168,35 @@ func (s *TextToSpeechService) generate(ctx context.Context, input Request) ([]by
 		if os.WriteFile(filepath.Join(dir, name), audio, 0600) != nil {
 			return nil, ErrUnavailable
 		}
-		fmt.Fprintf(&manifest, "file '%s'\n", name)
+		names = append(names, name)
 	}
-	if os.WriteFile(filepath.Join(dir, "segments.txt"), []byte(manifest.String()), 0600) != nil {
-		return nil, ErrUnavailable
+	if len(names) == 0 {
+		return nil, ErrResponse
 	}
 	// Fixed filenames and arguments; neither text nor user paths enter a shell.
-	// One PCM timeline encoded once avoids independent MP3 headers/encoder gaps.
-	cmd := exec.CommandContext(ctx, s.ffmpeg, "-nostdin", "-v", "error", "-f", "concat", "-safe", "1", "-i", "segments.txt", "-map", "0:a:0", "-c:a", "libmp3lame", "-b:a", "128k", "-threads", "1", "-fs", "67108864", "speech.mp3")
+	args := []string{"-nostdin", "-v", "error"}
+	for _, name := range names {
+		args = append(args, "-i", name)
+	}
+	if len(names) == 1 {
+		args = append(args, "-map", "0:a:0")
+	} else {
+		// Chain acrossfade left to right: each join blends the tail of the
+		// timeline so far with the head of the next segment (see crossfadeSeconds).
+		var filter strings.Builder
+		label := "[0:a]"
+		for i := 1; i < len(names); i++ {
+			out := fmt.Sprintf("[a%d]", i)
+			if i == len(names)-1 {
+				out = "[out]"
+			}
+			fmt.Fprintf(&filter, "%s[%d:a]acrossfade=d=%g:c1=tri:c2=tri%s;", label, i, crossfadeSeconds, out)
+			label = out
+		}
+		args = append(args, "-filter_complex", strings.TrimSuffix(filter.String(), ";"), "-map", "[out]")
+	}
+	args = append(args, "-c:a", "libmp3lame", "-b:a", "128k", "-threads", "1", "-fs", "67108864", "speech.mp3")
+	cmd := exec.CommandContext(ctx, s.ffmpeg, args...)
 	cmd.Dir = dir
 	if cmd.Run() != nil {
 		if ctx.Err() != nil {

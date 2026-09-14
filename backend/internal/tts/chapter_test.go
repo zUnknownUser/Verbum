@@ -30,7 +30,7 @@ func TestSplitTextLossless(t *testing.T) {
 			}
 		}
 	}
-	text := strings.Repeat("a", 600) + ". " + strings.Repeat("b", 600)
+	text := strings.Repeat("a", segmentBytes-100) + ". " + strings.Repeat("b", segmentBytes-100)
 	if !strings.HasSuffix(splitText(text)[0], ". ") {
 		t.Fatal("sentence boundary not preferred")
 	}
@@ -190,8 +190,10 @@ func TestChapterContinuousMP3(t *testing.T) {
 	os.WriteFile(path, audio, 0600)
 	out, err := exec.Command("ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", path).Output()
 	duration, _ := strconv.ParseFloat(strings.TrimSpace(string(out)), 64)
-	if err != nil || duration < float64(segments) || duration > float64(segments)+0.2 {
-		t.Fatalf("duration %f: %v", duration, err)
+	// Each of the segments-1 joins overlaps by crossfadeSeconds instead of a hard cut.
+	expected := float64(segments) - float64(segments-1)*crossfadeSeconds
+	if err != nil || duration < expected-0.05 || duration > expected+0.2 {
+		t.Fatalf("duration %f (expected ~%f): %v", duration, expected, err)
 	}
 	if err := exec.Command(ffmpeg, "-v", "error", "-i", path, "-f", "null", "-").Run(); err != nil {
 		t.Fatal("invalid MP3", err)
