@@ -203,11 +203,39 @@ def test_publish_preserves_editorial_data_and_other_languages(
         d.revision = "b" * 40
     named = next(r for r in updated.enrichment.records if r.id == "step.TIPNR.H1732")
     named.occurrences = named.occurrences[:1]
+    omitted_edge = copy.deepcopy(updated.content.relationships[1])
+    updated.content.relationships = updated.content.relationships[:1]
+    changed_edge = updated.content.relationships[0]
+    changed_edge.confidence = 0.5
+    changed_edge.sourceReferenceIds = [d.sourceId for d in updated.enrichment.datasets][:2]
     source2, approved2 = reviewed(updated, tmp_path, "2")
     publish(source2, approved2, database)
     with psycopg.connect(database) as conn:
         assert conn.execute("SELECT count(*) FROM entity_occurrences").fetchone()[0] == 2
         assert conn.execute("SELECT count(*) FROM source_datasets").fetchone()[0] == 6
+        assert (
+            conn.execute(
+                "SELECT confidence FROM relationships WHERE id=%s", (changed_edge.id,)
+            ).fetchone()[0]
+            == 0.5
+        )
+        assert [
+            r[0]
+            for r in conn.execute(
+                "SELECT source_id FROM relationship_sources "
+                "WHERE relationship_id=%s ORDER BY position",
+                (changed_edge.id,),
+            )
+        ] == changed_edge.sourceReferenceIds
+        assert [
+            r[0]
+            for r in conn.execute(
+                "SELECT source_id FROM relationship_sources "
+                "WHERE relationship_id=%s ORDER BY position",
+                (omitted_edge.id,),
+            )
+        ] == omitted_edge.sourceReferenceIds
+        assert conn.execute("SELECT count(*) FROM relationships").fetchone()[0] == 61
         assert (
             conn.execute("SELECT name FROM entity_localizations WHERE language='pt-BR'").fetchone()[
                 0

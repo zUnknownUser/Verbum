@@ -176,17 +176,28 @@ acidental. Definições longas de TBESG também ficaram fora do recorte.
   com citações verificadas/atribuição, sem chamadas pagas.
 - Teste Python → HTTP Go preserva os sete exemplos de contrato anteriores.
 
-O lote real e a fila pendente foram gerados em
+O lote real e os arquivos editoriais estão em
 `pipeline/work/step/a51237d7a5f2dd2e0f26ccc7156b92ad79703ba9/` (ignorado pelo Git).
-A publicação integral foi testada em PostgreSQL descartável. As migrações foram aplicadas ao banco
-de produção em 2026-09-15; as tabelas STEP continuam vazias, aguardando publicação editorial.
-O deploy configura a migração de schema como etapa prévia. O disparo automático por push depende
-da autorização do aplicativo GitHub do Railway: a tentativa de cadastrar o trigger foi recusada
-por falta de acesso ao repositório. Consulte o registro operacional em `backend/DEPLOY.md`.
+**Lucas revisou e aprovou o lote na conversa em 15/09/2026. O conteúdo foi publicado em produção.**
+A aprovação foi transcrita em `decisions.approved.json` e persistida no banco com o hash do lote;
+`decisions.json` preserva o rascunho inicial. `publication.json` registra o resultado, com um recibo
+resumido versionado em `pipeline/sources/step/publication-2026-09-15.json`.
 
-Próximos passos: revisão/publicação do lote; traduções editoriais PT-BR com fonte própria;
-interface de léxico; política explícita de retirada de registros; corpus de tokens alinhados e
-recuperação lexical com citações separadas, se a experiência do produto justificar.
+A primeira tentativa perdeu a conexão e foi desfeita integralmente. A publicação com relações em
+lote levou 29,8 segundos; a reexecução retornou `already_published`. Foram conferidos os 26.760
+registros, 29.763 ocorrências e 4.648 relações STEP. O backup anterior foi restaurado com sucesso
+em banco descartável. As migrações e o gatilho GitHub também foram verificados em produção.
+
+A busca dos dois apps agora inclui a seção **Termos originais / Original terms**, reutilizando
+os modelos, resultados e detalhe existentes. Glossas e identificadores detalhados continuam
+na API; não há uma nova interface de léxico completo. Use um build atualizado do app para ver
+essa seção. Um push no backend não atualiza automaticamente os aplicativos instalados.
+
+Roteiro funcional: [QA_STEP_2026-09-15.md](QA_STEP_2026-09-15.md).
+Próximo passo recomendado do MVP: completar o **Contexto editorial** (resumo fundamentado,
+quem fala, destinatários, situação histórica/literária), incluindo localização PT-BR e avaliação
+do percurso de leitura. A fonte STEP fornece evidências estruturadas, não substitui essa redação.
+Salvos, notas, Biblioteca/Jornada e onboarding continuam pendentes na auditoria.
 
 ### Arquivos da integração
 

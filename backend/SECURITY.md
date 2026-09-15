@@ -138,4 +138,9 @@ mutation permissions. No service-account key was added to the repository and no 
 deploy was triggered by the variable change. Updated mobile binaries are required for paid POSTs.
 Enabled `identitytoolkit.googleapis.com` in the ADC service account's project (`verbum-app1`),
 which is distinct from the mobile Firebase project. Verified Firebase configuration and user-read
-access using that service account; no user accounts were created and no paid API calls were made.
+access using that service account; this configuration check did not create user accounts or call paid APIs.
+
+After STEP publication, a temporary anonymous Firebase identity was used for one real Portuguese
+Ask request and one short TTS request. Both returned HTTP 200; Ask included verified passage
+references and STEP attribution. The temporary account was deleted immediately afterwards.
+Tokens and credentials were not written to the repository or test reports. Device QA remains separate.

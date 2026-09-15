@@ -1,0 +1,30 @@
+{
+  "publishedAt": "2026-09-15T16:48:02.771404+00:00",
+  "environment": "production",
+  "reviewer": "Lucas",
+  "result": {
+    "status": "published",
+    "bundleHash": "30db2cefb6ca752386d45d0ad54c48319f801b78f0f0c551a09ed09f4e634f73"
+  },
+  "reexecution": {
+    "status": "already_published",
+    "bundleHash": "30db2cefb6ca752386d45d0ad54c48319f801b78f0f0c551a09ed09f4e634f73"
+  },
+  "backup": "production-before-step-20260915.dump",
+  "sourceRevision": "a51237d7a5f2dd2e0f26ccc7156b92ad79703ba9",
+  "datasets": [
+    "TBESH",
+    "TBESG",
+    "TIPNR"
+  ],
+  "counts": {
+    "sourceRecords": 26760,
+    "occurrences": 29763,
+    "stepRelationships": 4648,
+    "totalEntities": 26782,
+    "totalRelationships": 4707,
+    "scriptureVerses": 31098
+  },
+  "approval": "Explicit approval by Lucas in the project conversation on 2026-09-15; transcribed into decisions.approved.json and persisted in content_publications.review.",
+  "backupRestoreVerified": true
+}

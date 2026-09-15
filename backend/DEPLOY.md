@@ -1,23 +1,43 @@
 # Deploying the API to Railway
 
-## Production rollout record — 2026-09-15
+## Verified production state — 2026-09-15
 
-- Pushed implementation `710bfdc` and explicit startup configuration `bb366f7` to `main`.
-- Applied migrations `0001` through `0005` with the existing migration command against production;
-  verified the new tables/view. Existing content remains 45 entities, 59 relationships and 31,098
-  Scripture verses. STEP content tables remain empty pending the existing editorial review.
-- The GitHub deployment trigger could not be registered: Railway reported that no project member
-  has repository access. Reauthorize the Railway GitHub App for `zUnknownUser/Verbum`, then connect
-  `main` and verify a trigger exists. A successful git push alone does not confirm deployment.
-- API images built successfully, but container creation stalled before application startup; the
-  previous image also stalled on rollback. Initial runtime logs repeatedly reported mounting the
-  audio cache volume. As a diagnostic, detached `api-volume` without deleting it; the database
-  volume was not changed. While detached, audio caching uses the container filesystem and does
-  not survive redeployment. Reattachment should be verified with a successful health check.
-- Reusing the built `bb366f7` image with the cache detached recovered the API (`c0a3f3c7`,
-  HTTP 200 health, search, entity, daily verse and TTS config; unauthenticated Ask returned 401).
-  Reattachment interrupted the healthy instance and queued its replacement, so the cache remains
-  detached pending infrastructure diagnosis. The original cache files remain on `api-volume`.
+- GitHub repository `zUnknownUser/Verbum`, branch `main`, has an active production trigger.
+  Push `37282da` automatically built and deployed; the mobile-only `aca7b63` push was correctly
+  skipped by backend watch patterns.
+- Deployment `6e0b27e6-6fa1-4e3e-8f3d-81452e819225` applied migrations `0001`–`0005`,
+  mounted the original `api-volume`, started API/TTS/Ask, and passed `/readyz` with HTTP 200.
+  The persistent audio volume is attached again; the database volume was preserved.
+- Lucas explicitly approved the unchanged STEP batch. It was published transactionally in
+  29.8 seconds after batching relationship writes; reexecution returned `already_published`.
+  Production contains 26,760 STEP records, 29,763 occurrences, 26,782 total entities,
+  4,707 total relationships and the same 31,098 Scripture verses.
+- Readiness, search, detail, context, graph, daily verse and TTS configuration were checked.
+  A real Portuguese Ask request returned cited passages and STEP attribution. A short TTS
+  request returned MP3 audio. The temporary anonymous Firebase test account was deleted.
+- The first publication attempt lost its remote connection and rolled back completely.
+  Its per-relationship round trips were replaced with batched writes in the existing publisher.
+  Publication and schema deployment must run sequentially: migrations can wait on publication locks.
+- The unused local `verbum-step-api-test` image and disposable restore-test resources were removed.
+  Active Railway images, rollback history and persistent data were retained.
+
+### Backups and recovery
+
+A PostgreSQL 18 custom-format backup taken before STEP publication is stored locally at
+`pipeline/work/backups/production-before-step-20260915.dump` (207,876,598 bytes, mode 0600,
+Git-ignored). Restoring it to a disposable PostgreSQL 18/pgvector database succeeded and reproduced
+45 entities, 59 relationships and 31,098 Scripture verses. Production PostgreSQL reported 18.6;
+use compatible PostgreSQL 18 client tools when making/restoring these backups.
+
+**Automatic backups remain a required owner action:** the Railway API denied permission to enable
+DAILY/WEEKLY schedules. In Railway, select the **pgvector service → Backups**, enable the schedules,
+then verify successful backups appear. No automated backup is claimed by this delivery.
+
+Restore to a **new, isolated database** with pgvector, validate counts and functional routes, and
+only then switch the API's database URL during a planned recovery. Do not restore the old dump over
+the live database: it predates STEP publication. Real approval is also persisted in
+`content_publications.review`; the compact publication receipt is versioned under
+`pipeline/sources/step/publication-2026-09-15.json`.
 
 ## Automated schema migration (2026-09-15)
 

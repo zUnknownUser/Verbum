@@ -1,8 +1,20 @@
 # Roadmap
 
-## STEP Bible — implementação local, 2026-09-15
+## STEP Bible — publicado em produção, 2026-09-15
 
-Integração estruturada TIPNR/TBESH/TBESG implementada no pipeline e Store existentes, com localização separada EN/PT-BR e proveniência. Snapshot completo importado e publicado em banco descartável para testes. Lote real aguarda revisão/publicação editorial. O push do código inclui migração automática do schema antes do deploy. Traduções PT-BR e UI lexical ficam como próximos passos. Detalhes em [STEP_BIBLE.md](STEP_BIBLE.md).
+Integração TIPNR/TBESH/TBESG publicada após revisão e aprovação explícita de Lucas: 26.760 registros,
+29.763 ocorrências e 4.648 relações, com localização EN/PT-BR separada e proveniência.
+Reexecução idempotente verificada. Publicação de relações agora usa lotes para evitar milhares de
+idas e voltas ao banco remoto. Busca mobile inclui termos originais; builds iOS/Android passaram.
+Ask e áudio foram verificados com autenticação real e conta temporária removida. Deploy automático,
+migrações, readiness com banco e montagem do cache persistente foram verificados no Railway.
+Backups automáticos aguardam habilitação pelo proprietário por restrição de permissão; backup
+manual pré-publicação foi restaurado em banco descartável. QA em dispositivos continua com o dono.
+Detalhes em [STEP_BIBLE.md](STEP_BIBLE.md); roteiro em [QA_STEP_2026-09-15.md](QA_STEP_2026-09-15.md).
+
+**Próximo item recomendado do MVP:** Contexto editorial completo e localizado, começando por um
+recorte pequeno com resumo, interlocutores, cenário histórico/literário e fontes revisadas.
+Depois, camada pessoal (salvos/notas/Biblioteca/Jornada) e onboarding ainda pendentes.
 
 ## Audit item 1 — paid API protection — 2026-09-15
 

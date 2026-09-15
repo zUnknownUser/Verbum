@@ -154,30 +154,7 @@ def write_content(cur, bundle: Bundle) -> None:
                 for i, s in enumerate(detail.sources)
             ],
         )
-    for position, edge in enumerate(content.relationships):
-        upsert(
-            cur,
-            "relationships",
-            {
-                "id": edge.id,
-                "source_entity_id": edge.sourceId,
-                "target_entity_id": edge.targetId,
-                "relationship_type": edge.type,
-                "confidence": edge.confidence,
-                "position": position,
-            },
-            "id",
-        )
-        replace_links(
-            cur,
-            "relationship_sources",
-            "relationship_id",
-            edge.id,
-            [
-                {"relationship_id": edge.id, "source_id": sid, "position": i}
-                for i, sid in enumerate(edge.sourceReferenceIds)
-            ],
-        )
+    write_relationships(cur, content.relationships)
     for position, event in enumerate(content.timeline):
         upsert(
             cur,
@@ -213,6 +190,29 @@ def write_content(cur, bundle: Bundle) -> None:
         cur.execute("DELETE FROM daily_verse_pool")
         for position, ref in enumerate(content.dailyVersePool):
             upsert(cur, "daily_verse_pool", {"position": position, **reference(ref)}, "position")
+
+
+def write_relationships(cur, edges) -> None:
+    # executemany pipelines remote writes. Per-edge execute calls made the official
+    # STEP graph spend minutes on round trips and risk connection timeouts.
+    # Replace sources only for submitted edges; omitted editorial edges survive.
+    if not edges:
+        return
+    cur.executemany(
+        "INSERT INTO relationships(id,source_entity_id,target_entity_id,relationship_type,"
+        "confidence,position) VALUES(%s,%s,%s,%s,%s,%s) ON CONFLICT(id) DO UPDATE SET "
+        "source_entity_id=EXCLUDED.source_entity_id,target_entity_id=EXCLUDED.target_entity_id,"
+        "relationship_type=EXCLUDED.relationship_type,confidence=EXCLUDED.confidence,"
+        "position=EXCLUDED.position",
+        [(e.id, e.sourceId, e.targetId, e.type, e.confidence, i) for i, e in enumerate(edges)],
+    )
+    cur.execute(
+        "DELETE FROM relationship_sources WHERE relationship_id=ANY(%s)", ([e.id for e in edges],)
+    )
+    cur.executemany(
+        "INSERT INTO relationship_sources(relationship_id,source_id,position) VALUES(%s,%s,%s)",
+        [(e.id, sid, i) for e in edges for i, sid in enumerate(e.sourceReferenceIds)],
+    )
 
 
 def write_enrichment(cur, bundle: Bundle) -> None:

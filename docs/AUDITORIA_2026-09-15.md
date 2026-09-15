@@ -2,9 +2,11 @@
 
 Data: 15/09/2026.
 
-Atualização após a auditoria: o primeiro item, proteção das APIs pagas, foi implementado
-localmente em 15/09, com identidade Firebase, limites e integração nos dois apps.
-Ativação/configuração em produção e QA real continuam pendentes. O texto abaixo
+Atualização após a auditoria: proteção das APIs pagas e integração STEP foram implantadas em
+produção em 15/09, com identidade Firebase, limites e integração nos dois apps. O proprietário
+revisou/aprovou o lote STEP, publicado com reexecução idempotente. Ask e TTS passaram por uma
+verificação real autenticada; aceite amplo de qualidade e QA em dispositivos continuam pendentes.
+O texto abaixo
 preserva o diagnóstico original; progresso em [ROADMAP.md](ROADMAP.md) e detalhes em
 [backend/SECURITY.md](../backend/SECURITY.md).
 
