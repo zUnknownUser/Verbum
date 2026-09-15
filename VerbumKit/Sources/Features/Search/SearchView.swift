@@ -76,6 +76,7 @@ public struct SearchView: View {
         entitySection(L10n.t("Places"), results.entities(of: .place), symbol: "mappin.and.ellipse")
         entitySection(L10n.t("Themes"), results.entities(of: .theme), symbol: "sparkle")
         entitySection(L10n.t("Events"), results.entities(of: .event), symbol: "clock")
+        entitySection(L10n.t("Original terms"), results.entities(of: .originalTerm), symbol: "text.book.closed")
     }
 
     @ViewBuilder

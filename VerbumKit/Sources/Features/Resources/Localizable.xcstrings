@@ -1400,6 +1400,16 @@
         }
       }
     },
+    "Original terms": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Termos originais"
+          }
+        }
+      }
+    },
     "Original term": {
       "localizations": {
         "pt-BR": {

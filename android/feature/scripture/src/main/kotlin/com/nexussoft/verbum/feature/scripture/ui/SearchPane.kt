@@ -135,6 +135,7 @@ private fun LazyListScope.resultSections(results: SearchResponse, send: (Action)
     entitySection(R.string.places, results.entities(BibleEntityType.PLACE), send)
     entitySection(R.string.themes, results.entities(BibleEntityType.THEME), send)
     entitySection(R.string.events, results.entities(BibleEntityType.EVENT), send)
+    entitySection(R.string.original_terms, results.entities(BibleEntityType.ORIGINAL_TERM), send)
 }
 
 private fun LazyListScope.entitySection(title: Int, entities: List<BibleEntity>, send: (Action) -> Unit) {
@@ -222,4 +223,3 @@ private fun NoResults(query: String, isOffline: Boolean) {
         )
     }
 }
-

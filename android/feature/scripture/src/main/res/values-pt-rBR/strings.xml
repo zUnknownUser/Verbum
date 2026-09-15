@@ -99,6 +99,7 @@
     <string name="kind_book">Livro</string>
     <string name="kind_prophecy">Profecia</string>
     <string name="kind_original_term">Termo original</string>
+    <string name="original_terms">Termos originais</string>
     <string name="kind_period">Período</string>
     <string name="err_offline_title">Você está offline</string>
     <string name="err_offline_message">Conecte-se para carregar este capítulo. Os capítulos que você já leu continuam disponíveis.</string>
