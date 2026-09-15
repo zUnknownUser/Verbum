@@ -136,3 +136,6 @@ backend ADC service account (`verbum-tts@verbum-app1.iam.gserviceaccount.com`) r
 `roles/firebaseauth.viewer` on `verbum-sw`, enabling revoked/disabled-user checks without user
 mutation permissions. No service-account key was added to the repository and no intermediate
 deploy was triggered by the variable change. Updated mobile binaries are required for paid POSTs.
+Enabled `identitytoolkit.googleapis.com` in the ADC service account's project (`verbum-app1`),
+which is distinct from the mobile Firebase project. Verified Firebase configuration and user-read
+access using that service account; no user accounts were created and no paid API calls were made.

@@ -178,8 +178,11 @@ acidental. Definições longas de TBESG também ficaram fora do recorte.
 
 O lote real e a fila pendente foram gerados em
 `pipeline/work/step/a51237d7a5f2dd2e0f26ccc7156b92ad79703ba9/` (ignorado pelo Git).
-A publicação integral foi testada em PostgreSQL descartável. O push dispara o deploy do código
-e a migração de schema; a publicação do lote de conteúdo continua sendo uma etapa editorial separada.
+A publicação integral foi testada em PostgreSQL descartável. As migrações foram aplicadas ao banco
+de produção em 2026-09-15; as tabelas STEP continuam vazias, aguardando publicação editorial.
+O deploy configura a migração de schema como etapa prévia. O disparo automático por push depende
+da autorização do aplicativo GitHub do Railway: a tentativa de cadastrar o trigger foi recusada
+por falta de acesso ao repositório. Consulte o registro operacional em `backend/DEPLOY.md`.
 
 Próximos passos: revisão/publicação do lote; traduções editoriais PT-BR com fonte própria;
 interface de léxico; política explícita de retirada de registros; corpus de tokens alinhados e

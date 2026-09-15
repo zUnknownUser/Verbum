@@ -1,5 +1,24 @@
 # Deploying the API to Railway
 
+## Production rollout record — 2026-09-15
+
+- Pushed implementation `710bfdc` and explicit startup configuration `bb366f7` to `main`.
+- Applied migrations `0001` through `0005` with the existing migration command against production;
+  verified the new tables/view. Existing content remains 45 entities, 59 relationships and 31,098
+  Scripture verses. STEP content tables remain empty pending the existing editorial review.
+- The GitHub deployment trigger could not be registered: Railway reported that no project member
+  has repository access. Reauthorize the Railway GitHub App for `zUnknownUser/Verbum`, then connect
+  `main` and verify a trigger exists. A successful git push alone does not confirm deployment.
+- API images built successfully, but container creation stalled before application startup; the
+  previous image also stalled on rollback. Initial runtime logs repeatedly reported mounting the
+  audio cache volume. As a diagnostic, detached `api-volume` without deleting it; the database
+  volume was not changed. While detached, audio caching uses the container filesystem and does
+  not survive redeployment. Reattachment should be verified with a successful health check.
+- Reusing the built `bb366f7` image with the cache detached recovered the API (`c0a3f3c7`,
+  HTTP 200 health, search, entity, daily verse and TTS config; unauthenticated Ask returned 401).
+  Reattachment interrupted the healthy instance and queued its replacement, so the cache remains
+  detached pending infrastructure diagnosis. The original cache files remain on `api-volume`.
+
 ## Automated schema migration (2026-09-15)
 
 `railway.json` runs `/app/migrate` as the pre-deploy command and explicitly starts `/app/api`. The Docker image includes
