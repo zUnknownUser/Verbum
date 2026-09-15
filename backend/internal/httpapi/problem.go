@@ -27,6 +27,9 @@ const (
 	CodeTTSRateLimited      = "tts_rate_limited"
 	CodeTTSTimeout          = "tts_timeout"
 	CodeTTSFailed           = "tts_failed"
+	CodeUnauthenticated     = "unauthenticated"
+	CodeAuthUnavailable     = "auth_unavailable"
+	CodeRateLimited         = "rate_limited"
 )
 
 func writeProblem(w http.ResponseWriter, status int, code, message string) {

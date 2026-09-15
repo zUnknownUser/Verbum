@@ -30,7 +30,7 @@ fun interface HttpTransport {
     suspend fun send(request: HttpRequest): HttpResponse
 }
 
-data class HttpRequest(val method: String, val url: String, val body: String? = null)
+data class HttpRequest(val method: String, val url: String, val body: String? = null, val headers: Map<String, String> = emptyMap())
 data class HttpResponse(val status: Int, val body: String)
 
 /** One HTTP exchange whose successful response is raw bytes (audio), not JSON text. */
@@ -49,6 +49,8 @@ object UrlConnectionHttpTransport : HttpTransport {
         val connection = URL(request.url).openConnection() as HttpURLConnection
         try {
             connection.requestMethod = request.method
+            connection.instanceFollowRedirects = false
+            request.headers.forEach { (key, value) -> connection.setRequestProperty(key, value) }
             connection.connectTimeout = 10_000
             connection.readTimeout = if (request.method == "POST") 45_000 else 15_000
             connection.setRequestProperty("Accept", "application/json")
@@ -73,6 +75,8 @@ object UrlConnectionBinaryHttpTransport : BinaryHttpTransport {
         val connection = URL(request.url).openConnection() as HttpURLConnection
         try {
             connection.requestMethod = request.method
+            connection.instanceFollowRedirects = false
+            request.headers.forEach { (key, value) -> connection.setRequestProperty(key, value) }
             connection.connectTimeout = 10_000
             connection.readTimeout = 630_000
             request.body?.let {
@@ -125,6 +129,9 @@ enum class ProblemCode(val wire: String) {
     TTS_RATE_LIMITED("tts_rate_limited"),
     TTS_TIMEOUT("tts_timeout"),
     TTS_FAILED("tts_failed"),
+    UNAUTHENTICATED("unauthenticated"),
+    AUTH_UNAVAILABLE("auth_unavailable"),
+    RATE_LIMITED("rate_limited"),
     UNKNOWN("");
 
     companion object {
@@ -182,6 +189,7 @@ class VerbumApi(
     private val transport: HttpTransport = UrlConnectionHttpTransport,
     private val cache: ResponseCache = ResponseCache(null),
     private val binaryTransport: BinaryHttpTransport = UrlConnectionBinaryHttpTransport,
+    private val tokenProvider: suspend (createIfNeeded: Boolean) -> String? = { null },
     private val now: () -> Long = System::currentTimeMillis,
 ) {
     companion object {
@@ -197,8 +205,8 @@ class VerbumApi(
     // ---- entities
 
     /** `GET /v1/entities/{id}` (§9). */
-    suspend fun entityDetail(id: EntityId): EntityDetail =
-        get("/v1/entities/${encode(id)}", WireEntityDetail.serializer()).toModel()
+    suspend fun entityDetail(id: EntityId, language: BookLanguage = BookLanguage.current): EntityDetail =
+        get("/v1/entities/${encode(id)}", WireEntityDetail.serializer(), "lang" to language.tag).toModel()
 
     /** `GET /v1/entities?type=` (§7). Passage nodes are never listed. */
     suspend fun entities(type: BibleEntityType, language: BookLanguage = BookLanguage.current): List<BibleEntity> =
@@ -207,8 +215,8 @@ class VerbumApi(
     // ---- graph
 
     /** `GET /v1/entities/{id}/graph?limit=` (§8, §44). One hop, never the whole graph. */
-    suspend fun graph(id: EntityId, limit: Int): GraphSnapshot =
-        get("/v1/entities/${encode(id)}/graph", WireGraphSnapshot.serializer(), "limit" to limit.coerceIn(1, 48).toString()).toModel()
+    suspend fun graph(id: EntityId, limit: Int, language: BookLanguage = BookLanguage.current): GraphSnapshot =
+        get("/v1/entities/${encode(id)}/graph", WireGraphSnapshot.serializer(), "limit" to limit.coerceIn(1, 48).toString(), "lang" to language.tag).toModel()
 
     // ---- context
 
@@ -216,8 +224,8 @@ class VerbumApi(
      * `GET /v1/passages/{Book.Chapter}/context` (§10). Verses are ignored: context is per chapter.
      * Missing coverage is `null`, never invented (§3.5).
      */
-    suspend fun context(reference: PassageReference): PassageContext? = try {
-        get("/v1/passages/${reference.bookId}.${reference.chapter}/context", WirePassageContext.serializer()).toModel()
+    suspend fun context(reference: PassageReference, language: BookLanguage = BookLanguage.current): PassageContext? = try {
+        get("/v1/passages/${reference.bookId}.${reference.chapter}/context", WirePassageContext.serializer(), "lang" to language.tag).toModel()
     } catch (e: VerbumApiException.Problem) {
         if (e.code == ProblemCode.CONTENT_UNAVAILABLE) null else throw e
     }
@@ -227,9 +235,9 @@ class VerbumApi(
     data class Timeline(val events: List<TimelineEvent>, val entityNames: Map<EntityId, String>)
 
     /** `GET /v1/timeline?entity=` (§4.2). Chronological, unknown dates last. */
-    suspend fun timeline(entity: EntityId? = null): Timeline {
-        val wire = if (entity == null) get("/v1/timeline", WireTimeline.serializer())
-        else get("/v1/timeline", WireTimeline.serializer(), "entity" to entity)
+    suspend fun timeline(entity: EntityId? = null, language: BookLanguage = BookLanguage.current): Timeline {
+        val wire = if (entity == null) get("/v1/timeline", WireTimeline.serializer(), "lang" to language.tag)
+        else get("/v1/timeline", WireTimeline.serializer(), "entity" to entity, "lang" to language.tag)
         return Timeline(wire.events.map { it.toModel() }, wire.entityNames)
     }
 
@@ -293,15 +301,19 @@ class VerbumApi(
      */
     internal suspend fun <T> get(path: String, strategy: DeserializationStrategy<T>, vararg query: Pair<String, String>): T {
         val url = url(path, query.toList())
-        cache.read(url)?.let { hit -> if (now() - hit.storedAt < FRESH_FOR_MS) return decode(hit.body, strategy) }
+        val token = if (path == "/v1/search") {
+            try { tokenProvider(false) } catch (e: CancellationException) { throw e } catch (_: Exception) { null }
+        } else null
+        val cacheKey = url + if (path == "/v1/search") (if (token == null) "#lexical" else "#semantic") else ""
+        cache.read(cacheKey)?.let { hit -> if (now() - hit.storedAt < FRESH_FOR_MS) return decode(hit.body, strategy) }
         val body = try {
-            send(HttpRequest("GET", url))
+            send(HttpRequest("GET", url, headers = token?.let { mapOf("Authorization" to "Bearer $it") } ?: emptyMap()))
         } catch (e: VerbumApiException.NetworkUnavailable) {
-            val stale = cache.read(url) ?: throw e
+            val stale = cache.read(cacheKey) ?: throw e
             return decode(stale.body, strategy)
         }
         val value = decode(body, strategy)
-        cache.write(url, body, now())
+        cache.write(cacheKey, body, now())
         return value
     }
 
@@ -320,7 +332,7 @@ class VerbumApi(
     /** One place that turns transport outcomes into [VerbumApiException] (§52). */
     private suspend fun send(request: HttpRequest): String {
         val response = try {
-            transport.send(request)
+            transport.send(authorize(request))
         } catch (e: VerbumApiException) {
             throw e
         } catch (e: CancellationException) {
@@ -338,7 +350,7 @@ class VerbumApi(
     /** [send]'s twin for a binary response (audio, not the JSON contract). */
     private suspend fun sendBinary(request: HttpRequest): ByteArray {
         val response = try {
-            binaryTransport.send(request)
+            binaryTransport.send(authorize(request))
         } catch (e: VerbumApiException) {
             throw e
         } catch (e: CancellationException) {
@@ -351,6 +363,12 @@ class VerbumApi(
             throw VerbumApiException.Problem(ProblemCode.of(problem?.code), response.status)
         }
         return response.bytes
+    }
+
+    private suspend fun authorize(request: HttpRequest): HttpRequest {
+        if (request.method != "POST") return request
+        val token = tokenProvider(true) ?: return request
+        return request.copy(headers = request.headers + ("Authorization" to "Bearer $token"))
     }
 
     private fun <T> decode(body: String, strategy: DeserializationStrategy<T>): T = try {

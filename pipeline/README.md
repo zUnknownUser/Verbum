@@ -1,5 +1,13 @@
 # pipeline/ — offline editorial content pipeline
 
+## STEP Bible (2026-09-15)
+
+`import-step` imports pinned official TIPNR/TBESH/TBESG selected fields as a version 2
+Bundle through the existing review/publish pipeline. Version 1 remains compatible.
+See [STEP_BIBLE.md](../docs/STEP_BIBLE.md) for architecture, licenses, commands,
+localization, exclusions and updating. Hybrid retrieval and Ask now read these associations.
+
+
 First content block of PRODUCT.md §32–33: import structured JSON, normalize and validate it,
 prepare proposals, require human review, and publish into PostgreSQL. Python ≥3.12, uv and
 checked-in `uv.lock`. No HTTP write endpoints or app changes.

@@ -1,5 +1,32 @@
 # Roadmap
 
+## STEP Bible — implementação local, 2026-09-15
+
+Integração estruturada TIPNR/TBESH/TBESG implementada no pipeline e Store existentes, com localização separada EN/PT-BR e proveniência. Snapshot completo importado e publicado em banco descartável para testes. Lote real aguarda revisão/publicação editorial. O push do código inclui migração automática do schema antes do deploy. Traduções PT-BR e UI lexical ficam como próximos passos. Detalhes em [STEP_BIBLE.md](STEP_BIBLE.md).
+
+## Audit item 1 — paid API protection — 2026-09-15
+
+- iOS 🟡 · Android 🟡 — Debug app builds succeed. Android client test sources compile;
+  mobile tests/device QA have not been executed in this delivery.
+- Owner approved anonymous Firebase identities on first Ask/voice/cloud-audio use;
+  normal reading/exploration stays public. Existing registered identities are reused.
+- Architecture preserved: token providers injected into the existing HTTP clients,
+  Firebase in adapters (`:core:auth` on Android), no SDK dependency in Android's pure
+  clients/models and no networking/authentication logic in views or reducers.
+- Go: official Firebase Admin SDK verifies project-bound ID tokens and revocation;
+  `httpapi.Protect` applies UID/IP/process/concurrency limits. Public search is lexical;
+  semantic embeddings require verified identity. Realtime model overrides are restricted.
+  Missing auth configuration disables paid routes. Ask body/Unicode validation hardened.
+- Verified: `go test ./...`, `go vet ./...`, HTTP race tests and OpenAPI 3.1 validation.
+  PostgreSQL integration tests skipped because no test database URL was configured;
+  this change does not modify stores or migrations. New mobile regression sources cover
+  header injection, public browsing, cache separation and credential-failure behavior.
+- **Not deployed.** Before rollout: enable Firebase Anonymous, set
+  `VERBUM_FIREBASE_PROJECT_ID`, grant ADC user-read permission, coordinate new clients
+  with server enforcement and perform real-account/device acceptance. Limits are local
+  to one process and do not constitute distributed or monetary quotas.
+- Configuration, limits and deployment acceptance: [backend/SECURITY.md](../backend/SECURITY.md).
+
 ## Discreet book search — 2026-09-14
 
 - iOS 🟡 · Android 🟡 — app builds succeed; Android regression test sources compile.

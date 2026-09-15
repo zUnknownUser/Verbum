@@ -24,6 +24,7 @@ import (
 	"verbum/backend/internal/ask"
 	"verbum/backend/internal/embeddings"
 	"verbum/backend/internal/httpapi"
+	"verbum/backend/internal/identity"
 	"verbum/backend/internal/realtime"
 	"verbum/backend/internal/store"
 	"verbum/backend/internal/store/memory"
@@ -113,6 +114,24 @@ func main() {
 		handler = httpapi.New(s, time.Now, nil, nil, nil, speech)
 	}
 
+	proxies, err := httpapi.ParseTrustedProxies(os.Getenv("VERBUM_TRUSTED_PROXIES"))
+	if err != nil {
+		slog.Error("invalid VERBUM_TRUSTED_PROXIES")
+		os.Exit(1)
+	}
+	var verify httpapi.VerifyIdentity
+	if project := os.Getenv("VERBUM_FIREBASE_PROJECT_ID"); project != "" {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		verify, err = identity.New(ctx, project)
+		cancel()
+		if err != nil {
+			slog.Error("Firebase verifier initialization failed: check project and ADC configuration")
+			os.Exit(1)
+		}
+	} else {
+		slog.Warn("paid API routes disabled: VERBUM_FIREBASE_PROJECT_ID not set; public search remains lexical")
+	}
+	handler = httpapi.Protect(handler, httpapi.AccessOptions{Verify: verify, TrustedProxies: proxies})
 	server := &http.Server{
 		Addr:              addr,
 		Handler:           handler,

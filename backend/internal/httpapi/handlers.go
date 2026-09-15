@@ -6,11 +6,13 @@ import (
 	"fmt"
 	"io"
 	"log/slog"
+	"mime"
 	"net/http"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"verbum/backend/internal/dailyverse"
 	"verbum/backend/internal/domain"
@@ -136,7 +138,7 @@ func (h *handlers) timeline(w http.ResponseWriter, r *http.Request) {
 // GET /v1/search?q=
 func (h *handlers) search(w http.ResponseWriter, r *http.Request) {
 	q := strings.TrimSpace(r.URL.Query().Get("q"))
-	if q == "" || len(q) > 200 {
+	if q == "" || !utf8.ValidString(q) || utf8.RuneCountInString(q) > 200 {
 		writeProblem(w, http.StatusBadRequest, CodeMalformedRequest, "q must be 1–200 characters")
 		return
 	}
@@ -178,7 +180,8 @@ func (h *handlers) searchPassages(ctx context.Context, q string) ([]domain.Passa
 	// request: semantic search is an enhancement on top of search that already works (§3.5
 	// spirit — never let optional AI-assisted retrieval take down a request that doesn't need it).
 	var embedding []float32
-	if h.embedder != nil {
+	lexicalOnly, _ := ctx.Value(accessContextKey{}).(bool)
+	if h.embedder != nil && !lexicalOnly {
 		embedStart := time.Now()
 		v, err := h.embedder.Embed(ctx, q)
 		slog.Info("search: query embedding", "reqID", id, "ms", time.Since(embedStart).Milliseconds(), "ok", err == nil)
@@ -239,6 +242,7 @@ func (h *handlers) realtimeSession(w http.ResponseWriter, r *http.Request) {
 		writeProblem(w, http.StatusServiceUnavailable, CodeRealtimeUnavailable, "realtime is not configured on this server")
 		return
 	}
+	_ = http.NewResponseController(w).SetWriteDeadline(time.Now().Add(20 * time.Second))
 	ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
 	defer cancel()
 	session, err := h.realtime.CreateSession(ctx, r.URL.Query().Get("model"), time.Minute)
@@ -258,24 +262,38 @@ func (h *handlers) realtimeSession(w http.ResponseWriter, r *http.Request) {
 // endpoint, same policy as realtime. The response must never be cached: it is one answer to one
 // question, not editorial content (contrast writeJSON's Cache-Control on every other route).
 func (h *handlers) ask(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "no-store")
 	if h.asker == nil {
 		writeProblem(w, http.StatusServiceUnavailable, CodeAskUnavailable, "ask is not configured on this server")
+		return
+	}
+	media, _, err := mime.ParseMediaType(r.Header.Get("Content-Type"))
+	if err != nil || media != "application/json" {
+		writeProblem(w, http.StatusUnsupportedMediaType, CodeMalformedRequest, "Content-Type must be application/json")
 		return
 	}
 	var body struct {
 		Question string `json:"question"`
 	}
-	if err := json.NewDecoder(io.LimitReader(r.Body, 8<<10)).Decode(&body); err != nil {
+	decoder := json.NewDecoder(http.MaxBytesReader(w, r.Body, 8<<10))
+	decoder.DisallowUnknownFields()
+	if err := decoder.Decode(&body); err != nil {
 		writeProblem(w, http.StatusBadRequest, CodeMalformedRequest, "body must be JSON {\"question\": string}")
 		return
 	}
+	if err := decoder.Decode(new(any)); err != io.EOF {
+		writeProblem(w, http.StatusBadRequest, CodeMalformedRequest, "body must contain one JSON object")
+		return
+	}
 	q := strings.TrimSpace(body.Question)
-	if q == "" || len(q) > maxAskQuestionLength {
+	if q == "" || !utf8.ValidString(q) || utf8.RuneCountInString(q) > maxAskQuestionLength {
 		writeProblem(w, http.StatusBadRequest, CodeMalformedRequest, fmt.Sprintf("question must be 1–%d characters", maxAskQuestionLength))
 		return
 	}
 	ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
 	defer cancel()
+	// Ask's 30-second operation must fit inside the connection's write deadline.
+	_ = http.NewResponseController(w).SetWriteDeadline(time.Now().Add(35 * time.Second))
 	answer, err := h.asker.Ask(ctx, q)
 	if err != nil {
 		slog.Error("ask", "reqID", reqid.From(ctx), "err", err)

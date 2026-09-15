@@ -9,9 +9,9 @@ import Models
 extension GraphClient {
     public static func live(api: VerbumAPI, language: BookLanguage = .current) -> GraphClient {
         GraphClient(
-            entity: { id in try await mapUnknown(id) { try await api.entityDetail(id).entity } },
-            neighbors: { id, limit in try await mapUnknown(id) { try await api.graph(id, limit: limit) } },
-            detail: { id in try await mapUnknown(id) { try await api.entityDetail(id) } },
+            entity: { id in try await mapUnknown(id) { try await api.entityDetail(id, language: language).entity } },
+            neighbors: { id, limit in try await mapUnknown(id) { try await api.graph(id, limit: limit, language: language) } },
+            detail: { id in try await mapUnknown(id) { try await api.entityDetail(id, language: language) } },
             entities: { type in
                 guard type != .passage else { return [] }
                 return try await api.entities(of: type, language: language)

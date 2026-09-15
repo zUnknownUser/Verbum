@@ -8,8 +8,8 @@
 // citation validation -> entity linking -> response. Intent/reference extraction is folded
 // into the existing hybrid retrieval (internal/store.SearchPassages) rather than a separate
 // stage — see backend/README.md for why. Entity linking only ever names an entity that has a
-// curated keyPassage covering a passage the model actually cited (never NL matching against
-// the question), so it inherits the same fabrication guarantees as passage citations.
+// curated key passage or sourced occurrence covering a passage the model actually cited
+// (never natural-language matching against the question), so it inherits the same fabrication guarantees as passage citations.
 package ask
 
 import (
@@ -31,6 +31,12 @@ type Retriever interface {
 	SearchPassages(ctx context.Context, queryText string, queryEmbedding []float32, limit int) ([]domain.PassageReference, error)
 	PassageText(ctx context.Context, translation string, refs []domain.PassageReference) (map[string]string, error)
 	EntitiesForPassages(ctx context.Context, refs []domain.PassageReference) ([]string, error)
+}
+
+// Source metadata is optional for legacy/fixture retrievers. It attributes structured
+// entity links; it never lets non-Scripture text pass the numbered citation gate.
+type entitySourceReader interface {
+	EntitySources(ctx context.Context, ids []string) ([]domain.SourceReference, error)
 }
 
 type Embedder interface {
@@ -176,8 +182,8 @@ func (s *Service) Ask(ctx context.Context, question string) (domain.AskResponse,
 	}
 
 	// Entity linking rides on citations already validated above — an entity is only ever named
-	// here because it has a curated keyPassage covering a passage the model actually cited, not
-	// because of any NL matching against the question. A failure here is an enrichment lost,
+	// here because a curated key passage or sourced occurrence covers a cited passage,
+	// rather than a name match in the question. A failure here is an enrichment lost,
 	// not an answer lost: it never turns a good answer into an error.
 	entityIDs, err := s.Store.EntitiesForPassages(ctx, cited)
 	if err != nil {
@@ -189,12 +195,30 @@ func (s *Service) Ask(ctx context.Context, question string) (domain.AskResponse,
 		entityIDs = []string{}
 	}
 
+	sources := translationSource(translation)
+	if reader, ok := s.Store.(entitySourceReader); ok && len(entityIDs) > 0 {
+		extra, sourceErr := reader.EntitySources(ctx, entityIDs)
+		if sourceErr != nil {
+			slog.Error("ask: entity provenance unavailable", "err", sourceErr)
+		} else {
+			seen := map[string]bool{}
+			for _, source := range sources {
+				seen[source.ID] = true
+			}
+			for _, source := range extra {
+				if !seen[source.ID] {
+					sources = append(sources, source)
+					seen[source.ID] = true
+				}
+			}
+		}
+	}
 	return domain.AskResponse{
 		Answer:               answer,
 		Summary:              reply.Summary,
 		PassageReferences:    cited,
 		EntityReferences:     entityIDs,
-		SourceReferences:     translationSource(translation),
+		SourceReferences:     sources,
 		Confidence:           confidence,
 		InterpretiveVariance: reply.InterpretiveVariance,
 	}, nil

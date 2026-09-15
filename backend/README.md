@@ -1,5 +1,16 @@
 # backend/ — the Verbum API (Go)
 
+## STEP Bible — 2026-09-15
+
+Apply migration `0005_structured_enrichment.sql` before running this backend. Official STEP data enters through the existing Python pipeline and becomes available to entity search, passage retrieval, context and Ask entity linking. See [STEP_BIBLE.md](../docs/STEP_BIBLE.md). No upstream STEP calls occur at runtime.
+
+**Access update (2026-09-15):** paid POST routes require a Firebase SDK ID token
+(anonymous or registered), with server verification and request limits. Public search
+does not call paid embeddings without a verified identity. Configure
+`VERBUM_FIREBASE_PROJECT_ID` and ADC permissions before deploying this release.
+See [SECURITY.md](SECURITY.md) for limits, tests, client rollout and proxy configuration.
+Historical references below to a wholly keyless API are superseded by this update.
+
 Google Cloud reading audio: `POST /v1/tts` (MP3, pt-BR/en-US). Configuration, sample requests,
 validation and App integration handoff: [TTS.md](TTS.md).
 

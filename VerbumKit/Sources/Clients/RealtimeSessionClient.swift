@@ -41,7 +41,7 @@ extension RealtimeSessionClient {
         RealtimeSessionClient(create: {
             do {
                 return try await api.realtimeSession()
-            } catch VerbumAPIError.problem(.realtimeUnavailable, _) {
+            } catch VerbumAPIError.problem(.realtimeUnavailable, _), VerbumAPIError.problem(.authUnavailable, _) {
                 throw VoiceError.unavailable
             } catch VerbumAPIError.problem(_, status: 404), VerbumAPIError.problem(_, status: 501) {
                 throw VoiceError.unavailable

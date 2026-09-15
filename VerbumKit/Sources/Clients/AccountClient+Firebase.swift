@@ -43,9 +43,10 @@ extension AccountClient {
         },
         anonymous: {
             try await mapped {
+                _ = try await FirebaseAPITokens.shared.token(createIfNeeded: true)
                 let auth = try configuredAuth()
-                if let user = auth.currentUser { return snapshot(user) }
-                return snapshot(try await auth.signInAnonymously().user)
+                guard let user = auth.currentUser else { throw AccountFailure.credentials }
+                return snapshot(user)
             }
         },
         resetPassword: { email in
@@ -81,6 +82,35 @@ extension AccountClient {
             }
         }
     )
+}
+
+/// Serializes first-use anonymous sign-in across Ask, voice, audio and the account
+/// sheet. Firebase owns token persistence/refresh; this actor never caches a token.
+actor FirebaseAPITokens {
+    static let shared = FirebaseAPITokens()
+    private var signingIn: Task<Void, Error>?
+
+    func token(createIfNeeded: Bool) async throws -> String? {
+        let auth = try configuredAuth()
+        if auth.currentUser == nil {
+            guard createIfNeeded else { return nil }
+            if let pending = signingIn {
+                try await pending.value
+            } else {
+                let task = Task<Void, Error> {
+                    if auth.currentUser == nil { _ = try await auth.signInAnonymously() }
+                }
+                signingIn = task
+                defer { signingIn = nil }
+                try await task.value
+            }
+        }
+        try Task.checkCancellation()
+        guard let user = auth.currentUser else { throw AccountFailure.credentials }
+        let token = try await user.getIDToken()
+        guard auth.currentUser?.uid == user.uid else { throw AccountFailure.credentials }
+        return token
+    }
 }
 
 private func configuredAuth() throws -> Auth {

@@ -1,5 +1,17 @@
 # Account integration — delivery 2026-09-13
 
+## Update — paid API identity, 2026-09-15
+
+Ask, voice-session creation and cloud audio now create a Firebase anonymous identity
+on first use if needed, with the owner's approval. Existing users are reused;
+ordinary reading/exploration does not create an identity. Both HTTP clients attach
+SDK ID tokens; the backend verifies them including revocation and applies UID/IP/
+process limits. Registration still links guest credentials to the existing UID.
+No cloud sync or user-data storage was added. Configuration and rollout requirements:
+[backend/SECURITY.md](../backend/SECURITY.md). The remaining sections describe the
+original account delivery; their statement that backend authorization is unimplemented
+is superseded by this update. Real-account/device validation is still pending.
+
 Additive implementation report for PRODUCT.md §48. PRODUCT.md and DESIGN_SYSTEM.md are unchanged.
 
 ## Entry and scope

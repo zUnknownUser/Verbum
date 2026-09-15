@@ -1,8 +1,15 @@
 # API routes
 
+## STEP Bible — 2026-09-15
+
+Detalhes de entidade possuem campos opcionais `sourceRecords` e `localizations`. As rotas de conteúdo aceitam `lang=en|pt|pt-BR`; metadados originais permanecem intactos. Busca por nomes/aliases/Strong’s e contexto incluem o enriquecimento publicado. Ver [STEP_BIBLE.md](STEP_BIBLE.md) e o OpenAPI atualizado.
+
 Human-readable companion to `api/openapi.yaml` (the actual contract — this doc explains what each
 route is *for*; the spec is authoritative on shapes, required fields and error codes). All routes
-are under `/v1`, public and keyless (`security: []`), except where noted. Errors are one shape,
+are under `/v1`. Editorial GETs remain public; paid POSTs require a Firebase ID token
+(anonymous identities are accepted). Search without identity stays lexical; verified
+identity enables semantic retrieval. UID/IP/process limits return 429 with Retry-After.
+See [API access](../backend/SECURITY.md). Errors are one shape,
 `Problem { code, message }` (§52) — apps switch on `code`, never show `message` to users.
 
 ## Content — Bible entities and their web
@@ -83,5 +90,5 @@ Errors: 400 malformed input or a voice/setting Google rejects, 415 wrong `Conten
 
 - `GET /v1/tts/config?language=pt-BR` — audio version for mobile cache invalidation, cached for one hour; no provider call. Pass its `version` as optional `revision` in `POST /v1/tts` to prevent deployment races.
 - `GET /healthz` — plain liveness check (`ok`), not in the OpenAPI spec, not versioned under `/v1`.
-- Nothing here requires auth today (`security: []`). `/me`-scoped routes (accounts, saved data) are
-  planned for a later phase and will add authentication when they land.
+- `/me`-scoped user-data routes remain planned. Their absence does not make paid generation
+  public: Ask, TTS and Realtime session creation already require verified Firebase identity.

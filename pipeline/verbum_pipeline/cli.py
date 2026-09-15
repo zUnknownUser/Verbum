@@ -8,7 +8,7 @@ from pathlib import Path
 import psycopg
 from pydantic import ValidationError
 
-from . import extract, normalize, publish, review, scripture
+from . import extract, normalize, publish, review, scripture, step
 from .files import digest, read, write
 from .models import Bundle, Provenance, Source
 
@@ -22,6 +22,15 @@ def main(argv=None) -> int:
         sub.add_argument("--output", type=Path, required=True)
         if command == "import":
             sub.add_argument("--fixtures", action="store_true")
+    sub = commands.add_parser("import-step")
+    sub.add_argument("source_dir", type=Path)
+    sub.add_argument("--manifest", type=Path, default=Path("sources/step/manifest.json"))
+    sub.add_argument("--mapping", type=Path, default=Path("sources/step/entity-map.json"))
+    sub.add_argument(
+        "--corpus", type=Path, default=Path("../VerbumKit/Sources/Clients/Resources/web.tsv")
+    )
+    sub.add_argument("--output", type=Path, required=True)
+    sub.add_argument("--report", type=Path, required=True)
     sub = commands.add_parser("review")
     sub.add_argument("source", type=Path)
     sub.add_argument("--queue", type=Path, required=True)
@@ -51,7 +60,13 @@ def main(argv=None) -> int:
             sub.add_argument("--allow-fixtures", action="store_true")
     args = parser.parse_args(argv)
     try:
-        if args.command == "import":
+        if args.command == "import-step":
+            if args.output.exists() or args.report.exists() or args.output == args.report:
+                raise ValueError("output and report need distinct, unused paths")
+            bundle, report = step.build(args.source_dir, args.manifest, args.mapping, args.corpus)
+            write(args.output, bundle.model_dump())
+            write(args.report, report)
+        elif args.command == "import":
             normalize.import_source(args.source, args.output, fixtures=args.fixtures)
         elif args.command == "normalize":
             normalize.normalize(args.source, args.output)

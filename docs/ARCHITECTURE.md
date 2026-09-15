@@ -1,6 +1,22 @@
 # Architecture
 
+## STEP Bible — 2026-09-15
+
+O adaptador STEP reutiliza o pipeline editorial e as entidades/relações existentes. A migração 0005 acrescenta proveniência por revisão, registros externos, localizações independentes e ocorrências bíblicas. O Store existente integra essas ocorrências no contexto e RAG. Ver [STEP_BIBLE.md](STEP_BIBLE.md).
+
 > How the two apps are built. Product rules live in PRODUCT.md; visual rules in DESIGN_SYSTEM.md.
+
+## Paid API identity — 2026-09-15
+
+Existing feature/client boundaries are preserved. `VerbumAPI`/`VerbumApi` receive an
+injected token provider; their production composition uses the Firebase adapter.
+Only a paid POST creates an anonymous user when needed. Public GETs stay independent
+of Firebase, while search may reuse an existing identity for semantic retrieval.
+Android Firebase code stays in `:core:auth`; `:core:clients` remains pure JVM.
+The Go `identity` adapter uses the Admin SDK; `httpapi.Protect`, installed by `cmd/api`,
+owns verification and UID/IP/process/concurrency limits. Domain stores and synthesis
+remain behind their existing interfaces. This supersedes the old keyless-paid-API
+description below. Operational contract: [SECURITY.md](../backend/SECURITY.md).
 
 ## Layering (both platforms)
 

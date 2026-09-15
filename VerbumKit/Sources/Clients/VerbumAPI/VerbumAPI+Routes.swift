@@ -9,8 +9,8 @@ extension VerbumAPI {
     // MARK: entities
 
     /// `GET /v1/entities/{id}` (§9).
-    public func entityDetail(_ id: EntityID) async throws -> EntityDetail {
-        try await get("/v1/entities/\(id)")
+    public func entityDetail(_ id: EntityID, language: BookLanguage = .current) async throws -> EntityDetail {
+        try await get("/v1/entities/\(id)", query: [Self.lang(language)])
     }
 
     /// `GET /v1/entities?type=` (§7). Passage nodes are never listed.
@@ -22,15 +22,15 @@ extension VerbumAPI {
     // MARK: graph
 
     /// `GET /v1/entities/{id}/graph?limit=` (§8, §44). One hop, never the whole graph.
-    public func graph(_ id: EntityID, limit: Int) async throws -> GraphSnapshot {
-        try await get("/v1/entities/\(id)/graph", query: [.init(name: "limit", value: String(min(max(limit, 1), 48)))])
+    public func graph(_ id: EntityID, limit: Int, language: BookLanguage = .current) async throws -> GraphSnapshot {
+        try await get("/v1/entities/\(id)/graph", query: [.init(name: "limit", value: String(min(max(limit, 1), 48))), Self.lang(language)])
     }
 
     // MARK: context
 
     /// `GET /v1/passages/{Book.Chapter}/context` (§10). Verses are ignored:
     /// context is per chapter. Missing coverage is `nil`, never invented (§3.5).
-    public func context(_ reference: PassageReference) async throws -> PassageContext? {
+    public func context(_ reference: PassageReference, language: BookLanguage = .current) async throws -> PassageContext? {
         struct Wire: Decodable {
             let reference: PassageReference
             let entities: [BibleEntity]
@@ -38,7 +38,7 @@ extension VerbumAPI {
             let sources: [SourceReference]
         }
         do {
-            let wire: Wire = try await get("/v1/passages/\(reference.bookId).\(reference.chapter)/context")
+            let wire: Wire = try await get("/v1/passages/\(reference.bookId).\(reference.chapter)/context", query: [Self.lang(language)])
             return PassageContext(reference: wire.reference, entities: wire.entities, relatedPassages: wire.relatedPassages, sources: wire.sources, isFixture: false)
         } catch VerbumAPIError.problem(.contentUnavailable, _) {
             return nil
@@ -54,8 +54,8 @@ extension VerbumAPI {
     }
 
     /// `GET /v1/timeline?entity=` (§4.2). Chronological, unknown dates last.
-    public func timeline(entity: EntityID? = nil) async throws -> Timeline {
-        try await get("/v1/timeline", query: entity.map { [.init(name: "entity", value: $0)] } ?? [])
+    public func timeline(entity: EntityID? = nil, language: BookLanguage = .current) async throws -> Timeline {
+        try await get("/v1/timeline", query: (entity.map { [.init(name: "entity", value: $0)] } ?? []) + [Self.lang(language)])
     }
 
     // MARK: search

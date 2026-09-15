@@ -29,9 +29,9 @@ import com.nexussoft.verbum.models.TimelineEvent
 // `.live` values in `Clients+Live.swift`.
 
 class LiveGraphClient(private val api: VerbumApi, private val language: () -> BookLanguage = { BookLanguage.current }) : GraphClient {
-    override suspend fun entity(id: EntityId): BibleEntity = mapUnknown(id) { api.entityDetail(id).entity }
-    override suspend fun neighbors(id: EntityId, limit: Int): GraphSnapshot = mapUnknown(id) { api.graph(id, limit) }
-    override suspend fun detail(id: EntityId): EntityDetail = mapUnknown(id) { api.entityDetail(id) }
+    override suspend fun entity(id: EntityId): BibleEntity = mapUnknown(id) { api.entityDetail(id, language()).entity }
+    override suspend fun neighbors(id: EntityId, limit: Int): GraphSnapshot = mapUnknown(id) { api.graph(id, limit, language()) }
+    override suspend fun detail(id: EntityId): EntityDetail = mapUnknown(id) { api.entityDetail(id, language()) }
     override suspend fun entities(type: BibleEntityType): List<BibleEntity> =
         if (type == BibleEntityType.PASSAGE) emptyList() else api.entities(type, language())
 
@@ -88,7 +88,7 @@ class LiveAskScriptureClient(private val api: VerbumApi) : AskScriptureClient {
     override suspend fun ask(question: String): ScriptureAnswer = try {
         api.ask(question.trim().take(500))
     } catch (e: VerbumApiException.Problem) {
-        if (e.code == ProblemCode.ASK_UNAVAILABLE || e.status == 404 || e.status == 501) throw AskScriptureException.Unavailable
+        if (e.code == ProblemCode.ASK_UNAVAILABLE || e.code == ProblemCode.AUTH_UNAVAILABLE || e.status == 404 || e.status == 501) throw AskScriptureException.Unavailable
         throw AskScriptureException.Failed
     } catch (e: VerbumApiException.NetworkUnavailable) {
         throw AskScriptureException.NetworkUnavailable
@@ -102,7 +102,7 @@ class LiveRealtimeSessionClient(private val api: VerbumApi) : RealtimeSessionCli
     override suspend fun create(): RealtimeSession = try {
         api.realtimeSession()
     } catch (e: VerbumApiException.Problem) {
-        if (e.code == ProblemCode.REALTIME_UNAVAILABLE || e.status == 404 || e.status == 501) throw VoiceException.Unavailable
+        if (e.code == ProblemCode.REALTIME_UNAVAILABLE || e.code == ProblemCode.AUTH_UNAVAILABLE || e.status == 404 || e.status == 501) throw VoiceException.Unavailable
         throw VoiceException.Failed
     } catch (e: VerbumApiException.NetworkUnavailable) {
         throw VoiceException.NetworkUnavailable

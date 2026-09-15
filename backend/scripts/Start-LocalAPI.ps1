@@ -25,7 +25,7 @@ try {
         $env:VERBUM_DATABASE_URL = 'postgres://verbum:verbum@db:5432/verbum?sslmode=disable'
     }
     & docker run -d --name $ContainerName --network verbum-backend_default `
-        -p "${Port}:8080" -e VERBUM_DATABASE_URL -e OPENAI_API_KEY `
+        -p "${Port}:8080" -e VERBUM_DATABASE_URL -e OPENAI_API_KEY -e VERBUM_FIREBASE_PROJECT_ID `
         -e GOOGLE_APPLICATION_CREDENTIALS=/run/secrets/google-tts.json `
         --mount "type=volume,source=verbum-tts-cache,target=/var/cache/verbum/tts" `
         --mount "type=bind,source=$credential,target=/run/secrets/google-tts.json,readonly" $Image

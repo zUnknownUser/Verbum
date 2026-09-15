@@ -39,8 +39,9 @@ class FirebaseAccountClient : AccountClient {
         requireNotNull(result.user).snapshot()
     }
     override suspend fun anonymous() = mapped {
+        FirebaseApiTokens.token(createIfNeeded = true)
         val auth = auth()
-        (auth.currentUser ?: requireNotNull(auth.signInAnonymously().await().user)).snapshot()
+        requireNotNull(auth.currentUser).snapshot()
     }
     override suspend fun resetPassword(email: String) {
         try { mapped { auth().sendPasswordResetEmail(email).await(); Unit } }

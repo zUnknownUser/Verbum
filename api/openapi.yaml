@@ -10,7 +10,8 @@ info:
     break before a user does.
 
     Conventions
-    - Read-only, keyless, cacheable (`Cache-Control` + `ETag`) for everything under /v1 that is not /me.
+    - Editorial GET routes are public and cacheable. Paid POST routes require a Firebase ID token.
+    - Public search is lexical; a verified identity enables paid semantic retrieval.
     - Scripture text is NOT served here: the apps read it from bible.helloao.org (and the bundled WEB).
       References are structured (`PassageReference`), never prose, so the apps render them in the
       reader's translation and language.
@@ -19,11 +20,11 @@ info:
     - Errors are one shape (`Problem`) with a small `code` vocabulary (§52); the apps map codes to
       states and never show `message` to users.
     - Ids are opaque strings. Fixture ids look like `fixture.person.david`; production ids may differ.
-security: []   # public, keyless read API; /me routes (Phase 7) will add auth here
+security: []   # editorial content stays public; paid operations override this below
 
 servers:
   - url: https://api.vendlydigital.com.br
-    description: production (Cloudflare Tunnel to the dev machine)
+    description: production API (Railway deployment recorded in backend/DEPLOY.md)
   - url: http://localhost:8080
     description: local backend
 
@@ -62,6 +63,8 @@ paths:
           description: Unsupported or missing language.
   /v1/tts:
     post:
+      security:
+        - FirebaseIDToken: []
       tags: [tts]
       operationId: synthesizeSpeech
       summary: Generate MP3 reading audio with Google Cloud Text-to-Speech.
@@ -90,6 +93,7 @@ paths:
               english:
                 externalValue: examples/tts/request-en-US.json
       responses:
+        '401': { $ref: '#/components/responses/Unauthenticated' }
         '200':
           description: MP3 bytes, ready to save or play (not JSON/base64).
           content:
@@ -111,7 +115,11 @@ paths:
             application/problem+json:
               schema: { $ref: '#/components/schemas/Problem' }
         '429':
-          description: Google quota exhausted; tts_rate_limited.
+          description: API limit reached (rate_limited) or Google quota exhausted (tts_rate_limited).
+          headers:
+            Retry-After:
+              description: Seconds to wait; supplied for API limits.
+              schema: { type: integer, example: 60 }
           content:
             application/problem+json:
               schema: { $ref: '#/components/schemas/Problem' }
@@ -121,7 +129,7 @@ paths:
             application/problem+json:
               schema: { $ref: '#/components/schemas/Problem' }
         '503':
-          description: TTS disabled, credential/permission failure or provider unavailable; tts_unavailable.
+          description: TTS or Firebase authentication unavailable; tts_unavailable or auth_unavailable.
           content:
             application/problem+json:
               schema: { $ref: '#/components/schemas/Problem' }
@@ -137,6 +145,7 @@ paths:
       summary: One entity's page (§9) — the facts, key passages, sources.
       description: Backs `GraphClient.detail(id)` and `GraphClient.entity(id)` (the apps read `.entity` from it).
       parameters:
+        - $ref: '#/components/parameters/Lang'
         - $ref: '#/components/parameters/EntityId'
       responses:
         '200':
@@ -187,6 +196,7 @@ paths:
         a balanced dozen themselves (`GraphLayout.balanced`), so the server should return nodes in a
         stable, meaningful order (by edge confidence desc, then name) rather than by kind.
       parameters:
+        - $ref: '#/components/parameters/Lang'
         - $ref: '#/components/parameters/EntityId'
         - name: depth
           in: query
@@ -216,6 +226,7 @@ paths:
         **Missing coverage is 404 with code `content_unavailable`**, which the apps show as
         "no context yet" — never a generated explanation (§3.5).
       parameters:
+        - $ref: '#/components/parameters/Lang'
         - name: reference
           in: path
           required: true
@@ -241,6 +252,7 @@ paths:
         Order: by `startYear`, then longer spans first, unknown dates last. `entityNames` saves the
         apps one round-trip per chip (today they call /entities/{id} for each).
       parameters:
+        - $ref: '#/components/parameters/Lang'
         - name: entity
           in: query
           required: false
@@ -267,6 +279,9 @@ paths:
 
   /v1/search:
     get:
+      security:
+        - {}
+        - FirebaseIDToken: []
       tags: [search]
       operationId: search
       summary: References, books and entities for a query (§27–28).
@@ -279,10 +294,12 @@ paths:
         `passages` (2026-09-12): hybrid lexical (Postgres full-text) + semantic (pgvector cosine
         similarity against a server-side query embedding) retrieval over a Scripture text corpus
         (currently WEB, English only). Ranking blends both channels' scores — a first heuristic,
-        not a calibrated relevance model. Direct-reference priority above is a client-side
-        concern still; the server does not special-case a query that is itself a reference.
-        Falls back to lexical-only, silently, when no embedding model is configured or a query
-        embedding call fails — never a failed request.
+        not a calibrated relevance model. Verified direct references bypass embeddings on the server.
+        A missing identity uses lexical/entity/reference search without a paid embedding call.
+        A valid Firebase token (including anonymous users) enables semantic retrieval.
+        Rate limits return 429 with Retry-After; invalid supplied tokens return 401.
+        Missing Firebase configuration with a supplied token returns 503.
+        Search results vary by Authorization. Embedding failures degrade to lexical retrieval.
       parameters:
         - name: q
           in: query
@@ -290,6 +307,10 @@ paths:
           schema: { type: string, minLength: 1, maxLength: 200 }
         - $ref: '#/components/parameters/Lang'
       responses:
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+        '503':
+          description: Firebase verification is not configured for a supplied identity.
         '200':
           description: OK
           content:
@@ -337,6 +358,8 @@ paths:
 
   /v1/ask:
     post:
+      security:
+        - FirebaseIDToken: []
       tags: [ask]
       operationId: askScripture
       summary: Task 12 — Ask Scripture. Retrieval-grounded synthesis with a hard citation gate (§29-31).
@@ -355,16 +378,31 @@ paths:
             schema:
               type: object
               required: [question]
+              additionalProperties: false
               properties:
                 question: { type: string, minLength: 1, maxLength: 500 }
       responses:
+        '415':
+          description: Content-Type must be application/json.
+        '429': { $ref: '#/components/responses/RateLimited' }
+        '400':
+          description: Invalid question or JSON body (one object, maximum 8 KiB).
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+        '502':
+          description: Upstream request failed.
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
         '200':
           description: OK
           content:
             application/json:
               schema: { $ref: '#/components/schemas/AskResponse' }
         '503':
-          description: No OpenAI key configured on this server.
+          description: Provider or Firebase authentication is not configured (ask_unavailable, realtime_unavailable or auth_unavailable, as applicable).
           content:
             application/problem+json:
               schema: { $ref: '#/components/schemas/Problem' }
@@ -372,6 +410,8 @@ paths:
 
   /v1/realtime/session:
     post:
+      security:
+        - FirebaseIDToken: []
       tags: [realtime]
       operationId: createRealtimeSession
       summary: A short-lived credential for a client to talk to OpenAI's Realtime API directly.
@@ -387,21 +427,40 @@ paths:
           in: query
           required: false
           schema: { type: string }
-          description: Overrides the server's default Realtime model for this session only.
+          description: Only omitted, empty, or gpt-realtime is accepted by the API access layer.
+          # Clients cannot select an arbitrary paid model.
       responses:
+        '429': { $ref: '#/components/responses/RateLimited' }
+        '400':
+          description: Invalid request or unsupported Realtime model.
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+        '502':
+          description: Upstream request failed.
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
         '200':
           description: OK
           content:
             application/json:
               schema: { $ref: '#/components/schemas/RealtimeSession' }
         '503':
-          description: No OpenAI key configured on this server.
+          description: Provider or Firebase authentication is not configured (ask_unavailable, realtime_unavailable or auth_unavailable, as applicable).
           content:
             application/problem+json:
               schema: { $ref: '#/components/schemas/Problem' }
               example: { code: realtime_unavailable, message: "realtime is not configured on this server" }
 
 components:
+  securitySchemes:
+    FirebaseIDToken:
+      type: http
+      scheme: bearer
+      bearerFormat: Firebase ID token
+      description: Firebase SDK ID token for a registered or anonymous user, validated against the configured project including revocation.
   parameters:
     EntityId:
       name: id
@@ -413,10 +472,23 @@ components:
       name: lang
       in: query
       required: false
-      schema: { type: string, enum: [en, pt], default: en }
-      description: Language for names and sort order; matches `BookLanguage` in the apps.
+      schema: { type: string, enum: [en, pt, pt-BR], default: en }
+      description: Presentation language; pt aliases pt-BR. Missing translations fall back to en. Original scripts and identifiers remain unchanged. Unsupported values use en.
 
   responses:
+    Unauthenticated:
+      description: Missing, invalid, expired, revoked or disabled Firebase identity. No paid operation is started.
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    RateLimited:
+      description: Per-user, IP, process or concurrency limit reached. No paid operation is started.
+      headers:
+        Retry-After:
+          schema: { type: integer, example: 60 }
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
     NotFound:
       description: Unknown id, or no content for it yet.
       content:
@@ -453,7 +525,7 @@ components:
       properties:
         code:
           type: string
-          enum: [unknown_entity, unknown_book, content_unavailable, malformed_request, internal, realtime_unavailable, ask_unavailable, tts_unavailable, tts_rate_limited, tts_timeout, tts_failed]
+          enum: [unauthenticated, auth_unavailable, rate_limited, unknown_entity, unknown_book, content_unavailable, malformed_request, internal, realtime_unavailable, ask_unavailable, tts_unavailable, tts_rate_limited, tts_timeout, tts_failed]
         message: { type: string }
 
     # ---- §22.1
@@ -469,6 +541,10 @@ components:
         type: { $ref: '#/components/schemas/BibleEntityType' }
         name: { type: string }
         summary: { type: [string, 'null'], description: Short and non-interpretive (§3.5). }
+        nameLanguage:
+          type: string
+          enum: [en, pt-BR]
+          description: Selected presentation record, including fallback. OriginalTerm names keep the original script; its language is lexical.language. Absent for legacy entities without localization records.
 
     # ---- §22.2
     RelationshipType:
@@ -513,6 +589,8 @@ components:
       type: object
       required: [entity, aliases, keyPassages, sources]
       properties:
+        sourceRecords: { type: array, items: { $ref: '#/components/schemas/EntitySourceRecord' }, description: Optional attributed structured enrichment. }
+        localizations: { type: array, items: { $ref: '#/components/schemas/EntityLocalization' }, description: Independent presentation records; absent when unavailable. }
         entity: { $ref: '#/components/schemas/BibleEntity' }
         aliases: { type: array, items: { type: string } }
         approximateDates: { type: [string, 'null'], description: 'Always hedged: "c. 1010–970 BC (commonly dated)".' }
@@ -520,6 +598,57 @@ components:
         modernGeography: { type: [string, 'null'], description: Places only. }
         keyPassages: { type: array, items: { $ref: '#/components/schemas/PassageReference' } }
         sources: { type: array, items: { $ref: '#/components/schemas/SourceReference' } }
+
+    EntityLocalization:
+      type: object
+      required: [language, sourceId, name, aliases]
+      properties:
+        language: { type: string, enum: [en, pt-BR] }
+        sourceId: { type: string }
+        name: { type: string }
+        aliases: { type: array, items: { type: string } }
+        description: { type: [string, 'null'] }
+
+    LexicalData:
+      type: object
+      required: [language, original, transliteration, morphology, gloss, glossLanguage, extendedStrong, disambiguatedStrong, unifiedStrong]
+      properties:
+        language: { type: string, enum: [he, arc, grc] }
+        original: { type: string }
+        transliteration: { type: string }
+        morphology: { type: string, description: Original STEP morphology code; may be empty. }
+        gloss: { type: string, description: Brief lexical metadata, not a verse translation. }
+        glossLanguage: { type: string, enum: [en] }
+        extendedStrong: { type: string }
+        disambiguatedStrong: { type: string, description: Original field including relation annotations. }
+        unifiedStrong: { type: string, description: Original field; may contain multiple identifiers. }
+
+    DatasetProvenance:
+      type: object
+      required: [repository, revision, path, sha256, licenseUrl, attribution, modifications]
+      properties:
+        repository: { type: string, format: uri }
+        revision: { type: string, pattern: '^[0-9a-f]{40}$' }
+        path: { type: string }
+        sha256: { type: string, pattern: '^[0-9a-f]{64}$' }
+        licenseUrl: { type: string, format: uri }
+        attribution: { type: string }
+        modifications: { type: string }
+
+    EntitySourceRecord:
+      type: object
+      required: [id, sourceId, externalId, sourceLine, identifiers, dataset, occurrenceCount]
+      properties:
+        id: { type: string }
+        sourceId: { type: string }
+        externalId: { type: string }
+        sourceLine: { type: integer, minimum: 1 }
+        identifiers:
+          type: object
+          additionalProperties: { type: array, items: { type: string } }
+        lexical: { $ref: '#/components/schemas/LexicalData' }
+        dataset: { $ref: '#/components/schemas/DatasetProvenance' }
+        occurrenceCount: { type: integer, minimum: 0 }
 
     # ---- §44
     GraphSnapshot:
@@ -607,7 +736,7 @@ components:
         entityReferences:
           type: array
           items: { type: string }
-          description: Always empty in this increment — entity linking for Ask is not implemented yet.
+          description: Editorial entities linked to the verified cited passages; empty when no links exist.
         sourceReferences:
           type: array
           items: { $ref: '#/components/schemas/SourceReference' }

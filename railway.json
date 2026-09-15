@@ -3,12 +3,19 @@
   "build": {
     "builder": "DOCKERFILE",
     "dockerfilePath": "backend/Dockerfile",
-    "watchPatterns": ["backend/**", "api/examples/**", "railway.json"]
+    "watchPatterns": [
+      "backend/**",
+      "api/examples/**",
+      "railway.json"
+    ]
   },
   "deploy": {
     "healthcheckPath": "/healthz",
     "healthcheckTimeout": 120,
     "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 5
+    "restartPolicyMaxRetries": 5,
+    "preDeployCommand": [
+      "/app/migrate"
+    ]
   }
 }

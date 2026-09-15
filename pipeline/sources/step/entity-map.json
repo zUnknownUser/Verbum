@@ -1,0 +1,140 @@
+{
+  "H0085": {
+    "entityId": "fixture.person.abraham",
+    "type": "person",
+    "uniqueName": "Abraham@Gen.11.26-1Pe",
+    "name": "Abraham"
+  },
+  "H1339": {
+    "entityId": "fixture.person.bathsheba",
+    "type": "person",
+    "uniqueName": "Bathsheba@2Sa.11.3-Psa",
+    "name": "Bathsheba"
+  },
+  "H1732": {
+    "entityId": "fixture.person.david",
+    "type": "person",
+    "uniqueName": "David@Rut.4.17-Rev",
+    "name": "David"
+  },
+  "H1555": {
+    "entityId": "fixture.person.goliath",
+    "type": "person",
+    "uniqueName": "Goliath@1Sa.17.4-1Ch",
+    "name": "Goliath"
+  },
+  "G2424G": {
+    "entityId": "fixture.person.jesus",
+    "type": "person",
+    "uniqueName": "Jesus@Isa.7.14-Rev",
+    "name": "Jesus"
+  },
+  "G2491H": {
+    "entityId": "fixture.person.john",
+    "type": "person",
+    "uniqueName": "John@Mat.4.21-Rev",
+    "name": "John"
+  },
+  "G3137G": {
+    "entityId": "fixture.person.mary",
+    "type": "person",
+    "uniqueName": "Mary@Mat.1.16-Act",
+    "name": "Mary"
+  },
+  "H4872": {
+    "entityId": "fixture.person.moses",
+    "type": "person",
+    "uniqueName": "Moses@Exo.2.10-Rev",
+    "name": "Moses"
+  },
+  "G3972G": {
+    "entityId": "fixture.person.paul",
+    "type": "person",
+    "uniqueName": "Paul@Act.7.58-2Pe",
+    "name": "Paul"
+  },
+  "G4074G": {
+    "entityId": "fixture.person.peter",
+    "type": "person",
+    "uniqueName": "Peter@Mat.4.18-2Pe",
+    "name": "Peter"
+  },
+  "H8050G": {
+    "entityId": "fixture.person.samuel",
+    "type": "person",
+    "uniqueName": "Samuel@1Sa.1.20-Heb",
+    "name": "Samuel"
+  },
+  "H7586G": {
+    "entityId": "fixture.person.saul",
+    "type": "person",
+    "uniqueName": "Saul@1Sa.9.2-Act",
+    "name": "Saul"
+  },
+  "H8010": {
+    "entityId": "fixture.person.solomon",
+    "type": "person",
+    "uniqueName": "Solomon@2Sa.5.14-Act",
+    "name": "Solomon"
+  },
+  "H0894": {
+    "entityId": "fixture.place.babylon",
+    "type": "place",
+    "uniqueName": "Babylon@Gen.10.10-Rev",
+    "name": "Babylon"
+  },
+  "H1035G": {
+    "entityId": "fixture.place.bethlehem",
+    "type": "place",
+    "uniqueName": "Bethlehem@Gen.35.16-Jhn",
+    "name": "Bethlehem"
+  },
+  "G2882": {
+    "entityId": "fixture.place.corinth",
+    "type": "place",
+    "uniqueName": "Corinth@Act.18.1-2Ti",
+    "name": "Corinth"
+  },
+  "H4714G": {
+    "entityId": "fixture.place.egypt",
+    "type": "place",
+    "uniqueName": "Egypt@Gen.12.10-Rev",
+    "name": "Egypt"
+  },
+  "H0425L": {
+    "entityId": "fixture.place.elah",
+    "type": "place",
+    "uniqueName": "Elah_Valley@1Sa.17.2-",
+    "name": "Valley of Elah"
+  },
+  "G2181": {
+    "entityId": "fixture.place.ephesus",
+    "type": "place",
+    "uniqueName": "Ephesus@Act.18.19-Rev",
+    "name": "Ephesus"
+  },
+  "H1551": {
+    "entityId": "fixture.place.galilee",
+    "type": "place",
+    "uniqueName": "Galilee@Jos.12.23-Act",
+    "name": "Galilee"
+  },
+  "H3389": {
+    "entityId": "fixture.place.jerusalem",
+    "type": "place",
+    "uniqueName": "Jerusalem@Gen.14.18-Rev",
+    "name": "Jerusalem"
+  },
+  "G3478": {
+    "entityId": "fixture.place.nazareth",
+    "type": "place",
+    "uniqueName": "Nazareth@Mat.2.23-Act",
+    "name": "Nazareth"
+  },
+  "G4514": {
+    "entityId": "fixture.place.rome",
+    "type": "place",
+    "uniqueName": "Rome@Jhn.11.48-Phm",
+    "name": "Rome"
+  }
+}

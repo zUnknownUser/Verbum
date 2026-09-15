@@ -2,7 +2,14 @@
 
 from typing import Annotated, Literal, Self
 
-from pydantic import BaseModel, ConfigDict, Field, StringConstraints, model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    StringConstraints,
+    model_serializer,
+    model_validator,
+)
 
 Text = Annotated[str, StringConstraints(min_length=1, pattern=r"\S")]
 Positive = Annotated[int, Field(gt=0)]
@@ -153,8 +160,89 @@ class Provenance(Model):
     section: Text | None = None
 
 
+class LexicalData(Model):
+    language: Literal["he", "arc", "grc"]
+    original: Text
+    transliteration: str
+    morphology: str
+    gloss: str
+    glossLanguage: Literal["en"] = "en"
+    # Preserve STEP distinctions and relation annotations verbatim.
+    extendedStrong: Text
+    disambiguatedStrong: Text
+    unifiedStrong: str
+
+
+class Localization(Model):
+    language: Literal["en", "pt-BR"]
+    name: Text
+    aliases: list[Text]
+    description: Text | None = None
+
+
+class Occurrence(Model):
+    reference: Reference
+    locator: Text
+
+    @model_validator(mode="after")
+    def single_verse(self) -> Self:
+        if (
+            self.reference.verseStart is None
+            or self.reference.verseStart != self.reference.verseEnd
+        ):
+            raise ValueError("source occurrences require a single verified verse")
+        return self
+
+
+class SourceRecord(Model):
+    id: Text
+    entityId: Text
+    sourceId: Text
+    externalId: Text
+    sourceLine: Positive
+    identifiers: dict[Text, list[Text]]
+    lexical: LexicalData | None = None
+    localizations: list[Localization]
+    occurrences: list[Occurrence]
+
+    @model_validator(mode="after")
+    def integrity(self) -> Self:
+        unique([x.language for x in self.localizations], "record languages")
+        unique([x.locator for x in self.occurrences], "record occurrences")
+        for loc in self.localizations:
+            unique(loc.aliases, "localized aliases")
+        for values in self.identifiers.values():
+            unique(values, "external identifiers")
+        return self
+
+
+class Dataset(Model):
+    sourceId: Text
+    repository: Text
+    revision: Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{40}$")]
+    path: Text
+    sha256: Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$")]
+    licenseUrl: Text
+    attribution: Text
+    modifications: Text
+
+
+class Enrichment(Model):
+    datasets: list[Dataset]
+    records: list[SourceRecord]
+
+    @model_validator(mode="after")
+    def integrity(self) -> Self:
+        unique([d.sourceId for d in self.datasets], "datasets")
+        unique([r.id for r in self.records], "source records")
+        unique([r.sourceId + ":" + r.externalId for r in self.records], "dataset identities")
+        unique([r.sourceId + ":" + r.entityId for r in self.records], "dataset entity bindings")
+        return self
+
+
 class Bundle(Model):
-    version: Literal[1] = 1
+    version: Literal[1, 2] = 1
+    enrichment: Enrichment | None = None
     kind: Literal["fixture", "editorial"]
     content: Content
     # Key = SourceReference.id, value = bibliographic metadata (§33).
@@ -162,8 +250,17 @@ class Bundle(Model):
     # Every entity claim has evidence, including entities without a detail page.
     entitySources: dict[str, list[Text]]
 
+    @model_serializer(mode="wrap")
+    def serialize_bundle(self, handler):
+        value = handler(self)
+        if self.version == 1:
+            value.pop("enrichment", None)  # Preserve all existing review hashes.
+        return value
+
     @model_validator(mode="after")
     def evidence(self) -> Self:
+        if (self.version == 2) != (self.enrichment is not None):
+            raise ValueError("version 2 requires enrichment; version 1 cannot contain it")
         source_ids = {s.id for s in self.content.sources}
         entity_ids = {e.id for e in self.content.entities}
         if self.entitySources.keys() != entity_ids:
@@ -178,4 +275,20 @@ class Bundle(Model):
             raise ValueError("editorial sources require provenance and license metadata")
         if self.kind == "editorial" and any(s.startswith("fixture.") for s in source_ids):
             raise ValueError("fixture sources cannot support editorial publication")
+        if self.enrichment is not None:
+            if self.kind != "editorial":
+                raise ValueError("enrichment must be editorial")
+            if self.content.details or self.content.timeline or self.content.dailyVersePool:
+                raise ValueError(
+                    "enrichment cannot replace curated details, timeline or daily pool"
+                )
+            if {d.sourceId for d in self.enrichment.datasets} != source_ids:
+                raise ValueError("every enrichment source requires dataset provenance")
+            for r in self.enrichment.records:
+                if r.entityId not in entity_ids or r.sourceId not in source_ids:
+                    raise ValueError("unknown entity/source in enrichment")
+                if r.sourceId not in self.entitySources[r.entityId]:
+                    raise ValueError("record source missing from entity evidence")
+            if {r.entityId for r in self.enrichment.records} != entity_ids:
+                raise ValueError("every enrichment entity requires a source record")
         return self

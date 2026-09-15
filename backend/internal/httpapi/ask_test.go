@@ -109,6 +109,29 @@ func TestAskRejectsMalformedJSON(t *testing.T) {
 	}
 }
 
+func TestAskRejectsTrailingJSONAndOversizedBodiesBeforeSynthesis(t *testing.T) {
+	for _, body := range []string{`{"question":"David"} {}`, `{"question":"David","unexpected":1}`, `{"question":"David"}` + strings.Repeat(" ", 8192)} {
+		fake := &fakeAsker{}
+		srv := askServer(t, fake)
+		res := postAsk(t, srv, body)
+		res.Body.Close()
+		if res.StatusCode != 400 || fake.gotQ != "" {
+			t.Fatalf("status=%d question reached synthesis=%v", res.StatusCode, fake.gotQ != "")
+		}
+	}
+}
+
+func TestAskLimitCountsUnicodeCharacters(t *testing.T) {
+	fake := &fakeAsker{}
+	srv := askServer(t, fake)
+	q := strings.Repeat("é", 500)
+	res := postAsk(t, srv, `{"question":"`+q+`"}`)
+	defer res.Body.Close()
+	if res.StatusCode != 200 || fake.gotQ != q {
+		t.Fatalf("valid Unicode question rejected: %d", res.StatusCode)
+	}
+}
+
 func TestAskUpstreamFailureDoesNotLeakDetail(t *testing.T) {
 	fake := &fakeAsker{err: errors.New("upstream exploded")}
 	srv := askServer(t, fake)

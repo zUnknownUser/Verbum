@@ -1,5 +1,21 @@
 # Deploying the API to Railway
 
+## Automated schema migration (2026-09-15)
+
+`railway.json` now runs `/app/migrate` as the pre-deploy command. The Docker image includes
+that existing binary and `db/migrations/`; migration failure prevents the new API deployment.
+The migrations remain additive/idempotent. STEP data itself is **not** downloaded, approved or
+published by deployment: use the reviewed Python pipeline described in
+[STEP_BIBLE.md](../docs/STEP_BIBLE.md). Database service/image upgrades are separate from schema
+migrations. See [Railway pre-deploy documentation](https://docs.railway.com/deployments/pre-deploy-command).
+
+
+**Before deploying the 2026-09-15 access update:** configure
+`VERBUM_FIREBASE_PROJECT_ID`, enable Anonymous auth, and grant the ADC service account
+Firebase Authentication user-read permission. Roll out token-capable mobile clients
+alongside enforcement; old clients receive 401 on paid POSTs. Full procedure and
+proxy limits: [SECURITY.md](SECURITY.md). The 2026-09-14 record below predates this change.
+
 One Railway project, three services: **api** (this Go server, from `backend/Dockerfile`),
 **Postgres with pgvector**, and one **volume** on the api service for the TTS MP3 cache.
 The apps already point at `https://api.vendlydigital.com.br` — the last step is moving that
@@ -84,7 +100,7 @@ after that, then Let's Encrypt issued.
 curl https://<railway-domain>/healthz                                  # ok
 curl "https://<railway-domain>/v1/daily-verse?days=1"                  # store works
 curl -X POST https://<railway-domain>/v1/ask -H 'content-type: application/json' \
-     -d '{"question":"how did David defeat Goliath","language":"en"}'   # 503 = no OPENAI_API_KEY
+     -d '{"question":"how did David defeat Goliath"}'   # 401 expected without a Firebase ID token
 curl "https://<railway-domain>/v1/tts/config?language=pt-BR"           # {"version":…} = TTS on
 ```
 

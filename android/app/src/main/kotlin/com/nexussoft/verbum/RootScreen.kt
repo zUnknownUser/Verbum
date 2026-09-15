@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nexussoft.verbum.auth.FirebaseAccountClient
+import com.nexussoft.verbum.auth.FirebaseApiTokens
 import com.nexussoft.verbum.feature.scripture.AccountViewModel
 import com.nexussoft.verbum.feature.scripture.ui.AccountHost
 import com.nexussoft.verbum.clients.api.LiveAskScriptureClient
@@ -40,7 +41,7 @@ fun RootScreen() {
     val context = LocalContext.current.applicationContext
     val viewModel: AppViewModel = viewModel {
         val preferences = SharedPreferencesClient(context)
-        val api = VerbumApi(BuildConfig.VERBUM_API_BASE_URL, cache = ResponseCache(File(context.cacheDir, "verbum-api")))
+        val api = VerbumApi(BuildConfig.VERBUM_API_BASE_URL, cache = ResponseCache(File(context.cacheDir, "verbum-api")), tokenProvider = FirebaseApiTokens::token)
         val bible = LiveBibleClient(
             language = BookLanguage.current,
             remote = HelloAOBibleClient(HelloAOTranslation.id(BookLanguage.current), cache = ChapterCache(File(context.cacheDir, "scripture"))),

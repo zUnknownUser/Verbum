@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "repository": "https://github.com/STEPBible/STEPBible-Data",
+  "revision": "a51237d7a5f2dd2e0f26ccc7156b92ad79703ba9",
+  "datasets": {
+    "TBESH": {
+      "path": "Lexicons/TBESH - Translators Brief lexicon of Extended Strongs for Hebrew - STEPBible.org CC BY.txt",
+      "sha256": "464dccadd95fd8620dd05fa0d7a4caba58ec3c4d5db3ebf38e43d046ca25b591"
+    },
+    "TBESG": {
+      "path": "Lexicons/TBESG - Translators Brief lexicon of Extended Strongs for Greek - STEPBible.org CC BY.txt",
+      "sha256": "312f723d7b8ef263bbdfb0451c9b8057125804dfff390b6f8544cff2a84b57f4"
+    },
+    "TIPNR": {
+      "path": "Proper Nouns/TIPNR - Translators Individualised Proper Names with all References - STEPBible.org CC BY.txt",
+      "sha256": "6f0a7bffadf97ae68230e0d572c9d039463f905ae8442cc5490816bb49caeb56"
+    }
+  }
+}

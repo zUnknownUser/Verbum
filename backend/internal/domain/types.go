@@ -22,10 +22,11 @@ const (
 
 // Entity is a node of the graph (§22.1).
 type Entity struct {
-	ID      string     `json:"id"`
-	Type    EntityType `json:"type"`
-	Name    string     `json:"name"`
-	Summary *string    `json:"summary"`
+	ID           string     `json:"id"`
+	Type         EntityType `json:"type"`
+	Name         string     `json:"name"`
+	NameLanguage string     `json:"nameLanguage,omitempty"`
+	Summary      *string    `json:"summary"`
 }
 
 // Relationship is a directed, sourced edge (§22.2, §33).
@@ -68,13 +69,15 @@ type SourceReference struct {
 
 // EntityDetail is an entity's page (§9).
 type EntityDetail struct {
-	Entity           Entity             `json:"entity"`
-	Aliases          []string           `json:"aliases"`
-	ApproximateDates *string            `json:"approximateDates"`
-	Role             *string            `json:"role"`
-	ModernGeography  *string            `json:"modernGeography"`
-	KeyPassages      []PassageReference `json:"keyPassages"`
-	Sources          []SourceReference  `json:"sources"`
+	SourceRecords    []EntitySourceRecord `json:"sourceRecords,omitempty"`
+	Localizations    []EntityLocalization `json:"localizations,omitempty"`
+	Entity           Entity               `json:"entity"`
+	Aliases          []string             `json:"aliases"`
+	ApproximateDates *string              `json:"approximateDates"`
+	Role             *string              `json:"role"`
+	ModernGeography  *string              `json:"modernGeography"`
+	KeyPassages      []PassageReference   `json:"keyPassages"`
+	Sources          []SourceReference    `json:"sources"`
 }
 
 // GraphSnapshot is one entity's neighbourhood (§44).
@@ -129,7 +132,7 @@ type DailyVerse struct {
 }
 
 // AskResponse is the §30 AI Response Data Contract, verbatim. EntityReferences only ever names
-// entities with a curated keyPassage covering a cited passage (internal/ask) — never derived
+// entities with a curated key passage or sourced occurrence covering a citation — never derived
 // from the question text itself.
 type AskResponse struct {
 	Answer               string             `json:"answer"`

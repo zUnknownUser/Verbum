@@ -1,5 +1,11 @@
 # Google Cloud TTS: continuous chapter audio
 
+**Access update (2026-09-15):** `POST /v1/tts` now requires a Firebase ID token in
+the Authorization header, even for a server cache hit. Both mobile clients supply it.
+The manifest remains public. Examples below need the same header; Test-TTS.ps1 reads
+`VERBUM_FIREBASE_ID_TOKEN`. Configuration, 401/429 behavior and rollout:
+[SECURITY.md](SECURITY.md).
+
 `POST /v1/tts` keeps the existing request and binary `audio/mpeg` response.
 The existing `internal/tts.TextToSpeechService` now handles normalization,
 segmentation, synthesis, assembly and persistent caching. No new router, database

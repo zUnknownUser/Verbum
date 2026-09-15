@@ -15,26 +15,31 @@ import Models
 public struct VerbumAPI: Sendable {
     /// Performs one request. Injected so tests never touch the network.
     public typealias Transport = @Sendable (URLRequest) async throws -> (Data, HTTPURLResponse)
+    public typealias TokenProvider = @Sendable (_ createIfNeeded: Bool) async throws -> String?
 
     public let baseURL: URL
     let transport: Transport
     let cache: ResponseCache
     let now: @Sendable () -> Date
+    let tokenProvider: TokenProvider
 
-    public init(baseURL: URL, transport: @escaping Transport = Self.urlSession, cache: ResponseCache = .onDisk, now: @escaping @Sendable () -> Date = { Date() }) {
+    public init(baseURL: URL, transport: @escaping Transport = Self.urlSession, cache: ResponseCache = .onDisk, tokenProvider: @escaping TokenProvider = { _ in nil }, now: @escaping @Sendable () -> Date = { Date() }) {
         self.baseURL = baseURL
         self.transport = transport
         self.cache = cache
         self.now = now
+        self.tokenProvider = tokenProvider
     }
 
     /// The backend the app is built against — see `VerbumAPI.Configuration`.
-    public static let shared = VerbumAPI(baseURL: Configuration.baseURL)
+    public static let shared = VerbumAPI(baseURL: Configuration.baseURL, tokenProvider: {
+        try await FirebaseAPITokens.shared.token(createIfNeeded: $0)
+    })
 
     /// Plain `URLSession` with a short timeout: the API answers from a database,
     /// and the reader must not hang on a dead server.
     public static let urlSession: Transport = { request in
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await URLSession.shared.data(for: request, delegate: APIRedirectPolicy())
         guard let http = response as? HTTPURLResponse else { throw VerbumAPIError.malformedResponse }
         return (data, http)
     }
@@ -50,12 +55,20 @@ public struct VerbumAPI: Sendable {
     /// there is none does the call fail with `.networkUnavailable`.
     func get<T: Decodable>(_ path: String, query: [URLQueryItem] = [], as type: T.Type = T.self) async throws -> T {
         let url = url(path, query: query)
-        let key = ResponseCache.key(for: url)
+        // Optional identity adds semantic search; public browsing never creates a guest.
+        var token: String?
+        if path == "/v1/search" {
+            do { token = try await tokenProvider(false) }
+            catch is CancellationError { throw CancellationError() }
+            catch { token = nil }
+        }
+        let key = ResponseCache.key(for: url) + (path == "/v1/search" ? (token == nil ? "-lexical" : "-semantic") : "")
         if let hit = await cache.read(key), now().timeIntervalSince(hit.storedAt) < Self.freshFor {
             return try decode(T.self, from: hit.data)
         }
         var request = URLRequest(url: url, timeoutInterval: Self.requestTimeout)
         request.setValue("application/json", forHTTPHeaderField: "Accept")
+        if let token { request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization") }
         let data: Data
         do {
             data = try await send(request)
@@ -75,6 +88,7 @@ public struct VerbumAPI: Sendable {
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try JSONEncoder().encode(body)
+        try await authorize(&request)
         return try decode(T.self, from: try await send(request))
     }
 
@@ -88,7 +102,14 @@ public struct VerbumAPI: Sendable {
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try JSONEncoder().encode(body)
+        try await authorize(&request)
         return try await send(request)
+    }
+
+    private func authorize(_ request: inout URLRequest) async throws {
+        if let token = try await tokenProvider(true) {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
     }
 
     /// Chapter speech generation: the server allows itself up to `tts.GenerationTimeout` (10 min)
@@ -131,6 +152,14 @@ public struct VerbumAPI: Sendable {
     }
 }
 
+/// The API has canonical endpoints. Do not forward identity or a paid POST body
+/// to a redirect destination; callers handle the 3xx through ordinary errors.
+private final class APIRedirectPolicy: NSObject, URLSessionTaskDelegate, Sendable {
+    func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping @Sendable (URLRequest?) -> Void) {
+        completionHandler(nil)
+    }
+}
+
 /// Why a call failed, in the terms the features switch on (spec §52).
 /// The server's `message` is never carried: it is for logs, not users.
 public enum VerbumAPIError: Error, Equatable, Sendable {
@@ -156,6 +185,9 @@ public struct Problem: Decodable, Equatable, Sendable {
         case ttsRateLimited = "tts_rate_limited"
         case ttsTimeout = "tts_timeout"
         case ttsFailed = "tts_failed"
+        case unauthenticated
+        case authUnavailable = "auth_unavailable"
+        case rateLimited = "rate_limited"
         /// A code this build does not know; treated as a failure, never shown.
         case unknown
 

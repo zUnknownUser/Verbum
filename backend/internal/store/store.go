@@ -45,7 +45,7 @@ type Store interface {
 	// by Ask (§29) to ground synthesis in real words — never exposed through /v1/search, which
 	// apps still read from bible.helloao.org (§3.5, backend/README.md).
 	PassageText(ctx context.Context, translation string, refs []domain.PassageReference) (map[string]string, error)
-	// EntitiesForPassages returns the ids of entities whose curated keyPassages cover any of
+	// EntitiesForPassages returns IDs whose curated key passages or sourced occurrences cover
 	// the given verses — used only by Ask (§29) to link cited Scripture back to the entity
 	// graph. Order is unspecified; deduplicated.
 	EntitiesForPassages(ctx context.Context, refs []domain.PassageReference) ([]string, error)

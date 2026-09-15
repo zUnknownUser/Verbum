@@ -42,6 +42,23 @@ def items(bundle: Bundle) -> list[dict]:
                     "sourceReferenceIds": evidence,
                 }
             )
+    if bundle.enrichment is not None:
+        for dataset in bundle.enrichment.datasets:
+            result.append(
+                {
+                    "key": f"dataset:{dataset.sourceId}",
+                    "proposal": dataset.model_dump(),
+                    "sourceReferenceIds": [dataset.sourceId],
+                }
+            )
+        for record in bundle.enrichment.records:
+            result.append(
+                {
+                    "key": f"record:{record.id}",
+                    "proposal": record.model_dump(),
+                    "sourceReferenceIds": [record.sourceId],
+                }
+            )
     result.append(
         {
             "key": "dailyVersePool",

@@ -40,7 +40,7 @@ func New(s store.Store, now func() time.Time, rt realtimeBroker, embedder queryE
 // without a tracing backend (§54; see internal/reqid's doc for why this, not OpenTelemetry, yet).
 func logging(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ctx := reqid.NewContext(r.Context())
+		ctx := store.WithLanguage(reqid.NewContext(r.Context()), r.URL.Query().Get("lang"))
 		start := time.Now()
 		rec := &statusRecorder{ResponseWriter: w, status: http.StatusOK}
 		next.ServeHTTP(rec, r.WithContext(ctx))

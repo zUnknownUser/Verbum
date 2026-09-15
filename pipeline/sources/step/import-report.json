@@ -1,0 +1,246 @@
+{
+  "excluded": [
+    {
+      "line": 1688,
+      "recordId": "step.TIPNR.G0256",
+      "identifier": "G0256",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 2136,
+      "recordId": "step.TIPNR.H6034",
+      "identifier": "H6034",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 5252,
+      "recordId": "step.TIPNR.H3562G",
+      "identifier": "H3562G",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 6875,
+      "recordId": "step.TIPNR.G1665G",
+      "identifier": "G1665G",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 7413,
+      "recordId": "step.TIPNR.G2131G",
+      "identifier": "G2131G",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 8487,
+      "recordId": "step.TIPNR.H4447G",
+      "identifier": "H4447G",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 8880,
+      "recordId": "step.TIPNR.H2726",
+      "identifier": "H2726",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 9479,
+      "recordId": "step.TIPNR.G2242G",
+      "identifier": "G2242G",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 9972,
+      "recordId": "step.TIPNR.H1940G",
+      "identifier": "H1940G",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 11164,
+      "recordId": "step.TIPNR.H3268",
+      "identifier": "H3273Q",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 11698,
+      "recordId": "step.TIPNR.H3464G",
+      "identifier": "H3464G",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 12200,
+      "recordId": "step.TIPNR.H3079G",
+      "identifier": "H3079G",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 13039,
+      "recordId": "step.TIPNR.G2424G",
+      "locator": "Rom.16.25",
+      "reason": "absent_from_WEB_versification"
+    },
+    {
+      "line": 13039,
+      "recordId": "step.TIPNR.G2424G",
+      "locator": "Rom.16.27",
+      "reason": "absent_from_WEB_versification"
+    },
+    {
+      "line": 13044,
+      "recordId": "step.TIPNR.G2424G",
+      "locator": "Rom.16.25",
+      "reason": "absent_from_WEB_versification"
+    },
+    {
+      "line": 13044,
+      "recordId": "step.TIPNR.G2424G",
+      "locator": "Rom.16.27",
+      "reason": "absent_from_WEB_versification"
+    },
+    {
+      "line": 13044,
+      "recordId": "step.TIPNR.G2424G",
+      "identifier": "G5547G",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 14123,
+      "recordId": "step.TIPNR.G2500H",
+      "identifier": "G2501P",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 15102,
+      "recordId": "step.TIPNR.H3876G",
+      "identifier": "H3876G",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 15979,
+      "recordId": "step.TIPNR.H4762I",
+      "identifier": "H4762I",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 16087,
+      "recordId": "step.TIPNR.H4308G",
+      "identifier": "H4308G",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 18569,
+      "recordId": "step.TIPNR.H0173",
+      "identifier": "H0173",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 19750,
+      "recordId": "step.TIPNR.H6317G",
+      "identifier": "H6317G",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 20520,
+      "recordId": "step.TIPNR.H5571G",
+      "identifier": "H5571G",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 22278,
+      "recordId": "step.TIPNR.H8100G",
+      "identifier": "H8100G",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 22645,
+      "recordId": "step.TIPNR.H7774",
+      "identifier": "H7774",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 23158,
+      "recordId": "step.TIPNR.H8472G",
+      "identifier": "H8472G",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 23256,
+      "recordId": "step.TIPNR.H8659J",
+      "identifier": "H8659J",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 23489,
+      "recordId": "step.TIPNR.H8555",
+      "identifier": "H8555",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 23505,
+      "recordId": "step.TIPNR.G5095G",
+      "identifier": "G5095G",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 24855,
+      "recordId": "step.TIPNR.H6667H",
+      "identifier": "H3079H",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 25099,
+      "recordId": "step.TIPNR.H6870G",
+      "identifier": "H6870G",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 25147,
+      "recordId": "step.TIPNR.H6649",
+      "identifier": "H6649",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 27245,
+      "recordId": "step.TIPNR.G0963G",
+      "identifier": "G0963G",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 27305,
+      "recordId": "step.TIPNR.H1012",
+      "identifier": "G0963H",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 28062,
+      "recordId": "step.TIPNR.H3672H",
+      "identifier": "H3672I",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "line": 32861,
+      "recordId": "step.TIPNR.H7417I",
+      "identifier": "H7417I",
+      "reason": "lexeme_not_in_selected_datasets"
+    },
+    {
+      "dataset": "TBESG",
+      "line": 2343,
+      "externalId": "G2199H",
+      "reason": "missing_original"
+    }
+  ],
+  "counts": {
+    "excluded_form_type_or_uncertainty": 516,
+    "excluded_record_type_or_uncertainty": 213
+  },
+  "revision": "a51237d7a5f2dd2e0f26ccc7156b92ad79703ba9",
+  "mappedEntities": 23,
+  "records": {
+    "step.TBESH": 11682,
+    "step.TBESG": 11034,
+    "step.TIPNR": 4044
+  },
+  "relationships": 4648,
+  "occurrences": 29763,
+  "corpusSHA256": "47b2dd1ea53840326d6dadb4ae4d3ac94a0b1c42ac7e6b377869df679cd0cef7"
+}

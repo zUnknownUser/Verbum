@@ -41,7 +41,7 @@ extension AskScriptureClient {
             let trimmed = String(question.trimmingCharacters(in: .whitespacesAndNewlines).prefix(500))
             do {
                 return try await api.ask(trimmed)
-            } catch VerbumAPIError.problem(.askUnavailable, _) {
+            } catch VerbumAPIError.problem(.askUnavailable, _), VerbumAPIError.problem(.authUnavailable, _) {
                 throw AskScriptureError.unavailable
             } catch VerbumAPIError.problem(_, status: 404), VerbumAPIError.problem(_, status: 501) {
                 throw AskScriptureError.unavailable
