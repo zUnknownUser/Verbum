@@ -2,7 +2,7 @@
 
 ## Automated schema migration (2026-09-15)
 
-`railway.json` now runs `/app/migrate` as the pre-deploy command. The Docker image includes
+`railway.json` runs `/app/migrate` as the pre-deploy command and explicitly starts `/app/api`. The Docker image includes
 that existing binary and `db/migrations/`; migration failure prevents the new API deployment.
 The migrations remain additive/idempotent. STEP data itself is **not** downloaded, approved or
 published by deployment: use the reviewed Python pipeline described in
