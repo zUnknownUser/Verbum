@@ -12,7 +12,7 @@ import "strings"
 // rather than exhaustive — it is a floor under the prompt instruction, not a replacement for it.
 var highStakesSignals = []string{
 	"depress", "suicid", "self-harm", "self harm", "hurt myself", "kill myself", "hopeless",
-	"want to die", "end my life",
+	"want to die", "end my life", "suicídio", "suicidio", "quero morrer", "me matar", "sem esperança", "sem esperanca", "automutil", "abuso", "deprimid", "crise financeira", "violência", "violencia", "divórcio", "divorcio",
 	"abuse", "abused", "abusive", "overdose", "addiction", "addicted",
 	"lawsuit", "sue me", "legal advice", "custody battle", "divorce",
 	"bankrupt", "financial crisis", "can't pay", "debt collector",
@@ -38,10 +38,12 @@ func needsProfessionalHelpNote(question string) bool {
 // include one on its own.
 func mentionsProfessionalHelp(answer string) bool {
 	a := strings.ToLower(answer)
-	for _, word := range []string{"professional", "therapist", "counselor", "counsellor", "doctor", "crisis line", "hotline"} {
+	for _, word := range []string{"profissional", "terapeuta", "psicólogo", "psicologo", "médico", "medico", "advogado", "professional", "therapist", "counselor", "counsellor", "doctor", "crisis line", "hotline"} {
 		if strings.Contains(a, word) {
 			return true
 		}
 	}
 	return false
 }
+
+const professionalHelpNotePT = " Esta resposta não substitui ajuda profissional. Procure também um médico, psicólogo, orientador, advogado ou serviço de apoio em crise, conforme a sua situação."

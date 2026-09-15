@@ -5,7 +5,7 @@ import SwiftUI
 
 enum AccountCopy {
     static func text(_ key: String) -> String {
-        String(localized: String.LocalizationValue(key), table: "Account", bundle: .module)
+        String(localized: String.LocalizationValue(key), table: "Account", bundle: L10n.bundle)
     }
 }
 extension EnvironmentValues {

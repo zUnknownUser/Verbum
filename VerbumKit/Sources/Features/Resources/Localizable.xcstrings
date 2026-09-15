@@ -1,11 +1,56 @@
 {
   "sourceLanguage": "en",
   "strings": {
-    "Search books": {"localizations": {"pt-BR": {"stringUnit": {"state": "translated", "value": "Buscar livros"}}}},
-    "Close search": {"localizations": {"pt-BR": {"stringUnit": {"state": "translated", "value": "Fechar busca"}}}},
-    "Book, chapter or verse": {"localizations": {"pt-BR": {"stringUnit": {"state": "translated", "value": "Livro, capítulo ou versículo"}}}},
-    "No matching reference. Try John 3:16.": {"localizations": {"pt-BR": {"stringUnit": {"state": "translated", "value": "Nenhuma referência encontrada. Tente João 3:16."}}}},
-    "Verse not found in this chapter.": {"localizations": {"pt-BR": {"stringUnit": {"state": "translated", "value": "Versículo não encontrado neste capítulo."}}}},
+    "Search books": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buscar livros"
+          }
+        }
+      }
+    },
+    "Close search": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fechar busca"
+          }
+        }
+      }
+    },
+    "Book, chapter or verse": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Livro, capítulo ou versículo"
+          }
+        }
+      }
+    },
+    "No matching reference. Try John 3:16.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nenhuma referência encontrada. Tente João 3:16."
+          }
+        }
+      }
+    },
+    "Verse not found in this chapter.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Versículo não encontrado neste capítulo."
+          }
+        }
+      }
+    },
     "%@ BC": {
       "localizations": {
         "pt-BR": {
@@ -676,16 +721,6 @@
         }
       }
     },
-    "Demonstration content · Connections from the local sample collection, not a complete or reviewed commentary. Entity descriptions are currently in English.": {
-      "localizations": {
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Conteúdo de demonstração · Conexões da coleção local de exemplo, não um comentário completo ou revisado. As descrições das entidades estão em inglês."
-          }
-        }
-      }
-    },
     "Deselects this verse": {
       "localizations": {
         "pt-BR": {
@@ -1053,7 +1088,7 @@
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "In the beginning, God created the heavens and the earth."
+            "value": "No princípio, Deus criou os céus e a terra."
           }
         }
       }
@@ -2456,6 +2491,66 @@
           "stringUnit": {
             "state": "translated",
             "value": "“%@” não é um livro que conhecemos."
+          }
+        }
+      }
+    },
+    "Original language": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Idioma original"
+          }
+        }
+      }
+    },
+    "Greek": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grego"
+          }
+        }
+      }
+    },
+    "Hebrew": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hebraico"
+          }
+        }
+      }
+    },
+    "Aramaic": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aramaico"
+          }
+        }
+      }
+    },
+    "Transliteration": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transliteração"
+          }
+        }
+      }
+    },
+    "Demonstration content · Connections from the sample collection; not a complete or reviewed commentary.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conteúdo de demonstração · Conexões da coleção de exemplo; não constitui um comentário completo ou revisado."
           }
         }
       }

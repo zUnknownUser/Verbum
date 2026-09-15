@@ -76,6 +76,10 @@ def publish(source: Path, decisions: Path, database_url: str, *, allow_fixtures=
 
 
 def write_content(cur, bundle: Bundle) -> None:
+    if bundle.translations is not None:
+        from .localize import validate_snapshot
+
+        validate_snapshot(cur, bundle.translations)
     content = bundle.content
     for position, source in enumerate(content.sources):
         upsert(cur, "sources", {**source.model_dump(), "position": position}, "id")
@@ -93,6 +97,11 @@ def write_content(cur, bundle: Bundle) -> None:
                 },
                 "reference_id",
             )
+    if bundle.translations is not None:
+        from .localize import write_translations
+
+        write_translations(cur, bundle.translations)
+        return
     if bundle.enrichment is not None:
         write_enrichment_entities(cur, bundle)
     for position, entity in enumerate(content.entities):

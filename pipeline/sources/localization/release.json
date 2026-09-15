@@ -1,0 +1,15 @@
+{
+  "bundleHash": "affe78b8e2cd539a44baafe9c70886d3c18a13b72123dd909f809d730bab0510",
+  "snapshotHash": "1dcf8087635ffb7415372b1186893d5793c90f24232021458b349dc6797389ef",
+  "glossaryHash": "a409d4e83735ef07604e108127fa795bc94dd557d84670e79c2f8dfaacaf6dd6",
+  "model": "gpt-4o-mini",
+  "instructionsHash": "ec896ba66a80d2cbe36638f0fae6a9dc26a1c78d4a20a8a7fc1ffe8d9e6c760a",
+  "counts": {
+    "entities": 26782,
+    "timeline": 16,
+    "sources": 5,
+    "distinctTexts": 14439
+  },
+  "review": "Machine-assisted translation with automated structural checks and selected lexical corrections; not individually human-reviewed.",
+  "sourceSTEPRevision": "a51237d7a5f2dd2e0f26ccc7156b92ad79703ba9"
+}

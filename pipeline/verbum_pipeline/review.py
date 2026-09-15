@@ -59,6 +59,14 @@ def items(bundle: Bundle) -> list[dict]:
                     "sourceReferenceIds": [record.sourceId],
                 }
             )
+    for translation in bundle.translations or []:
+        result.append(
+            {
+                "key": f"translation:{translation.target}:{translation.id}:{translation.language}",
+                "proposal": translation.model_dump(),
+                "sourceReferenceIds": [translation.sourceId],
+            }
+        )
     result.append(
         {
             "key": "dailyVersePool",

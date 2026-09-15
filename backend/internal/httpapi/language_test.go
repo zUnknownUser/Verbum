@@ -34,3 +34,20 @@ func TestContentLanguageReachesExistingStore(t *testing.T) {
 		})
 	}
 }
+
+func TestLanguageHeaderAndExplicitQueryPrecedence(t *testing.T) {
+	for _, test := range []struct{ query, header, want string }{
+		{"", "pt-BR,pt;q=0.9,en;q=0.8", "pt-BR"},
+		{"en", "pt-BR", "en"}, {"", "fr", "en"},
+	} {
+		s := &languageStore{}
+		handler := New(s, time.Now, nil, nil, nil, nil)
+		request := httptest.NewRequest(http.MethodGet, "/v1/entities?type=person&lang="+test.query, nil)
+		request.Header.Set("Accept-Language", test.header)
+		response := httptest.NewRecorder()
+		handler.ServeHTTP(response, request)
+		if s.language != test.want {
+			t.Fatalf("language=%s want=%s", s.language, test.want)
+		}
+	}
+}

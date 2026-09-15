@@ -11,7 +11,7 @@ enum VoiceScript {
     static let askTool = VoiceTool(
         name: "ask_scripture",
         description: "Answer a Bible question from Scripture itself. Returns a short answer with the passages it rests on and a confidence. Use it for anything not already in the page you were given.",
-        parametersJSON: #"{"type":"object","properties":{"question":{"type":"string","description":"The question, in English, in one sentence."}},"required":["question"]}"#
+        parametersJSON: #"{"type":"object","properties":{"question":{"type":"string","description":"The question, in the app language, in one sentence."}},"required":["question"]}"#
     )
     static let searchTool = VoiceTool(
         name: "search_scripture",
@@ -36,7 +36,7 @@ enum VoiceScript {
         ]
         switch context {
         case .chapter(let reference):
-            lines.append("The reader has \(reference.formatted(for: .english)) open. Its text (World English Bible):")
+            lines.append("The reader has \(reference.formatted(for: .english)) open. Its text (the translation currently selected in the reader):")
             if let chapterText { lines.append(String(chapterText.prefix(12_000))) }
         case .entity(let detail):
             var facts = ["The reader is on the page for \(detail.entity.name) (\(detail.entity.type.rawValue))."]

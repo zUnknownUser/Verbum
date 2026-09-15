@@ -33,6 +33,7 @@ public struct GraphSnapshot: Codable, Equatable, Sendable {
 /// What an entity page shows beyond the graph (spec §9). Fields are optional
 /// because not every kind has every fact, and absent is better than invented.
 public struct EntityDetail: Codable, Equatable, Sendable {
+    public let originalTerm: OriginalTermPresentation?
     public let entity: BibleEntity
     /// Other names: `Simon, Cephas`; `Jebus, Salem`.
     public let aliases: [String]
@@ -54,8 +55,10 @@ public struct EntityDetail: Codable, Equatable, Sendable {
         role: String? = nil,
         modernGeography: String? = nil,
         keyPassages: [PassageReference] = [],
-        sources: [SourceReference] = []
+        sources: [SourceReference] = [],
+        originalTerm: OriginalTermPresentation? = nil
     ) {
+        self.originalTerm = originalTerm
         self.entity = entity
         self.aliases = aliases
         self.approximateDates = approximateDates
@@ -64,4 +67,10 @@ public struct EntityDetail: Codable, Equatable, Sendable {
         self.keyPassages = keyPassages
         self.sources = sources
     }
+}
+
+public struct OriginalTermPresentation: Codable, Equatable, Sendable {
+    public let language: String
+    public let transliteration: String
+    public let strong: String
 }

@@ -29,7 +29,7 @@ public struct ContextView: View {
                     }
                 case .loaded(let context):
                     if context.isFixture {
-                        Text(L10n.t("Demonstration content · Connections from the local sample collection, not a complete or reviewed commentary. Entity descriptions are currently in English."))
+                        Text(L10n.t("Demonstration content · Connections from the sample collection; not a complete or reviewed commentary."))
                             .font(Typography.footnote).foregroundStyle(Palette.inkSecondary)
                     }
                     Text(L10n.t("Explore the people, places and themes connected to this chapter. Related readings below share an entity in this collection; they are not necessarily parallel accounts."))

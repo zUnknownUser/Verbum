@@ -611,10 +611,19 @@ components:
         url: { type: [string, 'null'], format: uri }
 
     # ---- §9
+    OriginalTermPresentation:
+      type: object
+      required: [language, transliteration, strong]
+      properties:
+        language: { type: string, enum: [he, arc, grc] }
+        transliteration: { type: string }
+        strong: { type: string }
+
     EntityDetail:
       type: object
       required: [entity, aliases, keyPassages, sources]
       properties:
+        originalTerm: { $ref: "#/components/schemas/OriginalTermPresentation", description: Canonical study metadata; localized meaning is entity.summary. }
         sourceRecords: { type: array, items: { $ref: '#/components/schemas/EntitySourceRecord' }, description: Optional attributed structured enrichment. }
         localizations: { type: array, items: { $ref: '#/components/schemas/EntityLocalization' }, description: Independent presentation records; absent when unavailable. }
         entity: { $ref: '#/components/schemas/BibleEntity' }

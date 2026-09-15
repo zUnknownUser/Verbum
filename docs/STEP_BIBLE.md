@@ -216,3 +216,9 @@ Validação realizada: **46 testes Python passaram**, incluindo publicação do 
 e Python → HTTP Go; testes Go e `go vet` passaram; OpenAPI válido; builds iOS e Android passaram.
 A compilação dos testes Android também passou. Conforme a orientação já registrada no roadmap,
 a execução de testes mobile e QA em dispositivos permanece com o proprietário.
+
+## PT-BR presentation release
+
+The complete current structured snapshot now has an independent PT-BR presentation overlay,
+including lexical glosses. Canonical STEP forms and identifiers remain unchanged. See
+[localization architecture, coverage, qualifications and update commands](LOCALIZATION.md).

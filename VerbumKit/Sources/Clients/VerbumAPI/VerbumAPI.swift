@@ -85,6 +85,7 @@ public struct VerbumAPI: Sendable {
     func post<T: Decodable>(_ path: String, body: some Encodable, as type: T.Type = T.self) async throws -> T {
         var request = URLRequest(url: url(path), timeoutInterval: Self.postTimeout)
         request.httpMethod = "POST"
+        request.setValue(BookLanguage.current.rawValue, forHTTPHeaderField: "Accept-Language")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try JSONEncoder().encode(body)
@@ -100,6 +101,7 @@ public struct VerbumAPI: Sendable {
     func postForData(_ path: String, body: some Encodable, timeout: TimeInterval) async throws -> Data {
         var request = URLRequest(url: url(path), timeoutInterval: timeout)
         request.httpMethod = "POST"
+        request.setValue(BookLanguage.current.rawValue, forHTTPHeaderField: "Accept-Language")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try JSONEncoder().encode(body)
         try await authorize(&request)
@@ -260,7 +262,7 @@ public actor ResponseCache {
     public static var inMemory: ResponseCache { ResponseCache(directory: nil) }
 
     static func key(for url: URL) -> String {
-        let digest = SHA256.hash(data: Data(url.absoluteString.utf8))
+        let digest = SHA256.hash(data: Data(("localized-v2:" + url.absoluteString).utf8))
         return digest.map { String(format: "%02x", $0) }.joined()
     }
 

@@ -87,6 +87,11 @@ public struct EntityDetailView: View {
                     .foregroundStyle(Palette.inkSecondary)
             }
             VStack(alignment: .leading, spacing: Spacing.xs) {
+                if let original = page.detail.originalTerm {
+                    fact(L10n.t("Original language"), original.language == "grc" ? L10n.t("Greek") : original.language == "arc" ? L10n.t("Aramaic") : L10n.t("Hebrew"))
+                    fact(L10n.t("Transliteration"), original.transliteration)
+                    fact("Strong’s", original.strong)
+                }
                 if let role = page.detail.role { fact(L10n.t("Role"), role) }
                 if let dates = page.detail.approximateDates { fact(L10n.t("When"), dates) }
                 if let modern = page.detail.modernGeography { fact(L10n.t("Today"), modern) }

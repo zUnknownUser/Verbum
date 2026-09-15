@@ -105,6 +105,11 @@ private fun Header(page: EntityDetailFeature.Page) {
             Text(page.detail.aliases.joinToString(" · "), style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily.Serif, fontStyle = FontStyle.Italic), color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         Column(Modifier.padding(top = Spacing.xs), verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
+            page.detail.originalTerm?.let { original ->
+                Fact(stringResource(R.string.original_language), stringResource(when(original.language) { "grc" -> R.string.greek; "arc" -> R.string.aramaic; else -> R.string.hebrew }))
+                Fact(stringResource(R.string.transliteration), original.transliteration)
+                Fact("Strong’s", original.strong)
+            }
             page.detail.role?.let { Fact(stringResource(R.string.fact_role), it) }
             page.detail.approximateDates?.let { Fact(stringResource(R.string.fact_when), it) }
             page.detail.modernGeography?.let { Fact(stringResource(R.string.fact_today), it) }

@@ -70,8 +70,14 @@ internal data class WireEntityDetail(
     val modernGeography: String? = null,
     val keyPassages: List<WirePassageReference> = emptyList(),
     val sources: List<WireSourceReference> = emptyList(),
+    val originalTerm: WireOriginalTerm? = null,
 ) {
-    fun toModel() = EntityDetail(entity.toModel(), aliases, approximateDates, role, modernGeography, keyPassages.map { it.toModel() }, sources.map { it.toModel() })
+    fun toModel() = EntityDetail(entity.toModel(), aliases, approximateDates, role, modernGeography, keyPassages.map { it.toModel() }, sources.map { it.toModel() }, originalTerm?.toModel())
+}
+
+@Serializable
+internal data class WireOriginalTerm(val language: String, val transliteration: String, val strong: String) {
+ fun toModel() = com.nexussoft.verbum.models.OriginalTermPresentation(language, transliteration, strong)
 }
 
 @Serializable

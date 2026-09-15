@@ -29,7 +29,7 @@ object VoiceScript {
     val askTool = VoiceTool(
         "ask_scripture",
         "Answer a Bible question from Scripture itself. Returns a short answer with the passages it rests on and a confidence. Use it for anything not already in the page you were given.",
-        """{"type":"object","properties":{"question":{"type":"string","description":"The question, in English, in one sentence."}},"required":["question"]}""",
+        """{"type":"object","properties":{"question":{"type":"string","description":"The question, in the app language, in one sentence."}},"required":["question"]}""",
     )
     val searchTool = VoiceTool(
         "search_scripture",
@@ -54,7 +54,7 @@ object VoiceScript {
         )
         when (context) {
             is VoiceContext.Chapter -> {
-                lines += "The reader has ${context.reference.formatted(BookLanguage.ENGLISH)} open. Its text (World English Bible):"
+                lines += "The reader has ${context.reference.formatted(BookLanguage.ENGLISH)} open. Its text (the translation currently selected in the reader):"
                 chapterText?.let { lines += it.take(12_000) }
             }
             is VoiceContext.Entity -> {

@@ -240,8 +240,48 @@ class Enrichment(Model):
         return self
 
 
+class ContentTranslation(Model):
+    target: Literal["entity", "timeline", "source"]
+    id: Text
+    language: Literal["pt-BR", "en"]
+    sourceId: Text
+    inputHash: Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]
+    fields: dict[str, str | list[str] | None]
+
+    @model_validator(mode="after")
+    def valid_fields(self) -> Self:
+        expected = {
+            "entity": {
+                "name",
+                "description",
+                "aliases",
+                "approximateDates",
+                "role",
+                "modernGeography",
+            },
+            "timeline": {"title", "summary"},
+            "source": {"citation"},
+        }[self.target]
+        if set(self.fields) != expected:
+            raise ValueError("translation must cover exactly the presentation fields")
+        for key, value in self.fields.items():
+            if key == "aliases":
+                if not isinstance(value, list) or any(
+                    not isinstance(v, str) or not v.strip() for v in value
+                ):
+                    raise ValueError("invalid translated aliases")
+            elif value is not None and (not isinstance(value, str) or not value.strip()):
+                raise ValueError("invalid translated text")
+        if not self.fields.get(
+            {"entity": "name", "timeline": "title", "source": "citation"}[self.target]
+        ):
+            raise ValueError("translated heading is required")
+        return self
+
+
 class Bundle(Model):
-    version: Literal[1, 2] = 1
+    version: Literal[1, 2, 3] = 1
+    translations: list[ContentTranslation] | None = None
     enrichment: Enrichment | None = None
     kind: Literal["fixture", "editorial"]
     content: Content
@@ -253,6 +293,8 @@ class Bundle(Model):
     @model_serializer(mode="wrap")
     def serialize_bundle(self, handler):
         value = handler(self)
+        if self.version != 3:
+            value.pop("translations", None)
         if self.version == 1:
             value.pop("enrichment", None)  # Preserve all existing review hashes.
         return value
@@ -261,6 +303,24 @@ class Bundle(Model):
     def evidence(self) -> Self:
         if (self.version == 2) != (self.enrichment is not None):
             raise ValueError("version 2 requires enrichment; version 1 cannot contain it")
+        if (self.version == 3) != (self.translations is not None):
+            raise ValueError("version 3 requires independent content translations")
+        if self.translations is not None:
+            if self.kind != "editorial" or any(
+                (
+                    self.content.entities,
+                    self.content.details,
+                    self.content.timeline,
+                    self.content.relationships,
+                    self.content.dailyVersePool,
+                )
+            ):
+                raise ValueError("translation batches cannot change canonical content")
+            unique([f"{t.target}:{t.id}:{t.language}" for t in self.translations], "translations")
+            if not self.translations or any(
+                t.sourceId not in {s.id for s in self.content.sources} for t in self.translations
+            ):
+                raise ValueError("translations require attributed sources")
         source_ids = {s.id for s in self.content.sources}
         entity_ids = {e.id for e in self.content.entities}
         if self.entitySources.keys() != entity_ids:

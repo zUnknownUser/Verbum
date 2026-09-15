@@ -8,7 +8,7 @@ from pathlib import Path
 import psycopg
 from pydantic import ValidationError
 
-from . import extract, normalize, publish, review, scripture, step
+from . import extract, localize, normalize, publish, review, scripture, step
 from .files import digest, read, write
 from .models import Bundle, Provenance, Source
 
@@ -22,6 +22,11 @@ def main(argv=None) -> int:
         sub.add_argument("--output", type=Path, required=True)
         if command == "import":
             sub.add_argument("--fixtures", action="store_true")
+    sub = commands.add_parser("localize")
+    sub.add_argument("--snapshot", type=Path, required=True)
+    sub.add_argument("--cache", type=Path, required=True)
+    sub.add_argument("--output", type=Path, required=True)
+    sub.add_argument("--model", default=extract.DEFAULT_MODEL)
     sub = commands.add_parser("import-step")
     sub.add_argument("source_dir", type=Path)
     sub.add_argument("--manifest", type=Path, default=Path("sources/step/manifest.json"))
@@ -60,7 +65,23 @@ def main(argv=None) -> int:
             sub.add_argument("--allow-fixtures", action="store_true")
     args = parser.parse_args(argv)
     try:
-        if args.command == "import-step":
+        if args.command == "localize":
+            if args.output.exists():
+                raise ValueError("output already exists")
+            if args.snapshot.exists():
+                rows = read(args.snapshot)["records"]
+            else:
+                url = os.environ.get("VERBUM_DATABASE_URL")
+                if not url:
+                    raise ValueError("VERBUM_DATABASE_URL is required to snapshot content")
+                with psycopg.connect(url) as conn:
+                    with conn.cursor() as cur:
+                        cur.execute("SET TRANSACTION READ ONLY")
+                        rows = localize.snapshot(cur)
+                write(args.snapshot, {"records": rows})
+            cache = localize.translate(rows, args.cache, extract.default_client(), args.model)
+            write(args.output, localize.build(rows, cache).model_dump())
+        elif args.command == "import-step":
             if args.output.exists() or args.report.exists() or args.output == args.report:
                 raise ValueError("output and report need distinct, unused paths")
             bundle, report = step.build(args.source_dir, args.manifest, args.mapping, args.corpus)

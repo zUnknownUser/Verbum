@@ -35,7 +35,7 @@
     <string name="context_source_failed">Não foi possível abrir esta fonte. Tente novamente.</string>
     <string name="context_surrounding">Antes e depois</string>
     <string name="context_unavailable">Ainda não há contexto disponível para este capítulo. Você pode continuar pelos capítulos anteriores e seguintes abaixo.</string>
-    <string name="context_fixture">Conteúdo de demonstração · Conexões da coleção local de exemplo, não um comentário completo ou revisado. As descrições das entidades estão em inglês.</string>
+    <string name="context_fixture">Conteúdo de demonstração · Conexões da coleção de exemplo; não constitui um comentário completo ou revisado.</string>
     <string name="context_intro">Explore pessoas, lugares e temas conectados a este capítulo. As leituras relacionadas compartilham uma entidade nesta coleção; não são necessariamente relatos paralelos.</string>
     <string name="books">Livros</string>
     <string name="old_testament">Antigo Testamento</string>
@@ -227,4 +227,9 @@
     <string name="voice_mute">Silenciar</string>
     <string name="voice_close">Fechar</string>
     <string name="voice_end">Encerrar</string>
+    <string name="original_language">Idioma original</string>
+    <string name="greek">Grego</string>
+    <string name="hebrew">Hebraico</string>
+    <string name="aramaic">Aramaico</string>
+    <string name="transliteration">Transliteração</string>
 </resources>

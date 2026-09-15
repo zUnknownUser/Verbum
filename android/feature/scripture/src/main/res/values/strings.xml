@@ -35,7 +35,7 @@
     <string name="context_source_failed">Unable to open this source. Try again.</string>
     <string name="context_surrounding">Before and after</string>
     <string name="context_unavailable">Context is not available for this chapter yet. You can keep reading the surrounding chapters below.</string>
-    <string name="context_fixture">Demonstration content · Connections from the local sample collection, not a complete or reviewed commentary. Entity descriptions are currently in English.</string>
+    <string name="context_fixture">Demonstration content · Connections from the sample collection; not a complete or reviewed commentary.</string>
     <string name="context_intro">Explore the people, places and themes connected to this chapter. Related readings share an entity in this collection; they are not necessarily parallel accounts.</string>
     <string name="books">Books</string>
     <string name="old_testament">Old Testament</string>
@@ -227,4 +227,9 @@
     <string name="voice_mute">Mute</string>
     <string name="voice_close">Close</string>
     <string name="voice_end">End</string>
+    <string name="original_language">Original language</string>
+    <string name="greek">Greek</string>
+    <string name="hebrew">Hebrew</string>
+    <string name="aramaic">Aramaic</string>
+    <string name="transliteration">Transliteration</string>
 </resources>

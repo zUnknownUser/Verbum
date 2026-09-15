@@ -143,3 +143,49 @@ func TestStructuredEnrichmentRetrievalAndLocalization(t *testing.T) {
 		t.Fatal("Scripture citation boundary changed")
 	}
 }
+
+func TestPortuguesePresentationCoversDetailsTimelineAndSources(t *testing.T) {
+	ctx := context.Background()
+	conn, url := testdb.Open(t, "../../../db/migrations")
+	_, err := conn.Exec(ctx, `
+ INSERT INTO sources(id,citation,position) VALUES ('source','Editorial notes',0),('translation','Translation attribution',1);
+ INSERT INTO entities(id,type,name,summary,position) VALUES ('moses','person','Moses','Led Israel out of Egypt.',0);
+ INSERT INTO entity_details(entity_id,approximate_dates,role,modern_geography) VALUES ('moses','Dates uncertain','Prophet','Egypt');
+ INSERT INTO entity_aliases(entity_id,alias,position) VALUES ('moses','Moses the prophet',0);
+ INSERT INTO entity_sources(entity_id,source_id,position) VALUES ('moses','source',0);
+ INSERT INTO entity_localizations(entity_id,language,source_id,name,aliases,description,fields) VALUES
+ ('moses','pt-BR','translation','Moisés',ARRAY['Profeta Moisés'],'Conduziu Israel para fora do Egito.',
+ '{"approximateDates":"Datas incertas","role":"Profeta","modernGeography":"Egito"}');
+ INSERT INTO timeline_events(id,title,start_year,date_precision,summary,position) VALUES ('exodus','Exodus',-1400,'approximate','Departure from Egypt.',0);
+ INSERT INTO timeline_event_entities(event_id,entity_id,position) VALUES ('exodus','moses',0);
+ INSERT INTO timeline_localizations VALUES ('exodus','pt-BR','translation','{"title":"Êxodo","summary":"Saída do Egito."}','hash');
+ INSERT INTO source_localizations VALUES ('source','pt-BR','translation','{"citation":"Notas editoriais"}','hash');
+ `)
+	if err != nil {
+		t.Fatal(err)
+	}
+	db, err := postgres.Open(ctx, url)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(db.Close)
+	pt := store.WithLanguage(ctx, "pt-BR")
+	detail, err := db.Detail(pt, "moses")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if detail.Entity.Name != "Moisés" || *detail.Role != "Profeta" || *detail.ApproximateDates != "Datas incertas" || *detail.ModernGeography != "Egito" || len(detail.Aliases) != 1 || detail.Aliases[0] != "Profeta Moisés" {
+		t.Fatalf("PT detail: %+v", detail)
+	}
+	if detail.Sources[0].Citation != "Notas editoriais" {
+		t.Fatalf("sources: %+v", detail.Sources)
+	}
+	en, err := db.Detail(ctx, "moses")
+	if err != nil || en.Entity.Name != "Moses" || *en.Role != "Prophet" || len(en.Sources) != 1 {
+		t.Fatalf("EN detail: %+v %v", en, err)
+	}
+	timeline, err := db.Timeline(pt, "")
+	if err != nil || timeline.Events[0].Title != "Êxodo" || timeline.EntityNames["moses"] != "Moisés" {
+		t.Fatalf("timeline: %+v %v", timeline, err)
+	}
+}

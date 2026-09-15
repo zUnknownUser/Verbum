@@ -12,7 +12,7 @@ type languageKey struct{}
 func WithLanguage(ctx context.Context, language string) context.Context {
 	lang := "en"
 	switch strings.ToLower(strings.TrimSpace(language)) {
-	case "pt", "pt-br":
+	case "pt", "pt-br", "pt-pt":
 		lang = "pt-BR"
 	}
 	return context.WithValue(ctx, languageKey{}, lang)

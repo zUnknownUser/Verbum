@@ -7,6 +7,7 @@ import (
 	"context"
 	"log/slog"
 	"net/http"
+	"strings"
 	"time"
 
 	"verbum/backend/internal/reqid"
@@ -56,7 +57,13 @@ func (h *handlers) ready(w http.ResponseWriter, r *http.Request) {
 // without a tracing backend (§54; see internal/reqid's doc for why this, not OpenTelemetry, yet).
 func logging(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ctx := store.WithLanguage(reqid.NewContext(r.Context()), r.URL.Query().Get("lang"))
+		language := r.URL.Query().Get("lang")
+		if language == "" {
+			language = strings.Split(strings.Split(r.Header.Get("Accept-Language"), ",")[0], ";")[0]
+		}
+		w.Header().Add("Vary", "Accept-Language")
+		ctx := store.WithLanguage(reqid.NewContext(r.Context()), language)
+		w.Header().Set("Content-Language", store.Language(ctx))
 		start := time.Now()
 		rec := &statusRecorder{ResponseWriter: w, status: http.StatusOK}
 		next.ServeHTTP(rec, r.WithContext(ctx))

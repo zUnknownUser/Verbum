@@ -15,7 +15,7 @@ enum class BookLanguage(val tag: String) {
     PORTUGUESE("pt");
 
     companion object {
-        fun of(locale: Locale): BookLanguage = if (locale.language == "pt") PORTUGUESE else ENGLISH
+        fun of(locale: Locale): BookLanguage = if (locale.language == "pt" || locale.country == "BR") PORTUGUESE else ENGLISH
         val current: BookLanguage get() = of(Locale.getDefault())
     }
 }

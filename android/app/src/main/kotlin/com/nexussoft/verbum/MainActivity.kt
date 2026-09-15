@@ -9,6 +9,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.nexussoft.verbum.designsystem.VerbumTheme
 
 class MainActivity : ComponentActivity() {
+    override fun attachBaseContext(base: android.content.Context) {
+        super.attachBaseContext(localizedContext(base))
+    }
+
     /** The POST_NOTIFICATIONS dialog; answered through [NotificationPermission]. */
     private val notificationPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
         NotificationPermission.complete(granted)

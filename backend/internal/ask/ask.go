@@ -23,6 +23,7 @@ import (
 
 	"verbum/backend/internal/domain"
 	"verbum/backend/internal/reqid"
+	"verbum/backend/internal/store"
 )
 
 // Retriever is the slice of store.Store this package needs — never the whole interface, so a
@@ -74,10 +75,14 @@ type modelReply struct {
 	InterpretiveVariance bool   `json:"interpretiveVariance"`
 }
 
-func noEvidenceResponse() domain.AskResponse {
+func noEvidenceResponse(languages ...string) domain.AskResponse {
+	summary := "No sufficiently relevant Scripture passages were found for this question."
+	if len(languages) > 0 && languages[0] == "pt-BR" {
+		summary = "Não foram encontradas passagens bíblicas suficientemente relevantes para esta pergunta."
+	}
 	return domain.AskResponse{
 		Answer:               "",
-		Summary:              "No sufficiently relevant Scripture passages were found for this question.",
+		Summary:              summary,
 		PassageReferences:    []domain.PassageReference{},
 		EntityReferences:     []string{},
 		SourceReferences:     []domain.SourceReference{},
@@ -125,7 +130,7 @@ func (s *Service) Ask(ctx context.Context, question string) (domain.AskResponse,
 	}
 	if len(refs) == 0 {
 		slog.Info("ask: retrieval", "reqID", id, "ms", time.Since(retrievalStart).Milliseconds(), "hits", 0)
-		return noEvidenceResponse(), nil
+		return noEvidenceResponse(store.Language(ctx)), nil
 	}
 	texts, err := s.Store.PassageText(ctx, translation, refs)
 	if err != nil {
@@ -141,11 +146,11 @@ func (s *Service) Ask(ctx context.Context, question string) (domain.AskResponse,
 	if len(items) == 0 {
 		// Retrieval named passages but the corpus has no text for them — never happens with a
 		// healthy scripture_verses table, but §3.5 says never fabricate around a gap either.
-		return noEvidenceResponse(), nil
+		return noEvidenceResponse(store.Language(ctx)), nil
 	}
 
 	synthStart := time.Now()
-	raw, err := s.Synthesizer.Complete(ctx, systemPrompt, buildUserPrompt(q, items))
+	raw, err := s.Synthesizer.Complete(ctx, localizedSystemPrompt(store.Language(ctx)), buildUserPrompt(q, items))
 	slog.Info("ask: synthesis", "reqID", id, "ms", time.Since(synthStart).Milliseconds(), "ok", err == nil)
 	if err != nil {
 		return domain.AskResponse{}, fmt.Errorf("ask: synthesize: %w", err)
@@ -163,7 +168,7 @@ func (s *Service) Ask(ctx context.Context, question string) (domain.AskResponse,
 	if len(cited) == 0 || strings.TrimSpace(reply.Answer) == "" {
 		// §31: cite relevant passages is not optional. An answer that cites nothing verifiable
 		// is treated as no answer, not shown as if it were grounded.
-		return noEvidenceResponse(), nil
+		return noEvidenceResponse(store.Language(ctx)), nil
 	}
 
 	confidence := reply.Confidence
@@ -178,7 +183,11 @@ func (s *Service) Ask(ctx context.Context, question string) (domain.AskResponse,
 
 	answer := reply.Answer
 	if needsProfessionalHelpNote(q) && !mentionsProfessionalHelp(answer) {
-		answer += professionalHelpNote
+		if store.Language(ctx) == "pt-BR" {
+			answer += professionalHelpNotePT
+		} else {
+			answer += professionalHelpNote
+		}
 	}
 
 	// Entity linking rides on citations already validated above — an entity is only ever named
@@ -196,6 +205,9 @@ func (s *Service) Ask(ctx context.Context, question string) (domain.AskResponse,
 	}
 
 	sources := translationSource(translation)
+	if store.Language(ctx) == "pt-BR" && translation == "WEB" {
+		sources[0].Citation = "World English Bible (domínio público) — fonte dos trechos; resposta em português por paráfrase"
+	}
 	if reader, ok := s.Store.(entitySourceReader); ok && len(entityIDs) > 0 {
 		extra, sourceErr := reader.EntitySources(ctx, entityIDs)
 		if sourceErr != nil {

@@ -32,6 +32,6 @@ func (s *Store) Context(ctx context.Context, bookID string, chapter int) (domain
  ) SELECT jsonb_build_object('reference',jsonb_build_object('bookId',$2::text,'chapter',$3::int),
  'entities',COALESCE((SELECT jsonb_agg(`+localizedEntityJSON("$4")+` ORDER BY e.position,e.id) FROM entities e WHERE e.id IN (SELECT id FROM linked) AND e.type<>'passage'),'[]'::jsonb),
  'relatedPassages',COALESCE((SELECT jsonb_agg(jsonb_build_object('bookId',split_part(p.other,'.',2),'chapter',split_part(p.other,'.',3)::int) ORDER BY p.position,p.other) FROM related_passages p),'[]'::jsonb),
- 'sources',COALESCE((SELECT jsonb_agg(`+sourceJSON+` ORDER BY s.position,s.id) FROM sources s WHERE s.id IN (SELECT source_id FROM source_ids)),'[]'::jsonb))
+ 'sources',COALESCE((SELECT jsonb_agg(`+localizedSourceJSON("$4")+` ORDER BY s.position,s.id) FROM sources s WHERE s.id IN (SELECT source_id FROM source_ids)),'[]'::jsonb))
  WHERE EXISTS (SELECT 1 FROM linked)`, fmt.Sprintf("passage.%s.%d", bookID, chapter), bookID, chapter, store.Language(ctx))
 }

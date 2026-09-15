@@ -20,7 +20,7 @@ struct ReaderSettingsView: View {
             }
             .pickerStyle(.segmented)
 
-            Text("In the beginning, God created the heavens and the earth.")
+            Text(L10n.t("In the beginning, God created the heavens and the earth."))
                 .font(Typography.scripture(pointSize: basePointSize * store.textScale.factor))
                 .foregroundStyle(Palette.ink)
                 .lineSpacing(basePointSize * store.textScale.factor * Typography.scriptureLineSpacingRatio)

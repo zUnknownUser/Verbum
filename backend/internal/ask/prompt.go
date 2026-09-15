@@ -55,3 +55,10 @@ func verseOf(ref domain.PassageReference) int {
 	}
 	return 0
 }
+
+func localizedSystemPrompt(language string) string {
+	if language == "pt-BR" {
+		return systemPrompt + "\nWrite answer and summary entirely in Brazilian Portuguese, regardless of the question or evidence language. Preserve original Hebrew/Greek study terms when useful, immediately explaining their meaning in Portuguese. Evidence is in English: any Portuguese rendering is a paraphrase, not a verbatim quotation from a Portuguese Bible edition. Use Brazilian biblical names."
+	}
+	return systemPrompt + "\nWrite answer and summary in English. Explain original Hebrew/Greek study terms in English."
+}

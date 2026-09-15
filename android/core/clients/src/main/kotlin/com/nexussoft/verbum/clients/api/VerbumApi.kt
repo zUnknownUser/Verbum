@@ -169,7 +169,7 @@ class ResponseCache(private val directory: File?) {
     }
 
     private fun key(url: String): String =
-        MessageDigest.getInstance("SHA-256").digest(url.toByteArray(Charsets.UTF_8)).joinToString("") { "%02x".format(it) }
+        MessageDigest.getInstance("SHA-256").digest(("localized-v2:" + url).toByteArray(Charsets.UTF_8)).joinToString("") { "%02x".format(it) }
 
     private fun file(key: String) = directory?.let { File(it, "$key.json") }
 }
@@ -319,7 +319,7 @@ class VerbumApi(
 
     /** `POST path` with a JSON body, decoded. Never cached. */
     internal suspend fun <T> post(path: String, body: String, strategy: DeserializationStrategy<T>): T =
-        decode(send(HttpRequest("POST", url(path, emptyList()), body)), strategy)
+        decode(send(HttpRequest("POST", url(path, emptyList()), body, headers = mapOf("Accept-Language" to BookLanguage.current.tag))), strategy)
 
     private fun url(path: String, query: List<Pair<String, String>>): String {
         val base = baseUrl.trimEnd('/') + path

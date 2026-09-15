@@ -69,15 +69,16 @@ type SourceReference struct {
 
 // EntityDetail is an entity's page (§9).
 type EntityDetail struct {
-	SourceRecords    []EntitySourceRecord `json:"sourceRecords,omitempty"`
-	Localizations    []EntityLocalization `json:"localizations,omitempty"`
-	Entity           Entity               `json:"entity"`
-	Aliases          []string             `json:"aliases"`
-	ApproximateDates *string              `json:"approximateDates"`
-	Role             *string              `json:"role"`
-	ModernGeography  *string              `json:"modernGeography"`
-	KeyPassages      []PassageReference   `json:"keyPassages"`
-	Sources          []SourceReference    `json:"sources"`
+	OriginalTerm     *OriginalTermPresentation `json:"originalTerm,omitempty"`
+	SourceRecords    []EntitySourceRecord      `json:"sourceRecords,omitempty"`
+	Localizations    []EntityLocalization      `json:"localizations,omitempty"`
+	Entity           Entity                    `json:"entity"`
+	Aliases          []string                  `json:"aliases"`
+	ApproximateDates *string                   `json:"approximateDates"`
+	Role             *string                   `json:"role"`
+	ModernGeography  *string                   `json:"modernGeography"`
+	KeyPassages      []PassageReference        `json:"keyPassages"`
+	Sources          []SourceReference         `json:"sources"`
 }
 
 // GraphSnapshot is one entity's neighbourhood (§44).
@@ -142,4 +143,11 @@ type AskResponse struct {
 	SourceReferences     []SourceReference  `json:"sourceReferences"`
 	Confidence           string             `json:"confidence"`
 	InterpretiveVariance bool               `json:"interpretiveVariance"`
+}
+
+// Original scripts and Strong identifiers remain canonical; meaning is entity.summary.
+type OriginalTermPresentation struct {
+	Language        string `json:"language"`
+	Transliteration string `json:"transliteration"`
+	Strong          string `json:"strong"`
 }

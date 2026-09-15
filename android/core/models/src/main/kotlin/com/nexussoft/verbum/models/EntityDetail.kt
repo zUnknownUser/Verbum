@@ -18,4 +18,7 @@ data class EntityDetail(
     val modernGeography: String? = null,
     val keyPassages: List<PassageReference> = emptyList(),
     val sources: List<SourceReference> = emptyList(),
+    val originalTerm: OriginalTermPresentation? = null,
 )
+
+data class OriginalTermPresentation(val language: String, val transliteration: String, val strong: String)
