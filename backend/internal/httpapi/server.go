@@ -4,6 +4,7 @@
 package httpapi
 
 import (
+	"context"
 	"log/slog"
 	"net/http"
 	"time"
@@ -21,6 +22,7 @@ func New(s store.Store, now func() time.Time, rt realtimeBroker, embedder queryE
 	h := &handlers{store: s, now: now, realtime: rt, embedder: embedder, asker: asker, tts: speech}
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, _ *http.Request) { w.Write([]byte("ok\n")) })
+	mux.HandleFunc("GET /readyz", h.ready)
 	mux.HandleFunc("GET /v1/entities", h.listEntities)
 	mux.HandleFunc("GET /v1/entities/{id}", h.entityDetail)
 	mux.HandleFunc("GET /v1/entities/{id}/graph", h.entityGraph)
@@ -33,6 +35,20 @@ func New(s store.Store, now func() time.Time, rt realtimeBroker, embedder queryE
 	mux.HandleFunc("POST /v1/tts", h.synthesizeSpeech)
 	mux.HandleFunc("GET /v1/tts/config", h.speechConfiguration)
 	return logging(mux)
+}
+
+// Deployment readiness exercises the existing content store without paid providers.
+// An empty database must not replace a working API during a rollout.
+func (h *handlers) ready(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "no-store")
+	ctx, cancel := context.WithTimeout(r.Context(), 2*time.Second)
+	defer cancel()
+	pool, err := h.store.DailyVersePool(ctx)
+	if err != nil || len(pool) == 0 {
+		http.Error(w, "not ready", http.StatusServiceUnavailable)
+		return
+	}
+	w.Write([]byte("ready\n"))
 }
 
 // logging writes one structured line per request, tagged with a request id (internal/reqid)

@@ -21,12 +21,20 @@
 
 ## Automated schema migration (2026-09-15)
 
-`railway.json` runs `/app/migrate` as the pre-deploy command and explicitly starts `/app/api`. The Docker image includes
+Deployment settings run `/app/migrate` as the pre-deploy command and explicitly start `/app/api`.
+`/readyz` checks the content store and nonempty daily passage pool with a two-second deadline;
+`/healthz` remains process-only. No paid provider is contacted by either check. The Docker image includes
 that existing binary and `db/migrations/`; migration failure prevents the new API deployment.
 The migrations remain additive/idempotent. STEP data itself is **not** downloaded, approved or
 published by deployment: use the reviewed Python pipeline described in
 [STEP_BIBLE.md](../docs/STEP_BIBLE.md). Database service/image upgrades are separate from schema
 migrations. See [Railway pre-deploy documentation](https://docs.railway.com/deployments/pre-deploy-command).
+
+The effective Railway manifest on 2026-09-15 had empty file configuration despite reporting JSON
+property mappings. Setting a new `railwayConfigFile` was rejected by the provider's deprecation
+policy. Start, pre-deploy, readiness, restart limit (5) and watch patterns were therefore set
+explicitly on the production API service. `railway.json` retains the intended values for reference;
+verify the effective deployment manifest rather than assuming that the legacy file was applied.
 
 
 **Before deploying the 2026-09-15 access update:** configure

@@ -38,6 +38,32 @@ tags:
   - name: tts
 
 paths:
+  /healthz:
+    get:
+      operationId: liveness
+      summary: Process liveness, independent of database availability.
+      responses:
+        '200':
+          description: Process is running.
+          content:
+            text/plain:
+              schema: { type: string }
+  /readyz:
+    get:
+      operationId: readiness
+      summary: Content store is reachable and the daily passage pool is populated.
+      description: Bounded to two seconds, not cached, and does not call paid providers. Used by deployment health checks.
+      responses:
+        '200':
+          description: Content is available.
+          content:
+            text/plain:
+              schema: { type: string }
+        '503':
+          description: Store unavailable, timed out, or not seeded. No internal diagnostic is exposed.
+          content:
+            text/plain:
+              schema: { type: string }
   /v1/tts/config:
     get:
       tags: [tts]

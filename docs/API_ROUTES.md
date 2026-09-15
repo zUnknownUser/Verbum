@@ -5,8 +5,10 @@
 Detalhes de entidade possuem campos opcionais `sourceRecords` e `localizations`. As rotas de conteúdo aceitam `lang=en|pt|pt-BR`; metadados originais permanecem intactos. Busca por nomes/aliases/Strong’s e contexto incluem o enriquecimento publicado. Ver [STEP_BIBLE.md](STEP_BIBLE.md) e o OpenAPI atualizado.
 
 Human-readable companion to `api/openapi.yaml` (the actual contract — this doc explains what each
-route is *for*; the spec is authoritative on shapes, required fields and error codes). All routes
-are under `/v1`. Editorial GETs remain public; paid POSTs require a Firebase ID token
+route is *for*; the spec is authoritative on shapes, required fields and error codes). Product routes
+are under `/v1`. Operational routes `/healthz` (process) and `/readyz` (content store plus nonempty
+daily pool, two-second deadline) return plain text. Deployment uses `/readyz`; neither calls paid providers.
+Editorial GETs remain public; paid POSTs require a Firebase ID token
 (anonymous identities are accepted). Search without identity stays lexical; verified
 identity enables semantic retrieval. UID/IP/process limits return 429 with Retry-After.
 See [API access](../backend/SECURITY.md). Errors are one shape,
