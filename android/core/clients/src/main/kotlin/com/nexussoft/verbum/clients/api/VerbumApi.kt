@@ -173,7 +173,7 @@ class ResponseCache(private val directory: File?) {
     }
 
     private fun key(url: String): String =
-        MessageDigest.getInstance("SHA-256").digest(("localized-v2:" + url).toByteArray(Charsets.UTF_8)).joinToString("") { "%02x".format(it) }
+        MessageDigest.getInstance("SHA-256").digest(("localized-v3:" + url).toByteArray(Charsets.UTF_8)).joinToString("") { "%02x".format(it) }
 
     private fun file(key: String) = directory?.let { File(it, "$key.json") }
 }

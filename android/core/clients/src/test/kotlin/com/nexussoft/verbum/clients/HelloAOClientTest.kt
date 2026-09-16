@@ -21,6 +21,13 @@ private fun sample(name: String): String =
     HelloAOClientTest::class.java.classLoader.getResourceAsStream("samples/$name.json")!!.bufferedReader().readText()
 
 class HelloAOClientTest {
+    @Test fun rejectsWrongTranslationBeforeCaching() = runTest {
+        val cache = ChapterCache(null)
+        val client = HelloAOBibleClient("por_blj", Transport { sample("BSB_PSA_23") }, cache)
+        assertFailsWith<BibleClientException.ContentUnavailable> { client.chapter("Ps",23) }
+        kotlin.test.assertNull(cache.read("por_blj", PassageReference("Ps",23)))
+    }
+
     @Test
     fun everyCanonBookHasAUsfmCodeAndBack() {
         for (book in BibleBook.canon) {

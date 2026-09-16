@@ -36,6 +36,8 @@ import Testing
     }
 
     @Test func languageFollowsTheLocale() {
+        #expect(BookLanguage(locale: Locale(identifier: "en_BR")) == .portuguese)
+        #expect(BookLanguage(locale: Locale(identifier: "es_BR")) == .portuguese)
         #expect(BookLanguage(locale: Locale(identifier: "pt_BR")) == .portuguese)
         #expect(BookLanguage(locale: Locale(identifier: "pt_PT")) == .portuguese)
         #expect(BookLanguage(locale: Locale(identifier: "en_US")) == .english)

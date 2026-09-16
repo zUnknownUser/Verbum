@@ -35,7 +35,8 @@ public struct HelloAOBibleClient: Sendable {
         guard (1...book.chapterCount).contains(chapter), let usfm = HelloAOBooks.usfmByOSIS[bookId] else {
             throw BibleClientError.contentUnavailable(reference)
         }
-        if let cached = await cache.read(translationId: translationId, reference: reference) {
+        if let cached = await cache.read(translationId: translationId, reference: reference),
+           !cached.isEmpty, cached.allSatisfy({ $0.translationId == translationId }) {
             return cached
         }
         let url = Self.baseURL.appendingPathComponent("\(translationId)/\(usfm)/\(chapter).json")
@@ -48,7 +49,7 @@ public struct HelloAOBibleClient: Sendable {
             throw BibleClientError.networkUnavailable
         }
         let passages = try HelloAOChapter.passages(from: data, bookId: bookId)
-        guard !passages.isEmpty else { throw BibleClientError.contentUnavailable(reference) }
+        guard !passages.isEmpty, passages.allSatisfy({ $0.translationId == translationId }) else { throw BibleClientError.contentUnavailable(reference) }
         await cache.write(passages, translationId: translationId, reference: reference)
         return passages
     }

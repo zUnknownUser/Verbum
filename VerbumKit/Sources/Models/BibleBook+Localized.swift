@@ -17,6 +17,8 @@ public enum BookLanguage: String, Sendable, CaseIterable {
         self = (locale.language.languageCode?.identifier == "pt" || locale.region?.identifier == "BR") ? .portuguese : .english
     }
 
+    public var locale: Locale { Locale(identifier: self == .portuguese ? "pt_BR" : "en_US") }
+
     /// Resolved once: iOS relaunches the app when its language changes.
     public static let current: BookLanguage = BookLanguage(locale: .current)
 }

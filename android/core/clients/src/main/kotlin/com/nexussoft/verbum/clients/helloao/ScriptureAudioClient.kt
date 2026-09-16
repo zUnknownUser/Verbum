@@ -20,18 +20,17 @@ fun interface ScriptureAudioClient {
 }
 
 /**
- * Audio follows the translation being read when it has any; otherwise the English BSB
- * recordings are offered, labelled as such. Mirrors iOS `ScriptureAudioClient.helloAO`.
+ * Recordings must match the requested reading translation. Never switch languages.
  */
 class HelloAOScriptureAudioClient(language: BookLanguage, private val transport: Transport = UrlConnectionTransport) : ScriptureAudioClient {
-    private val candidates: List<String> = listOf(HelloAOTranslation.id(language)) + RECORDED_FALLBACKS.filter { it != HelloAOTranslation.id(language) }
+    private val candidates: List<String> = listOf(HelloAOTranslation.id(language))
 
     override suspend fun chapterAudio(bookId: BookId, chapter: Int): ChapterAudio? {
         val usfm = HelloAOBooks.usfmByOsis[bookId] ?: return null
         for (translation in candidates) {
             val body = runCatching { transport.get("${HelloAOBibleClient.BASE_URL}/$translation/$usfm/$chapter.json") }.getOrNull() ?: continue
             val audio = runCatching { parse(body, bookId, chapter) }.getOrNull() ?: continue
-            if (audio.narrators.isNotEmpty()) {
+            if (audio.translationId == translation && audio.narrators.isNotEmpty()) {
                 val narrators=audio.narrators.map {narrator->
                     val cues=try {
                         val uri=narrator.timingsPath?.let {java.net.URI(HelloAOBibleClient.BASE_URL+"/").resolve(it)}
@@ -46,7 +45,6 @@ class HelloAOScriptureAudioClient(language: BookLanguage, private val transport:
     }
 
     companion object {
-        val RECORDED_FALLBACKS = listOf("BSB")
         private val json = Json { ignoreUnknownKeys = true }
 
         internal fun parseTimings(body:String,narrator:AudioNarrator,translation:String,book:String,chapter:Int):List<AudioCue> {

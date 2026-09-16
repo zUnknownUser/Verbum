@@ -39,6 +39,8 @@ class BibleBookLocalizedTest {
 
     @Test
     fun languageFollowsTheLocale() {
+        assertEquals(BookLanguage.PORTUGUESE, BookLanguage.of(Locale("en", "BR")))
+        assertEquals(BookLanguage.PORTUGUESE, BookLanguage.of(Locale("es", "BR")))
         assertEquals(BookLanguage.PORTUGUESE, BookLanguage.of(Locale("pt", "BR")))
         assertEquals(BookLanguage.PORTUGUESE, BookLanguage.of(Locale("pt", "PT")))
         assertEquals(BookLanguage.ENGLISH, BookLanguage.of(Locale.US))

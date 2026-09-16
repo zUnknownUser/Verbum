@@ -29,6 +29,13 @@ private func sample(_ name: String) throws -> Data {
 }
 
 @Suite struct HelloAOChapterTests {
+    @Test func rejectsWrongTranslationBeforeCaching() async throws {
+        let cache = ChapterCache.inMemory
+        let client = HelloAOBibleClient(translationId: "por_blj", transport: { _ in try sample("BSB_PSA_23") }, cache: cache)
+        await #expect(throws: BibleClientError.self) { try await client.chapter(bookId: "Ps", chapter: 23) }
+        #expect(await cache.read(translationId: "por_blj", reference: PassageReference(bookId: "Ps", chapter: 23)) == nil)
+    }
+
     @Test func poetryKeepsItsLines() throws {
         let verses = try HelloAOChapter.passages(from: try sample("BSB_PSA_23"), bookId: "Ps")
         #expect(verses.count == 6)

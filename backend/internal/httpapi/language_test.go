@@ -22,7 +22,7 @@ func (s *languageStore) Entities(ctx context.Context, _ domain.EntityType) ([]do
 }
 
 func TestContentLanguageReachesExistingStore(t *testing.T) {
-	for _, test := range []struct{ query, want string }{{"", "en"}, {"en", "en"}, {"pt", "pt-BR"}, {"pt-BR", "pt-BR"}, {"unsupported", "en"}} {
+	for _, test := range []struct{ query, want string }{{"", "en"}, {"en", "en"}, {"pt", "pt-BR"}, {"pt-BR", "pt-BR"}, {"en-BR", "pt-BR"}, {"es-BR", "pt-BR"}, {"unsupported", "en"}} {
 		t.Run(test.query, func(t *testing.T) {
 			s := &languageStore{}
 			handler := New(s, time.Now, nil, nil, nil, nil)

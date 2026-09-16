@@ -54,7 +54,7 @@ class HelloAOBibleClient(
         val reference = PassageReference(bookId, chapter)
         val usfm = HelloAOBooks.usfmByOsis[bookId]
         if (chapter !in 1..book.chapterCount || usfm == null) throw BibleClientException.ContentUnavailable(reference)
-        cache.read(translationId, reference)?.let { return@withContext it }
+        cache.read(translationId, reference)?.takeIf { it.isNotEmpty() && it.all { verse -> verse.translationId == translationId } }?.let { return@withContext it }
         val body = try {
             transport.get("$BASE_URL/$translationId/$usfm/$chapter.json")
         } catch (e: BibleClientException) {
@@ -65,7 +65,7 @@ class HelloAOBibleClient(
             throw BibleClientException.NetworkUnavailable
         }
         val passages = HelloAOChapter.passages(body, bookId)
-        if (passages.isEmpty()) throw BibleClientException.ContentUnavailable(reference)
+        if (passages.isEmpty() || passages.any { it.translationId != translationId }) throw BibleClientException.ContentUnavailable(reference)
         cache.write(translationId, reference, passages)
         passages
     }

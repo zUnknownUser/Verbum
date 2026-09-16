@@ -1,5 +1,6 @@
 import Clients
 import Features
+import Models
 import SwiftUI
 
 struct RootView: View {
@@ -12,11 +13,12 @@ struct RootView: View {
             if ready { AccountRootView().id(owner) }
             else if failed {
                 VStack {
-                    Text(Locale.current.language.languageCode?.identifier == "pt" ? "Não foi possível abrir seus dados salvos." : "Your saved data could not be opened.")
-                    Button(Locale.current.language.languageCode?.identifier == "pt" ? "Tentar novamente" : "Try again") { failed = false; retry += 1 }
+                    Text(BookLanguage.current == .portuguese ? "Não foi possível abrir seus dados salvos." : "Your saved data could not be opened.")
+                    Button(BookLanguage.current == .portuguese ? "Tentar novamente" : "Try again") { failed = false; retry += 1 }
                 }
             } else { ProgressView() }
         }
+            .environment(\.locale, BookLanguage.current.locale)
             .task(id: retry) {
                 for await _ in AccountClient.liveValue.sessions() {
                     if !ready {

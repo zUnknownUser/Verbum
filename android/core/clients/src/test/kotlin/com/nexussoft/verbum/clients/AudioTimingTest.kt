@@ -4,6 +4,17 @@ import com.nexussoft.verbum.models.*
 import kotlin.test.*
 
 class AudioTimingTest {
+    @Test fun portugueseRejectsEnglishRecordings() = kotlinx.coroutines.test.runTest {
+        val requests = mutableListOf<String>()
+        val client = HelloAOScriptureAudioClient(BookLanguage.PORTUGUESE, com.nexussoft.verbum.clients.helloao.Transport { url ->
+            requests.add(url)
+            """{"translation":{"id":"BSB","name":"English"},"thisChapterAudioLinks":{"reader":"https://example.test/en.mp3"}}"""
+        })
+        assertNull(client.chapterAudio("Prov", 2))
+        assertEquals(1, requests.size)
+        assertTrue(requests.single().contains("/por_blj/"))
+    }
+
     @Test fun timingsMustIdentifyExactRecording() {
         val data="""{"translationId":"BSB","bookId":"JHN","chapterNumber":1,"reader":"david","audioLink":"https://example.test/john.mp3","verses":[2.5,8,13.25]}"""
         val narrator=AudioNarrator("david","David","https://example.test/john.mp3",null)

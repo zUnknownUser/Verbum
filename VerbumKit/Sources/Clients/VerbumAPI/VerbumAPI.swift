@@ -312,7 +312,7 @@ public actor ResponseCache {
     public static var inMemory: ResponseCache { ResponseCache(directory: nil) }
 
     static func key(for url: URL) -> String {
-        let digest = SHA256.hash(data: Data(("localized-v2:" + url.absoluteString).utf8))
+        let digest = SHA256.hash(data: Data(("localized-v3:" + url.absoluteString).utf8))
         return digest.map { String(format: "%02x", $0) }.joined()
     }
 

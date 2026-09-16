@@ -74,7 +74,7 @@ func TestStructuredEnrichmentRetrievalAndLocalization(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if lex.Entity.Name != "דָּוִד" || lex.Entity.NameLanguage != "en" || lex.SourceRecords[0].Lexical.Language != "he" {
+	if lex.Entity.Name != "דָּוִד" || lex.Entity.NameLanguage != "pt-BR" || lex.Entity.Summary != nil || lex.SourceRecords[0].Lexical.Language != "he" {
 		t.Fatalf("original/fallback changed: %+v", lex)
 	}
 	for _, q := range []string{"H1732", "h1732", "Dawid", "דָּוִד", "Rei Davi"} {
@@ -228,5 +228,40 @@ func TestVerseReferencesReuseAttestedEntityOccurrences(t *testing.T) {
 	}
 	if len(chapter.RelatedPassages) != 0 {
 		t.Fatal("chapter-only API contract changed")
+	}
+}
+
+func TestPortugueseNeverUsesMissingEnglishPresentation(t *testing.T) {
+	ctx := context.Background()
+	conn, url := testdb.Open(t, "../../../db/migrations")
+	_, err := conn.Exec(ctx, `
+ INSERT INTO entities(id,type,name,summary,position) VALUES ('missing','person','English name','English summary',0);
+ INSERT INTO entity_details(entity_id,approximate_dates,role,modern_geography) VALUES ('missing','English dates','English role','English geography');
+ INSERT INTO entity_aliases(entity_id,alias,position) VALUES ('missing','English alias',0);
+ INSERT INTO timeline_events(id,title,date_precision,summary,position) VALUES ('missing','English event','unknown','English summary',0);
+ `)
+	if err != nil {
+		t.Fatal(err)
+	}
+	db, err := postgres.Open(ctx, url)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(db.Close)
+	pt := store.WithLanguage(ctx, "en-BR")
+	detail, err := db.Detail(pt, "missing")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if detail.Entity.Name != "Nome em tradução" || detail.Entity.Summary != nil || detail.Role != nil || detail.ModernGeography != nil || detail.ApproximateDates != nil || len(detail.Aliases) != 0 {
+		t.Fatalf("English leaked: %+v", detail)
+	}
+	timeline, err := db.Timeline(pt, "")
+	if err != nil || len(timeline.Events) != 0 {
+		t.Fatalf("English timeline leaked: %+v %v", timeline, err)
+	}
+	en, err := db.Detail(ctx, "missing")
+	if err != nil || en.Entity.Name != "English name" || en.Entity.Summary == nil {
+		t.Fatalf("English changed: %+v %v", en, err)
 	}
 }

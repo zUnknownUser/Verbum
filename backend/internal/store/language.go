@@ -2,6 +2,7 @@ package store
 
 import (
 	"context"
+	"golang.org/x/text/language"
 	"strings"
 )
 
@@ -9,11 +10,15 @@ type languageKey struct{}
 
 // WithLanguage carries presentation language through the existing store boundary.
 // Source language, Unicode forms and external IDs never depend on this value.
-func WithLanguage(ctx context.Context, language string) context.Context {
+func WithLanguage(ctx context.Context, requested string) context.Context {
 	lang := "en"
-	switch strings.ToLower(strings.TrimSpace(language)) {
-	case "pt", "pt-br", "pt-pt":
-		lang = "pt-BR"
+	tag, err := language.Parse(strings.ReplaceAll(strings.TrimSpace(requested), "_", "-"))
+	if err == nil {
+		base, _ := tag.Base()
+		region, _ := tag.Region()
+		if base.String() == "pt" || region.String() == "BR" {
+			lang = "pt-BR"
+		}
 	}
 	return context.WithValue(ctx, languageKey{}, lang)
 }

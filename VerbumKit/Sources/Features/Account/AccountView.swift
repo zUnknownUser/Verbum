@@ -163,7 +163,7 @@ struct AccountView: View {
                     Divider().overlay(Palette.rule)
                     detail("authentication", value: authentication(session))
                     if let date = session.createdAt {
-                        detail("memberSince", value: date.formatted(.dateTime.month(.wide).year()))
+                        detail("memberSince", value: date.formatted(.dateTime.month(.wide).year().locale(BookLanguage.current.locale)))
                     }
                     if session.isAnonymous {
                         primary("register") { store.send(.page(.register)) }

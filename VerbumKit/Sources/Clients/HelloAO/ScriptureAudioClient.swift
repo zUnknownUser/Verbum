@@ -11,7 +11,7 @@ public struct ScriptureAudioClient: Sendable {
 }
 
 extension ScriptureAudioClient: DependencyKey {
-    /// Portuguese: the device reads the translation on screen; English: helloao recordings.
+    /// Portuguese uses cloud narration; English uses helloao recordings.
     public static let liveValue: ScriptureAudioClient = .live(language: .current)
     public static let previewValue = ScriptureAudioClient(chapterAudio: { _, _ in nil })
 }
@@ -24,12 +24,9 @@ extension DependencyValues {
 }
 
 extension ScriptureAudioClient {
-    /// Translations known to carry recordings on helloao, in preference order after the reading one.
-    static let recordedFallbacks = ["BSB"]
-
     public static func helloAO(language: BookLanguage, transport: @escaping HelloAOBibleClient.Transport = HelloAOBibleClient.urlSession) -> ScriptureAudioClient {
         let reading = HelloAOTranslation.id(for: language)
-        let candidates = [reading] + recordedFallbacks.filter { $0 != reading }
+        let candidates = [reading]
         return ScriptureAudioClient(
             chapterAudio: { bookId, chapter in
                 guard let usfm = HelloAOBooks.usfmByOSIS[bookId] else { return nil }
@@ -37,7 +34,7 @@ extension ScriptureAudioClient {
                     let url = HelloAOBibleClient.baseURL.appendingPathComponent("\(translation)/\(usfm)/\(chapter).json")
                     let data: Data
                     do { data = try await transport(url) } catch { continue }
-                    if let audio = try? HelloAOChapterAudio.parse(data, bookId: bookId, chapter: chapter), !audio.narrators.isEmpty {
+                    if let audio = try? HelloAOChapterAudio.parse(data, bookId: bookId, chapter: chapter), audio.translationId == reading, !audio.narrators.isEmpty {
                         var narrators: [AudioNarrator] = []
                         for narrator in audio.narrators {
                             var cues: [AudioCue] = []

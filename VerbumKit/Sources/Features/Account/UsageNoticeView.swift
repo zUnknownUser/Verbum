@@ -18,7 +18,7 @@ struct UsageNoticeView: View {
             Text(AccountCopy.text(title)).font(Typography.editorialHeadline)
             Text(AccountCopy.text(restriction.code == "plan_required" ? "limitPlanBody" : "limitBody")).font(Typography.subheadline)
             if let date = restriction.resetDate {
-                Text(AccountCopy.text("usageReset") + " " + date.formatted(date: .abbreviated, time: .shortened)).font(Typography.footnote)
+                Text(AccountCopy.text("usageReset") + " " + date.formatted(Date.FormatStyle(date: .abbreviated, time: .shortened).locale(BookLanguage.current.locale))).font(Typography.footnote)
             }
         }
     }
