@@ -201,7 +201,7 @@ public struct AppFeature {
             state[keyPath: path].append(.entity(EntityDetailFeature.State(entityID: id)))
         case .graph(.delegate(.focus(let entity))):
             state[keyPath: path].append(.graph(GraphFeature.State(rootID: entity.id)))
-        case .reader(.delegate(.openContext(let reference))), .arrival(.delegate(.openContext(let reference))):
+        case .arrival(.delegate(.openContext(let reference))):
             state[keyPath: path].append(.context(ContextFeature.State(reference: reference)))
         case .books(.delegate(.chapterSelected(let reference))):
             state[keyPath: path].append(.reader(ScriptureFeature.State(reference: reference)))

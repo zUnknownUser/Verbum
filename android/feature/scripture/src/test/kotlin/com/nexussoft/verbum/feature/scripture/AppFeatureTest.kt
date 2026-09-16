@@ -29,7 +29,7 @@ class AppFeatureTest {
     private val preferences = InMemoryPreferencesClient()
 
     private fun deps(bible: StubBibleClient = StubBibleClient(), graph: StubGraphClient = StubGraphClient()) = AppFeature.Dependencies(
-        bibleClient = bible, clipboard = unimplementedClipboard, preferences = preferences, searchClient = unimplementedSearch, graphClient = graph,
+        bibleClient = bible, preferences = preferences, searchClient = unimplementedSearch, graphClient = graph,
         audioClient = ScriptureAudioClient { _, _ -> null }, player = FakePlayer(),
         clock = Clock.fixed(Instant.parse("2026-01-04T15:00:00Z"), ZoneId.of("UTC")), language = { BookLanguage.ENGLISH }, searchDebounceMs = 0,
     )
@@ -272,7 +272,7 @@ class AppFeatureTest {
         }
         val store = store(deps().let { d ->
             AppFeature.Dependencies(
-                d.bibleClient, d.clipboard, d.preferences, d.searchClient, d.graphClient, d.audioClient, d.player, d.clock, d.language,
+                d.bibleClient, d.preferences, d.searchClient, d.graphClient, d.audioClient, d.player, d.clock, d.language,
                 d.searchDebounceMs, d.initialTextScale, notifications = notifications,
             )
         })

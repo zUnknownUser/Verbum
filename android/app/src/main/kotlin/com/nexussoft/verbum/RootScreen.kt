@@ -56,7 +56,6 @@ fun RootScreen() {
             AppFeature.Dependencies(
                 usageStatus = { api.usageStatus() },
                 bibleClient = bible,
-                clipboard = AndroidClipboardClient(context),
                 preferences = preferences,
                 searchClient = LiveSearchClient(api),
                 graphClient = LiveGraphClient(api),

@@ -37,7 +37,6 @@ public struct ScriptureFeature {
         public enum Delegate: Equatable {
             case listen(PassageReference)
             case talk(PassageReference)
-            case openContext(PassageReference)
         }
     }
 
@@ -74,8 +73,6 @@ public struct ScriptureFeature {
             case .reader(.delegate(.talk(let reference))):
                 return .send(.delegate(.talk(reference)))
 
-            case .reader(.delegate(.openContext(let reference))):
-                return .send(.delegate(.openContext(reference)))
 
             case .reader:
                 // Keep the shelf's "you are here" in step with the reader.

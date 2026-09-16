@@ -16,7 +16,7 @@ class ScriptureFeatureTest {
     private val preferences = InMemoryPreferencesClient()
 
     private fun store(bible: StubBibleClient = StubBibleClient(), reference: PassageReference = PassageReference("John", 3)) =
-        TestStore(ScriptureFeature.State.initial(reference), ScriptureFeature.reducer(bible, unimplementedClipboard, preferences))
+        TestStore(ScriptureFeature.State.initial(reference), ScriptureFeature.reducer(bible, preferences))
 
     @Test
     fun startsOnTheReaderWithTheShelfInStep() {

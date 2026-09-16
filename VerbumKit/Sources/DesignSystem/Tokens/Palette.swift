@@ -9,8 +9,6 @@ import SwiftUI
 public enum Palette {
     // MARK: Background
 
-    /// Full-screen reading canvas.
-    public static let background = Color(.systemBackground)
     /// Grouped screens (Explore, Library, settings-like lists).
     public static let groupedBackground = Color(.systemGroupedBackground)
 
@@ -18,18 +16,12 @@ public enum Palette {
 
     /// A card or row resting on `groupedBackground`.
     public static let surface = Color(.secondarySystemGroupedBackground)
-    /// A surface nested inside another surface.
-    public static let surfaceElevated = Color(.tertiarySystemGroupedBackground)
-    /// Subtle fill for chips, verse selection, timeline tracks.
-    public static let fill = Color(.systemFill)
     public static let fillSecondary = Color(.secondarySystemFill)
 
     // MARK: Foreground
 
-    public static let foreground = Color(.label)
     public static let foregroundSecondary = Color(.secondaryLabel)
     public static let foregroundTertiary = Color(.tertiaryLabel)
-    public static let separator = Color(.separator)
 
     // MARK: Accent
 

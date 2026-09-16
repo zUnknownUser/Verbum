@@ -99,7 +99,7 @@ class ListenIntegrationTest {
     fun readerListenStartsTheGlobalPlayerAndTogglesWhenAlreadyOn() = runTest {
         val preferences = com.nexussoft.verbum.clients.InMemoryPreferencesClient()
         val deps = AppFeature.Dependencies(
-            bibleClient = StubBibleClient(), clipboard = unimplementedClipboard, preferences = preferences, searchClient = unimplementedSearch, graphClient = StubGraphClient(),
+            bibleClient = StubBibleClient(), preferences = preferences, searchClient = unimplementedSearch, graphClient = StubGraphClient(),
             audioClient = ScriptureAudioClient { _, _ -> null }, player = FakePlayer(), language = { com.nexussoft.verbum.models.BookLanguage.ENGLISH }, searchDebounceMs = 0,
         )
         val store = TestStore(AppFeature.State(), AppFeature.reducer(deps))

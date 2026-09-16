@@ -2,8 +2,31 @@
 
 Data: 16/09/2026. Base examinada: `5fc4f664da4358040749faaa532f8f28f5b6d144`.
 
-**Status: diagnóstico registrado; nenhuma remoção ou alteração de código foi realizada.**
-O pedido foi localizar e documentar os achados, deixando qualquer limpeza para depois.
+**Status: limpeza autorizada posteriormente pelo usuário e aplicada após revalidação.**
+
+## Resultado da limpeza
+
+Base da revalidação: `0ed6d37`. Os achados originais abaixo ficam preservados como histórico.
+
+- CM-01 a CM-03: removidos o helper `Result.mapError`, o identificador de cancelamento não usado e a ação intermediária `verseTapped`.
+- CM-04 e CM-05: removidos os fluxos inacessíveis de seleção/cópia, seu estado, formatadores e clientes de clipboard, incluindo a injeção Android. Os dois testes exclusivos do formatador eliminado foram retirados junto com a implementação. O teste Android de estudo do versículo agora aciona `StudyVerse`, exatamente como a interface atual, mantendo suas asserções.
+- CM-06: removida somente a cadeia antiga de entrada em Contexto pelo leitor. Contexto pela exploração guiada continua ativo.
+- CM-07: removidos os tokens listados, após nova busca confirmar ausência de consumidores.
+- CM-08 e APIs da seção 5: preservados, por não serem remoções inequivocamente seguras. O estado de falha de anotações merece uma decisão funcional separada.
+
+Leitura, estudo, destaques, notas, áudio, regras de custos e compatibilidade iOS 17 continuam fora do escopo da remoção. Não houve alteração no backend ou no pipeline.
+
+## Validação da limpeza
+
+- Android: `:app:assembleDebug` concluído. Nos testes selecionados de ChapterReader, ChapterNavigation, Scripture e AudioPlayer, 18 de 19 passaram.
+- iOS: build do app no simulador iPhone 17 Pro / iOS 27 concluído. Nos testes selecionados de ChapterReader, ChapterNavigation, Scripture e AudioPlayer, 19 de 21 passaram.
+- As falhas em `titleOpensTheShelfAndAChapterClosesItIntoTheReader` (ambos) e `steppingChaptersInReaderMovesTheShelfMarker` (iOS) foram reproduzidas em checkout isolado de `0ed6d37`, antes da limpeza, com as mesmas divergências de estado de navegação. Permanecem pendências anteriores; não foram alteradas para tornar a suíte verde.
+- O runner de testes iOS da comparação terminou de relatar os cinco testes e ficou preso no encerramento; foi interrompido após registrar as duas falhas (12 ocorrências), iguais às da versão modificada.
+- `git diff --check` e nova busca por referências aos símbolos removidos sem pendências.
+
+## Auditoria original
+
+O pedido inicial foi localizar e documentar os achados, deixando a limpeza para depois.
 
 ## Escopo e limites
 
@@ -186,7 +209,7 @@ deste diagnóstico.
 
 ## 7. Registro para uma possível limpeza futura
 
-Nenhuma limpeza está autorizada por este documento. Se houver um pedido posterior,
+Este era o registro do diagnóstico inicial, antes da autorização posterior de limpeza. Para novas remoções,
 revalidar as referências no commit então vigente e tratar separadamente helpers isolados,
 ações antigas, estado sem consumidor, tokens públicos e APIs utilizadas por testes.
 Preservar os caminhos ativos de estudo do versículo, destaque de passagens, Contexto e

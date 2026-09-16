@@ -22,22 +22,3 @@ enum ChapterNavigation {
         return PassageReference(bookId: previousBook.id, chapter: previousBook.chapterCount)
     }
 }
-
-/// Formats a verse selection the way people cite it: contiguous runs become
-/// ranges, gaps become commas. `John 3:16-18, 21`.
-enum SelectionFormatter {
-    static func format(bookId: BookID, chapter: Int, verses: Set<Int>) -> String? {
-        guard !verses.isEmpty else { return nil }
-        let bookName = BibleBook.book(id: bookId)?.name ?? bookId
-        var runs: [ClosedRange<Int>] = []
-        for verse in verses.sorted() {
-            if let last = runs.last, last.upperBound + 1 == verse {
-                runs[runs.count - 1] = last.lowerBound...verse
-            } else {
-                runs.append(verse...verse)
-            }
-        }
-        let parts = runs.map { $0.lowerBound == $0.upperBound ? "\($0.lowerBound)" : "\($0.lowerBound)-\($0.upperBound)" }
-        return "\(bookName) \(chapter):\(parts.joined(separator: ", "))"
-    }
-}

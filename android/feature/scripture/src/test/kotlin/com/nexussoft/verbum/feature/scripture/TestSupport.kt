@@ -8,7 +8,6 @@ import com.nexussoft.verbum.clients.helloao.ScriptureAudioClient
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.emptyFlow
-import com.nexussoft.verbum.clients.ClipboardClient
 import com.nexussoft.verbum.clients.GraphClient
 import com.nexussoft.verbum.clients.SearchClient
 import com.nexussoft.verbum.models.BibleEntity
@@ -45,8 +44,6 @@ internal class StubGraphClient(
     override suspend fun neighbors(id: EntityId, limit: Int) = neighborsStub(id, limit)
     override suspend fun detail(id: EntityId) = detailStub(id)
 }
-
-internal val unimplementedClipboard = ClipboardClient { throw AssertionError("ClipboardClient.copy was called but not stubbed: $it") }
 
 internal val unimplementedAudio = ScriptureAudioClient { b, c -> throw AssertionError("ScriptureAudioClient.chapterAudio($b, $c) was called but not stubbed") }
 

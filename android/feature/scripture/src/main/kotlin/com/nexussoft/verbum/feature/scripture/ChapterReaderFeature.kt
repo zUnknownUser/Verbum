@@ -12,7 +12,6 @@ object ChapterReaderFeature {
     data class State(
         val reference: PassageReference,
         val content: Content = Content.Idle,
-        val selectedVerses: Set<Int> = emptySet(),
         val textScale: ReaderTextScale = ReaderTextScale.STANDARD,
         val requestedVerses: IntRange? = reference.verses,
         val readingMode: ReadingMode = ReadingMode.PAGES,
@@ -31,13 +30,11 @@ object ChapterReaderFeature {
         val restorePosition: Position?=null,
         val navigationRevision: Int=0,
     ) {
-        constructor(reference: PassageReference,textScale: ReaderTextScale):this(PassageReference(reference.bookId,reference.chapter),Content.Idle,emptySet(),textScale,reference.verses)
+        constructor(reference: PassageReference,textScale: ReaderTextScale):this(PassageReference(reference.bookId,reference.chapter),Content.Idle,textScale,reference.verses)
         val book: BibleBook? get()=BibleBook.book(reference.bookId)
         val title: String get()=reference.formatted
         val canGoToNextChapter get()=ChapterNavigation.next(reference)!=null
         val canGoToPreviousChapter get()=ChapterNavigation.previous(reference)!=null
-        val selectionCitation: String? get()=SelectionFormatter.format(reference.bookId,reference.chapter,selectedVerses)
-        val selectedText: String? get()=(content as? Content.Loaded)?.verses?.filter { it.verseStart in selectedVerses }?.takeIf { it.isNotEmpty() }?.joinToString(" ") { it.text }
     }
     sealed interface Content {
         data object Idle:Content;data object Loading:Content
@@ -58,8 +55,6 @@ object ChapterReaderFeature {
         data class Study(val action:VerseStudyFeature.Action):Action
         data object StudyDismissed:Action
         data class StudyVerse(val reference:PassageReference,val verse:Int,val ids:List<String> = emptyList()):Action
-        data class VerseTapped(val verse:Int):Action
-        data object ClearSelectionTapped:Action;data object CopySelectionTapped:Action
         data object NextChapterTapped:Action;data object PreviousChapterTapped:Action
         data class Go(val reference:PassageReference):Action
         data class VisitPassage(val reference:PassageReference):Action
@@ -70,19 +65,18 @@ object ChapterReaderFeature {
         data class ModeChanged(val mode:ReadingMode):Action
         data class FocusChanged(val enabled:Boolean):Action
         data object FocusToggled:Action
-        data object ListenTapped:Action;data object TalkTapped:Action;data object ContextTapped:Action
+        data object ListenTapped:Action;data object TalkTapped:Action
         data class Delegate(val delegate:DelegateAction):Action
     }
     sealed interface DelegateAction {
         data class Listen(val reference:PassageReference):DelegateAction
         data class Talk(val reference:PassageReference):DelegateAction
-        data class OpenContext(val reference:PassageReference):DelegateAction
     }
     // Requests are keyed by canonical chapter identity.
     const val LAST_READ_KEY="lastRead"
     const val MODE_KEY="readingMode"
     const val FOCUS_KEY="readerFocusMode"
-    fun reducer(bibleClient:BibleClient,clipboard:ClipboardClient,preferences:PreferencesClient,
+    fun reducer(bibleClient:BibleClient,preferences:PreferencesClient,
         contextClient:ContextClient = com.nexussoft.verbum.clients.fixtures.FixtureContextClient,
         graphClient:GraphClient = com.nexussoft.verbum.clients.fixtures.FixtureGraphClient,
         askClient:AskScriptureClient = AskScriptureClient { throw AskScriptureException.Unavailable },
@@ -114,8 +108,7 @@ object ChapterReaderFeature {
                     val first=action.verses.firstOrNull()
                     if(first!=null && (first.bookId!=state.reference.bookId || first.chapter!=state.reference.chapter)) return@Reducer state.only()
                     val key=ReaderCanon.key(state.reference)
-                    state.copy(content=Content.Loaded(action.verses),chapters=state.chapters+(key to action.verses),loadingChapters=state.loadingChapters-key,
-                        selectedVerses=state.requestedVerses?.let {range->action.verses.map {it.verseStart}.filter {it in range}.toSet()} ?: emptySet()).with(Effect.Merge(listOf(
+                    state.copy(content=Content.Loaded(action.verses),chapters=state.chapters+(key to action.verses),loadingChapters=state.loadingChapters-key).with(Effect.Merge(listOf(
                             context(state.reference),runEffect {send->
                                 preferences.setString(LAST_READ_KEY,LastRead.encode(state.reference))
                                 ChapterNavigation.previous(state.reference)?.let {send(Action.EnsureChapter(it))}
@@ -161,9 +154,6 @@ object ChapterReaderFeature {
                     null -> state.only()
                 }
                 Action.StudyDismissed -> if(state.study?.let {it.saving || it.savedNote!=it.annotation.note}==true) state.only() else state.copy(study=null).only()
-                is Action.VerseTapped -> state.with(Effect.Send(Action.StudyVerse(state.reference,action.verse)))
-                Action.ClearSelectionTapped -> state.copy(selectedVerses=emptySet()).only()
-                Action.CopySelectionTapped -> if(state.selectedText==null) state.only() else state.with(runEffect {clipboard.copy("${state.selectedText}\n— ${state.selectionCitation}")})
                 is Action.VisitPassage -> {
                     val pos=state.positions[if(state.readingMode==ReadingMode.CONTINUOUS) "flow" else ReaderCanon.key(state.reference)] ?: Position()
                     jump(state.copy(history=(state.history+Visit(state.reference,state.flow,pos.index,pos.offset)).takeLast(32)),action.reference,bibleClient,::context)
@@ -189,14 +179,13 @@ object ChapterReaderFeature {
                 Action.FocusToggled -> state.with(Effect.Send(Action.FocusChanged(!state.focusMode)))
                 Action.ListenTapped -> state.with(Effect.Send(Action.Delegate(DelegateAction.Listen(state.reference))))
                 Action.TalkTapped -> state.with(Effect.Send(Action.Delegate(DelegateAction.Talk(state.reference))))
-                Action.ContextTapped -> state.with(Effect.Send(Action.Delegate(DelegateAction.OpenContext(state.reference))))
                 is Action.Delegate -> state.only()
             }
         },
     )
     private fun jump(state:State,reference:PassageReference,bible:BibleClient,context:(PassageReference)->Effect<Action>):Reduced<State,Action> {
         val chapter=PassageReference(reference.bookId,reference.chapter);val key=ReaderCanon.key(chapter)
-        val next=state.copy(reference=chapter,requestedVerses=reference.verses,selectedVerses=emptySet(),flow=listOf(chapter),navigationRevision=state.navigationRevision+1,
+        val next=state.copy(reference=chapter,requestedVerses=reference.verses,flow=listOf(chapter),navigationRevision=state.navigationRevision+1,
             restorePosition=if(reference.verses==null && state.readingMode==ReadingMode.PAGES) state.positions[key] ?: Position() else null)
         val verses=state.chapters[key] ?: return load(next,bible)
         return next.copy(content=Content.Loaded(verses)).with(Effect.Merge(listOf(context(chapter),runEffect {send->

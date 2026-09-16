@@ -9,7 +9,6 @@ import com.nexussoft.verbum.clients.VoiceException
 import com.nexussoft.verbum.clients.UnavailableVoiceClient
 import com.nexussoft.verbum.common.arch.pullbackOptional
 import com.nexussoft.verbum.models.VoiceContext
-import com.nexussoft.verbum.clients.ClipboardClient
 import com.nexussoft.verbum.clients.GraphClient
 import com.nexussoft.verbum.clients.NoopNotificationClient
 import com.nexussoft.verbum.clients.NotificationClient
@@ -99,7 +98,6 @@ object AppFeature {
 
     class Dependencies(
         val bibleClient: BibleClient,
-        val clipboard: ClipboardClient,
         val preferences: PreferencesClient,
         val searchClient: SearchClient,
         val graphClient: GraphClient,
@@ -122,7 +120,7 @@ object AppFeature {
     )
 
     fun reducer(deps: Dependencies): Reducer<State, Action> {
-        val reader = ScriptureFeature.reducer(deps.bibleClient, deps.clipboard, deps.preferences, deps.contextClient, deps.graphClient, deps.askClient)
+        val reader = ScriptureFeature.reducer(deps.bibleClient, deps.preferences, deps.contextClient, deps.graphClient, deps.askClient)
         val entity = EntityDetailFeature.reducer(deps.graphClient, deps.timelineClient)
         val timeline = TimelineFeature.reducer(deps.timelineClient, deps.graphClient)
         val entities = EntityListFeature.reducer(deps.graphClient)
@@ -188,9 +186,7 @@ object AppFeature {
             is DestinationAction.Books -> (action.action as? BookPickerFeature.Action.Delegate)?.delegate?.let {
                 when (it) { is BookPickerFeature.DelegateAction.ChapterSelected -> Destination.Reader(ScriptureFeature.State.initial(it.reference, deps.initialTextScale())) }
             }
-            is DestinationAction.Reader -> ((action.action as? ScriptureFeature.Action.Delegate)?.delegate as? ScriptureFeature.DelegateAction.OpenContext)?.let {
-                Destination.Context(ContextFeature.State(PassageReference(it.reference.bookId, it.reference.chapter)))
-            }
+            is DestinationAction.Reader -> null
             is DestinationAction.Context -> (action.action as? ContextFeature.Action.Delegate)?.delegate?.let {
                 when (it) {
                     is ContextFeature.DelegateAction.OpenEntity -> Destination.Entity(EntityDetailFeature.State(it.entity.id))

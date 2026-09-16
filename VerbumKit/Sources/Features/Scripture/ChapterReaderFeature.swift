@@ -13,7 +13,6 @@ public struct ChapterReaderFeature {
         public var reference: PassageReference
         @Shared(.readingActivity) var readingActivity
         public var content: Content = .idle
-        public var selectedVerses: Set<Int> = []
         public var requestedVerses: ClosedRange<Int>?
         @Shared(.readerTextScale) public var textScale
         @Shared(.lastRead) public var lastRead
@@ -49,19 +48,6 @@ public struct ChapterReaderFeature {
 
         public var canGoToNextChapter: Bool { ChapterNavigation.next(after: reference) != nil }
         public var canGoToPreviousChapter: Bool { ChapterNavigation.previous(before: reference) != nil }
-
-        /// `John 3:16-18, 21` while verses are selected.
-        public var selectionCitation: String? {
-            SelectionFormatter.format(bookId: reference.bookId, chapter: reference.chapter, verses: selectedVerses)
-        }
-
-        public var selectedText: String? {
-            guard case .loaded(let verses) = content, !selectedVerses.isEmpty else { return nil }
-            return verses
-                .filter { selectedVerses.contains($0.verseStart) }
-                .map(\.text)
-                .joined(separator: " ")
-        }
     }
 
     public enum Content: Equatable, Sendable {
@@ -85,16 +71,12 @@ public struct ChapterReaderFeature {
         case scrollOffsetChanged(String, Double)
         case retryTapped
         case chapterResponse(Result<[BiblePassage], ReaderError>)
-        case verseTapped(Int)
-        case clearSelectionTapped
-        case copySelectionTapped
         case nextChapterTapped
         case previousChapterTapped
         /// Parent-driven jump (book picker). Reloads.
         case go(to: PassageReference)
         case listenTapped
         case talkTapped
-        case contextTapped
         case delegate(Delegate)
 
         @CasePathable
@@ -102,14 +84,12 @@ public struct ChapterReaderFeature {
             case listen(PassageReference)
             /// Start a spoken conversation about this chapter.
             case talk(PassageReference)
-            case openContext(PassageReference)
         }
     }
 
     @Dependency(\.date.now) var now
     @Dependency(\.calendar) var calendar
     @Dependency(\.bibleClient) var bibleClient
-    @Dependency(\.pasteboard) var pasteboard
     @Dependency(\.contextClient) var contextClient
     @Dependency(\.readerAnnotations) var readerAnnotations
 
@@ -210,9 +190,6 @@ public struct ChapterReaderFeature {
                 state.loadingChapters.remove(ReaderCanon.key(state.reference))
                 state.content = .loaded(verses)
                 state.chapters[ReaderCanon.key(state.reference)] = verses
-                if let requested = state.requestedVerses {
-                    state.selectedVerses = Set(verses.map(\.verseStart).filter { requested.contains($0) })
-                }
                 let reference = state.reference
                 state.$lastRead.withLock { $0 = reference }
                 let neighbors = [ChapterNavigation.previous(before: reference), ChapterNavigation.next(after: reference)].compactMap { $0 }
@@ -223,17 +200,6 @@ public struct ChapterReaderFeature {
                 state.loadingChapters.remove(ReaderCanon.key(state.reference))
                 state.chapterErrors[ReaderCanon.key(state.reference)] = error
                 return .none
-
-            case .verseTapped(let verse):
-                return .send(.studyVerse(state.reference, verse, []))
-
-            case .clearSelectionTapped:
-                state.selectedVerses = []
-                return .none
-
-            case .copySelectionTapped:
-                guard let citation = state.selectionCitation, let text = state.selectedText else { return .none }
-                return .run { [pasteboard] _ in pasteboard.copy(text: "\(text)\n— \(citation)") }
 
             case .nextChapterTapped:
                 guard let next = ChapterNavigation.next(after: state.reference) else { return .none }
@@ -252,9 +218,6 @@ public struct ChapterReaderFeature {
             case .talkTapped:
                 return .send(.delegate(.talk(state.reference)))
 
-            case .contextTapped:
-                return .send(.delegate(.openContext(state.reference)))
-
             case .delegate:
                 return .none
             }
@@ -271,7 +234,6 @@ public struct ChapterReaderFeature {
     private func jump(_ state: inout State, to reference: PassageReference) -> Effect<Action> {
         state.reference = PassageReference(bookId: reference.bookId, chapter: reference.chapter)
         state.requestedVerses = reference.verses
-        state.selectedVerses = []
         state.flow = [state.reference]
         state.navigationRevision += 1
         state.restoreOffset = reference.verses == nil ? (state.readingMode == .continuous ? 0 : state.scrollOffsets[ReaderCanon.key(state.reference)] ?? 0) : nil
@@ -290,14 +252,5 @@ public struct ChapterReaderFeature {
         return .send(.ensureChapter(state.reference))
     }
 
-    private enum CancelID { case load, annotations }
-}
-
-extension Result where Failure == any Error {
-    fileprivate func mapError<E: Error>(_ transform: (any Error) -> E) -> Result<Success, E> {
-        switch self {
-        case .success(let value): .success(value)
-        case .failure(let error): .failure(transform(error))
-        }
-    }
+    private enum CancelID { case annotations }
 }

@@ -17,7 +17,7 @@ import kotlin.test.*
 class ChapterReaderFeatureTest {
     private val preferences=InMemoryPreferencesClient()
     private fun TestScope.reader(state:State,bible:StubBibleClient=StubBibleClient(chapterStub={b,c->verses(b,c,3)})) =
-        Store(state,ChapterReaderFeature.reducer(bible,RecordingClipboardClient(),preferences),this)
+        Store(state,ChapterReaderFeature.reducer(bible,preferences),this)
 
     @Test fun loadsCurrentAndAdjacentChaptersOnly()=runTest {
         val calls=mutableListOf<String>()
@@ -41,7 +41,7 @@ class ChapterReaderFeatureTest {
         val ref=PassageReference("John",3,2..2)
         val state=State(PassageReference("John",3),chapters=mapOf("John.3" to verses("John",3,3)),annotations=mapOf("John.3.2" to ReaderAnnotation(ref,HighlightColor.SAGE,"Minha nota")))
         val store=reader(state)
-        store.send(Action.VerseTapped(2))
+        store.send(Action.StudyVerse(state.reference, 2))
         assertEquals(ref,store.state.value.study?.reference)
         assertEquals("Minha nota",store.state.value.study?.annotation?.note)
         assertEquals(state.reference,store.state.value.reference)

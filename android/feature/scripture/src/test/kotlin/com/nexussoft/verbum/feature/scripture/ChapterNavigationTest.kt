@@ -25,13 +25,4 @@ class ChapterNavigationTest {
         assertNull(ChapterNavigation.next(PassageReference("Rev", 22)))
         assertNull(ChapterNavigation.next(PassageReference("Xyz", 1)))
     }
-
-    @Test
-    fun selectionCitations() {
-        assertNull(SelectionFormatter.format("John", 3, emptySet()))
-        assertEquals("John 3:16", SelectionFormatter.format("John", 3, setOf(16)))
-        assertEquals("John 3:16-18", SelectionFormatter.format("John", 3, setOf(18, 16, 17)))
-        assertEquals("John 3:16, 18", SelectionFormatter.format("John", 3, setOf(16, 18)))
-        assertEquals("1 Samuel 17:1-2, 4-6, 9", SelectionFormatter.format("1Sam", 17, setOf(1, 2, 4, 5, 6, 9)))
-    }
 }

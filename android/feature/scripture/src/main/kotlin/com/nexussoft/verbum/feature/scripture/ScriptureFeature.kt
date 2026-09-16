@@ -1,7 +1,6 @@
 package com.nexussoft.verbum.feature.scripture
 
 import com.nexussoft.verbum.clients.BibleClient
-import com.nexussoft.verbum.clients.ClipboardClient
 import com.nexussoft.verbum.clients.PreferencesClient
 import com.nexussoft.verbum.common.arch.Effect
 import com.nexussoft.verbum.common.arch.Reducer
@@ -46,10 +45,9 @@ object ScriptureFeature {
     sealed interface DelegateAction {
         data class Listen(val reference: PassageReference) : DelegateAction
         data class Talk(val reference: PassageReference) : DelegateAction
-        data class OpenContext(val reference: PassageReference) : DelegateAction
     }
 
-    fun reducer(bibleClient: BibleClient, clipboard: ClipboardClient, preferences: PreferencesClient,
+    fun reducer(bibleClient: BibleClient, preferences: PreferencesClient,
         contextClient: com.nexussoft.verbum.clients.ContextClient = com.nexussoft.verbum.clients.fixtures.FixtureContextClient,
         graphClient: com.nexussoft.verbum.clients.GraphClient = com.nexussoft.verbum.clients.fixtures.FixtureGraphClient,
         askClient: com.nexussoft.verbum.clients.AskScriptureClient = com.nexussoft.verbum.clients.AskScriptureClient { throw com.nexussoft.verbum.clients.AskScriptureException.Unavailable },
@@ -58,7 +56,7 @@ object ScriptureFeature {
             get = { it.books }, set = { s, c -> s.copy(books = c) },
             extractAction = { (it as? Action.Books)?.action }, embedAction = { Action.Books(it) },
         ),
-        ChapterReaderFeature.reducer(bibleClient, clipboard, preferences, contextClient, graphClient, askClient).pullback(
+        ChapterReaderFeature.reducer(bibleClient, preferences, contextClient, graphClient, askClient).pullback(
             get = { it.reader }, set = { s, c -> s.copy(reader = c) },
             extractAction = { (it as? Action.Reader)?.action }, embedAction = { Action.Reader(it) },
         ),
@@ -84,7 +82,6 @@ object ScriptureFeature {
                     when (val delegate = (action.action as? ChapterReaderFeature.Action.Delegate)?.delegate) {
                         is ChapterReaderFeature.DelegateAction.Listen -> synced.with(Effect.Send(Action.Delegate(DelegateAction.Listen(delegate.reference))))
                         is ChapterReaderFeature.DelegateAction.Talk -> synced.with(Effect.Send(Action.Delegate(DelegateAction.Talk(delegate.reference))))
-                        is ChapterReaderFeature.DelegateAction.OpenContext -> synced.with(Effect.Send(Action.Delegate(DelegateAction.OpenContext(delegate.reference))))
                         null -> synced.only()
                     }
                 }

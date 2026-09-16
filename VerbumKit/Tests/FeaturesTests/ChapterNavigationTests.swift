@@ -19,12 +19,4 @@ import Testing
         #expect(ChapterNavigation.next(after: PassageReference(bookId: "Rev", chapter: 22)) == nil)
         #expect(ChapterNavigation.next(after: PassageReference(bookId: "Xyz", chapter: 1)) == nil)
     }
-
-    @Test func selectionCitations() {
-        #expect(SelectionFormatter.format(bookId: "John", chapter: 3, verses: []) == nil)
-        #expect(SelectionFormatter.format(bookId: "John", chapter: 3, verses: [16]) == "John 3:16")
-        #expect(SelectionFormatter.format(bookId: "John", chapter: 3, verses: [18, 16, 17]) == "John 3:16-18")
-        #expect(SelectionFormatter.format(bookId: "John", chapter: 3, verses: [16, 18]) == "John 3:16, 18")
-        #expect(SelectionFormatter.format(bookId: "1Sam", chapter: 17, verses: [1, 2, 4, 5, 6, 9]) == "1 Samuel 17:1-2, 4-6, 9")
-    }
 }
