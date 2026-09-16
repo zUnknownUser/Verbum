@@ -55,3 +55,7 @@ Um Play em Provérbios 2 fez `POST /v1/tts` retornar 503 às 18:30:36 UTC (reqID
 `VERBUM_TTS_NARRATOR` foi temporariamente revertido para `chirp3` para restabelecer áudio português, preservando o cache anterior. O backend agora aceita a versão Gemini do manifesto retida por até uma hora nos celulares durante esse rollback, mas gera sempre com a voz portuguesa ativa. iOS e Android deixam de substituir falha do TTS português por gravação inglesa; uma falha aparece como indisponibilidade do áudio. Novos logs separam falha de credencial/permissão de falha de rede/provedor sem expor tokens ou texto.
 
 O código Gemini permanece pronto e pode ser reativado após conferir a permissão no projeto `verbum-app1`. Não houve geração real de áudio pelo agente.
+
+### Publicação da correção
+
+Commit `696ba578a219b151d5aee7dd12ac04e599d710a1` enviado para `main`. Deploy Railway `77be9bc2-09cd-4fb9-94ab-76964350ef94` **SUCCESS**. A variável `VERBUM_TTS_NARRATOR=chirp3` foi confirmada; `/healthz` e `/readyz` responderam HTTP 200 e o manifesto português voltou a `12abd06af4eda81e138c979a7a11f0c07461dab65b23a9a7074eac2a66011627`. O seletor de horário e a retirada do fallback inglês estão no código iOS/Android e precisam de nova versão dos apps para chegar aos aparelhos.
