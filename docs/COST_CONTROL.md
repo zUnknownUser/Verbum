@@ -83,3 +83,9 @@ go vet ./...
 ```
 
 Os testes usam schemas isolados e aplicam migrações duas vezes. Cobrem orçamento concorrente, persistência após reconstruir serviço, expiração de premium, cache após cota esgotada, deduplicação entre serviços, idempotência/timeout, ticket de uso único, relay com provedor WebSocket simulado, duração, contabilização, proteção de parâmetros, texto TTS canônico e fallback sem embeddings. Testes de clientes validam autenticação, ausência de cache do saldo, datas de limite e vínculo do relay ao host esperado.
+
+## Atualização publicada: narração padrão gratuita
+
+O commit `2de8bd03a2d20fc2e4cbc58209788eb47eca8571` foi publicado na `main` e no serviço API de produção do Railway, deployment `6b822ccd-13c0-4367-b1d7-ae46b75eebb3` (**SUCCESS**). Nenhuma nova migração foi necessária; o timestamp `infinity` representa os áudios sem expiração.
+
+Validação: builds iOS e Android concluídos, suíte Go com `-race` e PostgreSQL real aprovada, além de testes específicos de mais de três gerações sem saldo pessoal, reutilização permanente, promoção de áudio existente e exclusão mútua entre servidores. Em produção, `/readyz` respondeu 200 e o saldo de um visitante respondeu `standardNarration: free`, sem entrada `tts` em `remaining`. Texto arbitrário continuou bloqueado e conversa por voz manteve sua política própria. A identidade temporária foi excluída; não foi executada geração paga para verificar o deploy. O texto atualizado do perfil exige uma nova build dos apps; não houve publicação nas lojas.
