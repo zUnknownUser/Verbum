@@ -1,5 +1,7 @@
 # Deploy — proteção de custos e perfis
 
+> Registro histórico do primeiro deploy. A política de narração foi posteriormente alterada para gratuita e sem cota pessoal; consulte [COST_CONTROL.md](COST_CONTROL.md).
+
 Autorizado por Lucas em 16/09/2026. Código do backend publicado no commit
 `ad7fab8f52e4b6e981340df1b142cb1252fff447` da `main` de `zUnknownUser/Verbum`.
 

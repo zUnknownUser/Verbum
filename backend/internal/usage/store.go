@@ -17,13 +17,15 @@ type Operation struct {
 	Kind, Key string
 	Estimate  int64
 	TTL       time.Duration
+	Permanent bool // Shared library artifact; zero expiry is stored as PostgreSQL infinity.
 }
 type Summary struct {
-	Plan         string           `json:"plan"`
-	ResetsAt     time.Time        `json:"resetsAt"`
-	Remaining    map[string]int64 `json:"remaining"`
-	VoiceSeconds int              `json:"voiceSeconds"`
-	Restricted   bool             `json:"restricted"`
+	Plan              string           `json:"plan"`
+	ResetsAt          time.Time        `json:"resetsAt"`
+	Remaining         map[string]int64 `json:"remaining"`
+	VoiceSeconds      int              `json:"voiceSeconds"`
+	Restricted        bool             `json:"restricted"`
+	StandardNarration string           `json:"standardNarration"`
 }
 type Store interface {
 	Plan(context.Context, Principal, time.Time) (string, error)
@@ -31,6 +33,7 @@ type Store interface {
 	Settle(context.Context, Charge, int64, bool) error
 	Cached(context.Context, string, time.Time) ([]byte, error)
 	PutCache(context.Context, string, []byte, time.Time) error
+	Preserve(context.Context, string) error
 	Lock(context.Context, string) (func(), error)
 	Bind(context.Context, string, string, time.Time) error
 	Summary(context.Context, Principal, Policy, time.Time) (Summary, error)
@@ -58,13 +61,22 @@ func (s *Service) Do(ctx context.Context, op Operation, f func(context.Context) 
 	if op.Estimate < 0 || op.Estimate > 100_000_000 {
 		return nil, Unavailable()
 	}
-	key := Hash(s.Policy.Revision, op.Kind, op.Key)
-	if op.TTL > 0 {
+	revision := s.Policy.Revision
+	if op.Permanent {
+		revision = "cost-v1"
+	} // Preserve existing audio identity independently of AI policy revisions.
+	key := Hash(revision, op.Kind, op.Key)
+	if op.TTL > 0 || op.Permanent {
 		v, e := s.Store.Cached(ctx, key, s.Now())
 		if e != nil {
 			return nil, Unavailable()
 		}
 		if v != nil {
+			if op.Permanent {
+				if e := s.Store.Preserve(ctx, key); e != nil {
+					return nil, Unavailable()
+				}
+			}
 			return v, nil
 		}
 	}
@@ -73,12 +85,17 @@ func (s *Service) Do(ctx context.Context, op Operation, f func(context.Context) 
 		return nil, Unavailable()
 	}
 	defer unlock()
-	if op.TTL > 0 {
+	if op.TTL > 0 || op.Permanent {
 		v, e := s.Store.Cached(ctx, key, s.Now())
 		if e != nil {
 			return nil, Unavailable()
 		}
 		if v != nil {
+			if op.Permanent {
+				if e := s.Store.Preserve(ctx, key); e != nil {
+					return nil, Unavailable()
+				}
+			}
 			return v, nil
 		}
 	}
@@ -88,6 +105,14 @@ func (s *Service) Do(ctx context.Context, op Operation, f func(context.Context) 
 	} else if pending != nil {
 		until, _ := time.Parse(time.RFC3339Nano, string(pending))
 		return nil, &Denial{Code: "request_in_progress", RetryAt: until}
+	}
+	if op.Kind == "tts" {
+		// One new narration at a time across replicas; provider calls remain outside transactions.
+		release, err := s.Store.Lock(ctx, "standard-narration-generation")
+		if err != nil {
+			return nil, Unavailable()
+		}
+		defer release()
 	}
 	charge, e := s.Store.Reserve(ctx, Identity(ctx), s.Policy, op.Kind, op.Estimate, s.Now())
 	if e != nil {
@@ -127,8 +152,12 @@ func (s *Service) Do(ctx context.Context, op Operation, f func(context.Context) 
 		}
 		return nil, err
 	}
-	if op.TTL > 0 {
-		if e = s.Store.PutCache(settleCtx, key, result, s.Now().Add(op.TTL)); e != nil {
+	if op.TTL > 0 || op.Permanent {
+		until := s.Now().Add(op.TTL)
+		if op.Permanent {
+			until = time.Time{}
+		}
+		if e = s.Store.PutCache(settleCtx, key, result, until); e != nil {
 			return nil, Unavailable()
 		}
 	}

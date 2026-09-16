@@ -99,9 +99,10 @@ struct ProfileView: View {
                     Text(t("usageUnavailable")).font(Typography.footnote)
                 } else if let status = store.usage {
                     Text(t("plan_" + status.plan)).font(Typography.editorialHeadline)
-                    ForEach([("ask", "usageAsk"), ("tts", "usageTTS"), ("voice", "usageVoice")], id: \.0) { item in
+                    ForEach([("ask", "usageAsk"), ("voice", "usageVoice")], id: \.0) { item in
                         HStack { Text(t(item.1)); Spacer(); Text(String(status.remaining[item.0] ?? 0)).monospacedDigit() }.font(Typography.footnote)
                     }
+                    Text(t("usageTTS")).font(Typography.footnote)
                     if let date = status.resetDate { Text(t("usageReset") + " " + date.formatted(date: .abbreviated, time: .shortened)).font(Typography.caption) }
                     if status.restricted { Text(t("usageRestricted")).font(Typography.footnote) }
                     Text(t("usageCache")).font(Typography.caption).foregroundStyle(Palette.inkSecondary)

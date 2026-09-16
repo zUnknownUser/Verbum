@@ -123,7 +123,7 @@ func (e economicSpeech) run(ctx context.Context, input tts.Request, timed bool) 
 		}
 	}
 	cost := int64(utf8.RuneCountInString(input.Text)) * 30
-	data, err := e.usage.Do(ctx, usage.Operation{Kind: "tts", Key: key, Estimate: cost, TTL: 7 * 24 * time.Hour}, func(ctx context.Context) ([]byte, error) {
+	data, err := e.usage.Do(ctx, usage.Operation{Kind: "tts", Key: key, Estimate: cost, Permanent: true}, func(ctx context.Context) ([]byte, error) {
 		usage.Attempt(ctx)
 		var result tts.TimedAudio
 		if timed {

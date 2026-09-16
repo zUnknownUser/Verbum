@@ -121,11 +121,12 @@ internal fun ProfileScreen(account: AccountFeature.State, state: ProfileFeature.
                             if(state.usageFailed) Text(accountText("usageUnavailable"), style = MaterialTheme.typography.bodySmall)
                             else if(usage != null) {
                                 Text(accountText("plan_" + usage.plan), style = VerbumTypography.editorialHeadline)
-                                listOf("ask" to "usageAsk", "tts" to "usageTTS", "voice" to "usageVoice").forEach { (kind, key) ->
+                                listOf("ask" to "usageAsk", "voice" to "usageVoice").forEach { (kind, key) ->
                                     Row { Text(accountText(key), Modifier.weight(1f), style = MaterialTheme.typography.bodySmall); Text((usage.remaining[kind] ?: 0).toString()) }
                                 }
                                 usageDate(usage.resetsAt)?.let { Text(accountText("usageReset") + " " + it, style = MaterialTheme.typography.bodySmall) }
                                 if(usage.restricted) Text(accountText("usageRestricted"), style = MaterialTheme.typography.bodySmall)
+                                Text(accountText("usageTTS"), style = MaterialTheme.typography.bodySmall)
                                 Text(accountText("usageCache"), style = MaterialTheme.typography.bodySmall)
                             } else Text(accountText("plan_guest"), style = VerbumTypography.editorialHeadline)
                         }

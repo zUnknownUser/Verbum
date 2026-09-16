@@ -56,10 +56,15 @@ func counters(p Principal, pol Policy, l Limits, kind string, cost int64, now ti
 	minute := now.UTC().Truncate(time.Minute)
 	c := []counter{
 		{"global", "money", day, cost, pol.GlobalDailyMicros, "budget_exhausted", day.Add(24 * time.Hour)},
-		{Hash("uid", p.UID), "money", day, cost, l.DailyMicros, "quota_exceeded", day.Add(24 * time.Hour)},
-		{Hash("uid", p.UID), kind, day, 1, l.Quota(kind), "quota_exceeded", day.Add(24 * time.Hour)},
-		{Hash("uid", p.UID), "hour", hour, 1, l.Hourly, "rate_limited", hour.Add(time.Hour)},
 		{Hash("uid", p.UID), "minute", minute, 1, 20, "rate_limited", minute.Add(time.Minute)},
+	}
+	// Standard narration belongs to the shared library, never to a reader's quota.
+	if kind != "tts" {
+		c = append(c,
+			counter{Hash("uid", p.UID), "money", day, cost, l.DailyMicros, "quota_exceeded", day.Add(24 * time.Hour)},
+			counter{Hash("uid", p.UID), kind, day, 1, l.Quota(kind), "quota_exceeded", day.Add(24 * time.Hour)},
+			counter{Hash("uid", p.UID), "hour", hour, 1, l.Hourly, "rate_limited", hour.Add(time.Hour)},
+		)
 	}
 	if p.IP != "" {
 		c = append(c, counter{Hash("ip", p.IP), "minute", minute, 1, 60, "rate_limited", minute.Add(time.Minute)})
@@ -80,7 +85,7 @@ func (s *Postgres) Reserve(ctx context.Context, p Principal, pol Policy, kind st
 		return Charge{}, e
 	}
 	l := pol.Limits(plan)
-	if l.Quota(kind) == 0 {
+	if kind != "tts" && l.Quota(kind) == 0 {
 		return Charge{}, &Denial{Code: "plan_required"}
 	}
 	tx, e := s.Pool.Begin(ctx)
@@ -140,7 +145,11 @@ func (s *Postgres) Settle(ctx context.Context, c Charge, actual int64, success b
 		return nil
 	}
 	// Record overruns too; never hide a pricing mismatch by clamping usage to the estimate.
-	for _, subject := range []string{"global", Hash("uid", c.UID)} {
+	subjects := []string{"global"}
+	if c.Kind != "tts" {
+		subjects = append(subjects, Hash("uid", c.UID))
+	}
+	for _, subject := range subjects {
 		_, e = tx.Exec(ctx, `UPDATE usage_counters SET amount=GREATEST(0,amount+$3) WHERE subject=$1 AND bucket='money' AND starts_at=$2`, subject, Day(c.Created), actual-charged)
 		if e != nil {
 			return e
@@ -164,7 +173,7 @@ func (s *Postgres) PutCache(ctx context.Context, key string, payload []byte, unt
 	if len(payload) > 90<<20 {
 		return fmt.Errorf("cache artifact too large")
 	}
-	_, e := s.Pool.Exec(ctx, `INSERT INTO usage_cache(key,payload,expires_at) VALUES($1,$2,$3) ON CONFLICT(key) DO UPDATE SET payload=EXCLUDED.payload,expires_at=EXCLUDED.expires_at,created_at=now()`, key, payload, until)
+	_, e := s.Pool.Exec(ctx, `INSERT INTO usage_cache(key,payload,expires_at) VALUES($1,$2,CASE WHEN $3::timestamptz = '0001-01-01 00:00:00+00'::timestamptz THEN 'infinity'::timestamptz ELSE $3 END) ON CONFLICT(key) DO UPDATE SET payload=EXCLUDED.payload,expires_at=EXCLUDED.expires_at,created_at=now()`, key, payload, until)
 	return e
 }
 func (s *Postgres) Lock(ctx context.Context, key string) (func(), error) {
@@ -221,8 +230,8 @@ func (s *Postgres) Summary(ctx context.Context, p Principal, pol Policy, now tim
 		return Summary{}, e
 	}
 	l := pol.Limits(plan)
-	v := Summary{Plan: plan, ResetsAt: Day(now).Add(24 * time.Hour), Remaining: map[string]int64{}, VoiceSeconds: l.VoiceSeconds}
-	for _, kind := range []string{"ask", "tts", "embedding", "voice"} {
+	v := Summary{StandardNarration: "free", Plan: plan, ResetsAt: Day(now).Add(24 * time.Hour), Remaining: map[string]int64{}, VoiceSeconds: l.VoiceSeconds}
+	for _, kind := range []string{"ask", "embedding", "voice"} {
 		var count int64
 		e = s.Pool.QueryRow(ctx, `SELECT COALESCE((SELECT amount FROM usage_counters WHERE subject=$1 AND bucket=$2 AND starts_at=$3),0)`, Hash("uid", p.UID), kind, Day(now)).Scan(&count)
 		if e != nil {
@@ -255,4 +264,10 @@ func (s *Postgres) TakeTicket(ctx context.Context, hash string, now time.Time) (
 	var p Principal
 	e := s.Pool.QueryRow(ctx, `UPDATE usage_voice_tickets SET consumed=true WHERE token_hash=$1 AND expires_at>$2 AND NOT consumed RETURNING uid,anonymous,device,ip`, hash, now).Scan(&p.UID, &p.Anonymous, &p.Device, &p.IP)
 	return p, e
+}
+
+// Preserve promotes previously generated audio without rewriting its potentially large payload.
+func (s *Postgres) Preserve(ctx context.Context, key string) error {
+	_, err := s.Pool.Exec(ctx, `UPDATE usage_cache SET expires_at='infinity' WHERE key=$1 AND expires_at<>'infinity'`, key)
+	return err
 }

@@ -9,14 +9,14 @@ Valores conservadores, configuráveis, sem promessa comercial de disponibilidade
 | Controle diário | Visitante Firebase anônimo | Free autenticado | Premium válido |
 |---|---:|---:|---:|
 | Novas respostas de IA | 3 | 10 | 100 |
-| Novos capítulos de áudio | 1 | 3 | 20 |
+| Narração padrão da Bíblia | Gratuita, sem cota pessoal | Gratuita, sem cota pessoal | Gratuita, sem cota pessoal |
 | Novos embeddings de busca | 20 | 60 | 300 |
 | Sessões de voz | 0 | 1 | 5 |
 | Duração máxima por sessão | — | 60 s | 180 s |
 | Orçamento estimado por usuário | US$ 0,10 | US$ 0,50 | US$ 3,00 |
-| Operações pagas por hora, incluindo etapas de voz/embedding | 20 | 40 | 120 |
+| Operações pagas por hora, excluindo TTS; incluindo etapas de voz/embedding | 20 | 40 | 120 |
 
-As cotas são tetos de geração, não garantias de que todas estarão disponíveis: o orçamento individual/global pode restringir antes. Áudio e respostas ainda em cache continuam disponíveis mesmo com orçamento esgotado. Respostas privadas são separadas por UID; áudio bíblico canônico é compartilhado.
+As cotas de IA e conversa por voz são tetos de geração, não garantias de que todas estarão disponíveis: o orçamento individual/global pode restringir antes. Áudios da biblioteca e respostas ainda em cache continuam disponíveis mesmo com orçamento esgotado. A geração de narração padrão usa exclusivamente o orçamento global; não consome orçamento pessoal, cota diária ou limite horário do plano. Limites rápidos contra abuso por UID/IP/instalação permanecem. Respostas privadas são separadas por UID; áudio bíblico canônico é compartilhado.
 
 - Minuto: UID 20, IP 60, instalação 40 operações novas, persistentes.
 - Hora: IP 300 e instalação 150, além do limite do plano.
@@ -33,18 +33,18 @@ Um marcador persistido antes da chamada bloqueia nova geração do mesmo conteú
 |---|---|
 | Resposta IA | UID + pergunta + idioma + referências + modelo + revisão; 1 h |
 | Embedding da consulta | UID + consulta + revisão; 24 h |
-| Áudio | Texto canônico + voz + configurações + variante sincronizada + revisão; 7 dias no PostgreSQL, além do cache de disco existente |
+| Áudio | Texto canônico + voz + configurações + variante sincronizada; sem expiração automática no PostgreSQL e no cache de disco existente |
 | Capítulo canônico externo | Tradução + livro + capítulo; 30 dias |
 | Tickets de voz | Hash de segredo aleatório, uso único, validade 60 s |
 
-Limite por artefato compartilhado: 90 MiB. Limpeza horária remove cache vencido, vínculos de idempotência vencidos, tickets antigos e contadores/operações após 35 dias. O cache de disco do TTS mantém a política já existente; não foi criado um teto total de armazenamento do servidor. Dimensionar banco/volume e egress continua necessário. A revisão `VERBUM_CONTENT_REVISION` invalida caches econômicos quando corpus/prompt/preços/modelos mudarem.
+Limite por artefato compartilhado: 90 MiB. Limpeza horária remove cache vencido, vínculos de idempotência vencidos, tickets antigos e contadores/operações após 35 dias. O cache de disco do TTS mantém a política já existente; não foi criado um teto total de armazenamento do servidor. Dimensionar banco/volume e egress continua necessário. A revisão `VERBUM_CONTENT_REVISION` invalida caches de IA quando corpus/prompt/preços/modelos mudarem; não descarta a biblioteca de narração padrão. A identidade de áudio continua incluindo texto/voz/configurações. Áudios compartilhados antigos ainda válidos são promovidos para retenção permanente quando reutilizados.
 
 ## Recursos protegidos e experiência
 
 - **Ask/RAG:** pergunta até 500 caracteres, corpo 8 KiB, prompt até 32 KiB, saída até 1.024 tokens; modelo tarifado `gpt-4o-mini`. Embeddings usam `text-embedding-3-large`. O limite da IA retorna HTTP 200 com `fallback`, resposta vazia e passagens da busca indexada, sem nova chamada paga. As telas distinguem esse resultado de uma resposta gerada. Busca semântica restrita degrada para busca lexical.
-- **TTS:** exige livro, capítulo e tradução, confronta o texto com a fonte canônica `bible.helloao.org`, aceita apenas `por_blj`/pt-BR/Aoede e `BSB`/en-US/Standard-A. Impede texto arbitrário, voz arbitrária e capítulos inexistentes. Velocidade é aplicada no player, evitando pagar novamente. Os apps não geram antecipadamente o próximo capítulo e não repetem falhas pelo endpoint alternativo. Áudio local continua disponível; a alternativa de gravação em inglês existente permanece identificada como tal.
+- **TTS:** exige livro, capítulo e tradução, confronta o texto com a fonte canônica `bible.helloao.org`, aceita apenas `por_blj`/pt-BR/Aoede e `BSB`/en-US/Standard-A. Impede texto arbitrário, voz arbitrária e capítulos inexistentes. Velocidade é aplicada no player, evitando pagar novamente. A narração padrão é gratuita em todos os planos. Só uma nova narração pode ser produzida por vez entre réplicas. A Bíblia inteira ainda não foi pré-gerada: um capítulo ausente é produzido sob demanda quando há orçamento global; se ele estiver esgotado, uma nova tentativa pode gerar o capítulo após a renovação. Não há um job de pré-geração da Bíblia inteira. Os apps não geram antecipadamente o próximo capítulo e não repetem falhas pelo endpoint alternativo. Áudio local continua disponível; a alternativa de gravação em inglês existente permanece identificada como tal.
 - **Voz:** o app recebe ticket Verbum e conecta ao mesmo host do backend. Nenhuma credencial OpenAI é entregue. O relay impõe duração, uma sessão ativa por UID, até 12 respostas, 384 tokens de saída por resposta, contexto de conversa truncado a 2.048 tokens após instruções, instruções até 16.000 bytes e ferramentas até 8.192 bytes. PCM é limitado à velocidade real e à duração da sessão. Cada resposta exige nova reserva; parâmetros arbitrários do cliente são removidos. Áudio/transcrições passam pelo relay sem persistência nele.
-- **Profile iOS/Android:** plano e saldo vêm de `GET /v1/me/usage`, autenticado e sem cache. Não há uma flag local que conceda premium. Mensagens de limite incluem renovação quando disponível; leitura, favoritos e conteúdo local seguem acessíveis.
+- **Profile iOS/Android:** plano, saldo de IA/voz e indicação de narração gratuita vêm de `GET /v1/me/usage`, autenticado e sem cache. Não há uma flag local que conceda premium. Mensagens de limite incluem renovação quando disponível; leitura, favoritos e conteúdo local seguem acessíveis.
 
 ## Estimativas e o que o teto cobre
 
@@ -58,7 +58,7 @@ O teto bloqueia **novas operações pela estimativa**; não é um limite contrat
 
 1. Aplicar `backend/db/migrations/0007_usage_policy.sql` com o processo de migração do projeto, antes de iniciar este backend. O usuário do banco precisa escrever nas tabelas `usage_*` e usar advisory locks. Sem PostgreSQL, operações pagas ficam bloqueadas; leitura pública permanece disponível.
 2. Manter `VERBUM_DATABASE_URL`, `VERBUM_FIREBASE_PROJECT_ID`, credenciais Firebase/Google e `OPENAI_API_KEY` conforme os recursos usados. As apps precisam do mesmo projeto Firebase do backend.
-3. Configurar `VERBUM_DAILY_BUDGET_MICROS` e, se desejado, `VERBUM_{GUEST,FREE,PREMIUM}_{ASK,AUDIO,EMBEDDING,VOICE,HOURLY,DAILY_MICROS}`. Valores inteiros de 0 a 1.000.000.000; zero desativa o recurso/capacidade. Valores inválidos impedem inicialização. Durações de voz ficam na política de código.
+3. Configurar `VERBUM_DAILY_BUDGET_MICROS` e, se desejado, `VERBUM_{GUEST,FREE,PREMIUM}_{ASK,EMBEDDING,VOICE,HOURLY,DAILY_MICROS}`. Valores inteiros de 0 a 1.000.000.000; zero desativa o recurso/capacidade. Valores inválidos impedem inicialização. Durações de voz ficam na política de código. As antigas variáveis `VERBUM_*_AUDIO` não são mais usadas: não há cota pessoal de narração.
 4. Implantar o backend e os apps de forma coordenada: TTS antigo sem identificação canônica será recusado, e clientes antigos que tentam usar o novo ticket diretamente na OpenAI não conseguem iniciar voz. Em app já distribuído, preparar atualização obrigatória/versão mínima antes dessa troca. Não manter um endpoint pago legado que contorne as regras.
 5. Habilitar WebSocket no proxy, com timeout suficiente para sessões de até 180 segundos. Observar negações, reservas sem conclusão e gasto no painel do provedor durante a validação real.
 

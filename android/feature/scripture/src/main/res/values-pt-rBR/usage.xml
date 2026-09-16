@@ -5,10 +5,10 @@
     <string name="usage_plan_free">Gratuito</string>
     <string name="usage_plan_premium">Premium</string>
     <string name="usage_usage_ask">Perguntas restantes</string>
-    <string name="usage_usage_t_t_s">Novas gerações de áudio</string>
+    <string name="usage_usage_t_t_s">A narração padrão da Bíblia é gratuita.</string>
     <string name="usage_usage_voice">Conversas por voz restantes</string>
     <string name="usage_usage_reset">Renova em</string>
-    <string name="usage_usage_cache">Áudios já gerados podem ser ouvidos sem consumir uma nova geração.</string>
+    <string name="usage_usage_cache">Áudios disponíveis podem ser ouvidos sem cota diária. Capítulos ainda não narrados dependem de disponibilidade.</string>
     <string name="usage_usage_unavailable">Não foi possível consultar seu plano. Sua leitura continua disponível.</string>
     <string name="usage_usage_restricted">Novas gerações estão temporariamente limitadas. A leitura e os áudios disponíveis continuam acessíveis.</string>
     <string name="usage_limit_title">Você atingiu seu limite de uso</string>

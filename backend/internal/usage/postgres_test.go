@@ -3,6 +3,7 @@ package usage
 import (
 	"context"
 	"errors"
+	"fmt"
 	"sync"
 	"sync/atomic"
 	"testing"
@@ -212,5 +213,107 @@ func TestAmbiguousFailureCannotImmediatelyChargeAgain(t *testing.T) {
 	var denial *Denial
 	if !errors.As(err, &denial) || denial.Code != "request_in_progress" || denial.RetryAt.IsZero() || calls != 1 {
 		t.Fatal("duplicate charge after timeout", err, calls)
+	}
+}
+
+func TestStandardNarrationHasNoPersonalQuotaAndRemainsAvailable(t *testing.T) {
+	db := database(t)
+	p := Defaults()
+	p.Guest.DailyMicros = 0
+	p.Guest.Hourly = 0
+	p.GlobalDailyMicros = 10000
+	s := New(db, p)
+	ctx := WithPrincipal(context.Background(), Principal{UID: "guest", Anonymous: true})
+	var calls int
+	f := func(ctx context.Context) ([]byte, error) {
+		calls++
+		Attempt(ctx)
+		Record(ctx, 100)
+		return []byte("audio"), nil
+	}
+	for i := 0; i < 5; i++ {
+		if _, err := s.Do(ctx, Operation{Kind: "tts", Key: fmt.Sprint(i), Estimate: 200, Permanent: true}, f); err != nil {
+			t.Fatal("personal allowance restricted free narration", err)
+		}
+	}
+	var personal int64
+	if err := db.Pool.QueryRow(ctx, `SELECT COALESCE(sum(amount),0) FROM usage_counters WHERE subject=$1 AND bucket IN ('money','tts','hour')`, Hash("uid", "guest")).Scan(&personal); err != nil || personal != 0 {
+		t.Fatal("narration consumed personal allowance", personal, err)
+	}
+	p.GlobalDailyMicros = 0
+	later := New(db, p)
+	later.Now = func() time.Time { return time.Now().AddDate(1, 0, 0) }
+	other := WithPrincipal(context.Background(), Principal{UID: "other"})
+	if _, err := later.Do(other, Operation{Kind: "tts", Key: "0", Estimate: 200, Permanent: true}, f); err != nil {
+		t.Fatal("library audio expired or was quota gated", err)
+	}
+	if _, err := later.Do(other, Operation{Kind: "tts", Key: "new", Estimate: 200, Permanent: true}, f); !IsDenied(err) {
+		t.Fatal("global budget bypass", err)
+	}
+	if calls != 5 {
+		t.Fatal("unexpected provider calls", calls)
+	}
+	summary, err := s.Status(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, exists := summary.Remaining["tts"]; exists || summary.StandardNarration != "free" {
+		t.Fatal("misleading personal audio quota", summary)
+	}
+}
+
+func TestLibraryGenerationIsSerializedAcrossServices(t *testing.T) {
+	db := database(t)
+	p := Defaults()
+	a, b := New(db, p), New(db, p)
+	var active, peak atomic.Int64
+	var wg sync.WaitGroup
+	for i := 0; i < 4; i++ {
+		wg.Add(1)
+		go func(i int) {
+			defer wg.Done()
+			s := a
+			if i%2 == 0 {
+				s = b
+			}
+			ctx := WithPrincipal(context.Background(), Principal{UID: fmt.Sprint(i)})
+			_, err := s.Do(ctx, Operation{Kind: "tts", Key: fmt.Sprint(i), Estimate: 100, Permanent: true}, func(ctx context.Context) ([]byte, error) {
+				n := active.Add(1)
+				defer active.Add(-1)
+				for old := peak.Load(); n > old && !peak.CompareAndSwap(old, n); old = peak.Load() {
+				}
+				Attempt(ctx)
+				time.Sleep(20 * time.Millisecond)
+				Record(ctx, 100)
+				return []byte("audio"), nil
+			})
+			if err != nil {
+				t.Error(err)
+			}
+		}(i)
+	}
+	wg.Wait()
+	if peak.Load() != 1 {
+		t.Fatal("parallel library generation", peak.Load())
+	}
+}
+func TestExistingAudioIsPromotedWithoutRegeneration(t *testing.T) {
+	db := database(t)
+	ctx := WithPrincipal(context.Background(), Principal{UID: "reader"})
+	key := Hash("cost-v1", "tts", "existing")
+	if err := db.PutCache(ctx, key, []byte("existing audio"), time.Now().Add(time.Hour)); err != nil {
+		t.Fatal(err)
+	}
+	p := Defaults()
+	p.GlobalDailyMicros = 0
+	p.Revision = "new-ai-prompt"
+	s := New(db, p)
+	result, err := s.Do(ctx, Operation{Kind: "tts", Key: "existing", Estimate: 100, Permanent: true}, func(context.Context) ([]byte, error) { t.Fatal("existing audio regenerated"); return nil, nil })
+	if err != nil || string(result) != "existing audio" {
+		t.Fatal(err, string(result))
+	}
+	var permanent bool
+	if err = db.Pool.QueryRow(ctx, `SELECT expires_at='infinity' FROM usage_cache WHERE key=$1`, key).Scan(&permanent); err != nil || !permanent {
+		t.Fatal("audio still expires", err)
 	}
 }

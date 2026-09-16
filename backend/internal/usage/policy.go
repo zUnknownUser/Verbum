@@ -44,9 +44,9 @@ func IsDenied(err error) bool   { var d *Denial; return errors.As(err, &d) }
 func Unavailable() error        { return &Denial{Code: "usage_unavailable"} }
 
 type Limits struct {
-	Ask, Audio, Embedding, Voice, Hourly int64
-	DailyMicros                          int64
-	VoiceSeconds                         int
+	Ask, Embedding, Voice, Hourly int64
+	DailyMicros                   int64
+	VoiceSeconds                  int
 }
 type Policy struct {
 	GlobalDailyMicros    int64
@@ -57,16 +57,16 @@ type Policy struct {
 func Defaults() Policy {
 	return Policy{
 		GlobalDailyMicros: 5_000_000, Revision: "cost-v1",
-		Guest:   Limits{Ask: 3, Audio: 1, Embedding: 20, Voice: 0, Hourly: 20, DailyMicros: 100_000, VoiceSeconds: 60},
-		Free:    Limits{Ask: 10, Audio: 3, Embedding: 60, Voice: 1, Hourly: 40, DailyMicros: 500_000, VoiceSeconds: 60},
-		Premium: Limits{Ask: 100, Audio: 20, Embedding: 300, Voice: 5, Hourly: 120, DailyMicros: 3_000_000, VoiceSeconds: 180},
+		Guest:   Limits{Ask: 3, Embedding: 20, Voice: 0, Hourly: 20, DailyMicros: 100_000, VoiceSeconds: 60},
+		Free:    Limits{Ask: 10, Embedding: 60, Voice: 1, Hourly: 40, DailyMicros: 500_000, VoiceSeconds: 60},
+		Premium: Limits{Ask: 100, Embedding: 300, Voice: 5, Hourly: 120, DailyMicros: 3_000_000, VoiceSeconds: 180},
 	}
 }
 func FromEnvironment() (Policy, error) {
 	p := Defaults()
 	vars := map[string]*int64{"VERBUM_DAILY_BUDGET_MICROS": &p.GlobalDailyMicros}
 	for name, l := range map[string]*Limits{"GUEST": &p.Guest, "FREE": &p.Free, "PREMIUM": &p.Premium} {
-		for field, v := range map[string]*int64{"ASK": &l.Ask, "AUDIO": &l.Audio, "EMBEDDING": &l.Embedding, "VOICE": &l.Voice, "HOURLY": &l.Hourly, "DAILY_MICROS": &l.DailyMicros} {
+		for field, v := range map[string]*int64{"ASK": &l.Ask, "EMBEDDING": &l.Embedding, "VOICE": &l.Voice, "HOURLY": &l.Hourly, "DAILY_MICROS": &l.DailyMicros} {
 			vars["VERBUM_"+name+"_"+field] = v
 		}
 	}
@@ -97,8 +97,6 @@ func (l Limits) Quota(kind string) int64 {
 	switch kind {
 	case "ask":
 		return l.Ask
-	case "tts":
-		return l.Audio
 	case "embedding":
 		return l.Embedding
 	case "voice":

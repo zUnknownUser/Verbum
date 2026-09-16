@@ -97,7 +97,7 @@ paths:
       description: |
         Verifies the supplied text against the canonical chapter identified by bookId, chapter and translation.
         Arbitrary text, unsupported voices, nonzero pitch and provider-side speed changes are rejected.
-        Shared cached audio is replayed before checking generation quotas; only cache misses reserve budget.
+        Shared cached audio is replayed before checking generation quotas; only cache misses reserve global budget. Standard narration has no personal generation quota.
         Maximum 100000 UTF-8 bytes of text and 1 MiB request body. Plain text only.
         Automatically segments at 2200 bytes (below Google's 5000-byte limit) and returns one complete MP3,
         crossfading segment joins to avoid an audible seam, cached persistently by exact chapter text and
@@ -613,7 +613,8 @@ components:
         remaining:
           type: object
           additionalProperties: { type: integer, minimum: 0 }
-          description: Remaining daily ask, tts, embedding and voice generations; cache replay does not consume these.
+          description: Remaining daily ask, embedding and voice generations. Standard narration is free and has no personal quota.
+        standardNarration: { type: string, const: free, description: Available standard audio is reusable without a personal quota; missing chapters require global generation budget. }
         voiceSeconds: { type: integer }
         restricted: { type: boolean }
 

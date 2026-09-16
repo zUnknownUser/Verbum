@@ -2251,13 +2251,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "New audio generations"
+            "value" : "Standard Bible narration is free."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Novas gerações de áudio"
+            "value" : "A narração padrão da Bíblia é gratuita."
           }
         }
       }
@@ -2302,13 +2302,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Previously generated audio can be replayed without using a new generation."
+            "value" : "Available audio can be replayed without a daily quota. Chapters not yet narrated depend on availability."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Áudios já gerados podem ser ouvidos sem consumir uma nova geração."
+            "value" : "Áudios disponíveis podem ser ouvidos sem cota diária. Capítulos ainda não narrados dependem de disponibilidade."
           }
         }
       }
