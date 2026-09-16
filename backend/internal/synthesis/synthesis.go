@@ -17,11 +17,10 @@ import (
 
 const endpoint = "https://api.openai.com/v1/chat/completions"
 
-// DefaultModel is deliberately the same budget-conscious default as the pipeline's extraction
-// stage (pipeline/verbum_pipeline/extract.py). Override with VERBUM_ASK_MODEL if Ask's
-// user-facing synthesis warrants a stronger (costlier) model than internal extraction does —
-// that is an owner call, not assumed here.
-const DefaultModel = "gpt-4o-mini"
+// DefaultModel is the explicitly selected cost-sensitive Ask model. Pipeline extraction,
+// embeddings and realtime voice keep their separate models.
+const DefaultModel = "gpt-5.6-luna"
+const legacyModel = "gpt-4o-mini"
 
 type Client struct {
 	apiKey   string
@@ -43,19 +42,27 @@ func (c *Client) Complete(ctx context.Context, systemPrompt, userPrompt string) 
 	if len(systemPrompt)+len(userPrompt) > 32_000 {
 		return "", fmt.Errorf("prompt exceeds bound")
 	}
-	if c.model != DefaultModel {
+	if c.model != DefaultModel && c.model != legacyModel {
 		return "", usage.Unavailable()
 	}
-	body, err := json.Marshal(map[string]any{
+	payload := map[string]any{
 		"model":                 c.model,
-		"temperature":           0,
 		"max_completion_tokens": 1024,
 		"response_format":       map[string]string{"type": "json_object"},
 		"messages": []map[string]string{
 			{"role": "system", "content": systemPrompt},
 			{"role": "user", "content": userPrompt},
 		},
-	})
+	}
+	if c.model == DefaultModel {
+		payload["reasoning_effort"] = "none"
+	} else {
+		payload["temperature"] = 0
+	}
+	if uid := usage.Identity(ctx).UID; uid != "" {
+		payload["safety_identifier"] = usage.Hash("openai-safety", uid)
+	}
+	body, err := json.Marshal(payload)
 	if err != nil {
 		return "", err
 	}
@@ -83,6 +90,10 @@ func (c *Client) Complete(ctx context.Context, systemPrompt, userPrompt string) 
 		Usage *struct {
 			Prompt     int64 `json:"prompt_tokens"`
 			Completion int64 `json:"completion_tokens"`
+			Details    *struct {
+				Cached  int64 `json:"cached_tokens"`
+				Written int64 `json:"cache_write_tokens"`
+			} `json:"prompt_tokens_details"`
 		} `json:"usage"`
 		Choices []struct {
 			Message struct {
@@ -97,7 +108,18 @@ func (c *Client) Complete(ctx context.Context, systemPrompt, userPrompt string) 
 		return "", fmt.Errorf("synthesis response had no content")
 	}
 	if parsed.Usage != nil {
-		usage.Record(ctx, (parsed.Usage.Prompt*15+parsed.Usage.Completion*60+99)/100)
+		if parsed.Usage.Prompt >= 0 && parsed.Usage.Completion >= 0 {
+			cost := (parsed.Usage.Prompt*15 + parsed.Usage.Completion*60 + 99) / 100
+			if c.model == DefaultModel {
+				// Bound input at the 1.25x cache-write rate when details are unavailable.
+				input := parsed.Usage.Prompt * 25
+				if d := parsed.Usage.Details; d != nil && d.Cached >= 0 && d.Written >= 0 && d.Cached+d.Written <= parsed.Usage.Prompt {
+					input = parsed.Usage.Prompt*20 - d.Cached*18 + d.Written*5
+				}
+				cost = (input + parsed.Usage.Completion*120 + 99) / 100
+			}
+			usage.Record(ctx, cost)
+		}
 	}
 	return parsed.Choices[0].Message.Content, nil
 }

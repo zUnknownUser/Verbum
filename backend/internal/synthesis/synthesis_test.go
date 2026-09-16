@@ -35,6 +35,12 @@ func TestCompleteSendsExpectedRequestAndReturnsContent(t *testing.T) {
 	if gotBody["model"] != DefaultModel {
 		t.Errorf("model = %v", gotBody["model"])
 	}
+	if gotBody["reasoning_effort"] != "none" || gotBody["max_completion_tokens"] != float64(1024) {
+		t.Error("missing bounded Luna settings")
+	}
+	if _, ok := gotBody["temperature"]; ok {
+		t.Error("unvalidated sampling parameter sent to Luna")
+	}
 	rf, _ := gotBody["response_format"].(map[string]any)
 	if rf["type"] != "json_object" {
 		t.Errorf("response_format = %#v", rf)
@@ -59,5 +65,30 @@ func TestCompleteRejectsEmptyChoices(t *testing.T) {
 	})
 	if _, err := c.Complete(context.Background(), "s", "u"); err == nil {
 		t.Fatal("want an error for empty choices")
+	}
+}
+
+func TestUnsupportedModelDoesNotCallProvider(t *testing.T) {
+	c := client(t, func(http.ResponseWriter, *http.Request) { t.Fatal("unsupported model called provider") })
+	c.model = "gpt-unknown"
+	if _, err := c.Complete(context.Background(), "s", "u"); err == nil {
+		t.Fatal("unpriced model accepted")
+	}
+}
+func TestLegacyModelRetainsRollbackContract(t *testing.T) {
+	c := client(t, func(w http.ResponseWriter, r *http.Request) {
+		var got map[string]any
+		json.NewDecoder(r.Body).Decode(&got)
+		if got["model"] != legacyModel || got["temperature"] != float64(0) {
+			t.Error("rollback contract changed")
+		}
+		if _, ok := got["reasoning_effort"]; ok {
+			t.Error("legacy model received reasoning")
+		}
+		w.Write([]byte(`{"choices":[{"message":{"content":"{}"}}]}`))
+	})
+	c.model = legacyModel
+	if _, err := c.Complete(context.Background(), "JSON", "u"); err != nil {
+		t.Fatal(err)
 	}
 }

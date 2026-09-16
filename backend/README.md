@@ -126,8 +126,8 @@ mechanism (not just the two cases tested here) has not been done.
 
 Not implemented in this increment: PT-BR (blocked on the same license gap as search), streaming,
 and any evaluation of answer quality/citation precision beyond the manual spot checks above.
-`VERBUM_ASK_MODEL` overrides the synthesis model (default `gpt-4o-mini`, same budget-conscious
-default as the pipeline's extraction stage) independently of anything else that uses OpenAI.
+`VERBUM_ASK_MODEL` selects Ask synthesis: default `gpt-5.6-luna`, priced rollback `gpt-4o-mini`.
+Unpriced models are rejected. Pipeline extraction, embeddings and realtime use separate models.
 
 **Entity linking (2026-09-13):** `entityReferences` names entities whose curated `keyPassages`
 cover a passage the model actually cited (`Store.EntitiesForPassages`, `entity_key_passages`) —
