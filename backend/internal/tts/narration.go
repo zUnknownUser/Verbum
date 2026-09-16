@@ -169,3 +169,8 @@ func (r Request) geminiInputCost() int64 { return int64(len(r.Text) + len(r.narr
 func (r Request) measuredCost(seconds float64) int64 {
 	return r.geminiInputCost() + int64(math.Ceil(seconds*25))*20
 }
+
+func geminiAudioVersion() string {
+	r, _ := (Request{Text: "audio-version", Language: "pt-BR", Voice: NarrationVoice}).normalized()
+	return strings.TrimSuffix(cacheKey(r), ".mp3")
+}

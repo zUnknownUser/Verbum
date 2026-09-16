@@ -26,3 +26,19 @@ func TestAudioVersion(t *testing.T) {
 		t.Fatal("stale revision accepted")
 	}
 }
+
+func TestRollbackAcceptsRecentlyPublishedGeminiManifest(t *testing.T) {
+	t.Setenv("VERBUM_TTS_NARRATOR", "chirp3")
+	current, err := AudioVersion("pt-BR")
+	if err != nil {
+		t.Fatal(err)
+	}
+	previous := geminiAudioVersion()
+	if current == previous {
+		t.Fatal("rollback did not change voice")
+	}
+	r, err := (Request{Text: "passage", Language: "pt-BR", Revision: previous}).normalized()
+	if err != nil || r.Voice != "pt-BR-Chirp3-HD-Aoede" {
+		t.Fatalf("stale mobile revision failed to use Portuguese rollback: %v %s", err, r.Voice)
+	}
+}

@@ -99,7 +99,17 @@ func (h *handlers) synthesizeSpeech(w http.ResponseWriter, r *http.Request) {
 		case errors.Is(err, context.Canceled):
 			status, code, message = 408, CodeTTSFailed, "speech request cancelled"
 		}
-		slog.Warn("tts failed", "reqID", reqid.From(r.Context()), "code", code, "status", status)
+		cause := "provider_or_network"
+		if errors.Is(err, tts.ErrCredentials) {
+			cause = "provider_credentials_or_permission"
+		}
+		if errors.Is(err, tts.ErrInvalidInput) {
+			cause = "invalid_configuration"
+		}
+		if errors.Is(err, tts.ErrTimeout) || errors.Is(err, context.DeadlineExceeded) {
+			cause = "provider_timeout"
+		}
+		slog.Warn("tts failed", "reqID", reqid.From(r.Context()), "code", code, "status", status, "cause", cause)
 		writeProblem(w, status, code, message)
 		return
 	}

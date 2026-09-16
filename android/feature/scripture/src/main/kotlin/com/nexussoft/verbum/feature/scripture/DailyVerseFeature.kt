@@ -18,6 +18,7 @@ import com.nexussoft.verbum.models.PassageReference
 import java.time.Clock
 import java.time.LocalDate
 import java.time.LocalDateTime
+import kotlinx.coroutines.ensureActive
 
 /**
  * The verse of the day on Home (§14): one verse, its text, a way to open it in the reader, a
@@ -29,6 +30,7 @@ object DailyVerseFeature {
         val text: TextState = TextState.Loading,
         /** The user's choice. Kept while the system permission is denied, so re-enabling in Settings is enough. */
         val morningsEnabled: Boolean = false,
+        val reminderMinute: Int = 7 * 60,
         val authorization: NotificationAuthorization = NotificationAuthorization.NOT_DETERMINED,
     ) {
         /** What the share sheet sends: the verse, its reference, its translation. */
@@ -51,6 +53,7 @@ object DailyVerseFeature {
         data class AuthorizationResponse(val authorization: NotificationAuthorization) : Action
         data object OpenTapped : Action
         data class MorningsToggled(val enabled: Boolean) : Action
+        data class ReminderTimeChanged(val minuteOfDay: Int) : Action
         data class Delegate(val delegate: DelegateAction) : Action
     }
 
@@ -58,11 +61,10 @@ object DailyVerseFeature {
         data class OpenPassage(val reference: PassageReference) : DelegateAction
     }
 
-    /** Wall-clock hour of the morning notification. */
-    const val MORNING_HOUR = 7
     /** How far ahead notifications are planned; refreshed on every launch. */
     const val PLANNED_DAYS = 14
     const val MORNINGS_KEY = "dailyVerseMornings"
+    const val REMINDER_MINUTE_KEY = "dailyVerseReminderMinute"
     private const val PLAN_ID = "dailyVerse.plan"
 
     fun reducer(
@@ -73,11 +75,12 @@ object DailyVerseFeature {
         title: () -> String = { "Verse of the day" },
     ): Reducer<State, Action> {
         /** Schedules the next [PLANNED_DAYS] mornings, replacing what was pending. Skipped without permission. */
-        fun plan(): Effect<Action> = runEffect(id = PLAN_ID, cancelInFlight = true) {
+        fun plan(minuteOfDay: Int): Effect<Action> = runEffect(id = PLAN_ID, cancelInFlight = true) {
             if (notifications.authorization() != NotificationAuthorization.AUTHORIZED) return@runEffect
-            val plan = DailyVersePlan.build(LocalDateTime.now(clock), PLANNED_DAYS, MORNING_HOUR, title()) { reference ->
+            val plan = DailyVersePlan.build(LocalDateTime.now(clock), PLANNED_DAYS, minuteOfDay / 60, title(), minuteOfDay % 60) { reference ->
                 runCatching { bibleClient.passage(reference).text }.getOrNull()
             }
+            kotlinx.coroutines.currentCoroutineContext().ensureActive()
             notifications.scheduleVerses(plan)
         }
 
@@ -86,20 +89,22 @@ object DailyVerseFeature {
                 Action.Started -> {
                     val enabled = preferences.string(MORNINGS_KEY) == "true"
                     val reference = DailyVerses.verse(LocalDate.now(clock))
-                    state.copy(reference = reference, text = TextState.Loading, morningsEnabled = enabled).with(
+                    val minute = preferences.string(REMINDER_MINUTE_KEY)?.toIntOrNull()?.takeIf { it in 0..1439 } ?: 7 * 60
+                    state.copy(reference = reference, text = TextState.Loading, morningsEnabled = enabled, reminderMinute = minute).with(
                         merge(
                             runEffect { send ->
                                 val passage = runCatching { bibleClient.passage(reference) }.getOrNull()
                                 send(if (passage != null) Action.TextLoaded(passage) else Action.TextFailed)
                             },
                             runEffect { send -> send(Action.AuthorizationResponse(notifications.authorization())) },
-                            if (enabled) plan() else Effect.None,
                         ),
                     )
                 }
                 is Action.TextLoaded -> state.copy(text = TextState.Loaded(action.passage)).only()
                 Action.TextFailed -> state.copy(text = TextState.Failed).only()
-                is Action.AuthorizationResponse -> state.copy(authorization = action.authorization).only()
+                is Action.AuthorizationResponse -> state.copy(authorization = action.authorization).with(
+                    if (action.authorization == NotificationAuthorization.AUTHORIZED && state.morningsEnabled) plan(state.reminderMinute) else Effect.None,
+                )
                 Action.OpenTapped -> state.with(Effect.Send(Action.Delegate(DelegateAction.OpenPassage(state.reference))))
                 is Action.MorningsToggled -> {
                     preferences.setString(MORNINGS_KEY, action.enabled.toString())
@@ -108,17 +113,22 @@ object DailyVerseFeature {
                             runEffect { send ->
                                 val granted = runCatching { notifications.requestAuthorization() }.getOrDefault(false)
                                 send(Action.AuthorizationResponse(if (granted) NotificationAuthorization.AUTHORIZED else NotificationAuthorization.DENIED))
-                                // After the answer, so a fresh grant is honoured in the same tap.
-                                if (granted) {
-                                    val plan = DailyVersePlan.build(LocalDateTime.now(clock), PLANNED_DAYS, MORNING_HOUR, title()) { reference ->
-                                        runCatching { bibleClient.passage(reference).text }.getOrNull()
-                                    }
-                                    notifications.scheduleVerses(plan)
-                                }
                             },
                         )
                     } else {
-                        state.copy(morningsEnabled = false).with(runEffect { notifications.cancelVerses() })
+                        state.copy(morningsEnabled = false).with(merge(
+                            runEffect(id = PLAN_ID, cancelInFlight = true) {},
+                            runEffect { notifications.cancelVerses() },
+                        ))
+                    }
+                }
+                is Action.ReminderTimeChanged -> {
+                    if (action.minuteOfDay !in 0..1439) state.only()
+                    else {
+                        preferences.setString(REMINDER_MINUTE_KEY, action.minuteOfDay.toString())
+                        state.copy(reminderMinute = action.minuteOfDay).with(
+                            if (state.morningsEnabled) plan(action.minuteOfDay) else Effect.None,
+                        )
                     }
                 }
                 is Action.Delegate -> state.only()
@@ -129,14 +139,14 @@ object DailyVerseFeature {
 
 /** Builds the dated notifications for the mornings ahead. Pure apart from [text]. Twin of iOS `DailyVersePlan`. */
 object DailyVersePlan {
-    suspend fun build(now: LocalDateTime, days: Int, hour: Int, title: String, text: suspend (PassageReference) -> String?): List<VerseNotification> {
+    suspend fun build(now: LocalDateTime, days: Int, hour: Int, title: String, minute: Int = 0, text: suspend (PassageReference) -> String?): List<VerseNotification> {
         // Today's morning only if it is still ahead; otherwise the plan starts tomorrow.
-        val first = if (now.hour < hour) now.toLocalDate() else now.toLocalDate().plusDays(1)
+        val first = if (now.hour * 60 + now.minute < hour * 60 + minute) now.toLocalDate() else now.toLocalDate().plusDays(1)
         return (0 until days).map { offset ->
             val date = first.plusDays(offset.toLong())
             val reference = DailyVerses.verse(date)
             VerseNotification(
-                year = date.year, month = date.monthValue, day = date.dayOfMonth, hour = hour, minute = 0,
+                year = date.year, month = date.monthValue, day = date.dayOfMonth, hour = hour, minute = minute,
                 title = title,
                 body = body(reference, text(reference)),
                 reference = reference,

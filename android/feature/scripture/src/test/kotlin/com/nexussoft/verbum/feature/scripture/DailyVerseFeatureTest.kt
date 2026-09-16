@@ -102,6 +102,24 @@ class DailyVerseFeatureTest {
         assertEquals("false", preferences.string(DailyVerseFeature.MORNINGS_KEY))
     }
 
+    @Test fun changingReminderTimeReschedulesAndPersists() = runTest {
+        val notifications = FakeNotifications(status = { NotificationAuthorization.AUTHORIZED })
+        val preferences = InMemoryPreferencesClient(mapOf(DailyVerseFeature.MORNINGS_KEY to "true"))
+        val bible = StubBibleClient(passageStub = { passage(it, "text") })
+        val store = TestStore(State(morningsEnabled = true), reducer(bible, notifications, preferences, saturdayMorning))
+        store.send(Action.ReminderTimeChanged(20 * 60 + 45)) { it.copy(reminderMinute = 20 * 60 + 45) }
+        store.finish()
+        assertEquals("1245", preferences.string(DailyVerseFeature.REMINDER_MINUTE_KEY))
+        assertEquals(listOf(2026, 9, 12, 20, 45), notifications.scheduled!!.first().let { listOf(it.year, it.month, it.day, it.hour, it.minute) })
+    }
+
+    @Test fun chosenTimeSchedulesTodayOnlyWhenStillAhead() = runTest {
+        val today = DailyVersePlan.build(LocalDateTime.of(2026, 9, 12, 9, 30), 1, 20, "", 45) { "text" }
+        assertEquals(listOf(12, 20, 45), today.first().let { listOf(it.day, it.hour, it.minute) })
+        val tomorrow = DailyVersePlan.build(LocalDateTime.of(2026, 9, 12, 9, 30), 1, 9, "", 15) { "text" }
+        assertEquals(listOf(13, 9, 15), tomorrow.first().let { listOf(it.day, it.hour, it.minute) })
+    }
+
     @Test fun planFallsBackToTheReferenceWhenTextIsUnavailable() = runTest {
         val plan = DailyVersePlan.build(LocalDateTime.of(2026, 9, 12, 9, 30), 2, 7, "Verse of the day") { null }
         assertEquals(

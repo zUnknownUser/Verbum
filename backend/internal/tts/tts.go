@@ -68,7 +68,10 @@ type Request struct {
 func (r Request) normalized() (Request, error) {
 	if r.Revision != "" {
 		version, err := AudioVersion(r.Language)
-		if err != nil || version != r.Revision {
+		// Mobile manifests can retain Gemini's version for an hour after a rollback.
+		// Accept only that known version and render the current Portuguese voice.
+		oldGemini := r.Language == "pt-BR" && os.Getenv("VERBUM_TTS_NARRATOR") == "chirp3" && r.Revision == geminiAudioVersion()
+		if err != nil || (version != r.Revision && !oldGemini) {
 			return r, fmt.Errorf("%w: audio version changed; refresh configuration", ErrInvalidInput)
 		}
 		r.Revision = "" // Concurrency guard, not part of the synthesis/cache identity.

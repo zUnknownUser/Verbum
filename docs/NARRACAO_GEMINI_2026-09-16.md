@@ -47,3 +47,11 @@ Referências consultadas em 16/09/2026:
 - Manifesto inglês preservado: `b9889517f9d5f54f39eca42c2e7d94fe45037a40a02b304e017530b69f3337e1`.
 - Nenhuma versão mobile foi publicada; os clientes existentes já consultam o manifesto.
 - A síntese real, a permissão específica do modelo e a qualidade auditiva não foram validadas por geração: o usuário pediu para testar o áudio pessoalmente.
+
+## Incidente de idioma e rollback — 16/09/2026
+
+Um Play em Provérbios 2 fez `POST /v1/tts` retornar 503 às 18:30:36 UTC (reqID `68670fee9b75`). O app português então escolheu automaticamente uma gravação BSB em inglês. A causa não foi a atualização do cache: esse caminho de fallback já existia nos clientes. O log antigo não permitiu distinguir permissão do Google, indisponibilidade do provedor ou falha de rede, por isso a causa específica do 503 permanece não confirmada. A permissão `aiplatform.endpoints.predict` continua sem confirmação.
+
+`VERBUM_TTS_NARRATOR` foi temporariamente revertido para `chirp3` para restabelecer áudio português, preservando o cache anterior. O backend agora aceita a versão Gemini do manifesto retida por até uma hora nos celulares durante esse rollback, mas gera sempre com a voz portuguesa ativa. iOS e Android deixam de substituir falha do TTS português por gravação inglesa; uma falha aparece como indisponibilidade do áudio. Novos logs separam falha de credencial/permissão de falha de rede/provedor sem expor tokens ou texto.
+
+O código Gemini permanece pronto e pode ser reativado após conferir a permissão no projeto `verbum-app1`. Não houve geração real de áudio pelo agente.

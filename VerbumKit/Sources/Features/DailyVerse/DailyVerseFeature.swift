@@ -15,6 +15,7 @@ public struct DailyVerseFeature {
         /// The user's choice. Kept even while the system permission is denied,
         /// so turning notifications back on in Settings is enough.
         @Shared(.dailyVerseMornings) public var morningsEnabled
+        @Shared(.dailyVerseReminderMinute) public var reminderMinute
         public var authorization: NotificationAuthorization = .notDetermined
 
         public init() {}
@@ -41,6 +42,7 @@ public struct DailyVerseFeature {
         case authorizationResponse(NotificationAuthorization)
         case openTapped
         case morningsToggled(Bool)
+        case reminderTimeChanged(Int)
         case delegate(Delegate)
 
         @CasePathable
@@ -53,8 +55,6 @@ public struct DailyVerseFeature {
         public init() {}
     }
 
-    /// Wall-clock time of the morning notification.
-    public static let morningHour = 7
     /// How far ahead notifications are planned; refreshed on every launch.
     public static let plannedDays = 14
 
@@ -81,8 +81,7 @@ public struct DailyVerseFeature {
                     },
                     .run { [notificationClient] send in
                         await send(.authorizationResponse(await notificationClient.authorization()))
-                    },
-                    state.morningsEnabled ? plan() : .none
+                    }
                 )
 
             case .textResponse(.success(let passage)):
@@ -95,7 +94,8 @@ public struct DailyVerseFeature {
 
             case .authorizationResponse(let authorization):
                 state.authorization = authorization
-                return .none
+                return authorization == .authorized && state.morningsEnabled
+                    ? plan(minuteOfDay: state.reminderMinute) : .none
 
             case .openTapped:
                 return .send(.delegate(.openPassage(state.reference)))
@@ -106,11 +106,15 @@ public struct DailyVerseFeature {
                     let granted = (try? await notificationClient.requestAuthorization()) ?? false
                     await send(.authorizationResponse(granted ? .authorized : .denied))
                 }
-                .concatenate(with: plan())
 
             case .morningsToggled(false):
                 state.$morningsEnabled.withLock { $0 = false }
-                return .run { [notificationClient] _ in await notificationClient.cancelVerses() }
+                return .concatenate(.cancel(id: CancelID.plan), .run { [notificationClient] _ in await notificationClient.cancelVerses() })
+
+            case .reminderTimeChanged(let minute):
+                guard (0..<1440).contains(minute) else { return .none }
+                state.$reminderMinute.withLock { $0 = minute }
+                return state.morningsEnabled ? plan(minuteOfDay: minute) : .none
 
             case .delegate:
                 return .none
@@ -122,23 +126,31 @@ public struct DailyVerseFeature {
     /// Skipped silently when the user has not granted notifications: asking
     /// the system to schedule would be a no-op, and the plan is rebuilt on the
     /// next launch anyway.
-    private func plan() -> Effect<Action> {
+    private func plan(minuteOfDay: Int) -> Effect<Action> {
         .run { [now, calendar, bibleClient, notificationClient] _ in
             guard await notificationClient.authorization() == .authorized else { return }
             let notifications = await DailyVersePlan.build(
                 from: now,
                 calendar: calendar,
                 days: Self.plannedDays,
-                hour: Self.morningHour,
+                hour: minuteOfDay / 60,
+                minute: minuteOfDay % 60,
                 title: L10n.t("Verse of the day"),
                 text: { reference in try? await bibleClient.passage(reference).text }
             )
+            guard !Task.isCancelled else { return }
             await notificationClient.scheduleVerses(notifications)
         }
         .cancellable(id: CancelID.plan, cancelInFlight: true)
     }
 
     private enum CancelID { case plan }
+}
+
+extension SharedKey where Self == AppStorageKey<Int>.Default {
+    public static var dailyVerseReminderMinute: Self {
+        Self[.appStorage("dailyVerseReminderMinute"), default: 7 * 60]
+    }
 }
 
 extension SharedKey where Self == AppStorageKey<Bool>.Default {
@@ -156,13 +168,15 @@ public enum DailyVersePlan {
         calendar: Calendar,
         days: Int,
         hour: Int,
+        minute: Int = 0,
         title: String,
         text: @Sendable (PassageReference) async -> String?
     ) async -> [VerseNotification] {
         var notifications: [VerseNotification] = []
         let today = calendar.startOfDay(for: now)
-        // Today's morning only if it is still ahead; otherwise the plan starts tomorrow.
-        let firstOffset = calendar.component(.hour, from: now) < hour ? 0 : 1
+        // The chosen local time today is included only while still ahead.
+        let nowMinute = calendar.component(.hour, from: now) * 60 + calendar.component(.minute, from: now)
+        let firstOffset = nowMinute < hour * 60 + minute ? 0 : 1
         for offset in firstOffset..<(firstOffset + days) {
             guard let date = calendar.date(byAdding: .day, value: offset, to: today) else { continue }
             let c = calendar.dateComponents([.year, .month, .day], from: date)
@@ -170,7 +184,7 @@ public enum DailyVersePlan {
             let reference = DailyVerses.verse(year: year, month: month, day: day)
             let text = await text(reference)
             notifications.append(VerseNotification(
-                year: year, month: month, day: day, hour: hour, minute: 0,
+                year: year, month: month, day: day, hour: hour, minute: minute,
                 title: title,
                 body: body(reference: reference, text: text),
                 reference: reference

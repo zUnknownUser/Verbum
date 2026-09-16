@@ -5,20 +5,10 @@ import Models
 extension ScriptureAudioClient {
     /// Production audio: in Portuguese, the backend's Google Cloud voice reads the translation
     /// on screen (no Portuguese recordings exist for these translations); in English, the
-    /// helloao recordings. If the cloud voice cannot be reached, the English recordings are
-    /// offered, labelled as such — never passed off as the reading.
+    /// helloao recordings. A Portuguese TTS failure is surfaced to the listener.
     public static func live(language: BookLanguage) -> ScriptureAudioClient {
         guard language == .portuguese else { return .helloAO(language: language) }
-        let recordings = ScriptureAudioClient.helloAO(language: language)
-        return ScriptureAudioClient(chapterAudio: { bookId, chapter in
-            do {
-                return try await cloudPortuguese.chapterAudio(bookId: bookId, chapter: chapter)
-            } catch is CancellationError {
-                throw CancellationError()
-            } catch {
-                return try await recordings.chapterAudio(bookId: bookId, chapter: chapter)
-            }
-        })
+        return cloudPortuguese
     }
 
     /// Speak the exact cached reading translation via the backend's `POST /v1/tts`; never

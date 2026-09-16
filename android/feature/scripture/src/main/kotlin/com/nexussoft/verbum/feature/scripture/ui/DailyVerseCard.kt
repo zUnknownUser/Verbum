@@ -1,5 +1,6 @@
 package com.nexussoft.verbum.feature.scripture.ui
 
+import android.app.TimePickerDialog
 import android.content.Intent
 import android.provider.Settings
 import androidx.compose.foundation.background
@@ -24,6 +25,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -44,6 +46,8 @@ import com.nexussoft.verbum.designsystem.tokens.Spacing
 import com.nexussoft.verbum.designsystem.tokens.VerbumTypography
 import com.nexussoft.verbum.feature.scripture.DailyVerseFeature
 import com.nexussoft.verbum.feature.scripture.R
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 /**
  * The verse of the day as a card on Home: the text in the reading face, its reference,
@@ -110,11 +114,7 @@ internal fun DailyVerseCard(state: DailyVerseFeature.State, send: (DailyVerseFea
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
         Column(verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.md)) {
-                Icon(Icons.Outlined.WbTwilight, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-                Text(stringResource(R.string.every_morning_at_seven), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurface, modifier = Modifier.weight(1f))
-                Switch(checked = state.morningsEnabled, onCheckedChange = { send(DailyVerseFeature.Action.MorningsToggled(it)) })
-            }
+            ReminderControls(state, send)
             if (state.morningsEnabled && state.authorization == NotificationAuthorization.DENIED) {
                 Text(
                     stringResource(R.string.notifications_off_open_settings),
@@ -128,6 +128,30 @@ internal fun DailyVerseCard(state: DailyVerseFeature.State, send: (DailyVerseFea
                         )
                     },
                 )
+            }
+        }
+    }
+}
+
+/** Shared by Home and Profile so both surfaces edit the same local reminder. */
+@Composable
+internal fun ReminderControls(state: DailyVerseFeature.State, send: (DailyVerseFeature.Action) -> Unit) {
+    val context = LocalContext.current
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.md)) {
+        Icon(Icons.Outlined.WbTwilight, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+        Text(stringResource(R.string.daily_verse_reminder), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurface, modifier = Modifier.weight(1f))
+        Switch(checked = state.morningsEnabled, onCheckedChange = { send(DailyVerseFeature.Action.MorningsToggled(it)) })
+    }
+    if (state.morningsEnabled) {
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+            Text(stringResource(R.string.reminder_time), style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
+            val time = LocalTime.of(state.reminderMinute / 60, state.reminderMinute % 60)
+            TextButton(onClick = {
+                TimePickerDialog(context, { _, hour, minute ->
+                    send(DailyVerseFeature.Action.ReminderTimeChanged(hour * 60 + minute))
+                }, time.hour, time.minute, android.text.format.DateFormat.is24HourFormat(context)).show()
+            }) {
+                Text(time.format(DateTimeFormatter.ofLocalizedTime(java.time.format.FormatStyle.SHORT)))
             }
         }
     }

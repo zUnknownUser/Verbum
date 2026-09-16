@@ -133,7 +133,8 @@
     <string name="daily_verse_failed">Não foi possível carregar o versículo de hoje. Abra para ler no capítulo.</string>
     <string name="open_reference">Abrir %1$s</string>
     <string name="share_verse">Compartilhar versículo</string>
-    <string name="every_morning_at_seven">Toda manhã às 7:00</string>
+    <string name="daily_verse_reminder">Lembrete do versículo diário</string>
+    <string name="reminder_time">Horário do lembrete</string>
     <string name="notifications_off_open_settings">As notificações do Verbum estão desativadas. Ative nos Ajustes.</string>
     <string name="graph">Grafo</string>
     <string name="list">Lista</string>

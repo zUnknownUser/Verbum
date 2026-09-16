@@ -932,12 +932,22 @@
         }
       }
     },
-    "Every morning at 7:00" : {
+    "Daily verse reminder" : {
       "localizations" : {
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Toda manhã às 7:00"
+            "value" : "Lembrete do versículo diário"
+          }
+        }
+      }
+    },
+    "Reminder time" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Horário do lembrete"
           }
         }
       }

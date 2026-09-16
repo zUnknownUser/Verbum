@@ -18,8 +18,7 @@ import java.util.UUID
 /**
  * Production audio: in Portuguese the backend's Google Cloud voice reads the translation on
  * screen aloud (no Portuguese recordings exist for these translations); in English the helloao
- * recordings. If the cloud voice cannot be reached, the English recordings are offered,
- * labelled as such — never passed off as the reading. Twin of iOS `ScriptureAudioClient.live`.
+ * recordings. A Portuguese TTS failure is surfaced to the listener. Twin of iOS `ScriptureAudioClient.live`.
  */
 class LiveScriptureAudioClient(language: BookLanguage, context: Context, bible: BibleClient, api: VerbumApi) : ScriptureAudioClient {
     private val recordings = HelloAOScriptureAudioClient(language)
@@ -27,13 +26,7 @@ class LiveScriptureAudioClient(language: BookLanguage, context: Context, bible: 
 
     override suspend fun chapterAudio(bookId: BookId, chapter: Int): ChapterAudio? {
         val cloud = cloud ?: return recordings.chapterAudio(bookId, chapter)
-        return try {
-            cloud.chapterAudio(bookId, chapter)
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            recordings.chapterAudio(bookId, chapter)
-        }
+        return cloud.chapterAudio(bookId, chapter)
     }
 }
 

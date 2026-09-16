@@ -78,7 +78,7 @@ struct DailyVerseView: View {
                 set: { store.send(.morningsToggled($0)) }
             )) {
                 Label {
-                    Text(L10n.t("Every morning at 7:00"))
+                    Text(L10n.t("Daily verse reminder"))
                         .font(Typography.subheadline)
                         .foregroundStyle(Palette.ink)
                 } icon: {
@@ -88,6 +88,31 @@ struct DailyVerseView: View {
                 }
             }
             .tint(Palette.accent)
+
+            if store.morningsEnabled {
+                HStack {
+                    Text(L10n.t("Reminder time"))
+                        .font(Typography.subheadline)
+                        .foregroundStyle(Palette.inkSecondary)
+                    Spacer()
+                    DatePicker(
+                        L10n.t("Reminder time"),
+                        selection: Binding(
+                            get: {
+                                Calendar.current.date(byAdding: .minute, value: store.reminderMinute, to: Calendar.current.startOfDay(for: .now)) ?? .now
+                            },
+                            set: { date in
+                                let components = Calendar.current.dateComponents([.hour, .minute], from: date)
+                                store.send(.reminderTimeChanged((components.hour ?? 7) * 60 + (components.minute ?? 0)))
+                            }
+                        ),
+                        displayedComponents: .hourAndMinute
+                    )
+                    .labelsHidden()
+                    .datePickerStyle(.compact)
+                    .accessibilityLabel(L10n.t("Reminder time"))
+                }
+            }
 
             if store.morningsEnabled && store.authorization == .denied {
                 Button {

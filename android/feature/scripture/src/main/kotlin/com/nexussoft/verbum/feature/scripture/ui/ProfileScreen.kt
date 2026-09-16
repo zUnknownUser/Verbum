@@ -206,10 +206,7 @@ internal fun ProfileScreen(account: AccountFeature.State, state: ProfileFeature.
                     "notifications" -> {
                         LaunchedEffect(Unit) { sendNotifications(DailyVerseFeature.Action.Started) }
                         Text(accountText("notificationsBody"), color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(stringResource(R.string.every_morning_at_seven), Modifier.weight(1f))
-                            Switch(notifications.morningsEnabled, { sendNotifications(DailyVerseFeature.Action.MorningsToggled(it)) })
-                        }
+                        ReminderControls(notifications, sendNotifications)
                         if(notifications.authorization == NotificationAuthorization.DENIED) TextButton(onClick = { settings() }) {
                             Text(stringResource(R.string.notifications_off_open_settings))
                         }

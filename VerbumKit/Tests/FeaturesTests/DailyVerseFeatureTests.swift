@@ -102,6 +102,19 @@ private func passage(_ reference: PassageReference, _ text: String) -> BiblePass
         #expect(cancelled.value)
     }
 
+    @Test func chosenTimeSchedulesTodayOnlyWhenStillAhead() async {
+        let today = await DailyVersePlan.build(
+            from: Self.saturdayMorning, calendar: Self.calendar, days: 1,
+            hour: 20, minute: 45, title: "", text: { _ in "text" }
+        )
+        #expect(today.first.map { [$0.day, $0.hour, $0.minute] } == [12, 20, 45])
+        let tomorrow = await DailyVersePlan.build(
+            from: Self.saturdayMorning, calendar: Self.calendar, days: 1,
+            hour: 9, minute: 15, title: "", text: { _ in "text" }
+        )
+        #expect(tomorrow.first.map { [$0.day, $0.hour, $0.minute] } == [13, 9, 15])
+    }
+
     @Test func planFallsBackToTheReferenceWhenTextIsUnavailable() async {
         let plan = await DailyVersePlan.build(
             from: Self.saturdayMorning, calendar: Self.calendar, days: 2, hour: 7, title: "Verse of the day",
