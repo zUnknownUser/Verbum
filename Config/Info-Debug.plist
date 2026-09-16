@@ -2,21 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>To talk with the study companion about the page you are reading.</string>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>audio</string>
-	</array>
-	<!-- The Verbum backend (api/openapi.yaml). Set per configuration by the VERBUM_API_BASE_URL build setting;
-	     override at runtime with the launch argument -VerbumAPIBaseURL http://<ip>:8080 (Edit Scheme → Arguments). -->
-	<key>VerbumAPIBaseURL</key>
-	<string>$(VERBUM_API_BASE_URL)</string>
-	<!-- Debug only: a development backend on a LAN address speaks plain HTTP. Release keeps ATS intact. -->
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
+	<key>VerbumAPIBaseURL</key>
+	<string>$(VERBUM_API_BASE_URL)</string>
 </dict>
 </plist>

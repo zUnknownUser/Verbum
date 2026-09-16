@@ -82,12 +82,12 @@ struct ChapterReaderView: View {
                 } label: {
                     Label(L10n.t("Follow reading"), systemImage: "text.line.first.and.arrowtriangle.forward")
                         .font(Typography.footnote).padding(Spacing.md)
-                }.tint(Palette.ink).glassEffect(.regular.interactive(), in: .capsule)
+                }.tint(Palette.ink).readerControlMaterial()
             } else if !store.focusMode, let previous = store.history.last {
                 Button { store.send(.backToReading) } label: {
                     Label(L10n.t("Back to \(previous.reference.formatted)"), systemImage: "arrow.uturn.backward")
                         .font(Typography.footnote).padding(.horizontal, Spacing.lg).padding(.vertical, Spacing.md)
-                }.tint(Palette.ink).glassEffect(.regular.interactive(), in: .capsule)
+                }.tint(Palette.ink).readerControlMaterial()
                     .padding(.bottom, Spacing.sm)
             }
         }
@@ -115,6 +115,22 @@ private struct ReaderScrollPage: View {
     let reference: PassageReference
     let continuous: Bool
     @Binding var followsAudio: Bool
+
+    var body: some View {
+        if #available(iOS 18.0, *) {
+            ModernReaderScrollPage(store: store, reference: reference, continuous: continuous, followsAudio: $followsAudio)
+        } else {
+            LegacyReaderScrollPage(store: store, reference: reference, continuous: continuous, followsAudio: $followsAudio)
+        }
+    }
+}
+
+@available(iOS 18.0, *)
+private struct ModernReaderScrollPage: View {
+    let store: StoreOf<ChapterReaderFeature>
+    let reference: PassageReference
+    let continuous: Bool
+    @Binding var followsAudio: Bool
     @Environment(\.audioReading) private var audioReading
     @State private var visibleVerses: Set<String> = []
     @State private var position = ScrollPosition()
@@ -124,24 +140,7 @@ private struct ReaderScrollPage: View {
 
     var body: some View {
         ScrollView {
-            LazyVStack(alignment: .leading, spacing: 0) {
-                ForEach(continuous ? store.flow : [reference], id: \.self) { chapter in
-                    ReaderChapterBody(store: store, reference: chapter, continuous: continuous)
-                }
-                if continuous, let last = store.flow.last, store.chapters[ReaderCanon.key(last)] != nil,
-                   let next = ChapterNavigation.next(after: last) {
-                    VStack(spacing: Spacing.sm) {
-                        Text(next.formatted).font(Typography.editorialHeadline)
-                        Label(L10n.t("Continue reading"), systemImage: "arrow.down").font(Typography.footnote)
-                    }.foregroundStyle(Palette.inkTertiary).frame(maxWidth: .infinity).padding(Spacing.xxl).opacity(store.focusMode ? 0 : 1).accessibilityHidden(store.focusMode)
-                        .onAppear { store.send(.appendChapter) }
-                }
-            }
-            .scrollTargetLayout()
-            .frame(maxWidth: Spacing.readingMaxWidth)
-            .frame(maxWidth: .infinity)
-            .padding(.horizontal, Spacing.readingMargin)
-            .padding(.bottom, Spacing.xxxl)
+            ReaderScrollContent(store: store, reference: reference, continuous: continuous)
         }
         .scrollPosition($position)
         .scrollIndicators(.hidden)
@@ -181,6 +180,33 @@ private struct ReaderScrollPage: View {
     }
 }
 
+struct ReaderScrollContent: View {
+    let store: StoreOf<ChapterReaderFeature>
+    let reference: PassageReference
+    let continuous: Bool
+
+    var body: some View {
+        LazyVStack(alignment: .leading, spacing: 0) {
+            ForEach(continuous ? store.flow : [reference], id: \.self) { chapter in
+                ReaderChapterBody(store: store, reference: chapter, continuous: continuous)
+            }
+            if continuous, let last = store.flow.last, store.chapters[ReaderCanon.key(last)] != nil,
+               let next = ChapterNavigation.next(after: last) {
+                VStack(spacing: Spacing.sm) {
+                    Text(next.formatted).font(Typography.editorialHeadline)
+                    Label(L10n.t("Continue reading"), systemImage: "arrow.down").font(Typography.footnote)
+                }.foregroundStyle(Palette.inkTertiary).frame(maxWidth: .infinity).padding(Spacing.xxl).opacity(store.focusMode ? 0 : 1).accessibilityHidden(store.focusMode)
+                    .onAppear { store.send(.appendChapter) }
+            }
+        }
+        .scrollTargetLayout()
+        .frame(maxWidth: Spacing.readingMaxWidth)
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, Spacing.readingMargin)
+        .padding(.bottom, Spacing.xxxl)
+    }
+}
+
 private struct ReaderChapterBody: View {
     let store: StoreOf<ChapterReaderFeature>
     let reference: PassageReference
@@ -197,9 +223,9 @@ private struct ReaderChapterBody: View {
                 Rectangle().fill(Palette.accent).frame(width: 28, height: 1).padding(.top, Spacing.xs)
             }.frame(maxWidth: .infinity).padding(.top, Spacing.xxxl).padding(.bottom, Spacing.xxl).opacity(store.focusMode ? 0 : 1).accessibilityHidden(store.focusMode).frame(height: store.focusMode ? 12 : nil).clipped()
                 .accessibilityElement(children: .combine).accessibilityAddTraits(.isHeader)
-                .onScrollVisibilityChange(threshold: 0.8) { visible in
+                .modifier(ReaderChapterVisibility(reference: reference) { visible in
                     if visible && continuous { store.send(.chapterVisible(reference)) }
-                }
+                })
             if let verses = store.chapters[key] {
                 ForEach(verses) { verse in
                     let id = "\(verse.bookId).\(verse.chapter).\(verse.verseStart)"
@@ -208,6 +234,7 @@ private struct ReaderChapterBody: View {
                         requested: reference == store.reference && (store.requestedVerses?.contains(verse.verseStart) ?? false)) { ids in
                             if store.focusMode { store.send(.focusToggled) } else { store.send(.studyVerse(reference, verse.verseStart, ids)) }
                         }.id(id)
+                        .modifier(LegacyReaderFrame(element: .verse(id)))
                 }
                 if !continuous && !store.focusMode {
                     if let next = ChapterNavigation.next(after: reference) {

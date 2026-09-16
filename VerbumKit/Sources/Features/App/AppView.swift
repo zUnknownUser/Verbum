@@ -13,7 +13,7 @@ public struct AppView: View {
 
     public var body: some View {
         Group {
-            if store.isListening && !isReaderFocused {
+            if #available(iOS 26.0, *), store.isListening && !isReaderFocused {
                 tabs.tabViewBottomAccessory {
                     MiniPlayerView(store: store.scope(state: \.audio, action: \.audio))
                 }
@@ -38,38 +38,92 @@ public struct AppView: View {
         return reader.reader.focusMode
     }
 
+    @ViewBuilder
     private var tabs: some View {
+        if #available(iOS 26.0, *) {
+            modernTabs.tabBarMinimizeBehavior(.onScrollDown)
+        } else if #available(iOS 18.0, *) {
+            modernTabs
+        } else {
+            TabView(selection: $store.tab.sending(\.tabChanged)) {
+                home.tabItem { Label(L10n.t("Home"), systemImage: "house") }
+                    .tag(AppFeature.Tab.home)
+                explore.tabItem { Label(L10n.t("Explore"), systemImage: "point.3.connected.trianglepath.dotted") }
+                    .tag(AppFeature.Tab.explore)
+                journey.tabItem { Label(L10n.t("Journey"), systemImage: "point.topleft.down.to.point.bottomright.curvepath") }
+                    .tag(AppFeature.Tab.journey)
+                library.tabItem { Label(L10n.t("Library"), systemImage: "books.vertical") }
+                    .tag(AppFeature.Tab.library)
+                search.tabItem { Label(L10n.t("Search"), systemImage: "magnifyingglass") }
+                    .tag(AppFeature.Tab.search)
+            }
+            .tint(Palette.accent)
+        }
+    }
+
+    @available(iOS 18.0, *)
+    private var modernTabs: some View {
         TabView(selection: $store.tab.sending(\.tabChanged)) {
-            Tab(L10n.t("Home"), systemImage: "house", value: AppFeature.Tab.home) {
-                NavigationStack(path: $store.scope(state: \.homePath, action: \.homePath)) {
-                    HomeView(store: store.scope(state: \.home, action: \.home))
-                } destination: { destination in
-                    PathView(store: destination)
-                }
-            }
-            Tab(L10n.t("Explore"), systemImage: "point.3.connected.trianglepath.dotted", value: AppFeature.Tab.explore) {
-                NavigationStack(path: $store.scope(state: \.explorePath, action: \.explorePath)) {
-                    ExploreView(store: store.scope(state: \.explore, action: \.explore))
-                } destination: { destination in
-                    PathView(store: destination)
-                }
-            }
-            Tab(L10n.t("Journey"), systemImage: "point.topleft.down.to.point.bottomright.curvepath", value: AppFeature.Tab.journey) {
-                NavigationStack { JourneyView() }
-            }
-            Tab(L10n.t("Library"), systemImage: "books.vertical", value: AppFeature.Tab.library) {
-                NavigationStack { LibraryView() }
-            }
-            Tab(value: AppFeature.Tab.search, role: .search) {
-                NavigationStack {
-                    SearchView(store: store.scope(state: \.search, action: \.search))
-                }
+            Tab(L10n.t("Home"), systemImage: "house", value: AppFeature.Tab.home) { home }
+            Tab(L10n.t("Explore"), systemImage: "point.3.connected.trianglepath.dotted", value: AppFeature.Tab.explore) { explore }
+            Tab(L10n.t("Journey"), systemImage: "point.topleft.down.to.point.bottomright.curvepath", value: AppFeature.Tab.journey) { journey }
+            Tab(L10n.t("Library"), systemImage: "books.vertical", value: AppFeature.Tab.library) { library }
+            if #available(iOS 26.0, *) {
+                Tab(value: AppFeature.Tab.search, role: .search) { search }
+            } else {
+                Tab(L10n.t("Search"), systemImage: "magnifyingglass", value: AppFeature.Tab.search) { search }
             }
         }
         .tabViewStyle(.sidebarAdaptable)
-        .tabBarMinimizeBehavior(.onScrollDown)
         .tint(Palette.accent)
     }
+
+    private var home: some View {
+        withLegacyPlayer {
+            NavigationStack(path: $store.scope(state: \.homePath, action: \.homePath)) {
+                HomeView(store: store.scope(state: \.home, action: \.home))
+            } destination: { PathView(store: $0) }
+        }
+    }
+
+    private var explore: some View {
+        withLegacyPlayer {
+            NavigationStack(path: $store.scope(state: \.explorePath, action: \.explorePath)) {
+                ExploreView(store: store.scope(state: \.explore, action: \.explore))
+            } destination: { PathView(store: $0) }
+        }
+    }
+
+    private var journey: some View {
+        withLegacyPlayer { NavigationStack { JourneyView() } }
+    }
+
+    private var library: some View {
+        withLegacyPlayer { NavigationStack { LibraryView() } }
+    }
+
+    private var search: some View {
+        withLegacyPlayer {
+            NavigationStack { SearchView(store: store.scope(state: \.search, action: \.search)) }
+        }
+    }
+
+    @ViewBuilder
+    private func withLegacyPlayer<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content()
+        } else {
+            // Inset each tab's content so the player sits above the system tab bar.
+            content().safeAreaInset(edge: .bottom, spacing: 0) {
+                if store.isListening && !isReaderFocused {
+                    MiniPlayerView(store: store.scope(state: \.audio, action: \.audio))
+                        .padding(.vertical, Spacing.md)
+                        .background(.regularMaterial)
+                }
+            }
+        }
+    }
+
 }
 
 /// One view per destination kind.

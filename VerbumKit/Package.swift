@@ -19,7 +19,7 @@ import PackageDescription
 let package = Package(
     name: "VerbumKit",
     defaultLocalization: "en",
-    platforms: [.iOS(.v26)],
+    platforms: [.iOS(.v17)],
     products: [
         .library(name: "Models", targets: ["Models"]),
         .library(name: "Core", targets: ["Core"]),
