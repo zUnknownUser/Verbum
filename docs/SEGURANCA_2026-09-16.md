@@ -15,7 +15,7 @@ Validação: backend `go test ./...`, `go vet ./...` e testes com `-race` de HTT
 
 O aviso residual [GO-2026-5932](https://pkg.go.dev/vuln/GO-2026-5932) é sobre `golang.org/x/crypto/openpgp`, sem versão corrigida. `go mod why golang.org/x/crypto/openpgp` confirma que o módulo principal não utiliza esse pacote. A análise conservadora do binário final listou somente esse aviso pela presença do módulo `x/crypto`; `go list -deps ./cmd/api` também confirma ausência de pacotes OpenPGP. Isso não demonstra uso de OpenPGP pelo Verbum. As atualizações adicionais de gRPC 1.83.2, x/crypto 0.56.0 e x/net 0.58.0 cobrem os demais avisos encontrados na primeira análise da imagem.
 
-Rollout detalhado: [APP_CHECK.md](APP_CHECK.md).
+Rollout detalhado: [APP_CHECK.md](APP_CHECK.md). Deploy concluído e verificações: [DEPLOYMENT_SECURITY_2026-09-16.md](DEPLOYMENT_SECURITY_2026-09-16.md).
 
 ## Diagnóstico original
 
