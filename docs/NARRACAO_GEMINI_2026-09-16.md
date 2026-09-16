@@ -1,5 +1,7 @@
 # Narração bíblica — Gemini 2.5 Pro TTS
 
+**Estado atual:** Gemini 2.5 Pro TTS + Charon em PT-BR reativado, após habilitação da API e concessão IAM pelo administrador. Síntese técnica real aprovada; escuta editorial com Lucas. As seções abaixo preservam o histórico de implantação e rollback.
+
 Implementação: Google Cloud Text-to-Speech (`gemini-2.5-pro-tts`), voz masculina **Charon**, português brasileiro. A escolha do timbre é inicial: a avaliação auditiva fica com Lucas. Nenhuma geração real de áudio foi executada nesta implementação.
 
 ## Direção editorial
@@ -67,3 +69,17 @@ Após autorização de Lucas para uma síntese técnica curta, a chamada direta 
 A tentativa de ativar apenas essa API via Service Usage também retornou HTTP 403, negando à conta de serviço a permissão de ativação. É necessário que um administrador do projeto ative a API em https://console.cloud.google.com/apis/library/aiplatform.googleapis.com?project=verbum-app1 . Depois disso, repetir a síntese técnica; se surgir uma negativa de IAM específica, tratar a permissão indicada antes da reativação. Não trocar a variável de produção para Gemini enquanto a chamada permanecer bloqueada.
 
 Lucas ativou a API. A repetição da chamada passou da barreira de serviço desativado e recebeu uma negativa IAM específica: `aiplatform.endpoints.predict` no modelo `gemini-2.5-pro-tts`, localização `global`. Solicitado ao administrador adicionar `roles/aiplatform.user` a `verbum-tts@verbum-app1.iam.gserviceaccount.com`. Ainda sem áudio gerado nessa tentativa.
+
+
+## Reativação confirmada após ajuste IAM
+
+Lucas confirmou a concessão do papel. As primeiras tentativas ainda receberam 403; após aguardar a aplicação da permissão, a mesma chamada passou, sem mudança no payload ou na credencial.
+
+- Google Cloud TTS retornou HTTP 200 para `gemini-2.5-pro-tts`, `Charon`, `pt-BR`.
+- Uma única síntese bem-sucedida, de uma frase curta, autorizada por Lucas: WAV válido, mono, 24.000 Hz, aproximadamente 3,65 segundos, 175.290 bytes. Sem reprodução/avaliação auditiva pelo agente. As tentativas negadas não produziram áudio.
+- Configuração Railway alterada para `VERBUM_TTS_NARRATOR=gemini`.
+- Deployment `83d56162-81f0-45d7-9a5a-a349921c14a4`: `SUCCESS`.
+- Manifesto português público: `2f259b36683fd3a97aa2b6d6f2939454178a0717067d9c6bf9b4489ca74cae30`, correspondente ao Gemini.
+- Não houve mudança de código de síntese, orçamento, prompt ou credenciais nesta correção; a causa era API desativada e falta de permissão IAM.
+- Os apps existentes mantêm a consulta do manifesto em cache por até uma hora. Até a atualização local, uma gravação Chirp já armazenada ainda pode tocar. Após atualizar o manifesto, o cache passa a usar a identidade Gemini; áudios antigos não são apagados nem regenerados em massa.
+- A chamada técnica confirma o acesso ao provedor e formato do áudio. Não substitui teste completo de um capítulo no app nem revisão da fidelidade/qualidade da narração.
