@@ -122,6 +122,10 @@ paths:
         '401': { $ref: '#/components/responses/Unauthenticated' }
         '200':
           description: MP3 bytes, ready to save or play (not JSON/base64).
+          headers:
+            X-Verbum-Audio-Cues:
+              description: Optional JSON array of measured excerpts with verseStart, verseEnd, start and end (seconds), bound to these MP3 bytes. Present for requests with verses; absent means playback without synchronization.
+              schema: { type: string }
           content:
             audio/mpeg:
               schema: { type: string, format: binary }
@@ -537,6 +541,18 @@ components:
       additionalProperties: false
       required: [text, language]
       properties:
+        verses:
+          type: array
+          minItems: 1
+          maxItems: 176
+          description: Optional ordered verses for synchronized narration. Their text joined by newlines must equal text exactly. Measured excerpts contain at most three verses (long verses can span several excerpts). Legacy requests omit this field and retain their cache/audio behavior.
+          items:
+            type: object
+            additionalProperties: false
+            required: [number, text]
+            properties:
+              number: { type: integer, minimum: 1, maximum: 176 }
+              text: { type: string, minLength: 1 }
         revision:
           type: string
           description: Optional version from GET /v1/tts/config. A changed version returns 400 before generation; omitted preserves legacy behavior.

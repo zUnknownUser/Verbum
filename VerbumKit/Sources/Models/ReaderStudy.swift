@@ -4,6 +4,8 @@ public enum ReadingMode: String, Codable, CaseIterable, Sendable {
     case pages, continuous
 }
 
+public enum HighlightStyle: String, Codable, CaseIterable, Sendable { case background, underline, margin }
+
 public enum HighlightColor: String, Codable, CaseIterable, Sendable {
     case gold, sage, rose
 }
@@ -12,10 +14,11 @@ public enum HighlightColor: String, Codable, CaseIterable, Sendable {
 public struct ReaderAnnotation: Codable, Equatable, Sendable, Identifiable {
     public var reference: PassageReference
     public var highlight: HighlightColor?
+    public var highlightStyle: HighlightStyle?
     public var note: String
     public var id: String { "\(reference.bookId).\(reference.chapter).\(reference.verses?.lowerBound ?? 1)" }
-    public init(reference: PassageReference, highlight: HighlightColor? = nil, note: String = "") {
-        self.reference = reference; self.highlight = highlight; self.note = note
+    public init(reference: PassageReference, highlight: HighlightColor? = nil, note: String = "", highlightStyle: HighlightStyle? = nil) {
+        self.reference = reference; self.highlight = highlight; self.note = note; self.highlightStyle = highlightStyle
     }
 }
 

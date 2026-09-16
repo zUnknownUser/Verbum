@@ -9,6 +9,8 @@ import com.nexussoft.verbum.common.arch.Reducer
 import com.nexussoft.verbum.common.arch.only
 import com.nexussoft.verbum.common.arch.runEffect
 import com.nexussoft.verbum.common.arch.with
+import com.nexussoft.verbum.models.AudioCue
+import com.nexussoft.verbum.models.AudioReadingPosition
 import com.nexussoft.verbum.models.AudioNarrator
 import com.nexussoft.verbum.models.ChapterAudio
 import com.nexussoft.verbum.models.PassageReference
@@ -30,6 +32,11 @@ object AudioPlayerFeature {
         val rate: Float = 1f,
         val failed: Boolean = false,
     ) {
+        val readingPosition: AudioReadingPosition? get() {
+            if(failed || isLoading || audio==null) return null
+            val cue=AudioCue.active(narrator?.cues.orEmpty(),currentTime) ?: return null
+            return AudioReadingPosition(audio.reference,audio.translationId,cue,isPlaying)
+        }
         val isActive: Boolean get() = reference != null
         val progress: Float get() = if (duration > 0) (currentTime / duration).coerceAtMost(1.0).toFloat() else 0f
         fun isPlaying(reference: PassageReference) = isPlaying && this.reference?.bookId == reference.bookId && this.reference?.chapter == reference.chapter

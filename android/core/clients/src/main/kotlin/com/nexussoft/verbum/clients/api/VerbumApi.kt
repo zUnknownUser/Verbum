@@ -41,7 +41,7 @@ fun interface BinaryHttpTransport {
 /** [bytes] is only meaningful when [status] is 2xx; a failed request's body is JSON text
  * (the [WireProblem] contract), carried in [problemBody] instead. Not a `data class`: a
  * `ByteArray` would give it reference-equality `equals`/`hashCode`, which is never used here. */
-class BinaryHttpResponse(val status: Int, val bytes: ByteArray, val problemBody: String = "")
+class BinaryHttpResponse(val status: Int, val bytes: ByteArray, val problemBody: String = "", val headers: Map<String,String> = emptyMap())
 
 /** Plain `HttpURLConnection` with short timeouts: the API answers from a database, and the reader must not hang on a dead server. */
 object UrlConnectionHttpTransport : HttpTransport {
@@ -86,7 +86,7 @@ object UrlConnectionBinaryHttpTransport : BinaryHttpTransport {
             }
             val status = connection.responseCode
             if (status < 400) {
-                BinaryHttpResponse(status, connection.inputStream.use { it.readBytes() })
+                BinaryHttpResponse(status, connection.inputStream.use { it.readBytes() }, headers=mapOf("X-Verbum-Audio-Cues" to (connection.getHeaderField("X-Verbum-Audio-Cues") ?: "")))
             } else {
                 BinaryHttpResponse(status, ByteArray(0), connection.errorStream?.bufferedReader(Charsets.UTF_8)?.use { it.readText() } ?: "")
             }
@@ -293,6 +293,13 @@ class VerbumApi(
         return sendBinary(HttpRequest("POST", url("/v1/tts", emptyList()), body))
     }
 
+    suspend fun synthesizeChapterSpeech(verses:List<com.nexussoft.verbum.models.BiblePassage>,language:String,revision:String?):Pair<ByteArray,List<com.nexussoft.verbum.models.AudioCue>> {
+        val body=json.encodeToString(WireTimedSpeech.serializer(),WireTimedSpeech(verses.joinToString("\n") {it.text},language,revision,verses.map {WireSpeechVerse(it.verseStart,it.text)}))
+        val response=sendBinaryResponse(HttpRequest("POST",url("/v1/tts",emptyList()),body))
+        val header=response.headers.entries.firstOrNull {it.key.equals("X-Verbum-Audio-Cues",true)}?.value
+        return response.bytes to decodeAudioCues(header)
+    }
+
     // ---- plumbing
 
     /**
@@ -348,7 +355,8 @@ class VerbumApi(
     }
 
     /** [send]'s twin for a binary response (audio, not the JSON contract). */
-    private suspend fun sendBinary(request: HttpRequest): ByteArray {
+    private suspend fun sendBinary(request: HttpRequest): ByteArray = sendBinaryResponse(request).bytes
+    private suspend fun sendBinaryResponse(request: HttpRequest): BinaryHttpResponse {
         val response = try {
             binaryTransport.send(authorize(request))
         } catch (e: VerbumApiException) {
@@ -362,7 +370,7 @@ class VerbumApi(
             val problem = runCatching { json.decodeFromString(WireProblem.serializer(), response.problemBody) }.getOrNull()
             throw VerbumApiException.Problem(ProblemCode.of(problem?.code), response.status)
         }
-        return response.bytes
+        return response
     }
 
     private suspend fun authorize(request: HttpRequest): HttpRequest {

@@ -5,12 +5,14 @@ public struct AudioNarrator: Identifiable, Codable, Equatable, Hashable, Sendabl
     public let url: String
     /// Where per-verse timings can be fetched later (phase 2: timestamp → verse).
     public let timingsPath: String?
+    public let cues: [AudioCue]?
 
-    public init(id: String, name: String, url: String, timingsPath: String?) {
+    public init(id: String, name: String, url: String, timingsPath: String?, cues: [AudioCue]? = nil) {
         self.id = id
         self.name = name
         self.url = url
         self.timingsPath = timingsPath
+        self.cues = cues.map(AudioCue.validated)
     }
 
     /// Ids of readings the device synthesised from the translation on screen

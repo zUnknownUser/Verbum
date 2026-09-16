@@ -101,6 +101,11 @@ extension VerbumAPI {
     // MARK: speech
 
     private struct SpeechRequest: Encodable { let text: String; let language: String; let revision: String? }
+    private struct SpeechVerse: Encodable { let number: Int; let text: String }
+    private struct TimedSpeechRequest: Encodable { let text: String; let language: String; let revision: String?; let verses: [SpeechVerse] }
+    public func synthesizeChapterSpeech(verses: [BiblePassage], language: String, revision: String?) async throws -> (Data, [AudioCue]) {
+        try await postTimedAudio(TimedSpeechRequest(text: verses.map(\.text).joined(separator: "\n"), language: language, revision: revision, verses: verses.map { SpeechVerse(number: $0.verseStart, text: $0.text) }))
+    }
     private struct SpeechConfiguration: Decodable { let version: String }
 
     public func speechVersion(language: String) async throws -> String {

@@ -184,6 +184,10 @@ func (s *TextToSpeechService) generate(ctx context.Context, input Request) ([]by
 	if len(names) == 0 {
 		return nil, ErrResponse
 	}
+	return s.encodeChapter(ctx, dir, names)
+}
+
+func (s *TextToSpeechService) encodeChapter(ctx context.Context, dir string, names []string) ([]byte, error) {
 	// Fixed filenames and arguments; neither text nor user paths enter a shell.
 	args := []string{"-nostdin", "-v", "error"}
 	for _, name := range names {

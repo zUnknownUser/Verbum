@@ -54,6 +54,11 @@ struct VerseStudyView: View {
         switch store.tab {
         case .highlight:
             Text(L10n.t("Mark what speaks to you")).font(Typography.editorialHeadline)
+            Picker(L10n.t("Highlight style"), selection: Binding(get: { store.annotation.highlightStyle ?? .background }, set: { store.send(.highlightStyleChanged($0)) })) {
+                Text(L10n.t("Soft background")).tag(HighlightStyle.background)
+                Text(L10n.t("Underline")).tag(HighlightStyle.underline)
+                Text(L10n.t("Margin mark")).tag(HighlightStyle.margin)
+            }.pickerStyle(.segmented).disabled(store.saving)
             HStack(spacing: Spacing.xl) {
                 ForEach(HighlightColor.allCases, id: \.self) { color in
                     Button { store.send(.highlightChanged(store.annotation.highlight == color ? nil : color)) } label: {
@@ -165,7 +170,7 @@ struct VerseStudyView: View {
             }
         }.font(Typography.subheadline)
     }
-    private func swatch(_ color: HighlightColor) -> Color { switch color { case .gold: .yellow; case .sage: .green; case .rose: .pink } }
+    private func swatch(_ color: HighlightColor) -> Color { switch color { case .gold: Color(red: 0.66, green: 0.51, blue: 0.28); case .sage: Color(red: 0.40, green: 0.53, blue: 0.44); case .rose: Color(red: 0.65, green: 0.43, blue: 0.46) } }
     private func title(_ tab: VerseStudyFeature.Tab) -> String {
         switch tab { case .highlight: L10n.t("Highlight"); case .note: L10n.t("Note"); case .compare: L10n.t("Compare"); case .context: L10n.t("Context"); case .references: L10n.t("References"); case .ask: L10n.t("Ask") }
     }

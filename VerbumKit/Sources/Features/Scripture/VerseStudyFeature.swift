@@ -45,6 +45,7 @@ public struct VerseStudyFeature {
     }
     public enum Action: Equatable {
         case task, save, closeEntity, done
+        case highlightStyleChanged(HighlightStyle)
         case tabChanged(Tab), highlightChanged(HighlightColor?), noteChanged(String), questionChanged(String)
         case contextResponse(PassageContext?), contextFailed
         case entityTapped(BibleEntity), entityResponse(EntityDetail), entityFailed
@@ -89,6 +90,11 @@ public struct VerseStudyFeature {
                     }.cancellable(id: CancelID.comparison, cancelInFlight: true)
                 }
                 return .none
+            case .highlightStyleChanged(let style):
+                state.annotation.highlightStyle = style
+                if state.annotation.highlight == nil { state.annotation.highlight = .gold }
+                state.saved = false
+                return .send(.save)
             case .highlightChanged(let color):
                 state.annotation.highlight = color; state.saved = false
                 return .send(.save)

@@ -108,6 +108,17 @@ public struct VerbumAPI: Sendable {
         return try await send(request)
     }
 
+    func postTimedAudio<Body: Encodable & Sendable>(_ body: Body) async throws -> (Data, [AudioCue]) {
+        var request = URLRequest(url: url("/v1/tts"), timeoutInterval: Self.speechTimeout)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try JSONEncoder().encode(body)
+        try await authorize(&request)
+        let (data, response) = try await exchange(request)
+        let cues = response.value(forHTTPHeaderField: "X-Verbum-Audio-Cues").flatMap { try? JSONDecoder().decode([AudioCue].self, from: Data($0.utf8)) } ?? []
+        return (data, AudioCue.validated(cues))
+    }
+
     private func authorize(_ request: inout URLRequest) async throws {
         if let token = try await tokenProvider(true) {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
@@ -127,6 +138,9 @@ public struct VerbumAPI: Sendable {
     /// One place that turns transport outcomes into `VerbumAPIError` (spec §52:
     /// network, content and malformed answers are different states).
     private func send(_ request: URLRequest) async throws -> Data {
+        try await exchange(request).0
+    }
+    private func exchange(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
         let data: Data
         let response: HTTPURLResponse
         do {
@@ -142,7 +156,7 @@ public struct VerbumAPI: Sendable {
             let problem = try? JSONDecoder().decode(Problem.self, from: data)
             throw VerbumAPIError.problem(problem?.code ?? .unknown, status: response.statusCode)
         }
-        return data
+        return (data, response)
     }
 
     private func decode<T: Decodable>(_ type: T.Type, from data: Data) throws -> T {

@@ -22,6 +22,10 @@ public struct AudioPlayerFeature {
 
         public init() {}
 
+        public var readingPosition: AudioReadingPosition? {
+            guard !failed, !isLoading, let audio, let cue = AudioCue.active(in: narrator?.cues ?? [], at: currentTime) else { return nil }
+            return .init(reference: audio.reference, translationID: audio.translationId, cue: cue, isPlaying: isPlaying)
+        }
         public var isActive: Bool { reference != nil }
         public var progress: Double { duration > 0 ? min(1, currentTime / duration) : 0 }
 

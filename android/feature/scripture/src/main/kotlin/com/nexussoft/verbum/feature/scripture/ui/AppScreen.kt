@@ -26,6 +26,7 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import kotlinx.coroutines.flow.map
@@ -73,6 +74,9 @@ fun AppScreen(store: Store<AppFeature.State, Action>) {
     }
     val reading = (when(state.tab) { Tab.HOME -> state.homePath.lastOrNull(); Tab.EXPLORE -> state.explorePath.lastOrNull(); else -> null }) as? Destination.Reader
     val quiet = reading?.state?.reader?.focusMode == true
+    val readingFlow=remember(store) {store.state.map {it.audio.readingPosition}.distinctUntilChanged()}
+    val audioReading by readingFlow.collectAsStateWithLifecycle(initialValue=store.state.value.audio.readingPosition)
+    CompositionLocalProvider(LocalAudioReading provides audioReading) {
     NavigationSuiteScaffold(
         layoutType = if(quiet) NavigationSuiteType.None else NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(currentWindowAdaptiveInfo()),
         navigationSuiteItems = {
@@ -106,6 +110,8 @@ fun AppScreen(store: Store<AppFeature.State, Action>) {
           if (!quiet) AudioAccessory(store)
         }
     }
+}
+
 }
 
 @Composable

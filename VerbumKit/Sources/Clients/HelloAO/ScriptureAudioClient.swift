@@ -38,7 +38,18 @@ extension ScriptureAudioClient {
                     let data: Data
                     do { data = try await transport(url) } catch { continue }
                     if let audio = try? HelloAOChapterAudio.parse(data, bookId: bookId, chapter: chapter), !audio.narrators.isEmpty {
-                        return audio
+                        var narrators: [AudioNarrator] = []
+                        for narrator in audio.narrators {
+                            var cues: [AudioCue] = []
+                            if let path = narrator.timingsPath, let url = URL(string: path, relativeTo: HelloAOBibleClient.baseURL)?.absoluteURL,
+                               url.scheme == "https", url.host == HelloAOBibleClient.baseURL.host {
+                                do { cues = try HelloAOChapterAudio.timings(try await transport(url), narrator: narrator, translation: audio.translationId, book: usfm, chapter: chapter) }
+                                catch is CancellationError { throw CancellationError() }
+                                catch { /* Audio stays playable without timings. */ }
+                            }
+                            narrators.append(AudioNarrator(id: narrator.id, name: narrator.name, url: narrator.url, timingsPath: narrator.timingsPath, cues: cues))
+                        }
+                        return ChapterAudio(translationId: audio.translationId, translationName: audio.translationName, reference: audio.reference, narrators: narrators)
                     }
                 }
                 return nil
@@ -55,6 +66,15 @@ enum HelloAOChapterAudio {
         let thisChapterAudioTimings: [String: String]?
 
         struct Translation: Decodable { let id: String; let name: String }
+    }
+
+    static func timings(_ data: Data, narrator: AudioNarrator, translation: String, book: String, chapter: Int) throws -> [AudioCue] {
+        struct Wire: Decodable { let translationId: String; let bookId: String; let chapterNumber: Int; let reader: String; let audioLink: String; let verses: [Double] }
+        let wire = try JSONDecoder().decode(Wire.self, from: data)
+        guard wire.translationId == translation, wire.bookId == book, wire.chapterNumber == chapter, wire.reader == narrator.id, wire.audioLink == narrator.url else { return [] }
+        return AudioCue.validated(wire.verses.enumerated().map { index, start in
+            AudioCue(verseStart: index + 1, verseEnd: index + 1, start: start, end: index + 1 < wire.verses.count ? wire.verses[index + 1] : nil)
+        })
     }
 
     static func parse(_ data: Data, bookId: BookID, chapter: Int) throws -> ChapterAudio {

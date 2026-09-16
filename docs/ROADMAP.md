@@ -1,5 +1,12 @@
 # Roadmap
 
+## Áudio acompanhado, destaques e foco — 2026-09-16
+
+- PT-BR/EN: tempos medidos de trechos TTS ou marcações da gravação, indicação discreta,
+  pausa do acompanhamento ao explorar e retomada explícita. Player/caches existentes preservados.
+- Fundo suave, sublinhado e margem; foco sem controles, com retorno ao tocar no texto.
+- Implementação e QA: [AUDIO_READING_SYNC.md](AUDIO_READING_SYNC.md).
+
 ## Reader de estudo e PT-BR — 2026-09-15
 
 - iOS 🟡 · Android 🟡: reader com destaques/notas locais, ficha contextual, comparação,

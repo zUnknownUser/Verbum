@@ -13,7 +13,7 @@ public struct AppView: View {
 
     public var body: some View {
         Group {
-            if store.isListening {
+            if store.isListening && !isReaderFocused {
                 tabs.tabViewBottomAccessory {
                     MiniPlayerView(store: store.scope(state: \.audio, action: \.audio))
                 }
@@ -21,6 +21,7 @@ public struct AppView: View {
                 tabs
             }
         }
+        .environment(\.audioReading, store.audio.readingPosition)
         .sheet(item: $store.scope(state: \.voice, action: \.voice)) { voice in
             VoiceView(store: voice)
                 .presentationDetents([.medium, .large])
@@ -28,6 +29,13 @@ public struct AppView: View {
                 .presentationBackground(Palette.paper)
         }
         .task { await store.send(.task).finish() }
+    }
+
+    private var isReaderFocused: Bool {
+        guard store.tab == .home || store.tab == .explore else { return false }
+        let path = store.tab == .home ? store.homePath : store.explorePath
+        guard let destination = path.last, case .reader(let reader) = destination else { return false }
+        return reader.reader.focusMode
     }
 
     private var tabs: some View {

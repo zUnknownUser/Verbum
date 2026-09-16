@@ -4,6 +4,11 @@ import com.nexussoft.verbum.models.BookId
 import com.nexussoft.verbum.models.BookLanguage
 import com.nexussoft.verbum.models.ChapterAudio
 import com.nexussoft.verbum.models.AudioNarrator
+import com.nexussoft.verbum.models.AudioCue
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.double
+import kotlinx.serialization.json.int
+import kotlinx.coroutines.CancellationException
 import com.nexussoft.verbum.models.PassageReference
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
@@ -26,7 +31,16 @@ class HelloAOScriptureAudioClient(language: BookLanguage, private val transport:
         for (translation in candidates) {
             val body = runCatching { transport.get("${HelloAOBibleClient.BASE_URL}/$translation/$usfm/$chapter.json") }.getOrNull() ?: continue
             val audio = runCatching { parse(body, bookId, chapter) }.getOrNull() ?: continue
-            if (audio.narrators.isNotEmpty()) return audio
+            if (audio.narrators.isNotEmpty()) {
+                val narrators=audio.narrators.map {narrator->
+                    val cues=try {
+                        val uri=narrator.timingsPath?.let {java.net.URI(HelloAOBibleClient.BASE_URL+"/").resolve(it)}
+                        if(uri?.scheme=="https" && uri.host=="bible.helloao.org") parseTimings(transport.get(uri.toString()),narrator,translation,usfm,chapter) else emptyList()
+                    } catch(e:CancellationException) {throw e} catch(_:Exception) {emptyList()}
+                    narrator.copy(cues=cues)
+                }
+                return audio.copy(narrators=narrators)
+            }
         }
         return null
     }
@@ -34,6 +48,13 @@ class HelloAOScriptureAudioClient(language: BookLanguage, private val transport:
     companion object {
         val RECORDED_FALLBACKS = listOf("BSB")
         private val json = Json { ignoreUnknownKeys = true }
+
+        internal fun parseTimings(body:String,narrator:AudioNarrator,translation:String,book:String,chapter:Int):List<AudioCue> {
+            val root=json.parseToJsonElement(body).jsonObject
+            if(root["translationId"]?.jsonPrimitive?.content!=translation || root["bookId"]?.jsonPrimitive?.content!=book || root["chapterNumber"]?.jsonPrimitive?.int!=chapter || root["reader"]?.jsonPrimitive?.content!=narrator.id || root["audioLink"]?.jsonPrimitive?.content!=narrator.url) return emptyList()
+            val starts=root.getValue("verses").jsonArray.map {it.jsonPrimitive.double}
+            return AudioCue.validated(starts.mapIndexed {i,start->AudioCue(i+1,i+1,start,starts.getOrNull(i+1))})
+        }
 
         internal fun parse(body: String, bookId: BookId, chapter: Int): ChapterAudio {
             val root = json.parseToJsonElement(body).jsonObject

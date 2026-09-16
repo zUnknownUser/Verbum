@@ -59,6 +59,11 @@ internal fun VerseStudySheet(state: VerseStudyFeature.State, send: (Action)->Uni
                 when(state.tab) {
                     Tab.HIGHLIGHT -> {
                         Text(stringResource(R.string.reader_mark),style=VerbumTypography.editorialHeadline)
+                        Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(Spacing.sm)) {
+                            HighlightStyle.entries.forEach {style->
+                                FilterChip(selected=(state.annotation.highlightStyle ?: HighlightStyle.BACKGROUND)==style,onClick={send(Action.HighlightStyleChanged(style))},enabled=!state.saving,label={Text(stringResource(when(style) {HighlightStyle.BACKGROUND->R.string.highlight_soft;HighlightStyle.UNDERLINE->R.string.highlight_underline;HighlightStyle.MARGIN->R.string.highlight_margin}))})
+                            }
+                        }
                         Row(horizontalArrangement=Arrangement.spacedBy(Spacing.lg),verticalAlignment=Alignment.CenterVertically) {
                             HighlightColor.entries.forEach {color->
                                 val label=stringResource(when(color) {HighlightColor.GOLD->R.string.reader_gold;HighlightColor.SAGE->R.string.reader_sage;HighlightColor.ROSE->R.string.reader_rose})
@@ -174,4 +179,4 @@ internal fun VerseStudySheet(state: VerseStudyFeature.State, send: (Action)->Uni
 private fun tabTitle(tab:Tab):Int=when(tab) {
     Tab.HIGHLIGHT->R.string.reader_highlight;Tab.NOTE->R.string.reader_note;Tab.COMPARE->R.string.reader_compare;Tab.CONTEXT->R.string.reader_context;Tab.REFERENCES->R.string.reader_references;Tab.ASK->R.string.reader_ask
 }
-internal fun highlightColor(color:HighlightColor):Color=when(color) {HighlightColor.GOLD->Color(0xFFE5BB55);HighlightColor.SAGE->Color(0xFF92AB8A);HighlightColor.ROSE->Color(0xFFCB9391)}
+internal fun highlightColor(color:HighlightColor):Color=when(color) {HighlightColor.GOLD->Color(0xFFA88247);HighlightColor.SAGE->Color(0xFF668770);HighlightColor.ROSE->Color(0xFFA66E75)}

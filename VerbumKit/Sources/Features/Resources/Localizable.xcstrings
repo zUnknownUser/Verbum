@@ -2934,6 +2934,56 @@
           }
         }
       }
+    },
+    "Follow reading": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acompanhar leitura"
+          }
+        }
+      }
+    },
+    "Highlight style": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estilo de destaque"
+          }
+        }
+      }
+    },
+    "Soft background": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fundo suave"
+          }
+        }
+      }
+    },
+    "Underline": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sublinhado"
+          }
+        }
+      }
+    },
+    "Margin mark": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Margem"
+          }
+        }
+      }
     }
   },
   "version": "1.1"

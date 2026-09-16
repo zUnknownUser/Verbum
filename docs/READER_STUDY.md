@@ -21,7 +21,7 @@
    referência selecionada; a resposta mostra evidências bíblicas e fontes. Sua nota não é enviada.
 8. No menu **… → Configurações de leitura**, alterne **Páginas / Contínua**. Páginas usa
    swipe horizontal nativo; Contínua acrescenta capítulos durante o scroll. A preferência é salva.
-   Use o ícone de leitura discreta para esconder controles, e o olho para mostrá-los novamente.
+   Use o ícone de leitura discreta para esconder controles, e toque no texto para mostrá-los novamente. Veja também [Áudio acompanhado](AUDIO_READING_SYNC.md).
 
 ## Arquitetura e limites de cobertura
 

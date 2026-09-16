@@ -274,4 +274,8 @@
     <string name="reader_continue">Continue a leitura</string>
     <string name="reader_mode">Modo de leitura</string>
     <string name="reader_return">Voltar a %1$s</string>
+    <string name="audio_follow_reading">Acompanhar leitura</string>
+    <string name="highlight_soft">Fundo suave</string>
+    <string name="highlight_underline">Sublinhado</string>
+    <string name="highlight_margin">Margem</string>
 </resources>

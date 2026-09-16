@@ -29,6 +29,7 @@ object VerseStudyFeature {
     sealed interface Action {
         data object Started: Action; data object Save: Action; data object Done: Action
         data class TabChanged(val tab: Tab): Action
+        data class HighlightStyleChanged(val style:HighlightStyle):Action
         data class HighlightChanged(val color: HighlightColor?): Action
         data class NoteChanged(val value: String): Action
         data class QuestionChanged(val value: String): Action
@@ -72,6 +73,7 @@ object VerseStudyFeature {
                         else -> next.only()
                     }
                 }
+                is Action.HighlightStyleChanged -> state.copy(annotation=state.annotation.copy(highlightStyle=action.style,highlight=state.annotation.highlight ?: HighlightColor.GOLD),saved=false).with(Effect.Send(Action.Save))
                 is Action.HighlightChanged -> state.copy(annotation=state.annotation.copy(highlight=action.color),saved=false).with(Effect.Send(Action.Save))
                 is Action.NoteChanged -> state.copy(annotation=state.annotation.copy(note=action.value.take(10000)),saved=false).only()
                 Action.Save -> state.copy(saving=true,saveFailed=false).with(runEffect(id=SaveId,cancelInFlight=true) {send->

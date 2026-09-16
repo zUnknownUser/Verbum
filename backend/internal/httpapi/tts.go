@@ -61,7 +61,27 @@ func (h *handlers) synthesizeSpeech(w http.ResponseWriter, r *http.Request) {
 	_ = http.NewResponseController(w).SetWriteDeadline(time.Now().Add(tts.GenerationTimeout + 30*time.Second))
 	ctx, cancel := context.WithTimeout(r.Context(), tts.GenerationTimeout)
 	defer cancel()
-	audio, err := h.tts.Synthesize(ctx, input)
+	var audio []byte
+	if len(input.Verses) > 0 {
+		timed, ok := h.tts.(interface {
+			SynthesizeTimed(context.Context, tts.Request) (tts.TimedAudio, error)
+		})
+		if !ok {
+			writeProblem(w, 503, CodeTTSUnavailable, "synchronized speech unavailable")
+			return
+		}
+		var result tts.TimedAudio
+		result, err = timed.SynthesizeTimed(ctx, input)
+		audio = result.Audio
+		if err == nil {
+			metadata, _ := json.Marshal(result.Cues)
+			if len(metadata) <= 7000 {
+				w.Header().Set("X-Verbum-Audio-Cues", string(metadata))
+			}
+		}
+	} else {
+		audio, err = h.tts.Synthesize(ctx, input)
+	}
 	if err != nil {
 		status, code, message := http.StatusBadGateway, CodeTTSFailed, "speech generation failed"
 		switch {

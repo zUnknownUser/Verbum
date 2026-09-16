@@ -133,3 +133,25 @@ func TestTTSChapterBodyAndScopedDeadline(t *testing.T) {
 		t.Fatal("oversize body accepted")
 	}
 }
+
+type fakeTimedTTS struct{ fakeTTS }
+
+func (f *fakeTimedTTS) SynthesizeTimed(_ context.Context, r tts.Request) (tts.TimedAudio, error) {
+	f.got = r
+	return tts.TimedAudio{Audio: []byte("ID3timed"), Cues: []tts.Cue{{VerseStart: 1, VerseEnd: 1, Start: 0, End: 2.5}}}, nil
+}
+func TestSynchronizedSpeechMetadataAndLegacyCompatibility(t *testing.T) {
+	service := &fakeTimedTTS{}
+	res := speechRequest(service, `{"text":"Texto","language":"pt-BR","verses":[{"number":1,"text":"Texto"}]}`, "application/json")
+	if res.Code != 200 || res.Body.String() != "ID3timed" {
+		t.Fatal(res)
+	}
+	var cues []tts.Cue
+	if json.Unmarshal([]byte(res.Header().Get("X-Verbum-Audio-Cues")), &cues) != nil || len(cues) != 1 || cues[0].End != 2.5 {
+		t.Fatal("missing timing header")
+	}
+	legacy := speechRequest(service, `{"text":"Texto","language":"pt-BR"}`, "application/json")
+	if legacy.Code != 200 || legacy.Body.String() != "ID3audio" || legacy.Header().Get("X-Verbum-Audio-Cues") != "" {
+		t.Fatal("legacy playback changed")
+	}
+}

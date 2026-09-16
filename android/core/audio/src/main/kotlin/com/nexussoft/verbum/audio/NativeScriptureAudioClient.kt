@@ -3,6 +3,8 @@ package com.nexussoft.verbum.audio
 import android.content.Context
 import com.nexussoft.verbum.clients.BibleClient
 import com.nexussoft.verbum.clients.api.VerbumApi
+import com.nexussoft.verbum.clients.api.decodeAudioCues
+import com.nexussoft.verbum.clients.api.encodeAudioCues
 import com.nexussoft.verbum.clients.helloao.HelloAOScriptureAudioClient
 import com.nexussoft.verbum.clients.helloao.ScriptureAudioClient
 import com.nexussoft.verbum.models.*
@@ -55,9 +57,9 @@ class CloudScriptureAudioClient(context: Context, private val bible: BibleClient
         val verses = bible.chapter(bookId, chapter)
         val first = verses.firstOrNull() ?: return@withLock null
         val text = verses.joinToString("\n") { it.text }
-        val file = render(text)
+        val (file,cues) = render(verses)
         ChapterAudio(first.translationId, "Leitura automática · Português", PassageReference(bookId, chapter),
-            listOf(AudioNarrator(AudioNarrator.SYNTHESISED_PREFIX + "pt-BR", "Leitura automática", file.toURI().toString(), null)))
+            listOf(AudioNarrator(AudioNarrator.SYNTHESISED_PREFIX + "pt-BR", "Leitura automática", file.toURI().toString(), null,cues)))
     }
 
     private fun nextChapter(bookId: BookId, chapter: Int): PassageReference? {
@@ -70,30 +72,38 @@ class CloudScriptureAudioClient(context: Context, private val bible: BibleClient
     /** One MP3 per exact chapter text and server voice version, cached on disk. The backend also caches server-side by
      * the same text, so a cold local cache (after reinstall, or a pruned entry) still answers
      * without paying for a new generation — only the round trip. */
-    private suspend fun render(text: String): File {
+    private suspend fun render(verses:List<BiblePassage>): Pair<File,List<AudioCue>> {
+        val text=verses.joinToString("\n") {it.text}
         val directory = File(context.cacheDir, "cloud-speech-pt-BR-v1").also { check(it.isDirectory || it.mkdirs()) }
         // One manifest check/hour, with the API cache's offline fallback. Older servers
         // keep using legacy files until the version endpoint is deployed.
         val version = try { api.speechVersion("pt-BR") }
             catch (e: CancellationException) { throw e }
             catch (_: Exception) { null }
-        val identity = version?.let { "$it\npt-BR\n$text" } ?: text
+        val identity = "sync-v1\n"+verses.joinToString(",") {it.verseStart.toString()}+"\n"+(version?.let { "$it\npt-BR\n$text" } ?: text)
         val key = MessageDigest.getInstance("SHA-256").digest(identity.toByteArray(Charsets.UTF_8)).joinToString("") { "%02x".format(it) }
         val output = File(directory, "$key.mp3")
-        if (output.exists()) { output.setLastModified(System.currentTimeMillis()); return output }
-        val audio = withContext(Dispatchers.IO) { api.synthesizeSpeech(text, "pt-BR", revision = version) }
+        if (output.exists()) {
+            output.setLastModified(System.currentTimeMillis())
+            return output to decodeAudioCues(runCatching {File(output.path+".json").readText()}.getOrNull())
+        }
+        val (audio,cues) = try {withContext(Dispatchers.IO) {api.synthesizeChapterSpeech(verses,"pt-BR",revision=version)}}
+        catch(e:CancellationException) {throw e}
+        catch(_:Exception) {withContext(Dispatchers.IO) {api.synthesizeSpeech(text,"pt-BR",revision=version)} to emptyList<AudioCue>()}
         check(audio.isNotEmpty())
         currentCoroutineContext().ensureActive()
         val temporary = File(directory, "${UUID.randomUUID()}.partial.mp3")
         temporary.writeBytes(audio)
         if (output.exists()) temporary.delete() else check(temporary.renameTo(output))
+        val metadata=File(output.path+".json");val metadataTemp=File(directory,"${UUID.randomUUID()}.partial.json")
+        runCatching {metadataTemp.writeText(encodeAudioCues(cues));check(metadataTemp.renameTo(metadata))}.onFailure {metadataTemp.delete()}
         // Newest first: at most 40 chapters (MP3 at 128 kbit/s is ~1 MB/minute; Psalm 119 is ~13 MB).
         var bytes = 0L
         directory.listFiles().orEmpty().filter { it.extension == "mp3" && !it.name.endsWith(".partial.mp3") }
             .sortedByDescending { it.lastModified() }.forEachIndexed { index, file ->
                 bytes += file.length()
-                if (file != output && (index >= 40 || bytes > 150_000_000L)) file.delete()
+                if (file != output && (index >= 40 || bytes > 150_000_000L)) {file.delete();File(file.path+".json").delete()}
             }
-        return output
+        return output to cues
     }
 }
