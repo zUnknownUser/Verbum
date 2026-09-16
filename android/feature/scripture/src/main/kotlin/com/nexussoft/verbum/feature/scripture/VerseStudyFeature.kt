@@ -27,6 +27,7 @@ object VerseStudyFeature {
         }
     }
     sealed interface Action {
+        data object BookmarkToggled: Action
         data object Started: Action; data object Save: Action; data object Done: Action
         data class TabChanged(val tab: Tab): Action
         data class HighlightStyleChanged(val style:HighlightStyle):Action
@@ -59,6 +60,7 @@ object VerseStudyFeature {
         ),
         Reducer { state,action ->
             when(action) {
+                Action.BookmarkToggled -> if(state.saving) state.only() else state.copy(annotation=state.annotation.copy(bookmarked=!state.annotation.bookmarked),saved=false).with(Effect.Send(Action.Save))
                 Action.Started -> if(state.candidates.size==1) state.with(Effect.Send(Action.EntityTapped(state.candidates[0]))) else state.only()
                 Action.Done -> if(state.annotation.note!=state.savedNote) state.copy(closeAfterSave=true).with(Effect.Send(Action.Save)) else state.with(Effect.Send(Action.Delegate(DelegateAction.Close)))
                 is Action.TabChanged -> {

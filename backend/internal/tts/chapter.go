@@ -225,3 +225,28 @@ func (s *TextToSpeechService) encodeChapter(ctx context.Context, dir string, nam
 	}
 	return audio, nil
 }
+
+// Prepare normalizes identity after a trusted chapter resolver validated the input.
+func Prepare(input Request) (Request, error) {
+	input.BookID = ""
+	input.Chapter = 0
+	input.Translation = ""
+	return input.normalized()
+}
+func (s *TextToSpeechService) Cached(input Request, timed bool) (TimedAudio, bool) {
+	input, err := input.normalized()
+	if err != nil || s.cacheDir == "" {
+		return TimedAudio{}, false
+	}
+	if !timed {
+		v, e := readAudio(filepath.Join(s.cacheDir, cacheKey(input)))
+		return TimedAudio{Audio: v}, e == nil
+	}
+	raw, e := os.ReadFile(filepath.Join(s.cacheDir, "sync-v1-"+strings.TrimSuffix(cacheKey(input), ".mp3")+".json"))
+	if e != nil || len(raw) > maxAudioBytes*2 {
+		return TimedAudio{}, false
+	}
+	var v TimedAudio
+	e = json.Unmarshal(raw, &v)
+	return v, e == nil && len(v.Audio) > 0 && validCues(v.Cues)
+}

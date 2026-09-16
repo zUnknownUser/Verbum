@@ -44,7 +44,8 @@ internal/testdb/           Isolated schemas for PostgreSQL integration tests.
 internal/httpapi/          server.go (routes) · handlers.go (one func per route) · problem.go (errors)
                            contract_test.go proves every api/examples/*.json is answered byte-for-byte.
 internal/dailyverse/       the verse-of-the-day pick — same algorithm as the apps (tested on the same dates).
-internal/realtime/         brokers OpenAI Realtime ephemeral sessions; optional, needs OPENAI_API_KEY.
+internal/voicegate/        metered Realtime relay and single-use tickets; needs OPENAI_API_KEY.
+internal/usage/            persistent entitlements, reservations, quotas and shared cache.
 internal/embeddings/       embeds one search query at request time; optional, same key, degrades to lexical search.
 internal/synthesis/        calls OpenAI chat completions for Ask; optional, same key.
 internal/ask/              Task 12 orchestration: retrieval, prompt assembly, citation validation. No network calls of its own.
@@ -261,13 +262,17 @@ rotate the key without restarting the server.
 
 ## Realtime voice sessions
 
-`POST /v1/realtime/session` mints one short-lived OpenAI Realtime API client secret
-(`internal/realtime`) so a client app can connect **directly** to OpenAI (WebRTC/WebSocket) for
-low-latency voice, without the real API key ever reaching the client. This was implemented ahead
-of any client feature, at the owner's request, so the app side can be built later without a
-backend change. Nothing about the resulting audio/voice session passes through this server —
-it only ever makes the one small `POST https://api.openai.com/v1/realtime/client_secrets` call
-per session request, and returns `{clientSecret, expiresAt, model}` with `Cache-Control:
-no-store` (never cache or log this value). Not part of the read-only content contract (§45): it
-doesn't touch `store.Store`. Owner still needs to build the client-side connection; this is
-server-side plumbing only, and has not been exercised against a real client yet.
+`POST /v1/realtime/session` now issues a one-use **Verbum** ticket (60 seconds),
+not a provider credential. iOS and Android connect to `/v1/realtime/connect` on
+this API using WebSocket. `internal/voicegate` relays audio without persisting it,
+enforces session duration and response limits, and reserves spending before each
+response. A `verbum.limit` event closes a restricted session.
+
+Paid operations require PostgreSQL migration `0007_usage_policy.sql`, verified
+Firebase identity and the persistent policy in `internal/usage`. Free/premium
+entitlements are server-owned. Cached content remains usable after generation
+quotas expire; restricted Ask requests return indexed passages with `fallback`.
+See [cost controls, configuration, rollout and tests](../docs/COST_CONTROL.md).
+The initial global estimate budget is US$ 5/day. Apply the migration before the
+backend rollout and coordinate updated apps: legacy TTS requests without a
+canonical chapter and legacy direct-provider voice clients are incompatible.

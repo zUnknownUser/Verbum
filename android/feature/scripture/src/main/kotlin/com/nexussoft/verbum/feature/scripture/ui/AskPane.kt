@@ -130,11 +130,14 @@ private fun androidx.compose.foundation.lazy.LazyListScope.answered(page: AskFea
 /** Nothing to stand behind (§51). */
 private fun androidx.compose.foundation.lazy.LazyListScope.noAnswer(answer: ScriptureAnswer, send: (Action) -> Unit, embedded: Boolean) {
     item {
+        val fallback = answer.fallback
+        if (fallback != null) { UsageNotice(fallback) } else {
         Text(stringResource(R.string.ask_no_answer), style = VerbumTypography.editorialHeadline)
         Text(
             stringResource(if (answer.passageReferences.isEmpty()) R.string.ask_no_answer_body else R.string.ask_no_answer_body_closest),
             style = MaterialTheme.typography.bodyMedium,
         )
+        }
         if (!embedded) TextButton(onClick = { send(Action.SearchInsteadTapped) }) { Text(stringResource(R.string.ask_see_search)) }
     }
     if (answer.passageReferences.isNotEmpty()) {
@@ -148,6 +151,7 @@ private fun androidx.compose.foundation.lazy.LazyListScope.noAnswer(answer: Scri
 private fun Failure(error: AskScriptureException, send: (Action) -> Unit, embedded: Boolean) {
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {
         when (error) {
+            is AskScriptureException.Limited -> UsageNotice(error.restriction)
             AskScriptureException.Unavailable -> {
                 Text(stringResource(R.string.ask_unavailable), style = VerbumTypography.editorialHeadline)
                 Text(stringResource(R.string.ask_unavailable_body), style = MaterialTheme.typography.bodyMedium)

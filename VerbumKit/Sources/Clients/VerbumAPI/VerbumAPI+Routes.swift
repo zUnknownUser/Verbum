@@ -102,9 +102,9 @@ extension VerbumAPI {
 
     private struct SpeechRequest: Encodable { let text: String; let language: String; let revision: String? }
     private struct SpeechVerse: Encodable { let number: Int; let text: String }
-    private struct TimedSpeechRequest: Encodable { let text: String; let language: String; let revision: String?; let verses: [SpeechVerse] }
+    private struct TimedSpeechRequest: Encodable { let bookId: String; let chapter: Int; let translation: String; let text: String; let language: String; let revision: String?; let verses: [SpeechVerse] }
     public func synthesizeChapterSpeech(verses: [BiblePassage], language: String, revision: String?) async throws -> (Data, [AudioCue]) {
-        try await postTimedAudio(TimedSpeechRequest(text: verses.map(\.text).joined(separator: "\n"), language: language, revision: revision, verses: verses.map { SpeechVerse(number: $0.verseStart, text: $0.text) }))
+        try await postTimedAudio(TimedSpeechRequest(bookId: verses.first?.bookId ?? "", chapter: verses.first?.chapter ?? 0, translation: verses.first?.translationId ?? "", text: verses.map(\.text).joined(separator: "\n"), language: language, revision: revision, verses: verses.map { SpeechVerse(number: $0.verseStart, text: $0.text) }))
     }
     private struct SpeechConfiguration: Decodable { let version: String }
 

@@ -15,6 +15,11 @@ struct VerseStudyView: View {
                 }
                 Text(store.reference.formatted).font(Typography.navigationSerif)
                 Spacer()
+                Button { store.send(.bookmarkToggled) } label: {
+                    Image(systemName: store.annotation.bookmarked == true ? "bookmark.fill" : "bookmark")
+                }
+                .accessibilityLabel(AccountCopy.text(store.annotation.bookmarked == true ? "removeBookmark" : "savePassage"))
+                .disabled(store.saving)
                 Button(L10n.t("Done")) { store.send(.done) }.disabled(store.saving)
             }.padding(.horizontal, Spacing.lg).padding(.top, Spacing.xl).padding(.bottom, Spacing.md)
             if let ask = store.scope(state: \.ask, action: \.ask) {

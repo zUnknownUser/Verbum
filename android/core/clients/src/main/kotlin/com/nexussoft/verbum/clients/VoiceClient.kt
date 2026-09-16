@@ -57,6 +57,7 @@ sealed interface VoiceEvent {
 
 /** Why a conversation could not start or continue, in the states the sheet shows (§52). */
 sealed class VoiceException : Exception() {
+    data class Limited(val restriction: com.nexussoft.verbum.models.UsageRestriction) : VoiceException()
     /** The server has no key configured, or does not offer voice at all. */
     data object Unavailable : VoiceException() { private fun readResolve(): Any = Unavailable }
     data object NetworkUnavailable : VoiceException() { private fun readResolve(): Any = NetworkUnavailable }

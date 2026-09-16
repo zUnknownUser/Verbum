@@ -49,14 +49,17 @@ var (
 // Request identifies a cached chapter by exact supplied text (translation-sensitive),
 // language, resolved voice, speed, pitch and format, with a provider/version namespace.
 type Request struct {
-	Verses   []Verse  `json:"verses,omitempty"`
-	Revision string   `json:"revision,omitempty"`
-	Text     string   `json:"text"`
-	Language string   `json:"language"`
-	Voice    string   `json:"voice,omitempty"`
-	Speed    *float64 `json:"speed,omitempty"`
-	Pitch    float64  `json:"pitch,omitempty"`
-	Format   string   `json:"format,omitempty"`
+	BookID      string   `json:"bookId,omitempty"`
+	Chapter     int      `json:"chapter,omitempty"`
+	Translation string   `json:"translation,omitempty"`
+	Verses      []Verse  `json:"verses,omitempty"`
+	Revision    string   `json:"revision,omitempty"`
+	Text        string   `json:"text"`
+	Language    string   `json:"language"`
+	Voice       string   `json:"voice,omitempty"`
+	Speed       *float64 `json:"speed,omitempty"`
+	Pitch       float64  `json:"pitch,omitempty"`
+	Format      string   `json:"format,omitempty"`
 }
 
 func (r Request) normalized() (Request, error) {

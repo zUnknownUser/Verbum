@@ -120,9 +120,30 @@ public struct VerbumAPI: Sendable {
     }
 
     private func authorize(_ request: inout URLRequest) async throws {
+        request.setValue(Self.installationID, forHTTPHeaderField: "X-Verbum-Installation")
+        request.setValue(UUID().uuidString, forHTTPHeaderField: "Idempotency-Key")
         if let token = try await tokenProvider(true) {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
+    }
+
+    private static let installationID: String = {
+        if let value = UserDefaults.standard.string(forKey: "verbumInstallation") { return value }
+        let value = UUID().uuidString
+        UserDefaults.standard.set(value, forKey: "verbumInstallation")
+        return value
+    }()
+    public func usageStatus() async throws -> UsageStatus? {
+        guard let token = try await tokenProvider(false) else { return nil }
+        var request = URLRequest(url: url("/v1/me/usage"))
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue(Self.installationID, forHTTPHeaderField: "X-Verbum-Installation")
+        return try decode(UsageStatus.self, from: try await send(request))
+    }
+    func relayURL(path: String) -> URL? {
+        guard path == "/v1/realtime/connect", var components = URLComponents(url: url(path), resolvingAgainstBaseURL: false) else { return nil }
+        components.scheme = components.scheme == "https" ? "wss" : "ws"
+        return components.url
     }
 
     /// Chapter speech generation: the server allows itself up to `tts.GenerationTimeout` (10 min)
@@ -154,6 +175,9 @@ public struct VerbumAPI: Sendable {
         }
         guard (200..<300).contains(response.statusCode) else {
             let problem = try? JSONDecoder().decode(Problem.self, from: data)
+            if let problem, [Problem.Code.quotaExceeded, .budgetExhausted, .planRequired, .usageUnavailable, .requestInProgress].contains(problem.code) {
+                throw VerbumAPIError.restricted(UsageRestriction(code: problem.code.rawValue, retryAt: problem.retryAt))
+            }
             throw VerbumAPIError.problem(problem?.code ?? .unknown, status: response.statusCode)
         }
         return (data, response)
@@ -185,6 +209,7 @@ public enum VerbumAPIError: Error, Equatable, Sendable {
     case problem(Problem.Code, status: Int)
     /// The answer was not the contract's JSON.
     case malformedResponse
+    case restricted(UsageRestriction)
 }
 
 /// The one error shape of the API (`api/openapi.yaml` `Problem`).
@@ -204,6 +229,7 @@ public struct Problem: Decodable, Equatable, Sendable {
         case unauthenticated
         case authUnavailable = "auth_unavailable"
         case rateLimited = "rate_limited"
+        case quotaExceeded = "quota_exceeded", budgetExhausted = "budget_exhausted", planRequired = "plan_required", usageUnavailable = "usage_unavailable", requestInProgress = "request_in_progress", idempotencyConflict = "idempotency_conflict"
         /// A code this build does not know; treated as a failure, never shown.
         case unknown
 
@@ -215,6 +241,7 @@ public struct Problem: Decodable, Equatable, Sendable {
 
     public let code: Code
     public let message: String
+    public let retryAt: String?
 }
 
 // MARK: - Configuration

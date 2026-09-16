@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import com.nexussoft.verbum.designsystem.VerbumTheme
 
 class MainActivity : ComponentActivity() {
     override fun attachBaseContext(base: android.content.Context) {
@@ -30,9 +29,7 @@ class MainActivity : ComponentActivity() {
         MicrophonePermission.launcher = microphonePermission
         if (savedInstanceState == null) openVerse(intent)
         setContent {
-            VerbumTheme {
-                RootScreen()
-            }
+            RootScreen()
         }
     }
 

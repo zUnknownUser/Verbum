@@ -6,6 +6,7 @@ import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.nexussoft.verbum.clients.AccountClient
 import com.nexussoft.verbum.models.AccountException
 import com.nexussoft.verbum.models.AccountFailure
@@ -57,6 +58,18 @@ class FirebaseAccountClient : AccountClient {
     override suspend fun refresh(): AuthSession? = mapped {
         auth().currentUser?.let { it.reload().await(); it.snapshot() }
     }
+    override suspend fun updateName(name: String) = mapped {
+        val user = auth().currentUser ?: throw AccountException(AccountFailure.credentials)
+        user.updateProfile(UserProfileChangeRequest.Builder().setDisplayName(name).build()).await()
+        user.snapshot()
+    }
+    override suspend fun changeEmail(email: String, password: String) = mapped {
+        val user = auth().currentUser ?: throw AccountException(AccountFailure.credentials)
+        val current = user.email ?: throw AccountException(AccountFailure.credentials)
+        if (user.providerData.none { it.providerId == "password" }) throw AccountException(AccountFailure.credentials)
+        user.reauthenticate(EmailAuthProvider.getCredential(current, password)).await()
+        user.verifyBeforeUpdateEmail(email).await(); Unit
+    }
     override suspend fun signOut() = mapped { auth().signOut() }
     override suspend fun deleteAccount(password: String) = mapped {
         val user = auth().currentUser ?: throw AccountException(AccountFailure.credentials)
@@ -68,7 +81,7 @@ class FirebaseAccountClient : AccountClient {
         user.delete().await(); Unit
     }
 }
-private fun FirebaseUser.snapshot() = AuthSession(uid, email, isAnonymous, isEmailVerified)
+private fun FirebaseUser.snapshot() = AuthSession(uid, email, isAnonymous, isEmailVerified, displayName, metadata?.creationTimestamp, providerData.map { it.providerId }.filter { it != "firebase" })
 private suspend fun <T> mapped(block: suspend () -> T): T = try { block() } catch (error: Exception) {
     if (error is CancellationException) throw error
     if (error is AccountException) throw error

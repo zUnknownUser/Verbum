@@ -1,6 +1,11 @@
 package com.nexussoft.verbum
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.nexussoft.verbum.designsystem.VerbumTheme
+import com.nexussoft.verbum.feature.scripture.ProfileFeature
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nexussoft.verbum.auth.FirebaseAccountClient
@@ -41,13 +46,15 @@ fun RootScreen() {
     val context = LocalContext.current.applicationContext
     val viewModel: AppViewModel = viewModel {
         val preferences = SharedPreferencesClient(context)
-        val api = VerbumApi(BuildConfig.VERBUM_API_BASE_URL, cache = ResponseCache(File(context.cacheDir, "verbum-api")), tokenProvider = FirebaseApiTokens::token)
+        val installation = preferences.string("verbumInstallation") ?: java.util.UUID.randomUUID().toString().also { preferences.setString("verbumInstallation", it) }
+        val api = VerbumApi(BuildConfig.VERBUM_API_BASE_URL, cache = ResponseCache(File(context.cacheDir, "verbum-api")), tokenProvider = FirebaseApiTokens::token, installationId = installation)
         val bible = LiveBibleClient(
             language = BookLanguage.current,
             remote = HelloAOBibleClient(HelloAOTranslation.id(BookLanguage.current), cache = ChapterCache(File(context.cacheDir, "scripture"))),
         )
         AppViewModel(
             AppFeature.Dependencies(
+                usageStatus = { api.usageStatus() },
                 bibleClient = bible,
                 clipboard = AndroidClipboardClient(context),
                 preferences = preferences,
@@ -68,5 +75,13 @@ fun RootScreen() {
         )
     }
     val accountViewModel: AccountViewModel = viewModel { AccountViewModel(FirebaseAccountClient()) }
-    AccountHost(accountViewModel.store) { AppScreen(viewModel.store) }
+    val appState by viewModel.store.state.collectAsStateWithLifecycle()
+    val dark = when(appState.profile.appearance) {
+        ProfileFeature.Appearance.AUTOMATIC -> isSystemInDarkTheme()
+        ProfileFeature.Appearance.DARK -> true
+        ProfileFeature.Appearance.LIGHT -> false
+    }
+    VerbumTheme(darkTheme = dark) {
+        AccountHost(accountViewModel.store, viewModel.store) { AppScreen(viewModel.store) }
+    }
 }

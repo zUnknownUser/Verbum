@@ -19,7 +19,7 @@ struct HomeView: View {
                             Image(systemName: "person.crop.circle").font(.title2)
                                 .padding(Spacing.sm)
                         }
-                        .accessibilityLabel(AccountCopy.text("account"))
+                        .accessibilityLabel(AccountCopy.text("profile"))
                     }
                     Text(L10n.t("What do you want to understand?"))
                         .font(Typography.editorialTitle)

@@ -129,12 +129,14 @@ public struct AskView: View {
     @ViewBuilder
     private func noAnswer(_ answer: ScriptureAnswer) -> some View {
         VStack(alignment: .leading, spacing: Spacing.md) {
+            if let fallback = answer.fallback { UsageNoticeView(restriction: fallback) } else {
             Text(L10n.t("No reliable answer"))
                 .font(Typography.editorialHeadline)
             Text(answer.passageReferences.isEmpty
                  ? L10n.t("I could not build a reliable answer from the available sources.")
                  : L10n.t("I could not build a reliable answer from the available sources. Here are the closest passages I found."))
                 .font(Typography.subheadline)
+            }
             if !embedded { Button(L10n.t("See search results")) { store.send(.searchInsteadTapped) }
                 .font(Typography.subheadline.weight(.semibold)) }
         }
@@ -150,6 +152,7 @@ public struct AskView: View {
     private func failure(_ error: AskScriptureError) -> some View {
         VStack(alignment: .leading, spacing: Spacing.md) {
             switch error {
+            case .limited(let restriction): UsageNoticeView(restriction: restriction)
             case .unavailable:
                 Text(L10n.t("Ask isn't available on this server yet")).font(Typography.editorialHeadline)
                 Text(L10n.t("Search still works — try the same words there.")).font(Typography.subheadline)

@@ -1,5 +1,7 @@
 # Google Cloud TTS: continuous chapter audio
 
+> Atualização de 16/09/2026: [COST_CONTROL.md](../docs/COST_CONTROL.md) define as cotas persistentes, planos, texto TTS canônico obrigatório e voz via relay. Exemplos antigos de texto livre não são aceitos pelo backend protegido.
+
 **Access update (2026-09-15):** `POST /v1/tts` now requires a Firebase ID token in
 the Authorization header, even for a server cache hit. Both mobile clients supply it.
 The manifest remains public. Examples below need the same header; Test-TTS.ps1 reads

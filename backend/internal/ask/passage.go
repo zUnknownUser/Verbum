@@ -31,3 +31,6 @@ func selectedPassages(ctx context.Context) []domain.PassageReference {
 	}
 	return refs
 }
+
+// SelectedPassages is part of the private answer cache identity.
+func SelectedPassages(ctx context.Context) []domain.PassageReference { return selectedPassages(ctx) }

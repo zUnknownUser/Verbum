@@ -12,6 +12,7 @@ public struct AskScriptureClient: Sendable {
 
 /// Why a question could not be answered, in the states the page shows (§52).
 public enum AskScriptureError: Error, Equatable, Sendable {
+    case limited(UsageRestriction)
     /// The server has no synthesis configured (`503 ask_unavailable`) — or the
     /// feature is not offered by this backend at all.
     case unavailable
@@ -46,6 +47,8 @@ extension AskScriptureClient {
                 throw AskScriptureError.unavailable
             } catch VerbumAPIError.problem(_, status: 404), VerbumAPIError.problem(_, status: 501) {
                 throw AskScriptureError.unavailable
+            } catch VerbumAPIError.restricted(let restriction) { throw AskScriptureError.limited(restriction)
+            } catch VerbumAPIError.problem(.rateLimited, _) { throw AskScriptureError.limited(.init(code: "rate_limited"))
             } catch VerbumAPIError.networkUnavailable {
                 throw AskScriptureError.networkUnavailable
             } catch is CancellationError {
@@ -56,6 +59,8 @@ extension AskScriptureClient {
         }, askAbout: { question, reference in
             do { return try await api.ask(String(question.prefix(500)), reference: reference) }
             catch is CancellationError { throw CancellationError() }
+            catch VerbumAPIError.restricted(let restriction) { throw AskScriptureError.limited(restriction) }
+            catch VerbumAPIError.problem(.rateLimited, _) { throw AskScriptureError.limited(.init(code: "rate_limited")) }
             catch VerbumAPIError.networkUnavailable { throw AskScriptureError.networkUnavailable }
             catch { throw AskScriptureError.failed }
         })

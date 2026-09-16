@@ -88,11 +88,14 @@ class LiveAskScriptureClient(private val api: VerbumApi) : AskScriptureClient {
     override suspend fun askAbout(question: String, reference: com.nexussoft.verbum.models.PassageReference): ScriptureAnswer =
         try { api.ask(question.trim().take(500),reference) }
         catch(e: kotlinx.coroutines.CancellationException) { throw e }
+        catch(e: VerbumApiException.Restricted) { throw AskScriptureException.Limited(e.restriction) }
         catch(e: Exception) { throw AskScriptureException.Failed }
 
     override suspend fun ask(question: String): ScriptureAnswer = try {
         api.ask(question.trim().take(500))
+    } catch (e: VerbumApiException.Restricted) { throw AskScriptureException.Limited(e.restriction)
     } catch (e: VerbumApiException.Problem) {
+        if(e.code == ProblemCode.RATE_LIMITED) throw AskScriptureException.Limited(com.nexussoft.verbum.models.UsageRestriction("rate_limited"))
         if (e.code == ProblemCode.ASK_UNAVAILABLE || e.code == ProblemCode.AUTH_UNAVAILABLE || e.status == 404 || e.status == 501) throw AskScriptureException.Unavailable
         throw AskScriptureException.Failed
     } catch (e: VerbumApiException.NetworkUnavailable) {
@@ -106,7 +109,9 @@ class LiveAskScriptureClient(private val api: VerbumApi) : AskScriptureClient {
 class LiveRealtimeSessionClient(private val api: VerbumApi) : RealtimeSessionClient {
     override suspend fun create(): RealtimeSession = try {
         api.realtimeSession()
+    } catch (e: VerbumApiException.Restricted) { throw VoiceException.Limited(e.restriction)
     } catch (e: VerbumApiException.Problem) {
+        if(e.code == ProblemCode.RATE_LIMITED) throw VoiceException.Limited(com.nexussoft.verbum.models.UsageRestriction("rate_limited"))
         if (e.code == ProblemCode.REALTIME_UNAVAILABLE || e.code == ProblemCode.AUTH_UNAVAILABLE || e.status == 404 || e.status == 501) throw VoiceException.Unavailable
         throw VoiceException.Failed
     } catch (e: VerbumApiException.NetworkUnavailable) {

@@ -19,6 +19,7 @@ data class ScriptureAnswer(
     val confidence: Confidence,
     /** True when traditions or scholars meaningfully disagree on the question (§31). */
     val interpretiveVariance: Boolean,
+    val fallback: UsageRestriction? = null,
 ) {
     /** How sure the server is that the answer is grounded in what it retrieved (§31). */
     enum class Confidence(val wireValue: String) {

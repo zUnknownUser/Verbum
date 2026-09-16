@@ -1,5 +1,7 @@
 package com.nexussoft.verbum.clients.api
 
+import com.nexussoft.verbum.models.UsageRestriction
+import com.nexussoft.verbum.models.UsageStatus
 import com.nexussoft.verbum.clients.RealtimeSession
 import com.nexussoft.verbum.models.BibleBook
 import com.nexussoft.verbum.models.BibleEntity
@@ -101,6 +103,7 @@ object UrlConnectionBinaryHttpTransport : BinaryHttpTransport {
  * never carried: it is for logs, not users. Twin of iOS `VerbumAPIError`.
  */
 sealed class VerbumApiException : Exception() {
+    data class Restricted(val restriction: UsageRestriction) : VerbumApiException()
     /** Could not reach the server and nothing is cached. */
     data object NetworkUnavailable : VerbumApiException() {
         private fun readResolve(): Any = NetworkUnavailable
@@ -132,6 +135,7 @@ enum class ProblemCode(val wire: String) {
     UNAUTHENTICATED("unauthenticated"),
     AUTH_UNAVAILABLE("auth_unavailable"),
     RATE_LIMITED("rate_limited"),
+    QUOTA_EXCEEDED("quota_exceeded"), BUDGET_EXHAUSTED("budget_exhausted"), PLAN_REQUIRED("plan_required"), USAGE_UNAVAILABLE("usage_unavailable"), REQUEST_IN_PROGRESS("request_in_progress"), IDEMPOTENCY_CONFLICT("idempotency_conflict"),
     UNKNOWN("");
 
     companion object {
@@ -190,6 +194,7 @@ class VerbumApi(
     private val cache: ResponseCache = ResponseCache(null),
     private val binaryTransport: BinaryHttpTransport = UrlConnectionBinaryHttpTransport,
     private val tokenProvider: suspend (createIfNeeded: Boolean) -> String? = { null },
+    private val installationId: String = java.util.UUID.randomUUID().toString(),
     private val now: () -> Long = System::currentTimeMillis,
 ) {
     companion object {
@@ -273,7 +278,10 @@ class VerbumApi(
 
     /** `POST /v1/realtime/session`. Never cached (the server says `no-store`). */
     suspend fun realtimeSession(): RealtimeSession =
-        post("/v1/realtime/session", "{}", WireRealtimeSession.serializer()).let { RealtimeSession(it.clientSecret, it.expiresAt, it.model) }
+        post("/v1/realtime/session", "{}", WireRealtimeSession.serializer()).let { RealtimeSession(it.clientSecret, it.expiresAt, it.model, it.relayPath?.let { path ->
+            if(path != "/v1/realtime/connect") throw VerbumApiException.MalformedResponse
+            url(path, emptyList()).replaceFirst("https://", "wss://").replaceFirst("http://", "ws://")
+        }, it.maxDurationSeconds) }
 
     // ---- speech
 
@@ -294,7 +302,7 @@ class VerbumApi(
     }
 
     suspend fun synthesizeChapterSpeech(verses:List<com.nexussoft.verbum.models.BiblePassage>,language:String,revision:String?):Pair<ByteArray,List<com.nexussoft.verbum.models.AudioCue>> {
-        val body=json.encodeToString(WireTimedSpeech.serializer(),WireTimedSpeech(verses.joinToString("\n") {it.text},language,revision,verses.map {WireSpeechVerse(it.verseStart,it.text)}))
+        val body=json.encodeToString(WireTimedSpeech.serializer(),WireTimedSpeech(verses.first().bookId,verses.first().chapter,verses.first().translationId,verses.joinToString("\n") {it.text},language,revision,verses.map {WireSpeechVerse(it.verseStart,it.text)}))
         val response=sendBinaryResponse(HttpRequest("POST",url("/v1/tts",emptyList()),body))
         val header=response.headers.entries.firstOrNull {it.key.equals("X-Verbum-Audio-Cues",true)}?.value
         return response.bytes to decodeAudioCues(header)
@@ -349,6 +357,8 @@ class VerbumApi(
         }
         if (response.status !in 200..299) {
             val problem = runCatching { json.decodeFromString(WireProblem.serializer(), response.body) }.getOrNull()
+            if(problem?.code in setOf("quota_exceeded", "budget_exhausted", "plan_required", "usage_unavailable", "request_in_progress"))
+                throw VerbumApiException.Restricted(UsageRestriction(problem!!.code, problem.retryAt))
             throw VerbumApiException.Problem(ProblemCode.of(problem?.code), response.status)
         }
         return response.body
@@ -368,15 +378,22 @@ class VerbumApi(
         }
         if (response.status !in 200..299) {
             val problem = runCatching { json.decodeFromString(WireProblem.serializer(), response.problemBody) }.getOrNull()
+            if(problem?.code in setOf("quota_exceeded", "budget_exhausted", "plan_required", "usage_unavailable", "request_in_progress"))
+                throw VerbumApiException.Restricted(UsageRestriction(problem!!.code, problem.retryAt))
             throw VerbumApiException.Problem(ProblemCode.of(problem?.code), response.status)
         }
         return response
     }
 
+    suspend fun usageStatus(): UsageStatus? {
+        val token = tokenProvider(false) ?: return null
+        return decode(send(HttpRequest("GET", url("/v1/me/usage", emptyList()), headers = mapOf("Authorization" to "Bearer $token", "X-Verbum-Installation" to installationId))), WireUsageStatus.serializer()).let { UsageStatus(it.plan,it.resetsAt,it.remaining,it.voiceSeconds,it.restricted) }
+    }
+
     private suspend fun authorize(request: HttpRequest): HttpRequest {
         if (request.method != "POST") return request
         val token = tokenProvider(true) ?: return request
-        return request.copy(headers = request.headers + ("Authorization" to "Bearer $token"))
+        return request.copy(headers = request.headers + mapOf("Authorization" to "Bearer $token", "X-Verbum-Installation" to installationId, "Idempotency-Key" to java.util.UUID.randomUUID().toString()))
     }
 
     private fun <T> decode(body: String, strategy: DeserializationStrategy<T>): T = try {

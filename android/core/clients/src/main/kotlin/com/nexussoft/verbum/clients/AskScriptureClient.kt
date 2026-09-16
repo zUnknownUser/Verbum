@@ -16,6 +16,7 @@ fun interface AskScriptureClient {
 
 /** Why a question could not be answered, in the states the page shows (§52). */
 sealed class AskScriptureException : Exception() {
+    data class Limited(val restriction: com.nexussoft.verbum.models.UsageRestriction) : AskScriptureException()
     /** The server has no synthesis configured (`503 ask_unavailable`) — or the feature is not offered by this backend at all. */
     data object Unavailable : AskScriptureException() {
         private fun readResolve(): Any = Unavailable

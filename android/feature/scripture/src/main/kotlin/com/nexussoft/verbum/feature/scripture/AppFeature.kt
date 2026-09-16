@@ -64,6 +64,7 @@ object AppFeature {
     }
 
     data class State(
+        val profile: ProfileFeature.State = ProfileFeature.State(),
         val tab: Tab = Tab.HOME,
         /** Home or Explore — whichever the user was on last. Search results land here. */
         val contentTab: Tab = Tab.HOME,
@@ -78,6 +79,8 @@ object AppFeature {
 
     sealed interface Action {
         /** The shell appeared: listen for notification taps for as long as it lives. */
+        data class Profile(val action: ProfileFeature.Action): Action
+        data class ProfilePassageOpened(val reference: PassageReference): Action
         data object Started : Action
         data class TabChanged(val tab: Tab) : Action
         /** The user tapped a verse-of-the-day notification. */
@@ -115,6 +118,7 @@ object AppFeature {
         val voiceClient: VoiceClient = UnavailableVoiceClient,
         /** Localised title for the morning notification; resolved when the plan is built. */
         val dailyVerseTitle: () -> String = { "Verse of the day" },
+        val usageStatus: suspend () -> com.nexussoft.verbum.models.UsageStatus? = { null },
     )
 
     fun reducer(deps: Dependencies): Reducer<State, Action> {
@@ -247,6 +251,10 @@ object AppFeature {
             else state.copy(tab = Tab.HOME, homePath = state.homePath + destination)
 
         return combine(
+            ProfileFeature.reducer(deps.preferences, usageStatus = deps.usageStatus).pullback(
+                get = { it.profile }, set = { s, c -> s.copy(profile = c) },
+                extractAction = { (it as? Action.Profile)?.action }, embedAction = { Action.Profile(it) },
+            ),
             HomeFeature.reducer(deps.preferences, deps.clock, deps.bibleClient, deps.notifications, deps.dailyVerseTitle).pullback(
                 get = { it.home }, set = { s, c -> s.copy(home = c) },
                 extractAction = { (it as? Action.Home)?.action }, embedAction = { Action.Home(it) },
@@ -270,6 +278,19 @@ object AppFeature {
             ),
             Reducer { state, action ->
                 when (action) {
+                    is Action.ProfilePassageOpened -> state.copy(tab = Tab.HOME, contentTab = Tab.HOME,
+                        homePath = state.homePath + Destination.Reader(ScriptureFeature.State.initial(action.reference, deps.initialTextScale()))).only()
+                    is Action.Profile -> {
+                        val setting = (action.action as? ProfileFeature.Action.Settings)?.action
+                        if(setting == null) state.only() else {
+                            val effects = state.homePath.mapIndexedNotNull { index, destination ->
+                                if(destination is Destination.Reader) Effect.Send<Action>(Action.HomePath(index, DestinationAction.Reader(ScriptureFeature.Action.Settings(setting)))) else null
+                            } + state.explorePath.mapIndexedNotNull { index, destination ->
+                                if(destination is Destination.Reader) Effect.Send<Action>(Action.ExplorePath(index, DestinationAction.Reader(ScriptureFeature.Action.Settings(setting)))) else null
+                            }
+                            state.with(Effect.Merge(effects))
+                        }
+                    }
                     // The companion opens a passage: the sheet goes, the reader comes.
                     is Action.Voice -> when (val d = (action.action as? VoiceFeature.Action.Delegate)?.delegate) {
                         is VoiceFeature.DelegateAction.OpenPassage -> push(state.copy(voice = null), Destination.Reader(ScriptureFeature.State.initial(d.reference, deps.initialTextScale()))).with(VoiceFeature.cancelSession())

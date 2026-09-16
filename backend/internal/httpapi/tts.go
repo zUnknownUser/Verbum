@@ -83,6 +83,9 @@ func (h *handlers) synthesizeSpeech(w http.ResponseWriter, r *http.Request) {
 		audio, err = h.tts.Synthesize(ctx, input)
 	}
 	if err != nil {
+		if writeUsageProblem(w, err) {
+			return
+		}
 		status, code, message := http.StatusBadGateway, CodeTTSFailed, "speech generation failed"
 		switch {
 		case errors.Is(err, tts.ErrInvalidInput):

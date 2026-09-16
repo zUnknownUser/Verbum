@@ -80,6 +80,23 @@ extension AccountClient {
                 }
                 try await user.delete()
             }
+        },
+        updateName: { name in
+            try await mapped {
+                guard let user = try configuredAuth().currentUser else { throw AccountFailure.credentials }
+                let request = user.createProfileChangeRequest()
+                request.displayName = name
+                try await request.commitChanges()
+                return snapshot(user)
+            }
+        },
+        changeEmail: { email, password in
+            try await mapped {
+                guard let user = try configuredAuth().currentUser, let currentEmail = user.email,
+                      user.providerData.contains(where: { $0.providerID == "password" }) else { throw AccountFailure.credentials }
+                try await user.reauthenticate(with: EmailAuthProvider.credential(withEmail: currentEmail, password: password))
+                try await user.sendEmailVerification(beforeUpdatingEmail: email)
+            }
         }
     )
 }
@@ -118,7 +135,9 @@ private func configuredAuth() throws -> Auth {
     return Auth.auth()
 }
 private func snapshot(_ user: User) -> AuthSession {
-    AuthSession(id: user.uid, email: user.email, isAnonymous: user.isAnonymous, isEmailVerified: user.isEmailVerified)
+    AuthSession(id: user.uid, email: user.email, isAnonymous: user.isAnonymous, isEmailVerified: user.isEmailVerified,
+                displayName: user.displayName, createdAt: user.metadata.creationDate,
+                providers: user.providerData.map(\.providerID))
 }
 private func mapped<T>(_ operation: () async throws -> T) async throws -> T {
     do { return try await operation() } catch { throw mapFailure(error) }

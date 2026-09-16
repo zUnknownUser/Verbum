@@ -11,6 +11,7 @@ public struct ChapterReaderFeature {
     @ObservableState
     public struct State: Equatable {
         public var reference: PassageReference
+        @Shared(.readingActivity) var readingActivity
         public var content: Content = .idle
         public var selectedVerses: Set<Int> = []
         public var requestedVerses: ClosedRange<Int>?
@@ -71,7 +72,7 @@ public struct ChapterReaderFeature {
     }
 
     public enum Action: Equatable {
-        case task
+        case task, recordReading
         case ensureChapter(PassageReference)
         case cachedChapter(PassageReference, Result<[BiblePassage], ReaderError>)
         case contextResponse(PassageReference, PassageContext?)
@@ -105,6 +106,8 @@ public struct ChapterReaderFeature {
         }
     }
 
+    @Dependency(\.date.now) var now
+    @Dependency(\.calendar) var calendar
     @Dependency(\.bibleClient) var bibleClient
     @Dependency(\.pasteboard) var pasteboard
     @Dependency(\.contextClient) var contextClient
@@ -115,6 +118,10 @@ public struct ChapterReaderFeature {
     public var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
+            case .recordReading:
+                guard state.chapters[ReaderCanon.key(state.reference)]?.isEmpty == false else { return .none }
+                state.$readingActivity.withLock { $0.record(state.reference, at: now, calendar: calendar) }
+                return .none
             case .task:
                 let annotationEffect: Effect<Action> = .run { [readerAnnotations] send in
                     do { await send(.annotationsResponse(try await readerAnnotations.load())) }

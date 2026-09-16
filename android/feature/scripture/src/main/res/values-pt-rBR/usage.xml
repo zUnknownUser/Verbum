@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="usage_usage_title">Seu plano</string>
+    <string name="usage_plan_guest">Visitante</string>
+    <string name="usage_plan_free">Gratuito</string>
+    <string name="usage_plan_premium">Premium</string>
+    <string name="usage_usage_ask">Perguntas restantes</string>
+    <string name="usage_usage_t_t_s">Novas gerações de áudio</string>
+    <string name="usage_usage_voice">Conversas por voz restantes</string>
+    <string name="usage_usage_reset">Renova em</string>
+    <string name="usage_usage_cache">Áudios já gerados podem ser ouvidos sem consumir uma nova geração.</string>
+    <string name="usage_usage_unavailable">Não foi possível consultar seu plano. Sua leitura continua disponível.</string>
+    <string name="usage_usage_restricted">Novas gerações estão temporariamente limitadas. A leitura e os áudios disponíveis continuam acessíveis.</string>
+    <string name="usage_limit_title">Você atingiu seu limite de uso</string>
+    <string name="usage_limit_body">Continue explorando a Bíblia com a busca, suas passagens salvas e os áudios disponíveis. Consulte seu saldo no Perfil.</string>
+    <string name="usage_limit_plan_title">Entre em uma conta para usar voz</string>
+    <string name="usage_limit_plan_body">Crie uma conta ou entre pelo Perfil. A leitura e a busca bíblica continuam disponíveis.</string>
+    <string name="usage_limit_temporary_title">Novas gerações estão pausadas por enquanto</string>
+    <string name="usage_limit_session_title">Esta conversa chegou ao limite</string>
+    <string name="usage_limit_rate_title">Vamos fazer uma pequena pausa</string>
+</resources>

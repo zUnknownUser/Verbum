@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="usage_usage_title">Your plan</string>
+    <string name="usage_plan_guest">Visitor</string>
+    <string name="usage_plan_free">Free</string>
+    <string name="usage_plan_premium">Premium</string>
+    <string name="usage_usage_ask">Questions remaining</string>
+    <string name="usage_usage_t_t_s">New audio generations</string>
+    <string name="usage_usage_voice">Voice sessions remaining</string>
+    <string name="usage_usage_reset">Renews</string>
+    <string name="usage_usage_cache">Previously generated audio can be replayed without using a new generation.</string>
+    <string name="usage_usage_unavailable">Your plan could not be checked. Your reading remains available.</string>
+    <string name="usage_usage_restricted">New generations are temporarily limited. Reading and available audio remain accessible.</string>
+    <string name="usage_limit_title">Your usage limit has been reached</string>
+    <string name="usage_limit_body">Continue exploring Scripture with search, your saved passages and available audio. Check your remaining allowance in Profile.</string>
+    <string name="usage_limit_plan_title">Sign in to use voice</string>
+    <string name="usage_limit_plan_body">Create an account or sign in from Profile. Reading and Scripture search remain available.</string>
+    <string name="usage_limit_temporary_title">New generations are paused for now</string>
+    <string name="usage_limit_session_title">This conversation has reached its limit</string>
+    <string name="usage_limit_rate_title">Let’s take a short pause</string>
+</resources>

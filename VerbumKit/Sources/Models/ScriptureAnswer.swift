@@ -12,6 +12,7 @@ public struct ScriptureAnswer: Codable, Equatable, Sendable {
     }
 
     /// Empty when no reliable, citable answer was found (§51: trust over always answering).
+    public let fallback: UsageRestriction?
     public let answer: String
     public let summary: String
     /// Only passages the server itself retrieved and the model actually cited.
@@ -30,8 +31,10 @@ public struct ScriptureAnswer: Codable, Equatable, Sendable {
         entityReferences: [String],
         sourceReferences: [SourceReference],
         confidence: Confidence,
-        interpretiveVariance: Bool
+        interpretiveVariance: Bool,
+        fallback: UsageRestriction? = nil
     ) {
+        self.fallback = fallback
         self.answer = answer
         self.summary = summary
         self.passageReferences = passageReferences

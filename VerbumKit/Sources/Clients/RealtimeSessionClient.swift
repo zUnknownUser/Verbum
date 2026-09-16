@@ -1,20 +1,25 @@
 import ComposableArchitecture
 import Models
+import Foundation
 
 /// The short-lived credential a voice session starts with (`POST /v1/realtime/session`).
-/// It is OpenAI's ephemeral client secret, minted by our backend so the real key never
-/// ships in the app (spec §56). Never logged, never persisted; it can only *start* a
+/// It is a one-use Verbum relay ticket; the provider key stays on the backend. Never logged, never persisted; it can only *start* a
 /// session until `expiresAt`.
 public struct RealtimeSession: Decodable, Equatable, Sendable {
+    private enum CodingKeys: String, CodingKey { case clientSecret, expiresAt, model, relayPath, maxDurationSeconds }
     public let clientSecret: String
     /// Unix seconds.
     public let expiresAt: Int
     public let model: String
+    public var relayPath: String?
+    public var relayURL: URL?
+    public var maxDurationSeconds: Int?
 
-    public init(clientSecret: String, expiresAt: Int, model: String) {
+    public init(clientSecret: String, expiresAt: Int, model: String, relayURL: URL? = nil) {
         self.clientSecret = clientSecret
         self.expiresAt = expiresAt
         self.model = model
+        self.relayURL = relayURL
     }
 }
 
@@ -45,6 +50,8 @@ extension RealtimeSessionClient {
                 throw VoiceError.unavailable
             } catch VerbumAPIError.problem(_, status: 404), VerbumAPIError.problem(_, status: 501) {
                 throw VoiceError.unavailable
+            } catch VerbumAPIError.restricted(let restriction) { throw VoiceError.limited(restriction)
+            } catch VerbumAPIError.problem(.rateLimited, _) { throw VoiceError.limited(.init(code: "rate_limited"))
             } catch VerbumAPIError.networkUnavailable {
                 throw VoiceError.networkUnavailable
             } catch is CancellationError {
@@ -60,6 +67,11 @@ extension VerbumAPI {
     /// `POST /v1/realtime/session`. Never cached (the server says `no-store`).
     public func realtimeSession() async throws -> RealtimeSession {
         struct Empty: Encodable {}
-        return try await post("/v1/realtime/session", body: Empty())
+        var session: RealtimeSession = try await post("/v1/realtime/session", body: Empty())
+        if let path = session.relayPath {
+            guard let url = relayURL(path: path) else { throw VerbumAPIError.malformedResponse }
+            session.relayURL = url
+        }
+        return session
     }
 }

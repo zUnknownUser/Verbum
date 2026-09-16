@@ -73,7 +73,7 @@ internal fun HomeScreen(state: HomeFeature.State, send: (HomeFeature.Action) -> 
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Text(stringResource(greeting).uppercase(), style = VerbumTypography.overline, color = MaterialTheme.colorScheme.primary, modifier = Modifier.weight(1f))
                 IconButton(onClick = openAccount) {
-                    Icon(Icons.Outlined.AccountCircle, contentDescription = accountText("account"), tint = MaterialTheme.colorScheme.primary)
+                    Icon(Icons.Outlined.AccountCircle, contentDescription = accountText("profile"), tint = MaterialTheme.colorScheme.primary)
                 }
             }
             Text(stringResource(R.string.home_question), style = VerbumTypography.editorialTitle, color = MaterialTheme.colorScheme.onSurface)

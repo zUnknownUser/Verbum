@@ -135,6 +135,7 @@ public struct VoiceView: View {
     private func failure(_ error: VoiceError) -> some View {
         VStack(alignment: .leading, spacing: Spacing.md) {
             switch error {
+            case .limited(let restriction): UsageNoticeView(restriction: restriction)
             case .unavailable:
                 Text(L10n.t("Voice isn't available on this server yet")).font(Typography.editorialHeadline)
                 Text(L10n.t("Ask Scripture in writing still works from Search.")).font(Typography.subheadline)

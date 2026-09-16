@@ -16,9 +16,12 @@ public struct ReaderAnnotation: Codable, Equatable, Sendable, Identifiable {
     public var highlight: HighlightColor?
     public var highlightStyle: HighlightStyle?
     public var note: String
+    /// Optional for compatibility with annotations saved before bookmarks existed.
+    public var bookmarked: Bool?
     public var id: String { "\(reference.bookId).\(reference.chapter).\(reference.verses?.lowerBound ?? 1)" }
-    public init(reference: PassageReference, highlight: HighlightColor? = nil, note: String = "", highlightStyle: HighlightStyle? = nil) {
+    public init(reference: PassageReference, highlight: HighlightColor? = nil, note: String = "", highlightStyle: HighlightStyle? = nil, bookmarked: Bool? = nil) {
         self.reference = reference; self.highlight = highlight; self.note = note; self.highlightStyle = highlightStyle
+        self.bookmarked = bookmarked
     }
 }
 

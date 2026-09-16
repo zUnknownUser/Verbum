@@ -12,6 +12,7 @@ import (
 	"io"
 	"net/http"
 	"time"
+	"verbum/backend/internal/usage"
 )
 
 const endpoint = "https://api.openai.com/v1/chat/completions"
@@ -39,10 +40,17 @@ func New(apiKey, model string) *Client {
 // Complete returns the raw JSON text of the model's one reply (response_format=json_object).
 // internal/ask parses and validates it; this package does not look inside it.
 func (c *Client) Complete(ctx context.Context, systemPrompt, userPrompt string) (string, error) {
+	if len(systemPrompt)+len(userPrompt) > 32_000 {
+		return "", fmt.Errorf("prompt exceeds bound")
+	}
+	if c.model != DefaultModel {
+		return "", usage.Unavailable()
+	}
 	body, err := json.Marshal(map[string]any{
-		"model":           c.model,
-		"temperature":     0,
-		"response_format": map[string]string{"type": "json_object"},
+		"model":                 c.model,
+		"temperature":           0,
+		"max_completion_tokens": 1024,
+		"response_format":       map[string]string{"type": "json_object"},
 		"messages": []map[string]string{
 			{"role": "system", "content": systemPrompt},
 			{"role": "user", "content": userPrompt},
@@ -58,6 +66,7 @@ func (c *Client) Complete(ctx context.Context, systemPrompt, userPrompt string) 
 	req.Header.Set("Authorization", "Bearer "+c.apiKey)
 	req.Header.Set("Content-Type", "application/json")
 
+	usage.Attempt(ctx)
 	resp, err := c.client.Do(req)
 	if err != nil {
 		return "", fmt.Errorf("synthesis request: %w", err)
@@ -71,6 +80,10 @@ func (c *Client) Complete(ctx context.Context, systemPrompt, userPrompt string) 
 		return "", fmt.Errorf("synthesis request failed: status %d", resp.StatusCode)
 	}
 	var parsed struct {
+		Usage *struct {
+			Prompt     int64 `json:"prompt_tokens"`
+			Completion int64 `json:"completion_tokens"`
+		} `json:"usage"`
 		Choices []struct {
 			Message struct {
 				Content string `json:"content"`
@@ -82,6 +95,9 @@ func (c *Client) Complete(ctx context.Context, systemPrompt, userPrompt string) 
 	}
 	if len(parsed.Choices) == 0 || parsed.Choices[0].Message.Content == "" {
 		return "", fmt.Errorf("synthesis response had no content")
+	}
+	if parsed.Usage != nil {
+		usage.Record(ctx, (parsed.Usage.Prompt*15+parsed.Usage.Completion*60+99)/100)
 	}
 	return parsed.Choices[0].Message.Content, nil
 }

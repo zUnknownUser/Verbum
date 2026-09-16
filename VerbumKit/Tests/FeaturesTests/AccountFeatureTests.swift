@@ -1,3 +1,4 @@
+import Foundation
 import Clients
 import ComposableArchitecture
 import Models
@@ -46,7 +47,7 @@ struct AccountFeatureTests {
         }
         await store.send(.perform(.register)) { $0.busy = true }
         await store.receive(.completed(.register, registered)) {
-            $0.busy = false; $0.session = registered; $0.page = .account; $0.password = ""; $0.confirmation = ""
+            $0.busy = false; $0.session = registered; $0.page = .profile; $0.password = ""; $0.confirmation = ""
         }
     }
     @Test func recoveryHasNeutralResponse() async {
@@ -70,11 +71,56 @@ struct AccountFeatureTests {
             $0.accountClient.deleteAccount = { _ in }
         }
         await store.send(.sessionChanged(guest)) { $0.session = guest }
-        await store.send(.open) { $0.presented = true; $0.page = .account }
+        await store.send(.open) { $0.presented = true; $0.page = .profile }
         await store.send(.page(.delete)) { $0.page = .delete }
         await store.send(.perform(.delete)) { $0.busy = true }
         await store.receive(.completed(.delete, nil)) {
-            $0.busy = false; $0.session = nil; $0.page = .welcome; $0.notice = "deleted"
+            $0.busy = false; $0.session = nil; $0.page = .profile; $0.notice = "deleted"
+        }
+    }
+
+    @Test func resetCurrentPasswordUsesSessionEmail() async {
+        var state = AccountFeature.State()
+        state.session = AuthSession(id: "reader", email: "reader@example.com", isAnonymous: false, isEmailVerified: true, providers: ["password"])
+        state.email = "unrelated@example.com"
+        let store = TestStore(initialState: state) { AccountFeature() } withDependencies: {
+            $0.accountClient.resetPassword = { email in #expect(email == "reader@example.com") }
+        }
+        await store.send(.perform(.resetCurrentPassword)) { $0.busy = true }
+        await store.receive(.completed(.resetCurrentPassword, nil)) { $0.busy = false; $0.notice = "resetSent" }
+    }
+    @Test func emailChangeWaitsForVerificationAndClearsPassword() async {
+        var state = AccountFeature.State()
+        state.session = AuthSession(id: "reader", email: "old@example.com", isAnonymous: false, isEmailVerified: true, providers: ["password"])
+        state.page = .changeEmail; state.email = " new@example.com "; state.password = "password123"
+        let store = TestStore(initialState: state) { AccountFeature() } withDependencies: {
+            $0.accountClient.changeEmail = { email, password in
+                #expect(email == "new@example.com"); #expect(password == "password123")
+            }
+        }
+        await store.send(.perform(.changeEmail)) { $0.busy = true }
+        await store.receive(.completed(.changeEmail, nil)) {
+            $0.busy = false; $0.password = ""; $0.page = .account; $0.notice = "emailChangeSent"
+        }
+        #expect(store.state.session?.email == "old@example.com")
+    }
+    @Test func providerWithoutPasswordCannotRequestPasswordReset() async {
+        var state = AccountFeature.State()
+        state.session = AuthSession(id: "reader", email: "reader@example.com", isAnonymous: false, isEmailVerified: true, providers: ["apple.com"])
+        let store = TestStore(initialState: state) { AccountFeature() }
+        await store.send(.perform(.resetCurrentPassword)) { $0.failure = .credentials }
+    }
+    @Test func nameIsValidatedAndSavedTrimmed() async {
+        var state = AccountFeature.State(); state.displayName = "  "
+        let renamed = AuthSession(id: "reader", email: "reader@example.com", isAnonymous: false, isEmailVerified: true, displayName: "Lucas Amorim")
+        let store = TestStore(initialState: state) { AccountFeature() } withDependencies: {
+            $0.accountClient.updateName = { name in #expect(name == "Lucas Amorim"); return renamed }
+        }
+        await store.send(.perform(.updateName)) { $0.failure = .nameRequired }
+        await store.send(.displayName(" Lucas Amorim ")) { $0.displayName = " Lucas Amorim "; $0.failure = nil }
+        await store.send(.perform(.updateName)) { $0.busy = true }
+        await store.receive(.completed(.updateName, renamed)) {
+            $0.busy = false; $0.session = renamed; $0.page = .account; $0.notice = "nameUpdated"
         }
     }
 }

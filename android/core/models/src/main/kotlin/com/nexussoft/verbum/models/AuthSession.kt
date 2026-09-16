@@ -1,9 +1,18 @@
 package com.nexussoft.verbum.models
 
-data class AuthSession(val id: String, val email: String?, val isAnonymous: Boolean, val isEmailVerified: Boolean)
+data class AuthSession(val id: String, val email: String?, val isAnonymous: Boolean, val isEmailVerified: Boolean,
+    val displayName: String? = null, val createdAt: Long? = null, val providers: List<String> = emptyList(),
+) {
+    val hasPassword: Boolean get() = "password" in providers
+    val initials: String? get() {
+        val parts = displayName?.trim()?.split(Regex("\\s+"))?.filter { it.isNotEmpty() }.orEmpty()
+        return if (parts.isNotEmpty()) (parts.first().take(1) + if (parts.size > 1) parts.last().take(1) else "").uppercase()
+            else email?.take(1)?.uppercase()
+    }
+}
 
 enum class AccountFailure {
-    invalidEmail, passwordRequired, passwordTooShort, passwordMismatch, credentials, emailInUse,
+    invalidEmail, nameRequired, passwordRequired, passwordTooShort, passwordMismatch, credentials, emailInUse,
     network, tooManyRequests, disabled, configuration, recentLoginRequired, unexpected,
 }
 class AccountException(val failure: AccountFailure) : Exception(failure.name)

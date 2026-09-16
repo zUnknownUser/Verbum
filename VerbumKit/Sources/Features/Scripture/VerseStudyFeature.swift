@@ -44,7 +44,7 @@ public struct VerseStudyFeature {
         }
     }
     public enum Action: Equatable {
-        case task, save, closeEntity, done
+        case task, save, closeEntity, done, bookmarkToggled
         case highlightStyleChanged(HighlightStyle)
         case tabChanged(Tab), highlightChanged(HighlightColor?), noteChanged(String), questionChanged(String)
         case contextResponse(PassageContext?), contextFailed
@@ -67,6 +67,10 @@ public struct VerseStudyFeature {
     public var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
+            case .bookmarkToggled:
+                guard !state.saving else { return .none }
+                state.annotation.bookmarked = !(state.annotation.bookmarked ?? false); state.saved = false
+                return .send(.save)
             case .done:
                 if state.annotation.note != state.savedNote { state.closeAfterSave = true; return .send(.save) }
                 return .send(.delegate(.close))

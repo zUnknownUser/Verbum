@@ -13,6 +13,7 @@ import (
 
 	"golang.org/x/time/rate"
 	"verbum/backend/internal/realtime"
+	"verbum/backend/internal/usage"
 )
 
 // VerifyIdentity verifies an SDK ID token, never a client-supplied UID.
@@ -23,6 +24,7 @@ type accessContextKey struct{}
 // AccessOptions configures the public edge. A nil verifier disables paid operations
 // (fail closed); public search still works without a paid query embedding.
 type AccessOptions struct {
+	Identify       func(context.Context, string) (usage.Principal, error)
 	Verify         VerifyIdentity
 	TrustedProxies []netip.Prefix
 }
@@ -30,6 +32,8 @@ type AccessOptions struct {
 type routeBudget struct{ perUser, perIP, global, concurrent int }
 
 var accessBudgets = map[string]routeBudget{
+	"GET /v1/realtime/connect":  {3, 10, 30, 4},
+	"GET /v1/me/usage":          {30, 60, 300, 8},
 	"GET /v1/search":            {60, 120, 600, 16},
 	"POST /v1/ask":              {10, 30, 60, 8},
 	"POST /v1/tts":              {10, 30, 60, 4},
@@ -68,7 +72,12 @@ func newAccess(next http.Handler, options AccessOptions, now func() time.Time) h
 			rejectAccess(w, route, http.StatusTooManyRequests, CodeRateLimited)
 			return
 		}
-		isSearch := r.Method == "GET"
+		if route == "GET /v1/realtime/connect" {
+			next.ServeHTTP(w, r)
+			return
+		}
+		isSearch := route == "GET /v1/search"
+		principal := usage.Principal{Anonymous: true}
 		uid := ""
 		if auth := r.Header.Get("Authorization"); auth != "" {
 			parts := strings.Fields(auth)
@@ -76,20 +85,26 @@ func newAccess(next http.Handler, options AccessOptions, now func() time.Time) h
 				rejectAccess(w, route, http.StatusUnauthorized, CodeUnauthenticated)
 				return
 			}
-			if options.Verify == nil {
+			if options.Verify == nil && options.Identify == nil {
 				rejectAccess(w, route, http.StatusServiceUnavailable, CodeAuthUnavailable)
 				return
 			}
 			ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 			var err error
-			uid, err = options.Verify(ctx, parts[1])
+			if options.Identify != nil {
+				principal, err = options.Identify(ctx, parts[1])
+				uid = principal.UID
+			} else {
+				uid, err = options.Verify(ctx, parts[1])
+				principal.UID = uid
+			}
 			cancel()
 			if err != nil || uid == "" {
 				rejectAccess(w, route, http.StatusUnauthorized, CodeUnauthenticated)
 				return
 			}
 		} else if !isSearch {
-			if options.Verify == nil {
+			if options.Verify == nil && options.Identify == nil {
 				rejectAccess(w, route, http.StatusServiceUnavailable, CodeAuthUnavailable)
 			} else {
 				rejectAccess(w, route, http.StatusUnauthorized, CodeUnauthenticated)
@@ -115,6 +130,12 @@ func newAccess(next http.Handler, options AccessOptions, now func() time.Time) h
 			w.Header().Add("Vary", "Authorization")
 			r = r.WithContext(context.WithValue(r.Context(), accessContextKey{}, uid == ""))
 		}
+		principal.IP = ip
+		device := r.Header.Get("X-Verbum-Installation")
+		if len(device) >= 16 && len(device) <= 80 {
+			principal.Device = device
+		}
+		r = r.WithContext(usage.WithPrincipal(r.Context(), principal))
 		next.ServeHTTP(w, r)
 	})
 }

@@ -8,7 +8,7 @@ struct RootView: View {
     }
 
     var body: some View {
-        AccountContainer { AppView(store: store) }
+        AccountContainer(onOpenPassage: { store.send(.profilePassageOpened($0)) }) { AppView(store: store) }
     }
 }
 

@@ -12,6 +12,7 @@ import (
 	"io"
 	"net/http"
 	"time"
+	"verbum/backend/internal/usage"
 )
 
 const endpoint = "https://api.openai.com/v1/embeddings"
@@ -51,6 +52,7 @@ func (c *Client) Embed(ctx context.Context, text string) ([]float32, error) {
 	req.Header.Set("Authorization", "Bearer "+c.apiKey)
 	req.Header.Set("Content-Type", "application/json")
 
+	usage.Attempt(ctx)
 	resp, err := c.client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("embeddings request: %w", err)
@@ -64,6 +66,9 @@ func (c *Client) Embed(ctx context.Context, text string) ([]float32, error) {
 		return nil, fmt.Errorf("embeddings request failed: status %d", resp.StatusCode)
 	}
 	var parsed struct {
+		Usage *struct {
+			Tokens int64 `json:"total_tokens"`
+		} `json:"usage"`
 		Data []struct {
 			Embedding []float32 `json:"embedding"`
 			Index     int       `json:"index"`
@@ -78,6 +83,9 @@ func (c *Client) Embed(ctx context.Context, text string) ([]float32, error) {
 	vector := parsed.Data[0].Embedding
 	if len(vector) != Dimensions {
 		return nil, fmt.Errorf("embeddings response had %d dimensions, want %d", len(vector), Dimensions)
+	}
+	if parsed.Usage != nil {
+		usage.Record(ctx, (parsed.Usage.Tokens*13+99)/100)
 	}
 	return vector, nil
 }

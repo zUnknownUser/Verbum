@@ -39,7 +39,7 @@ private actor AnnotationFile {
     }
     func save(_ annotation: ReaderAnnotation) throws {
         var values = try load().filter { $0.id != annotation.id }
-        if annotation.highlight != nil || !annotation.note.isEmpty { values.append(annotation) }
+        if annotation.highlight != nil || !annotation.note.isEmpty || annotation.bookmarked == true { values.append(annotation) }
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
         try JSONEncoder().encode(values).write(to: url, options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
         cache = values

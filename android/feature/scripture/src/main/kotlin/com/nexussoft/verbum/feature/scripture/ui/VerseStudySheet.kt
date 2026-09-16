@@ -39,6 +39,9 @@ internal fun VerseStudySheet(state: VerseStudyFeature.State, send: (Action)->Uni
             Row(Modifier.fillMaxWidth().padding(horizontal=Spacing.lg),verticalAlignment=Alignment.CenterVertically) {
                 if(state.ask!=null) TextButton(onClick={send(Action.CloseAnswer)}) {Text(stringResource(R.string.reader_study))}
                 Text(state.reference.formatted,style=VerbumTypography.navigationSerif,modifier=Modifier.weight(1f))
+                IconButton(onClick={send(Action.BookmarkToggled)},enabled=!state.saving) {
+                    Icon(if(state.annotation.bookmarked) Icons.Outlined.Bookmark else Icons.Outlined.BookmarkBorder,contentDescription=accountText(if(state.annotation.bookmarked) "removeBookmark" else "savePassage"))
+                }
                 TextButton(onClick={send(Action.Done)},enabled=!state.saving) {Text(stringResource(R.string.reader_done))}
             }
             if(state.ask!=null) {

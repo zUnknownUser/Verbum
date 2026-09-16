@@ -1,11 +1,12 @@
 import ComposableArchitecture
 import Foundation
+import Models
 
 /// A spoken conversation with the study companion (spec §19 "realtime", brought
 /// forward at the owner's request). The feature starts it with a session from
 /// `RealtimeSessionClient`, a configuration (what to talk about, which tools it
 /// may call) and a handler that runs those tools; it then observes events until
-/// it stops the conversation. No audio or transcript ever touches our server.
+/// it stops the conversation. Audio passes through the backend relay for session and spending limits; it is not stored there.
 @DependencyClient
 public struct VoiceClient: Sendable {
     /// Connects, configures the session and starts capturing the microphone.
@@ -73,6 +74,7 @@ public enum VoiceEvent: Equatable, Sendable {
 
 /// Why a conversation could not start or continue, in the states the sheet shows (§52).
 public enum VoiceError: Error, Equatable, Sendable {
+    case limited(UsageRestriction)
     /// The server has no key configured, or does not offer voice at all.
     case unavailable
     case networkUnavailable

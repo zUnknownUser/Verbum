@@ -25,12 +25,14 @@ import (
 	"verbum/backend/internal/embeddings"
 	"verbum/backend/internal/httpapi"
 	"verbum/backend/internal/identity"
-	"verbum/backend/internal/realtime"
+	"verbum/backend/internal/scripture"
 	"verbum/backend/internal/store"
 	"verbum/backend/internal/store/memory"
 	"verbum/backend/internal/store/postgres"
 	"verbum/backend/internal/synthesis"
 	"verbum/backend/internal/tts"
+	"verbum/backend/internal/usage"
+	"verbum/backend/internal/voicegate"
 )
 
 func main() {
@@ -98,20 +100,64 @@ func main() {
 			slog.Info("Google Cloud TTS enabled")
 		}
 	}
+	policy, err := usage.FromEnvironment()
+	if err != nil {
+		slog.Error("invalid usage policy", "err", err)
+		os.Exit(1)
+	}
+	var usageDB *usage.Postgres
+	var spending *usage.Service
+	if databaseURL := os.Getenv("VERBUM_DATABASE_URL"); databaseURL != "" {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		usageDB, err = usage.Open(ctx, databaseURL)
+		if err == nil {
+			err = usageDB.Ready(ctx)
+		}
+		cancel()
+		if err != nil {
+			slog.Error("usage storage unavailable: apply migration 0007 before rollout")
+			os.Exit(1)
+		}
+		defer usageDB.Close()
+		spending = usage.New(usageDB, policy)
+		go func() {
+			ticker := time.NewTicker(time.Hour)
+			defer ticker.Stop()
+			for {
+				ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+				if e := usageDB.Cleanup(ctx); e != nil {
+					slog.Warn("usage retention cleanup failed")
+				}
+				cancel()
+				<-ticker.C
+			}
+		}()
+	} else {
+		slog.Warn("paid generation disabled: persistent usage database is required")
+	}
+	economy := httpapi.EconomicOptions{Usage: spending, AskModel: env("VERBUM_ASK_MODEL", synthesis.DefaultModel)}
+	if usageDB != nil {
+		economy.SpeechVerifier = scripture.New(usageDB).Verify
+	}
 	var handler http.Handler
 	if key := os.Getenv("OPENAI_API_KEY"); key != "" {
 		slog.Info("realtime session broker, query embedder and ask enabled")
 		embedder := embeddings.New(key)
 		asker := &ask.Service{
 			Store:       s,
-			Embedder:    embedder,
+			Embedder:    economy.WrapEmbeddings(embedder),
 			Synthesizer: synthesis.New(key, env("VERBUM_ASK_MODEL", synthesis.DefaultModel)),
 			Translation: "WEB",
 		}
-		handler = httpapi.New(s, time.Now, realtime.New(key), embedder, asker, speech)
+		if spending != nil {
+			gateway := voicegate.New(spending, usageDB, key)
+			economy.VoiceRelay = gateway
+			economy.VoiceTickets = gateway
+		}
+		handler = httpapi.New(s, time.Now, nil, embedder, asker, speech, economy)
 	} else {
 		slog.Info("realtime session broker, query embedder and ask disabled: OPENAI_API_KEY not set")
-		handler = httpapi.New(s, time.Now, nil, nil, nil, speech)
+		handler = httpapi.New(s, time.Now, nil, nil, nil, speech, economy)
 	}
 
 	proxies, err := httpapi.ParseTrustedProxies(os.Getenv("VERBUM_TRUSTED_PROXIES"))
@@ -119,10 +165,10 @@ func main() {
 		slog.Error("invalid VERBUM_TRUSTED_PROXIES")
 		os.Exit(1)
 	}
-	var verify httpapi.VerifyIdentity
+	var identify func(context.Context, string) (usage.Principal, error)
 	if project := os.Getenv("VERBUM_FIREBASE_PROJECT_ID"); project != "" {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		verify, err = identity.New(ctx, project)
+		identify, err = identity.NewPrincipal(ctx, project)
 		cancel()
 		if err != nil {
 			slog.Error("Firebase verifier initialization failed: check project and ADC configuration")
@@ -131,7 +177,7 @@ func main() {
 	} else {
 		slog.Warn("paid API routes disabled: VERBUM_FIREBASE_PROJECT_ID not set; public search remains lexical")
 	}
-	handler = httpapi.Protect(handler, httpapi.AccessOptions{Verify: verify, TrustedProxies: proxies})
+	handler = httpapi.Protect(handler, httpapi.AccessOptions{Identify: identify, TrustedProxies: proxies})
 	server := &http.Server{
 		Addr:              addr,
 		Handler:           handler,

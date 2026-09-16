@@ -3,6 +3,7 @@ package httpapi
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"log/slog"
@@ -13,6 +14,7 @@ import (
 	"strings"
 	"time"
 	"unicode/utf8"
+	"verbum/backend/internal/usage"
 
 	"verbum/backend/internal/ask"
 	"verbum/backend/internal/dailyverse"
@@ -244,9 +246,7 @@ func (h *handlers) dailyVerse(w http.ResponseWriter, r *http.Request) {
 
 // POST /v1/realtime/session?model=
 //
-// Mints one short-lived OpenAI Realtime client secret so a client can connect directly to
-// OpenAI (WebRTC/WebSocket) without ever holding the real API key. Not part of the content
-// contract (§45): this brokers a third-party credential, it does not read the store.
+// Issues a one-use Verbum ticket for the server-metered WebSocket relay.
 func (h *handlers) realtimeSession(w http.ResponseWriter, r *http.Request) {
 	if h.realtime == nil {
 		writeProblem(w, http.StatusServiceUnavailable, CodeRealtimeUnavailable, "realtime is not configured on this server")
@@ -257,6 +257,9 @@ func (h *handlers) realtimeSession(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 	session, err := h.realtime.CreateSession(ctx, r.URL.Query().Get("model"), time.Minute)
 	if err != nil {
+		if writeUsageProblem(w, err) {
+			return
+		}
 		slog.Error("realtime session", "reqID", reqid.From(ctx), "err", err)
 		writeProblem(w, http.StatusBadGateway, CodeInternal, "could not create a realtime session")
 		return
@@ -322,6 +325,26 @@ func (h *handlers) ask(w http.ResponseWriter, r *http.Request) {
 	_ = http.NewResponseController(w).SetWriteDeadline(time.Now().Add(35 * time.Second))
 	answer, err := h.asker.Ask(ctx, q)
 	if err != nil {
+		var denial *usage.Denial
+		if errors.As(err, &denial) && denial.Code != "idempotency_conflict" {
+			fallbackCtx := context.WithValue(ctx, accessContextKey{}, true)
+			passages, searchErr := h.searchPassages(fallbackCtx, q)
+			if searchErr == nil {
+				if passages == nil {
+					passages = []domain.PassageReference{}
+				}
+				fallback := &domain.Availability{Code: denial.Code}
+				if !denial.RetryAt.IsZero() {
+					fallback.RetryAt = denial.RetryAt.Format(time.RFC3339)
+				}
+				writeJSONNoStore(w, domain.AskResponse{Fallback: fallback, PassageReferences: passages,
+					EntityReferences: []string{}, SourceReferences: []domain.SourceReference{}, Confidence: "low"})
+				return
+			}
+		}
+		if writeUsageProblem(w, err) {
+			return
+		}
 		slog.Error("ask", "reqID", reqid.From(ctx), "err", err)
 		writeProblem(w, http.StatusBadGateway, CodeInternal, "could not answer this question")
 		return

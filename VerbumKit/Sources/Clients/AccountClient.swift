@@ -12,6 +12,8 @@ public struct AccountClient: Sendable {
     public var refresh: @Sendable () async throws -> AuthSession?
     public var signOut: @Sendable () async throws -> Void
     public var deleteAccount: @Sendable (_ password: String) async throws -> Void
+    public var updateName: @Sendable (_ name: String) async throws -> AuthSession
+    public var changeEmail: @Sendable (_ email: String, _ password: String) async throws -> Void
 }
 
 extension AccountClient: DependencyKey {

@@ -1,17 +1,19 @@
 import Clients
 import ComposableArchitecture
+import Foundation
 import Models
 
 /// Optional account boundary: Scripture remains available without authentication.
 @Reducer
 public struct AccountFeature {
-    public enum Page: Equatable, Sendable { case welcome, signIn, register, reset, account, delete }
-    public enum Operation: Equatable, Sendable { case signIn, register, anonymous, reset, verify, refresh, signOut, delete }
+    public enum Page: Equatable, Sendable { case profile, welcome, signIn, register, reset, account, delete, editName, changeEmail }
+    public enum Operation: Equatable, Sendable { case signIn, register, anonymous, reset, verify, refresh, signOut, delete, updateName, changeEmail, resetCurrentPassword }
     @ObservableState
     public struct State: Equatable {
         public var presented = false
-        public var page: Page = .welcome
+        public var page: Page = .profile
         public var session: AuthSession?
+        public var displayName = ""
         public var email = ""
         public var password = ""
         public var confirmation = ""
@@ -24,7 +26,7 @@ public struct AccountFeature {
     }
     public enum Action: Equatable {
         case task, open, close
-        case page(Page), email(String), password(String), confirmation(String)
+        case page(Page), email(String), password(String), confirmation(String), displayName(String)
         case sessionChanged(AuthSession?)
         case perform(Operation)
         case completed(Operation, AuthSession?)
@@ -43,7 +45,7 @@ public struct AccountFeature {
                 }.cancellable(id: "account-session", cancelInFlight: true)
             case .open:
                 state.presented = true
-                state.page = state.session == nil ? .welcome : .account
+                state.page = .profile
                 state.failure = nil; state.notice = nil
                 return .none
             case .close:
@@ -53,30 +55,42 @@ public struct AccountFeature {
             case let .page(page):
                 guard !state.busy else { return .none }
                 state.page = page; state.clearSecrets(); state.failure = nil; state.notice = nil
+                if page == .editName { state.displayName = state.session?.displayName ?? "" }
+                if page == .changeEmail { state.email = "" }
                 return .none
+            case let .displayName(value): state.displayName = String(value.prefix(80)); state.failure = nil; return .none
             case let .email(value): state.email = value; state.failure = nil; return .none
             case let .password(value): state.password = value; state.failure = nil; return .none
             case let .confirmation(value): state.confirmation = value; state.failure = nil; return .none
             case let .sessionChanged(session):
                 if state.session?.id != session?.id { state.verificationSent = false }
                 state.session = session
-                if !state.busy, state.page == .account, session == nil { state.page = .welcome }
+                if !state.busy, session == nil, [.account, .delete, .editName, .changeEmail].contains(state.page) {
+                    state.page = .profile; state.clearSecrets()
+                }
                 return .none
             case let .perform(operation):
                 guard !state.busy else { return .none }
                 state.failure = nil; state.notice = nil
-                if [.signIn, .register, .reset].contains(operation),
+                if [.signIn, .register, .reset, .changeEmail].contains(operation),
                    let failure = AccountValidation.validate(email: state.email, password: state.password,
                        confirmation: operation == .register ? state.confirmation : nil, reset: operation == .reset) {
                     state.failure = failure
                     return .none
+                }
+                if operation == .updateName, state.displayName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    state.failure = .nameRequired; return .none
+                }
+                if [.changeEmail, .resetCurrentPassword].contains(operation), state.session?.hasPassword != true {
+                    state.failure = .credentials; return .none
                 }
                 if operation == .delete, state.session?.isAnonymous == false, state.password.isEmpty {
                     state.failure = .passwordRequired; return .none
                 }
                 if operation == .verify, state.verificationSent { return .none }
                 state.busy = true
-                let email = AccountValidation.email(state.email), password = state.password
+                let email = AccountValidation.email(operation == .resetCurrentPassword ? (state.session?.email ?? "") : state.email), password = state.password
+                let name = state.displayName.trimmingCharacters(in: .whitespacesAndNewlines)
                 return .run { [client] send in
                     do {
                         let session: AuthSession?
@@ -84,7 +98,9 @@ public struct AccountFeature {
                         case .signIn: session = try await client.signIn(email, password)
                         case .register: session = try await client.register(email, password)
                         case .anonymous: session = try await client.anonymous()
-                        case .reset: try await client.resetPassword(email); session = nil
+                        case .reset, .resetCurrentPassword: try await client.resetPassword(email); session = nil
+                        case .updateName: session = try await client.updateName(name)
+                        case .changeEmail: try await client.changeEmail(email, password); session = nil
                         case .verify: try await client.sendVerification(); session = nil
                         case .refresh: session = try await client.refresh()
                         case .signOut: try await client.signOut(); session = nil
@@ -96,11 +112,18 @@ public struct AccountFeature {
             case let .completed(operation, session):
                 state.busy = false; state.clearSecrets()
                 switch operation {
-                case .signIn, .register, .refresh:
-                    state.session = session; state.page = session == nil ? .welcome : .account
+                case .signIn, .register:
+                    state.session = session; state.page = .profile
+                case .refresh:
+                    state.session = session
+                    if session == nil { state.page = .profile }
+                case .updateName:
+                    state.session = session; state.page = .account; state.notice = "nameUpdated"
+                case .changeEmail:
+                    state.page = .account; state.notice = "emailChangeSent"
                 case .anonymous:
                     state.session = session; state.presented = false
-                case .reset: state.notice = "resetSent"
+                case .reset, .resetCurrentPassword: state.notice = "resetSent"
                 case .verify:
                     state.verificationSent = true; state.notice = "verificationSent"
                     return .run { [clock, id = state.session?.id] send in
@@ -108,7 +131,7 @@ public struct AccountFeature {
                         await send(.verificationCooldownEnded(id))
                     }.cancellable(id: "account-verification", cancelInFlight: true)
                 case .signOut, .delete:
-                    state.session = nil; state.page = .welcome; state.email = ""; state.verificationSent = false
+                    state.session = nil; state.page = .profile; state.email = ""; state.verificationSent = false
                     if operation == .delete { state.notice = "deleted" }
                 }
                 return .none

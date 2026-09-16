@@ -22,14 +22,10 @@ extension ScriptureAudioClient {
     }
 
     /// Speak the exact cached reading translation via the backend's `POST /v1/tts`; never
-    /// substitute English. The next chapter is rendered in the background once this one is, so
-    /// chaining does not wait.
+    /// substitute English. New generation is requested only for the chapter the listener opens.
     static let cloudPortuguese = ScriptureAudioClient(chapterAudio: { bookID, chapter in
         let reference = PassageReference(bookId: bookID, chapter: chapter)
         let audio = try await CloudSpeechRenderer.chapterAudio(reference)
-        if let next = CloudSpeechRenderer.next(after: reference) {
-            Task.detached(priority: .utility) { _ = try? await CloudSpeechRenderer.chapterAudio(next) }
-        }
         return audio
     })
 }
@@ -37,7 +33,7 @@ extension ScriptureAudioClient {
 @MainActor
 private enum CloudSpeechRenderer {
     /// Cached files are reused; rendering the same chapter twice at once is
-    /// collapsed into one job (the prefetch and a tap can race).
+    /// collapsed into one job (multiple taps can race).
     private static var inFlight: [PassageReference: Task<ChapterAudio, Error>] = [:]
 
     static func chapterAudio(_ reference: PassageReference) async throws -> ChapterAudio {
@@ -56,13 +52,6 @@ private enum CloudSpeechRenderer {
         inFlight[reference] = task
         defer { inFlight[reference] = nil }
         return try await task.value
-    }
-
-    nonisolated static func next(after reference: PassageReference) -> PassageReference? {
-        guard let book = BibleBook.book(id: reference.bookId) else { return nil }
-        if reference.chapter < book.chapterCount { return PassageReference(bookId: book.id, chapter: reference.chapter + 1) }
-        guard let nextBook = BibleBook.canon.first(where: { $0.order == book.order + 1 }) else { return nil }
-        return PassageReference(bookId: nextBook.id, chapter: 1)
     }
 
     /// One MP3 per exact chapter text and server voice version, cached on disk. The backend also caches server-side by
@@ -90,13 +79,8 @@ private enum CloudSpeechRenderer {
         }
         let audio: Data
         let cues: [AudioCue]
-        do { (audio, cues) = try await VerbumAPI.shared.synthesizeChapterSpeech(verses: verses, language: "pt-BR", revision: version) }
-        catch is CancellationError { throw CancellationError() }
-        catch {
-            // A metadata/provider failure must not remove Portuguese playback.
-            audio = try await VerbumAPI.shared.synthesizeSpeech(text: text, language: "pt-BR", revision: version)
-            cues = []
-        }
+        // A failed paid request is not retried through a second synthesis endpoint.
+        (audio, cues) = try await VerbumAPI.shared.synthesizeChapterSpeech(verses: verses, language: "pt-BR", revision: version)
         guard !audio.isEmpty else { throw SpeechFailure.emptyAudio }
         try Task.checkCancellation()
         let temporary = directory.appendingPathComponent(UUID().uuidString + ".partial.mp3")

@@ -1,5 +1,7 @@
 # Paid API access — 2026-09-15
 
+> Atualização de 16/09/2026: [COST_CONTROL.md](../docs/COST_CONTROL.md) define as cotas persistentes, planos, texto TTS canônico obrigatório e voz via relay. Exemplos antigos de texto livre não são aceitos pelo backend protegido.
+
 ## Behavior
 
 The app creates a Firebase anonymous identity on the first Ask, voice-session or

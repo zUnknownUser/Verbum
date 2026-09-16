@@ -24,9 +24,11 @@ const DefaultModel = "gpt-realtime"
 // Session is what a client needs to connect. Only the fields required for that are kept —
 // OpenAI's response is not otherwise forwarded.
 type Session struct {
-	ClientSecret string `json:"clientSecret"`
-	ExpiresAt    int64  `json:"expiresAt"` // unix seconds; when the secret stops being usable to START a session
-	Model        string `json:"model"`
+	RelayPath          string `json:"relayPath,omitempty"`
+	MaxDurationSeconds int    `json:"maxDurationSeconds,omitempty"`
+	ClientSecret       string `json:"clientSecret"`
+	ExpiresAt          int64  `json:"expiresAt"` // unix seconds; when the secret stops being usable to START a session
+	Model              string `json:"model"`
 }
 
 // Broker holds the real API key; every server process should build exactly one and share it.

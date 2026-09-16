@@ -45,6 +45,7 @@ object ChapterReaderFeature {
         data class Failed(val error: ReaderError):Content
     }
     sealed interface Action {
+        data object RecordReading:Action
         data object Started:Action;data object RetryTapped:Action
         data class ChapterLoaded(val verses:List<BiblePassage>):Action
         data class ChapterFailed(val error:ReaderError):Action
@@ -98,6 +99,7 @@ object ChapterReaderFeature {
                 send(Action.ContextLoaded(reference,value))
             }
             when(action) {
+                Action.RecordReading -> if(state.chapters[ReaderCanon.key(state.reference)].isNullOrEmpty()) state.only() else state.with(runEffect { runCatching { ReadingActivityClient(preferences).record(state.reference) }; Unit })
                 Action.Started -> state.with(runEffect {send->
                     val mode=preferences.string(MODE_KEY)?.let { runCatching { ReadingMode.valueOf(it) }.getOrNull() } ?: ReadingMode.PAGES
                     send(Action.PreferencesLoaded(mode,preferences.string(FOCUS_KEY)=="true"))

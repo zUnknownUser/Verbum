@@ -135,7 +135,12 @@ type DailyVerse struct {
 // AskResponse is the §30 AI Response Data Contract, verbatim. EntityReferences only ever names
 // entities with a curated key passage or sourced occurrence covering a citation — never derived
 // from the question text itself.
+type Availability struct {
+	Code    string `json:"code"`
+	RetryAt string `json:"retryAt,omitempty"`
+}
 type AskResponse struct {
+	Fallback             *Availability      `json:"fallback,omitempty"`
 	Answer               string             `json:"answer"`
 	Summary              string             `json:"summary"`
 	PassageReferences    []PassageReference `json:"passageReferences"`

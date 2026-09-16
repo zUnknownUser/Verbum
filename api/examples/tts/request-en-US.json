@@ -1,8 +1,36 @@
 {
-  "text": "The LORD is my shepherd; I shall lack nothing.",
+  "bookId": "Ps",
+  "chapter": 23,
+  "translation": "BSB",
+  "text": "The LORD is my shepherd;\nI shall not want.\nHe makes me lie down in green pastures;\nHe leads me beside quiet waters.\nHe restores my soul;\nHe guides me in the paths of righteousness\nfor the sake of His name.\nEven though I walk through the valley of the shadow of death,\nI will fear no evil,\nfor You are with me;\nYour rod and Your staff, they comfort me.\nYou prepare a table before me\nin the presence of my enemies.\nYou anoint my head with oil;\nmy cup overflows.\nSurely goodness and mercy will follow me\nall the days of my life,\nand I will dwell in the house of the LORD\nforever.",
   "language": "en-US",
   "voice": "en-US-Standard-A",
-  "speed": 1.0,
-  "pitch": 0,
-  "format": "MP3"
+  "speed": 1,
+  "format": "MP3",
+  "verses": [
+    {
+      "number": 1,
+      "text": "The LORD is my shepherd;\nI shall not want."
+    },
+    {
+      "number": 2,
+      "text": "He makes me lie down in green pastures;\nHe leads me beside quiet waters."
+    },
+    {
+      "number": 3,
+      "text": "He restores my soul;\nHe guides me in the paths of righteousness\nfor the sake of His name."
+    },
+    {
+      "number": 4,
+      "text": "Even though I walk through the valley of the shadow of death,\nI will fear no evil,\nfor You are with me;\nYour rod and Your staff, they comfort me."
+    },
+    {
+      "number": 5,
+      "text": "You prepare a table before me\nin the presence of my enemies.\nYou anoint my head with oil;\nmy cup overflows."
+    },
+    {
+      "number": 6,
+      "text": "Surely goodness and mercy will follow me\nall the days of my life,\nand I will dwell in the house of the LORD\nforever."
+    }
+  ]
 }

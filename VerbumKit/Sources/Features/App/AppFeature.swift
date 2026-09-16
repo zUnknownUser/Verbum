@@ -51,6 +51,7 @@ public struct AppFeature {
         case tabChanged(Tab)
         /// The user tapped a verse-of-the-day notification.
         case openedVerse(PassageReference)
+        case profilePassageOpened(PassageReference)
         case home(HomeFeature.Action)
         case explore(ExploreFeature.Action)
         case search(SearchFeature.Action)
@@ -84,7 +85,7 @@ public struct AppFeature {
                 return .none
 
             // A notification lands on Home, on top of whatever was there.
-            case .openedVerse(let reference):
+            case .openedVerse(let reference), .profilePassageOpened(let reference):
                 state.tab = .home
                 state.contentTab = .home
                 state.homePath.append(.reader(ScriptureFeature.State(reference: reference)))

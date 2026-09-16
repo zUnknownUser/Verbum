@@ -60,6 +60,9 @@ internal fun ChapterReaderPane(state:State,send:(Action)->Unit,onTitleTapped:()-
     LaunchedEffect(pagerDragged) {if(pagerDragged) followsAudio=false}
     var menu by remember {mutableStateOf(false)}
     LaunchedEffect(Unit) {send(Action.Started)}
+    LaunchedEffect(state.reference, state.chapters[ReaderCanon.key(state.reference)]?.firstOrNull()?.id) {
+        if(!state.chapters[ReaderCanon.key(state.reference)].isNullOrEmpty()) send(Action.RecordReading)
+    }
     LaunchedEffect(state.reference,state.readingMode) {
         val target=ReaderCanon.index(state.reference)
         if(state.readingMode==ReadingMode.PAGES && pager.currentPage!=target && !pager.isScrollInProgress) pager.animateScrollToPage(target)

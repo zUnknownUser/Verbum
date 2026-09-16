@@ -139,6 +139,7 @@ private fun LineView(line: VoiceFeature.Line) {
 private fun androidx.compose.foundation.layout.ColumnScope.Failure(error: VoiceException, onOpenSettings: () -> Unit, send: (Action) -> Unit) {
     Column(Modifier.weight(1f, fill = true).padding(horizontal = Spacing.readingMargin, vertical = Spacing.lg), verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {
         when (error) {
+            is VoiceException.Limited -> UsageNotice(error.restriction)
             VoiceException.Unavailable -> {
                 Text(stringResource(R.string.voice_unavailable), style = VerbumTypography.editorialHeadline)
                 Text(stringResource(R.string.voice_unavailable_body), style = MaterialTheme.typography.bodyMedium)

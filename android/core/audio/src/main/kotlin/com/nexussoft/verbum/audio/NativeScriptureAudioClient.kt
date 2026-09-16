@@ -39,17 +39,14 @@ class LiveScriptureAudioClient(language: BookLanguage, context: Context, bible: 
 
 /**
  * Generates chapter speech via the backend's Google Cloud TTS (`POST /v1/tts`), then uses the
- * existing MediaSession player for pause, seek, speed and background playback. The next chapter
- * is rendered in the background once this one is, so chaining does not wait.
+ * existing MediaSession player for pause, seek, speed and background playback. Only the chapter the listener opens can request a new generation.
  */
 class CloudScriptureAudioClient(context: Context, private val bible: BibleClient, private val api: VerbumApi) : ScriptureAudioClient {
-    private val prefetch = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val context = context.applicationContext
     private val mutex = Mutex()
 
     override suspend fun chapterAudio(bookId: BookId, chapter: Int): ChapterAudio? {
         val audio = renderChapter(bookId, chapter)
-        nextChapter(bookId, chapter)?.let { next -> prefetch.launch { runCatching { renderChapter(next.bookId, next.chapter) } } }
         return audio
     }
 
@@ -60,13 +57,6 @@ class CloudScriptureAudioClient(context: Context, private val bible: BibleClient
         val (file,cues) = render(verses)
         ChapterAudio(first.translationId, "Leitura automática · Português", PassageReference(bookId, chapter),
             listOf(AudioNarrator(AudioNarrator.SYNTHESISED_PREFIX + "pt-BR", "Leitura automática", file.toURI().toString(), null,cues)))
-    }
-
-    private fun nextChapter(bookId: BookId, chapter: Int): PassageReference? {
-        val book = BibleBook.book(bookId) ?: return null
-        if (chapter < book.chapterCount) return PassageReference(bookId, chapter + 1)
-        val nextBook = BibleBook.canon.firstOrNull { it.order == book.order + 1 } ?: return null
-        return PassageReference(nextBook.id, 1)
     }
 
     /** One MP3 per exact chapter text and server voice version, cached on disk. The backend also caches server-side by
@@ -87,9 +77,8 @@ class CloudScriptureAudioClient(context: Context, private val bible: BibleClient
             output.setLastModified(System.currentTimeMillis())
             return output to decodeAudioCues(runCatching {File(output.path+".json").readText()}.getOrNull())
         }
-        val (audio,cues) = try {withContext(Dispatchers.IO) {api.synthesizeChapterSpeech(verses,"pt-BR",revision=version)}}
-        catch(e:CancellationException) {throw e}
-        catch(_:Exception) {withContext(Dispatchers.IO) {api.synthesizeSpeech(text,"pt-BR",revision=version)} to emptyList<AudioCue>()}
+        // Never retry an ambiguous paid failure through a second synthesis endpoint.
+        val (audio,cues) = withContext(Dispatchers.IO) {api.synthesizeChapterSpeech(verses,"pt-BR",revision=version)}
         check(audio.isNotEmpty())
         currentCoroutineContext().ensureActive()
         val temporary = File(directory, "${UUID.randomUUID()}.partial.mp3")

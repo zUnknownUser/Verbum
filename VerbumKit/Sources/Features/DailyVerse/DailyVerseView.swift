@@ -71,7 +71,7 @@ struct DailyVerseView: View {
         }
     }
 
-    private var mornings: some View {
+    var mornings: some View {
         VStack(alignment: .leading, spacing: Spacing.xs) {
             Toggle(isOn: Binding(
                 get: { store.morningsEnabled },

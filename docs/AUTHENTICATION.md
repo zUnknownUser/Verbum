@@ -1,5 +1,7 @@
 # Account integration — delivery 2026-09-13
 
+> Planos e cotas persistentes: [COST_CONTROL.md](COST_CONTROL.md). Premium vem de `usage_entitlements` no backend; nenhuma flag do cliente concede acesso. Voz usa ticket de uso único para o relay Verbum.
+
 ## Update — paid API identity, 2026-09-15
 
 Ask, voice-session creation and cloud audio now create a Firebase anonymous identity

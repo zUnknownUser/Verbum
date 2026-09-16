@@ -102,7 +102,7 @@ class RealtimeConversation(
         if (running) stop()
         if (!audio.requestPermission()) throw VoiceException.MicrophoneDenied
         val frames = try {
-            transport.connect("$ENDPOINT?model=${session.model}", mapOf("Authorization" to "Bearer ${session.clientSecret}"))
+            transport.connect(session.relayUrl ?: "$ENDPOINT?model=${session.model}", mapOf("Authorization" to "Bearer ${session.clientSecret}"))
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
@@ -202,6 +202,7 @@ class RealtimeConversation(
 
             "response.output_item.done" -> (event["item"] as? JsonObject)?.let { runFunctionCall(it, tools) }
 
+            "verbum.limit" -> finish(VoiceEvent.Failed(VoiceException.Limited(com.nexussoft.verbum.models.UsageRestriction(event.string("code") ?: "quota_exceeded", event.string("retryAt")))))
             "response.done" -> {
                 responseActive = false
                 if (speaking) { speaking = false; playbackEndedAt = now(); emit(VoiceEvent.AssistantSpeaking(false)) }

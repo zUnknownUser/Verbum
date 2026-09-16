@@ -61,7 +61,7 @@ enum VoiceScript {
         case (.answer, .english): "I've read the answer with you. Where would you like to go from here?"
         }
         return VoiceConfiguration(
-            instructions: lines.joined(separator: "\n\n"),
+            instructions: String(decoding: lines.joined(separator: "\n\n").utf8.prefix(15_996), as: UTF8.self),
             opening: opening,
             tools: [askTool, searchTool, openTool],
             voice: "marin",

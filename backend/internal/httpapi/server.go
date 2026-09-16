@@ -4,8 +4,10 @@
 package httpapi
 
 import (
+	"bufio"
 	"context"
 	"log/slog"
+	"net"
 	"net/http"
 	"strings"
 	"time"
@@ -19,9 +21,31 @@ import (
 // panicking, and search stays lexical/entity-only (OPENAI_API_KEY is optional configuration,
 // unlike the store). Pass a literal nil at the call site for any of them, never a nil-valued
 // variable of the concrete pointer type — see cmd/api/main.go's comment on why.
-func New(s store.Store, now func() time.Time, rt realtimeBroker, embedder queryEmbedder, asker asker, speech TextToSpeech) http.Handler {
+func New(s store.Store, now func() time.Time, rt realtimeBroker, embedder queryEmbedder, asker asker, speech TextToSpeech, economic ...EconomicOptions) http.Handler {
 	h := &handlers{store: s, now: now, realtime: rt, embedder: embedder, asker: asker, tts: speech}
 	mux := http.NewServeMux()
+	if len(economic) > 0 {
+		e := economic[0]
+		h.asker = e.WrapAsk(asker)
+		h.embedder = e.WrapEmbeddings(embedder)
+		h.tts = e.WrapSpeech(speech)
+		if e.VoiceTickets != nil {
+			h.realtime = e.VoiceTickets
+		} else {
+			h.realtime = nil
+		}
+		mux.HandleFunc("GET /v1/me/usage", func(w http.ResponseWriter, r *http.Request) {
+			status, err := e.Usage.Status(r.Context())
+			if err != nil {
+				writeUsageProblem(w, err)
+				return
+			}
+			writeJSONNoStore(w, status)
+		})
+		if e.VoiceRelay != nil {
+			mux.Handle("GET /v1/realtime/connect", e.VoiceRelay)
+		}
+	}
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, _ *http.Request) { w.Write([]byte("ok\n")) })
 	mux.HandleFunc("GET /readyz", h.ready)
 	mux.HandleFunc("GET /v1/entities", h.listEntities)
@@ -63,6 +87,7 @@ func logging(next http.Handler) http.Handler {
 		}
 		w.Header().Add("Vary", "Accept-Language")
 		ctx := store.WithLanguage(reqid.NewContext(r.Context()), language)
+		ctx = context.WithValue(ctx, idempotencyKey{}, r.Header.Get("Idempotency-Key"))
 		w.Header().Set("Content-Language", store.Language(ctx))
 		start := time.Now()
 		rec := &statusRecorder{ResponseWriter: w, status: http.StatusOK}
@@ -81,4 +106,8 @@ func (r *statusRecorder) Unwrap() http.ResponseWriter { return r.ResponseWriter 
 func (r *statusRecorder) WriteHeader(code int) {
 	r.status = code
 	r.ResponseWriter.WriteHeader(code)
+}
+
+func (r *statusRecorder) Hijack() (net.Conn, *bufio.ReadWriter, error) {
+	return http.NewResponseController(r.ResponseWriter).Hijack()
 }

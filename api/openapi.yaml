@@ -95,7 +95,9 @@ paths:
       operationId: synthesizeSpeech
       summary: Generate MP3 reading audio with Google Cloud Text-to-Speech.
       description: |
-        Synthesizes the supplied plain text exactly; does not retrieve or alter Scripture.
+        Verifies the supplied text against the canonical chapter identified by bookId, chapter and translation.
+        Arbitrary text, unsupported voices, nonzero pitch and provider-side speed changes are rejected.
+        Shared cached audio is replayed before checking generation quotas; only cache misses reserve budget.
         Maximum 100000 UTF-8 bytes of text and 1 MiB request body. Plain text only.
         Automatically segments at 2200 bytes (below Google's 5000-byte limit) and returns one complete MP3,
         crossfading segment joins to avoid an audible seam, cached persistently by exact chapter text and
@@ -119,6 +121,16 @@ paths:
               english:
                 externalValue: examples/tts/request-en-US.json
       responses:
+        '403':
+          description: This plan cannot start the operation.
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+        '409':
+          description: Idempotency key was already bound to different content.
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
         '401': { $ref: '#/components/responses/Unauthenticated' }
         '200':
           description: MP3 bytes, ready to save or play (not JSON/base64).
@@ -145,7 +157,7 @@ paths:
             application/problem+json:
               schema: { $ref: '#/components/schemas/Problem' }
         '429':
-          description: API limit reached (rate_limited) or Google quota exhausted (tts_rate_limited).
+          description: Generation quota, pending duplicate, API rate limit or provider quota reached.
           headers:
             Retry-After:
               description: Seconds to wait; supplied for API limits.
@@ -421,6 +433,16 @@ paths:
                   $ref: '#/components/schemas/PassageReference'
                   description: Optional reader anchor. Must select 1–6 verses; corpus text is verified before synthesis.
       responses:
+        '403':
+          description: This plan cannot start the operation.
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+        '409':
+          description: Idempotency key was already bound to different content.
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
         '415':
           description: Content-Type must be application/json.
         '429': { $ref: '#/components/responses/RateLimited' }
@@ -453,14 +475,13 @@ paths:
         - FirebaseIDToken: []
       tags: [realtime]
       operationId: createRealtimeSession
-      summary: A short-lived credential for a client to talk to OpenAI's Realtime API directly.
+      summary: A one-use ticket for a metered voice connection through Verbum.
       description: |
-        Not in §45 and not part of the content contract: this brokers a third-party ephemeral
-        credential so the real OpenAI API key never ships in a client app. It does not read the
-        content store, and its response must never be cached (Cache-Control: no-store). No audio,
-        transcript or model output passes through this server — once the client has the secret,
-        it connects to OpenAI over WebRTC/WebSocket on its own. 503 when the server has no
-        OpenAI key configured; there is no offline/fixture fallback for this endpoint.
+        Returns a one-use Verbum ticket valid for 60 seconds. Connect to relayPath on the same
+        API host using WebSocket and Authorization Bearer clientSecret. No provider credential
+        is exposed. Audio passes through the backend without being persisted. Duration,
+        output tokens, response count and spending are enforced there. Responses are no-store.
+        Guest sessions cannot use voice. A verbum.limit event ends a restricted conversation.
       parameters:
         - name: model
           in: query
@@ -469,6 +490,16 @@ paths:
           description: Only omitted, empty, or gpt-realtime is accepted by the API access layer.
           # Clients cannot select an arbitrary paid model.
       responses:
+        '403':
+          description: This plan cannot start the operation.
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+        '409':
+          description: Idempotency key was already bound to different content.
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
         '429': { $ref: '#/components/responses/RateLimited' }
         '400':
           description: Invalid request or unsupported Realtime model.
@@ -493,8 +524,39 @@ paths:
               schema: { $ref: '#/components/schemas/Problem' }
               example: { code: realtime_unavailable, message: "realtime is not configured on this server" }
 
+  /v1/me/usage:
+    get:
+      security: [{ FirebaseIDToken: [] }]
+      operationId: getUsage
+      summary: Current server-owned plan and remaining daily generations.
+      responses:
+        '200':
+          description: UTC reset time and generation ceilings; budgets may restrict access sooner. Never cached.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/UsageStatus' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+        '503':
+          description: Usage storage unavailable; expensive operations remain blocked.
+  /v1/realtime/connect:
+    get:
+      security: [{ VerbumVoiceTicket: [] }]
+      operationId: connectVoice
+      summary: WebSocket relay with server-enforced duration and spending limits.
+      responses:
+        '101':
+          description: JSON Realtime events; verbum.limit carries code and optional retryAt before close.
+        '401': { description: Missing, expired or already consumed one-use ticket. }
+        '429': { description: Concurrent conversation, quota or budget limit. }
+        '503': { description: Usage storage or provider unavailable. }
+
 components:
   securitySchemes:
+    VerbumVoiceTicket:
+      type: http
+      scheme: bearer
+      description: One-use ticket returned by createRealtimeSession, never a provider key.
     FirebaseIDToken:
       type: http
       scheme: bearer
@@ -536,16 +598,38 @@ components:
           example: { code: unknown_entity, message: "no entity with id 'nope'" }
 
   schemas:
+    UsageRestriction:
+      type: object
+      required: [code]
+      properties:
+        code: { type: string }
+        retryAt: { type: string, format: date-time }
+    UsageStatus:
+      type: object
+      required: [plan, resetsAt, remaining, voiceSeconds, restricted]
+      properties:
+        plan: { type: string, enum: [guest, free, premium] }
+        resetsAt: { type: string, format: date-time }
+        remaining:
+          type: object
+          additionalProperties: { type: integer, minimum: 0 }
+          description: Remaining daily ask, tts, embedding and voice generations; cache replay does not consume these.
+        voiceSeconds: { type: integer }
+        restricted: { type: boolean }
+
     SpeechRequest:
       type: object
       additionalProperties: false
-      required: [text, language]
+      required: [text, language, bookId, chapter, translation]
       properties:
+        bookId: { type: string, description: Canonical OSIS book identifier, example: John }
+        chapter: { type: integer, minimum: 1, maximum: 150 }
+        translation: { type: string, enum: [por_blj, BSB], description: Must match language and the canonical text. }
         verses:
           type: array
           minItems: 1
           maxItems: 176
-          description: Optional ordered verses for synchronized narration. Their text joined by newlines must equal text exactly. Measured excerpts contain at most three verses (long verses can span several excerpts). Legacy requests omit this field and retain their cache/audio behavior.
+          description: Optional ordered verses for synchronized narration. Their text joined by newlines must equal text exactly. Measured excerpts contain at most three verses (long verses can span several excerpts). Omitting verses returns audio without timing metadata; canonical chapter identifiers remain required.
           items:
             type: object
             additionalProperties: false
@@ -566,8 +650,8 @@ components:
           maxLength: 128
           description: Google voice matching language; omitted/empty selects pt-BR-Chirp3-HD-Aoede or en-US-Standard-A.
           example: pt-BR-Chirp3-HD-Aoede
-        speed: { type: number, minimum: 0.25, maximum: 2, default: 1 }
-        pitch: { type: number, minimum: -20, maximum: 20, default: 0, description: 'Omit or use zero for Chirp 3 HD; nonzero values return 400. Retained for compatible legacy voices.' }
+        speed: { type: number, enum: [1], default: 1, description: Adjust playback speed locally without regenerating speech. }
+        pitch: { type: number, enum: [0], default: 0 }
         format: { type: string, enum: [MP3], default: MP3 }
     # ---- Errors (§52). Apps switch on `code`; `message` is for logs.
     Problem:
@@ -576,8 +660,10 @@ components:
       properties:
         code:
           type: string
-          enum: [unauthenticated, auth_unavailable, rate_limited, unknown_entity, unknown_book, content_unavailable, malformed_request, internal, realtime_unavailable, ask_unavailable, tts_unavailable, tts_rate_limited, tts_timeout, tts_failed]
+          enum: [unauthenticated, auth_unavailable, rate_limited, unknown_entity, unknown_book, content_unavailable, malformed_request, internal, realtime_unavailable, ask_unavailable, tts_unavailable, tts_rate_limited, tts_timeout, tts_failed, quota_exceeded, budget_exhausted, plan_required, usage_unavailable, request_in_progress, idempotency_conflict]
         message: { type: string }
+        retryAt: { type: string, format: date-time }
+        fallback: { type: string, enum: [scripture_search] }
 
     # ---- §22.1
     BibleEntityType:
@@ -775,24 +861,27 @@ components:
         clientSecret:
           type: string
           description: >-
-            OpenAI's ephemeral token (`ek_...`). Pass it to the client SDK's connect call; never
-            log or persist it. It is not the server's own OpenAI API key.
+            Opaque one-use Verbum ticket. Send only to relayPath on the API host. Never log or persist it.
         expiresAt:
           type: integer
           description: Unix seconds after which this secret can no longer start a session.
         model: { type: string }
+        relayPath: { type: string, const: /v1/realtime/connect }
+        maxDurationSeconds: { type: integer, minimum: 1 }
 
     # ---- §30 AI Response Data Contract, verbatim
     AskResponse:
       type: object
       required: [answer, summary, passageReferences, entityReferences, sourceReferences, confidence, interpretiveVariance]
       properties:
+        fallback:
+          $ref: '#/components/schemas/UsageRestriction'
         answer: { type: string, description: Empty when no reliable, citable answer was found. }
         summary: { type: string }
         passageReferences:
           type: array
           items: { $ref: '#/components/schemas/PassageReference' }
-          description: Only passages the server itself retrieved and the model actually cited; never model-authored.
+          description: Verified citations, or indexed search results when fallback is present and answer is empty.
         entityReferences:
           type: array
           items: { type: string }

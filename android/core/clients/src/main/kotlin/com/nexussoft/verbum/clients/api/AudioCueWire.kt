@@ -6,7 +6,7 @@ import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 
 @Serializable internal data class WireSpeechVerse(val number:Int,val text:String)
-@Serializable internal data class WireTimedSpeech(val text:String,val language:String,val revision:String?,val verses:List<WireSpeechVerse>)
+@Serializable internal data class WireTimedSpeech(val bookId:String,val chapter:Int,val translation:String,val text:String,val language:String,val revision:String?,val verses:List<WireSpeechVerse>)
 @Serializable internal data class WireAudioCue(val verseStart:Int,val verseEnd:Int,val start:Double,val end:Double?=null)
 private val audioJSON=Json {ignoreUnknownKeys=true}
 fun decodeAudioCues(value:String?):List<AudioCue> = runCatching {

@@ -16,11 +16,11 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 
 object AccountFeature {
-    enum class Page { WELCOME, SIGN_IN, REGISTER, RESET, ACCOUNT, DELETE }
-    enum class Operation { SIGN_IN, REGISTER, ANONYMOUS, RESET, VERIFY, REFRESH, SIGN_OUT, DELETE }
+    enum class Page { PROFILE, WELCOME, SIGN_IN, REGISTER, RESET, ACCOUNT, DELETE, EDIT_NAME, CHANGE_EMAIL }
+    enum class Operation { SIGN_IN, REGISTER, ANONYMOUS, RESET, VERIFY, REFRESH, SIGN_OUT, DELETE, UPDATE_NAME, CHANGE_EMAIL, RESET_CURRENT_PASSWORD }
     data class State(
-        val presented: Boolean = false, val page: Page = Page.WELCOME, val session: AuthSession? = null,
-        val email: String = "", val password: String = "", val confirmation: String = "",
+        val presented: Boolean = false, val page: Page = Page.PROFILE, val session: AuthSession? = null,
+        val displayName: String = "", val email: String = "", val password: String = "", val confirmation: String = "",
         val busy: Boolean = false, val failure: AccountFailure? = null, val notice: String? = null,
         val verificationSent: Boolean = false,
     )
@@ -29,6 +29,7 @@ object AccountFeature {
         data object Open : Action
         data object Close : Action
         data class Navigate(val page: Page) : Action
+        data class DisplayName(val value: String) : Action
         data class Email(val value: String) : Action
         data class Password(val value: String) : Action
         data class Confirmation(val value: String) : Action
@@ -43,21 +44,29 @@ object AccountFeature {
             Action.Started -> state.with(runEffect(id = "account-session", cancelInFlight = true) {
                 send -> client.sessions().collect { send(Action.SessionChanged(it)) }
             })
-            Action.Open -> state.copy(presented = true, page = if (state.session == null) Page.WELCOME else Page.ACCOUNT, failure = null, notice = null).only()
+            Action.Open -> state.copy(presented = true, page = Page.PROFILE, failure = null, notice = null).only()
             Action.Close -> if (state.busy) state.only() else state.copy(presented = false, password = "", confirmation = "").only()
-            is Action.Navigate -> if (state.busy) state.only() else state.copy(page = action.page, password = "", confirmation = "", failure = null, notice = null).only()
+            is Action.Navigate -> if (state.busy) state.only() else state.copy(page = action.page, password = "", confirmation = "", failure = null, notice = null,
+                displayName = if(action.page == Page.EDIT_NAME) state.session?.displayName.orEmpty() else state.displayName,
+                email = if(action.page == Page.CHANGE_EMAIL) "" else state.email).only()
+            is Action.DisplayName -> state.copy(displayName = action.value.take(80), failure = null).only()
             is Action.Email -> state.copy(email = action.value, failure = null).only()
             is Action.Password -> state.copy(password = action.value, failure = null).only()
             is Action.Confirmation -> state.copy(confirmation = action.value, failure = null).only()
             is Action.SessionChanged -> state.copy(session = action.session,
+                password = if (action.session == null && !state.busy) "" else state.password,
+                confirmation = if (action.session == null && !state.busy) "" else state.confirmation,
                 verificationSent = state.verificationSent && state.session?.id == action.session?.id,
-                page = if (!state.busy && state.page == Page.ACCOUNT && action.session == null) Page.WELCOME else state.page).only()
+                page = if (!state.busy && state.page in listOf(Page.ACCOUNT,Page.DELETE,Page.EDIT_NAME,Page.CHANGE_EMAIL) && action.session == null) Page.PROFILE else state.page).only()
             is Action.Perform -> {
                 if (state.busy || action.operation == Operation.VERIFY && state.verificationSent) return@Reducer state.only()
                 val op = action.operation
-                val failure = if (op in listOf(Operation.SIGN_IN, Operation.REGISTER, Operation.RESET))
+                val failure = if (op in listOf(Operation.SIGN_IN, Operation.REGISTER, Operation.RESET, Operation.CHANGE_EMAIL))
                     AccountValidation.validate(state.email, state.password, state.confirmation.takeIf { op == Operation.REGISTER }, op == Operation.RESET)
+                    else if (op == Operation.UPDATE_NAME && state.displayName.isBlank()) AccountFailure.nameRequired
+                    else if (op in listOf(Operation.CHANGE_EMAIL,Operation.RESET_CURRENT_PASSWORD) && state.session?.hasPassword != true) AccountFailure.credentials
                     else if (op == Operation.DELETE && state.session?.isAnonymous == false && state.password.isEmpty()) AccountFailure.passwordRequired else null
+                if (op == Operation.CHANGE_EMAIL && state.session?.hasPassword != true) return@Reducer state.copy(failure = AccountFailure.credentials).only()
                 if (failure != null) return@Reducer state.copy(failure = failure, notice = null).only()
                 state.copy(busy = true, failure = null, notice = null).with(runEffect { send ->
                     try {
@@ -65,6 +74,9 @@ object AccountFeature {
                             Operation.SIGN_IN -> client.signIn(AccountValidation.email(state.email), state.password)
                             Operation.REGISTER -> client.register(AccountValidation.email(state.email), state.password)
                             Operation.ANONYMOUS -> client.anonymous()
+                            Operation.UPDATE_NAME -> client.updateName(state.displayName.trim())
+                            Operation.CHANGE_EMAIL -> { client.changeEmail(AccountValidation.email(state.email), state.password); null }
+                            Operation.RESET_CURRENT_PASSWORD -> { client.resetPassword(state.session?.email.orEmpty()); null }
                             Operation.RESET -> { client.resetPassword(AccountValidation.email(state.email)); null }
                             Operation.VERIFY -> { client.sendVerification(); null }
                             Operation.REFRESH -> client.refresh()
@@ -86,11 +98,14 @@ object AccountFeature {
                     }
                 )
                 when (action.operation) {
-                    Operation.SIGN_IN, Operation.REGISTER, Operation.REFRESH -> clean.copy(session = action.session, page = if (action.session == null) Page.WELCOME else Page.ACCOUNT)
+                    Operation.SIGN_IN, Operation.REGISTER -> clean.copy(session = action.session, page = Page.PROFILE)
+                    Operation.REFRESH -> clean.copy(session = action.session, page = if(action.session == null) Page.PROFILE else state.page)
+                    Operation.UPDATE_NAME -> clean.copy(session = action.session, page = Page.ACCOUNT, notice = "nameUpdated")
+                    Operation.CHANGE_EMAIL -> clean.copy(page = Page.ACCOUNT, notice = "emailChangeSent")
                     Operation.ANONYMOUS -> clean.copy(session = action.session, presented = false)
-                    Operation.RESET -> clean.copy(notice = "resetSent")
+                    Operation.RESET, Operation.RESET_CURRENT_PASSWORD -> clean.copy(notice = "resetSent")
                     Operation.VERIFY -> clean.copy(verificationSent = true, notice = "verificationSent")
-                    Operation.SIGN_OUT, Operation.DELETE -> clean.copy(session = null, page = Page.WELCOME, email = "", verificationSent = false, notice = "deleted".takeIf { action.operation == Operation.DELETE })
+                    Operation.SIGN_OUT, Operation.DELETE -> clean.copy(session = null, page = Page.PROFILE, email = "", verificationSent = false, notice = "deleted".takeIf { action.operation == Operation.DELETE })
                 }.only()
             }
             is Action.Failed -> state.copy(busy = false, failure = action.failure, password = "", confirmation = "").only()

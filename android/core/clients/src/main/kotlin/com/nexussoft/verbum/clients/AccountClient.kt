@@ -14,4 +14,6 @@ interface AccountClient {
     suspend fun refresh(): AuthSession?
     suspend fun signOut()
     suspend fun deleteAccount(password: String)
+    suspend fun updateName(name: String): AuthSession
+    suspend fun changeEmail(email: String, password: String)
 }

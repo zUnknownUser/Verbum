@@ -81,7 +81,8 @@ object VoiceScript {
             is VoiceContext.Entity -> if (pt) "Vamos falar de ${context.detail.entity.name}. Pode perguntar." else "Let's talk about ${context.detail.entity.name}. Ask away."
             is VoiceContext.Answer -> if (pt) "Li a resposta com você. Onde quer ir a partir daqui?" else "I've read the answer with you. Where would you like to go from here?"
         }
-        return VoiceConfiguration(lines.joinToString("\n\n"), opening, listOf(askTool, searchTool, openTool), "marin", language.tag)
+        val instructions = lines.joinToString("\n\n").toByteArray(Charsets.UTF_8).let { it.copyOf(minOf(it.size, 15_996)).toString(Charsets.UTF_8) }
+        return VoiceConfiguration(instructions, opening, listOf(askTool, searchTool, openTool), "marin", language.tag)
     }
 
     /** Runs one tool for the model. Results are JSON text; references are given in English so the model can say them and hand them back to `open_passage`. */

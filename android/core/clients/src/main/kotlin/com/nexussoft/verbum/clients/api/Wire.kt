@@ -20,7 +20,7 @@ import kotlinx.serialization.Serializable
 private fun malformed(what: String): Nothing = throw IllegalArgumentException("not in the contract: $what")
 
 @Serializable
-internal data class WireProblem(val code: String, val message: String = "")
+internal data class WireProblem(val code: String, val message: String = "", val retryAt: String? = null)
 
 @Serializable
 internal data class WirePassageReference(val bookId: String, val chapter: Int, val verseStart: Int? = null, val verseEnd: Int? = null) {
@@ -139,18 +139,24 @@ internal data class WireAskResponse(
     val sourceReferences: List<WireSourceReference>,
     val confidence: String,
     val interpretiveVariance: Boolean,
+    val fallback: WireAvailability? = null,
 ) {
     fun toModel() = ScriptureAnswer(
         answer, summary, passageReferences.map { it.toModel() }, entityReferences, sourceReferences.map { it.toModel() },
         ScriptureAnswer.Confidence.fromWireValue(confidence) ?: malformed("confidence $confidence"), interpretiveVariance,
+        fallback?.let { com.nexussoft.verbum.models.UsageRestriction(it.code, it.retryAt) },
     )
 }
 
 @Serializable
-internal data class WireRealtimeSession(val clientSecret: String, val expiresAt: Long, val model: String)
+internal data class WireRealtimeSession(val clientSecret: String, val expiresAt: Long, val model: String, val relayPath: String? = null, val maxDurationSeconds: Int? = null)
 
 @Serializable
 internal data class WireSpeechRequest(val text: String, val language: String, val revision: String? = null)
 
 @kotlinx.serialization.Serializable
 internal data class WireSpeechConfiguration(val version: String)
+
+@Serializable internal data class WireUsageStatus(val plan:String, val resetsAt:String, val remaining:Map<String,Int>, val voiceSeconds:Int, val restricted:Boolean)
+
+@Serializable internal data class WireAvailability(val code: String, val retryAt: String? = null)

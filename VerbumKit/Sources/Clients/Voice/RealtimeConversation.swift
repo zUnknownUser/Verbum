@@ -75,7 +75,7 @@ public actor RealtimeConversation {
         components.queryItems = [URLQueryItem(name: "model", value: session.model)]
         let frames: AsyncThrowingStream<String, Error>
         do {
-            frames = try await transport.connect(url: components.url!, headers: ["Authorization": "Bearer \(session.clientSecret)"])
+            frames = try await transport.connect(url: session.relayURL ?? components.url!, headers: ["Authorization": "Bearer \(session.clientSecret)"])
         } catch {
             throw VoiceError.networkUnavailable
         }
@@ -178,6 +178,8 @@ public actor RealtimeConversation {
         case "response.output_item.done":
             if let item = event["item"] as? [String: Any] { await runFunctionCall(item, tools: tools) }
 
+        case "verbum.limit":
+            await finish(with: .failed(.limited(.init(code: event["code"] as? String ?? "quota_exceeded", retryAt: event["retryAt"] as? String))))
         case "response.done":
             responseActive = false
             if speaking {

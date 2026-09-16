@@ -106,6 +106,9 @@ struct ChapterReaderView: View {
                 .presentationDragIndicator(.visible)
                 .presentationBackground(.regularMaterial)
         }
+        .onChange(of: store.chapters[ReaderCanon.key(store.reference)]?.first?.id, initial: true) { _, id in
+            if id != nil { store.send(.recordReading) }
+        }
         .task { await store.send(.task).finish() }
     }
 }

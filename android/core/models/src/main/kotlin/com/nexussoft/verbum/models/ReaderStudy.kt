@@ -4,7 +4,7 @@ enum class ReadingMode { PAGES, CONTINUOUS }
 enum class HighlightStyle { BACKGROUND, UNDERLINE, MARGIN }
 enum class HighlightColor { GOLD, SAGE, ROSE }
 
-data class ReaderAnnotation(val reference: PassageReference, val highlight: HighlightColor? = null, val note: String = "", val highlightStyle: HighlightStyle? = null) {
+data class ReaderAnnotation(val reference: PassageReference, val highlight: HighlightColor? = null, val note: String = "", val highlightStyle: HighlightStyle? = null, val bookmarked: Boolean = false) {
     val id: String get() = "${reference.bookId}.${reference.chapter}.${reference.verses?.first ?: 1}"
 }
 object ReaderCanon {
