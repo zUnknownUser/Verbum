@@ -32,6 +32,7 @@ import Testing
         let signedAPI = VerbumAPI(baseURL: base, transport: script.transport, cache: cache, tokenProvider: { await tokens.token($0) })
         _ = try await signedAPI.search("David")
         #expect(script.requests.count == 2)
+        #expect(script.requests[1].value(forHTTPHeaderField: "X-Verbum-Installation")?.isEmpty == false)
         #expect(await tokens.requests == [false])
         #expect(script.requests[1].value(forHTTPHeaderField: "Authorization") == "Bearer test-id-token")
     }

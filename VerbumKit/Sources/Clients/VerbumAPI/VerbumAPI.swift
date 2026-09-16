@@ -68,7 +68,10 @@ public struct VerbumAPI: Sendable {
         }
         var request = URLRequest(url: url, timeoutInterval: Self.requestTimeout)
         request.setValue("application/json", forHTTPHeaderField: "Accept")
-        if let token { request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization") }
+        if let token {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            request.setValue(Self.installationID, forHTTPHeaderField: "X-Verbum-Installation")
+        }
         let data: Data
         do {
             data = try await send(request)

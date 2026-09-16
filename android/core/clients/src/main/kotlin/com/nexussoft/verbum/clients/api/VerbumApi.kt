@@ -322,7 +322,7 @@ class VerbumApi(
         val cacheKey = url + if (path == "/v1/search") (if (token == null) "#lexical" else "#semantic") else ""
         cache.read(cacheKey)?.let { hit -> if (now() - hit.storedAt < FRESH_FOR_MS) return decode(hit.body, strategy) }
         val body = try {
-            send(HttpRequest("GET", url, headers = token?.let { mapOf("Authorization" to "Bearer $it") } ?: emptyMap()))
+            send(HttpRequest("GET", url, headers = token?.let { mapOf("Authorization" to "Bearer $it", "X-Verbum-Installation" to installationId) } ?: emptyMap()))
         } catch (e: VerbumApiException.NetworkUnavailable) {
             val stale = cache.read(cacheKey) ?: throw e
             return decode(stale.body, strategy)

@@ -1,6 +1,6 @@
 # Controle de custos e planos
 
-Implementação de 16/09/2026. A política é aplicada pelo backend e compartilhada entre réplicas via PostgreSQL. O aplicativo informa a identidade Firebase e um identificador de instalação; não escolhe seu plano, suas cotas nem o orçamento. O deploy é rastreado em `backend/DEPLOY.md`; atualizações dos apps são distribuídas separadamente.
+Implementação de 16/09/2026. A política é aplicada pelo backend e compartilhada entre réplicas via PostgreSQL. O aplicativo informa a identidade Firebase e um identificador de instalação; não escolhe seu plano, suas cotas nem o orçamento. O deploy está registrado em [DEPLOYMENT_2026-09-16.md](DEPLOYMENT_2026-09-16.md); atualizações dos apps são distribuídas separadamente.
 
 ## Política inicial
 

@@ -36,6 +36,7 @@ class ApiAuthorizationTest {
         val tokenRequests = mutableListOf<Boolean>()
         VerbumApi(base, transport, cache, tokenProvider = { tokenRequests += it; "test-id-token" }).search("David")
         assertEquals(2, calls.size)
+        kotlin.test.assertTrue(calls[1].headers["X-Verbum-Installation"]?.isNotBlank() == true)
         assertEquals(listOf(false), tokenRequests)
         assertEquals("Bearer test-id-token", calls[1].headers["Authorization"])
     }
