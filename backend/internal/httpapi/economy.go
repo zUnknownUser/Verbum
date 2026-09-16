@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"strconv"
 	"time"
-	"unicode/utf8"
 	"verbum/backend/internal/ask"
 	"verbum/backend/internal/domain"
 	"verbum/backend/internal/store"
@@ -112,6 +111,9 @@ func (e economicSpeech) run(ctx context.Context, input tts.Request, timed bool) 
 	}
 	raw, _ := json.Marshal(input)
 	key := usage.Hash(string(raw), strconv.FormatBool(timed))
+	if input.IsGemini() {
+		key = usage.Hash(tts.EconomicIdentity(input), strconv.FormatBool(timed))
+	}
 	if err = e.usage.Bind(ctx, idempotency(ctx), usage.Hash("tts", key)); err != nil {
 		return empty, err
 	}
@@ -122,7 +124,7 @@ func (e economicSpeech) run(ctx context.Context, input tts.Request, timed bool) 
 			return v, nil
 		}
 	}
-	cost := int64(utf8.RuneCountInString(input.Text)) * 30
+	cost := tts.EstimateCost(input, timed)
 	data, err := e.usage.Do(ctx, usage.Operation{Kind: "tts", Key: key, Estimate: cost, Permanent: true}, func(ctx context.Context) ([]byte, error) {
 		usage.Attempt(ctx)
 		var result tts.TimedAudio
@@ -140,7 +142,9 @@ func (e economicSpeech) run(ctx context.Context, input tts.Request, timed bool) 
 		if err != nil {
 			return nil, err
 		}
-		usage.Record(ctx, cost)
+		if !input.IsGemini() {
+			usage.Record(ctx, cost)
+		}
 		return json.Marshal(result)
 	})
 	if err != nil {

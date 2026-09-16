@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"verbum/backend/internal/usage"
 )
 
 // Timings describe measured audio excerpts, never estimates from character counts.
@@ -32,6 +33,7 @@ type TimedAudio struct {
 type speechPart struct {
 	text        string
 	first, last int
+	style       string
 }
 
 func validateVerses(input Request) error {
@@ -71,7 +73,7 @@ func timedParts(verses []Verse) []speechPart {
 		}
 		if len(v.Text) > segmentBytes {
 			for _, p := range splitText(v.Text) {
-				result = append(result, speechPart{p, v.Number, v.Number})
+				result = append(result, speechPart{text: p, first: v.Number, last: v.Number})
 			}
 			continue
 		}
@@ -146,7 +148,7 @@ func (s *TextToSpeechService) SynthesizeTimed(ctx context.Context, input Request
 		return empty, ErrUnavailable
 	}
 	defer os.RemoveAll(dir)
-	parts := timedParts(input.Verses)
+	parts := input.speechParts()
 	names, durations, err := s.timedWaves(ctx, input, dir, parts)
 	if err != nil {
 		return empty, err
@@ -186,6 +188,16 @@ func (s *TextToSpeechService) SynthesizeTimed(ctx context.Context, input Request
 		if writeErr != nil || closeErr != nil || os.Rename(f.Name(), path) != nil {
 			return empty, ErrUnavailable
 		}
+	}
+	if input.IsGemini() {
+		var cost int64
+		for i, p := range parts {
+			segment := input
+			segment.Text = p.text
+			segment.style = p.style
+			cost += segment.measuredCost(durations[i])
+		}
+		usage.Record(ctx, cost)
 	}
 	return result, nil
 }
@@ -253,6 +265,7 @@ func (s *TextToSpeechService) timedWaves(ctx context.Context, input Request, dir
 				}
 				segment := input
 				segment.Text = parts[i].text
+				segment.style = parts[i].style
 				segment.Verses = nil
 				audio, err := s.synthesizeSegment(ctx, segment, "LINEAR16")
 				if err != nil {
@@ -260,7 +273,7 @@ func (s *TextToSpeechService) timedWaves(ctx context.Context, input Request, dir
 					return
 				}
 				duration, err := waveDuration(audio)
-				if err != nil || duration <= crossfadeSeconds {
+				if err != nil || duration <= crossfadeSeconds || (input.IsGemini() && duration >= 655) {
 					fail(ErrResponse)
 					return
 				}

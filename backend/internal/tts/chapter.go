@@ -13,6 +13,7 @@ import (
 	"strings"
 	"unicode"
 	"unicode/utf8"
+	"verbum/backend/internal/usage"
 )
 
 const maxAudioBytes = 64 << 20
@@ -28,10 +29,11 @@ const maxAudioBytes = 64 << 20
 const crossfadeSeconds = 0.06
 
 // splitText preserves every UTF-8 byte, preferring sentence and word boundaries.
-func splitText(text string) []string {
+func splitText(text string) []string { return splitTextAt(text, segmentBytes) }
+func splitTextAt(text string, limit int) []string {
 	var parts []string
-	for len(text) > segmentBytes {
-		end := segmentBytes
+	for len(text) > limit {
+		end := limit
 		for !utf8.RuneStart(text[end]) {
 			end--
 		}
@@ -73,7 +75,11 @@ func AudioVersion(language string) (string, error) {
 
 func cacheKey(input Request) string {
 	raw, _ := json.Marshal(input)
-	hash := sha256.Sum256(append([]byte(audioRevision+"\n"), raw...))
+	revision := audioRevision
+	if input.IsGemini() {
+		revision += "\n" + narrationRevision() + fmt.Sprintf("\n%s/%d/%s", input.literaryBook, input.literaryChapter, input.style)
+	}
+	hash := sha256.Sum256(append([]byte(revision+"\n"), raw...))
 	return hex.EncodeToString(hash[:]) + ".mp3"
 }
 
@@ -153,8 +159,8 @@ func (s *TextToSpeechService) Synthesize(ctx context.Context, input Request) ([]
 }
 
 func (s *TextToSpeechService) generate(ctx context.Context, input Request) ([]byte, error) {
-	parts := splitText(input.Text)
-	if len(parts) == 1 {
+	parts := input.textParts()
+	if len(parts) == 1 && !input.IsGemini() {
 		return s.synthesizeSegment(ctx, input, "MP3")
 	}
 	if s.ffmpeg == "" {
@@ -166,6 +172,7 @@ func (s *TextToSpeechService) generate(ctx context.Context, input Request) ([]by
 	}
 	defer os.RemoveAll(dir)
 	var names []string
+	var cost int64
 	for i, part := range parts {
 		if strings.TrimSpace(part) == "" {
 			continue
@@ -174,6 +181,13 @@ func (s *TextToSpeechService) generate(ctx context.Context, input Request) ([]by
 		audio, err := s.synthesizeSegment(ctx, input, "LINEAR16")
 		if err != nil {
 			return nil, err
+		}
+		if input.IsGemini() {
+			duration, err := waveDuration(audio)
+			if err != nil || duration >= 655 {
+				return nil, ErrResponse
+			}
+			cost += input.measuredCost(duration)
 		}
 		name := fmt.Sprintf("%04d.wav", i)
 		if os.WriteFile(filepath.Join(dir, name), audio, 0600) != nil {
@@ -184,7 +198,11 @@ func (s *TextToSpeechService) generate(ctx context.Context, input Request) ([]by
 	if len(names) == 0 {
 		return nil, ErrResponse
 	}
-	return s.encodeChapter(ctx, dir, names)
+	audio, err := s.encodeChapter(ctx, dir, names)
+	if err == nil && input.IsGemini() {
+		usage.Record(ctx, cost)
+	}
+	return audio, err
 }
 
 func (s *TextToSpeechService) encodeChapter(ctx context.Context, dir string, names []string) ([]byte, error) {
@@ -228,6 +246,8 @@ func (s *TextToSpeechService) encodeChapter(ctx context.Context, dir string, nam
 
 // Prepare normalizes identity after a trusted chapter resolver validated the input.
 func Prepare(input Request) (Request, error) {
+	input.literaryBook = input.BookID
+	input.literaryChapter = input.Chapter
 	input.BookID = ""
 	input.Chapter = 0
 	input.Translation = ""

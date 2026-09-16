@@ -1,0 +1,37 @@
+# Narração bíblica — Gemini 2.5 Pro TTS
+
+Implementação: Google Cloud Text-to-Speech (`gemini-2.5-pro-tts`), voz masculina **Charon**, português brasileiro. A escolha do timbre é inicial: a avaliação auditiva fica com Lucas. Nenhuma geração real de áudio foi executada nesta implementação.
+
+## Direção editorial
+
+`backend/internal/tts/narration.go` contém a direção geral e seis perfis: narrativa, contemplação/poesia, sabedoria, ensino, profecia e diálogo. Ritmo e expressividade orientam o prompt; velocidade de reprodução continua no dispositivo. A direção é enviada em `input.prompt`, separada de `input.text`, com instrução de leitura integral, sem comentários, música ou representação de personagens.
+
+Os padrões por livro são complementados por exceções de capítulo e intervalo de versículos. João 1:1–18 é contemplativo, João 1:19 em diante e João 11 são narrativos; João 3:1–21 recebe direção de diálogo. Romanos 8 é ensino; Salmo 23 é contemplativo. Mateus 5–7 e Daniel 1–6 têm exceções iniciais. É um conjunto editorial inicial, não uma classificação exaustiva de todas as passagens. Não existe chamada de IA para classificar a cada Play.
+
+O texto canônico é validado antes de selecionar contexto. O cliente não pode enviar modelo, prompt ou perfil. Trechos sincronizados respeitam mudanças editoriais e até 3.800 bytes, mantendo versículos inteiros sempre que possível. Isso dá mais contexto ao narrador e reduz reinícios; os indicadores de leitura acompanham grupos de versículos, não alinhamento palavra por palavra. Trechos com versículos individuais enormes ainda são divididos sem perder bytes. Requisições antigas sem lista de versículos usam a direção inicial do capítulo.
+
+## Cache e custo
+
+Modelo, voz, prompt, versão editorial, perfis, exceções e segmentação compõem a identidade da narração. A mudança atual invalida os áudios portugueses antigos no manifesto dos dispositivos, no disco do backend e no cache permanente do PostgreSQL. A atualização do manifesto pode levar até uma hora nos clientes; offline eles podem continuar com o último áudio conhecido. Áudios antigos não são apagados. Inglês mantém sua voz e identidade anteriores.
+
+Os áudios novos são gerados sob demanda e reutilizados; não há regeneração em massa da Bíblia. Uma mudança editorial futura invalida a versão portuguesa inteira nesta primeira implementação; a geração continua apenas sob demanda.
+
+Preço de referência: US$ 1/milhão de tokens de entrada e US$ 20/milhão de tokens de áudio (25 tokens por segundo). A reserva cobre o máximo documentado de 16.384 tokens de saída por trecho, mais os bytes de entrada como limite conservador de tokens, incluindo cada repetição do prompt. Sucesso é contabilizado por duração WAV medida antes de junções e arredondamento de tokens, mais a estimativa conservadora de entrada. Não é uma reprodução exata da fatura do Google. Falhas, timeout e cancelamento conservam a reserva inteira.
+
+O orçamento global existente de US$ 5/dia não foi aumentado. A reserva temporária é deliberadamente maior que o custo típico; capítulos extensos ou pouco saldo disponível podem impedir uma geração nova. Cache existente continua disponível. Sem novas cotas diárias por usuário para ouvir narração. Mantidos idempotência, serialização global e ausência de retries pagos automáticos.
+
+Cada chamada tem timeout de 180 segundos; capítulo completo continua limitado a 10 minutos. WAV com duração próxima do limite de truncamento de 655 segundos é rejeitado antes de publicar. Validação de formato/duração não comprova fidelidade verbal: a escuta editorial é necessária para avaliar a narração generativa.
+
+## Ativação e rollback
+
+`VERBUM_TTS_NARRATOR=gemini` ativa o novo narrador (também é o padrão sem variável). `VERBUM_TTS_NARRATOR=chirp3` conserva o narrador anterior e seu cache. Não há fallback pago automático entre modelos.
+
+A conta `verbum-tts@verbum-app1.iam.gserviceaccount.com` precisa de `aiplatform.endpoints.predict`, normalmente via `roles/aiplatform.user`, no projeto **verbum-app1**. A credencial atual não consegue ativar Cloud Resource Manager, que está desativado, portanto a consulta IAM não pôde ser concluída. O proprietário pediu a ativação imediata. `VERBUM_TTS_NARRATOR=gemini` foi configurado para o deploy. A consulta IAM não foi concluída. Um preflight deliberadamente sem texto retornou HTTP 400 “Please provide text to synthesize”, sem gerar áudio; isso não comprova a permissão de uma síntese real. A primeira geração e a escuta continuam a cargo de Lucas.
+
+## Validação
+
+Testes Go com race detector; testes de contrato HTTP com servidor simulado; perfis e limites por passagem; versão do cache; reserva por todos os segmentos; montagem MP3, duração dos indicadores e cache em container com FFmpeg e rede desativada. WAVs sintéticos de silêncio, sem Google, custo ou avaliação auditiva.
+
+Referências consultadas em 16/09/2026:
+- https://docs.cloud.google.com/text-to-speech/docs/gemini-tts
+- https://cloud.google.com/text-to-speech/pricing

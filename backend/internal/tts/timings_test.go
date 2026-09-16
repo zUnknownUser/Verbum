@@ -34,7 +34,7 @@ func TestTimedSpeechUsesMeasuredDurationsAndPersistentCache(t *testing.T) {
 	s.ffmpeg = ffmpeg
 	s.cacheDir = t.TempDir()
 	verses := []Verse{{1, "Primeiro."}, {2, "Segundo."}, {3, "Terceiro."}, {4, "Quarto."}}
-	input := Request{Text: "Primeiro.\nSegundo.\nTerceiro.\nQuarto.", Language: "pt-BR", Verses: verses}
+	input := Request{Text: "Primeiro.\nSegundo.\nTerceiro.\nQuarto.", Language: "pt-BR", Voice: "pt-BR-Chirp3-HD-Aoede", Verses: verses}
 	got, err := s.SynthesizeTimed(context.Background(), input)
 	if err != nil {
 		t.Fatal(err)
@@ -72,7 +72,7 @@ func TestTimedSpeechUsesMeasuredDurationsAndPersistentCache(t *testing.T) {
 func TestTimedSpeechRejectsMismatchedTextBeforeProvider(t *testing.T) {
 	s := testService(t, func(http.ResponseWriter, *http.Request) { t.Fatal("provider must not be called") })
 	for _, verses := range [][]Verse{{{1, "other"}}, {{2, "A"}, {1, "B"}}, {{177, "A"}}} {
-		_, err := s.SynthesizeTimed(context.Background(), Request{Text: "A", Language: "pt-BR", Verses: verses})
+		_, err := s.SynthesizeTimed(context.Background(), Request{Text: "A", Language: "pt-BR", Voice: "pt-BR-Chirp3-HD-Aoede", Verses: verses})
 		if !errors.Is(err, ErrInvalidInput) {
 			t.Fatalf("accepted invalid input: %v", err)
 		}

@@ -45,7 +45,7 @@ func TestSynthesize(t *testing.T) {
 				}
 				json.NewEncoder(w).Encode(map[string][]byte{"audioContent": []byte("ID3audio")})
 			})
-			audio, err := service.Synthesize(context.Background(), Request{Text: "  Texto exato.\n", Language: language})
+			audio, err := service.Synthesize(context.Background(), Request{Text: "  Texto exato.\n", Language: language, Voice: language + map[string]string{"pt-BR": "-Chirp3-HD-Aoede", "en-US": "-Standard-A"}[language]})
 			if err != nil || string(audio) != "ID3audio" {
 				t.Fatalf("audio %q err %v", audio, err)
 			}
@@ -84,7 +84,7 @@ func TestInvalidRequestsNeverCallGoogle(t *testing.T) {
 			t.Errorf("expected invalid input, got %v", err)
 		}
 	}
-	if _, err := (Request{Text: strings.Repeat("á", 2500), Language: "pt-BR"}).normalized(); err != nil {
+	if _, err := (Request{Text: strings.Repeat("á", 2500), Language: "pt-BR", Voice: "pt-BR-Chirp3-HD-Aoede"}).normalized(); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -95,7 +95,7 @@ func TestProviderErrors(t *testing.T) {
 			w.WriteHeader(status)
 			w.Write([]byte(`{"error":{"message":"PRIVATE PROVIDER DETAIL"}}`))
 		})
-		_, err := service.Synthesize(context.Background(), Request{Text: "x", Language: "pt-BR"})
+		_, err := service.Synthesize(context.Background(), Request{Text: "x", Language: "pt-BR", Voice: "pt-BR-Chirp3-HD-Aoede"})
 		if !errors.Is(err, want) || strings.Contains(err.Error(), "PRIVATE") {
 			t.Errorf("status %d: %v", status, err)
 		}
@@ -105,7 +105,7 @@ func TestProviderErrors(t *testing.T) {
 func TestMalformedProviderResponses(t *testing.T) {
 	for _, body := range []string{`{}`, `{"audioContent":""}`, `{"audioContent":"bad base64"}`, `not json`, strings.Repeat(" ", maxResponseBytes+1)} {
 		service := testService(t, func(w http.ResponseWriter, r *http.Request) { w.Write([]byte(body)) })
-		if _, err := service.Synthesize(context.Background(), Request{Text: "x", Language: "pt-BR"}); !errors.Is(err, ErrResponse) {
+		if _, err := service.Synthesize(context.Background(), Request{Text: "x", Language: "pt-BR", Voice: "pt-BR-Chirp3-HD-Aoede"}); !errors.Is(err, ErrResponse) {
 			t.Errorf("want invalid response: %v", err)
 		}
 	}
@@ -122,11 +122,11 @@ func TestCancellationAndTimeout(t *testing.T) {
 	})
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel()
-	if _, err := service.Synthesize(ctx, Request{Text: "x", Language: "pt-BR"}); !errors.Is(err, context.Canceled) {
+	if _, err := service.Synthesize(ctx, Request{Text: "x", Language: "pt-BR", Voice: "pt-BR-Chirp3-HD-Aoede"}); !errors.Is(err, context.Canceled) {
 		t.Fatalf("cancel: %v", err)
 	}
 	service.client.Timeout = 20 * time.Millisecond
-	if _, err := service.Synthesize(context.Background(), Request{Text: "x", Language: "pt-BR"}); !errors.Is(err, ErrTimeout) {
+	if _, err := service.Synthesize(context.Background(), Request{Text: "x", Language: "pt-BR", Voice: "pt-BR-Chirp3-HD-Aoede"}); !errors.Is(err, ErrTimeout) {
 		t.Fatalf("timeout: %v", err)
 	}
 }

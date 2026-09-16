@@ -49,17 +49,20 @@ var (
 // Request identifies a cached chapter by exact supplied text (translation-sensitive),
 // language, resolved voice, speed, pitch and format, with a provider/version namespace.
 type Request struct {
-	BookID      string   `json:"bookId,omitempty"`
-	Chapter     int      `json:"chapter,omitempty"`
-	Translation string   `json:"translation,omitempty"`
-	Verses      []Verse  `json:"verses,omitempty"`
-	Revision    string   `json:"revision,omitempty"`
-	Text        string   `json:"text"`
-	Language    string   `json:"language"`
-	Voice       string   `json:"voice,omitempty"`
-	Speed       *float64 `json:"speed,omitempty"`
-	Pitch       float64  `json:"pitch,omitempty"`
-	Format      string   `json:"format,omitempty"`
+	literaryBook    string
+	literaryChapter int
+	style           string
+	BookID          string   `json:"bookId,omitempty"`
+	Chapter         int      `json:"chapter,omitempty"`
+	Translation     string   `json:"translation,omitempty"`
+	Verses          []Verse  `json:"verses,omitempty"`
+	Revision        string   `json:"revision,omitempty"`
+	Text            string   `json:"text"`
+	Language        string   `json:"language"`
+	Voice           string   `json:"voice,omitempty"`
+	Speed           *float64 `json:"speed,omitempty"`
+	Pitch           float64  `json:"pitch,omitempty"`
+	Format          string   `json:"format,omitempty"`
 }
 
 func (r Request) normalized() (Request, error) {
@@ -79,12 +82,9 @@ func (r Request) normalized() (Request, error) {
 		return r, fmt.Errorf("%w: language must be pt-BR or en-US", ErrInvalidInput)
 	}
 	if r.Voice == "" {
-		r.Voice = r.Language + "-Standard-A"
-		if r.Language == "pt-BR" {
-			r.Voice = "pt-BR-Chirp3-HD-Aoede"
-		}
+		r.Voice = DefaultVoice(r.Language)
 	}
-	if !strings.HasPrefix(r.Voice, r.Language+"-") || len(r.Voice) > 128 || strings.ContainsAny(r.Voice, " \t\r\n") {
+	if (!r.IsGemini() && !strings.HasPrefix(r.Voice, r.Language+"-")) || len(r.Voice) > 128 || strings.ContainsAny(r.Voice, " \t\r\n") {
 		return r, fmt.Errorf("%w: voice must match language", ErrInvalidInput)
 	}
 	if r.Speed == nil {
@@ -99,6 +99,9 @@ func (r Request) normalized() (Request, error) {
 	}
 	if strings.Contains(r.Voice, "-Chirp3-HD-") && r.Pitch != 0 {
 		return r, fmt.Errorf("%w: pitch must be omitted or zero for Chirp 3 HD", ErrInvalidInput)
+	}
+	if r.IsGemini() && (r.Pitch != 0 || *r.Speed != 1) {
+		return r, fmt.Errorf("%w: Gemini narration uses device playback speed and no pitch override", ErrInvalidInput)
 	}
 	if r.Format == "" {
 		r.Format = "MP3"
@@ -121,12 +124,15 @@ type TextToSpeechService struct {
 // New uses ADC, including GOOGLE_APPLICATION_CREDENTIALS. The token source must
 // have a process-lifetime context: cancelling a startup context would break refresh.
 func New() (*TextToSpeechService, error) {
+	if v := os.Getenv("VERBUM_TTS_NARRATOR"); v != "" && v != "gemini" && v != "chirp3" {
+		return nil, ErrUnavailable
+	}
 	authContext := context.WithValue(context.Background(), oauth2.HTTPClient, &http.Client{Timeout: 10 * time.Second})
 	client, err := google.DefaultClient(authContext, "https://www.googleapis.com/auth/cloud-platform")
 	if err != nil {
 		return nil, ErrCredentials
 	}
-	client.Timeout = 60 * time.Second
+	client.Timeout = 180 * time.Second
 	cacheDir := os.Getenv("VERBUM_TTS_CACHE_DIR")
 	if cacheDir == "" {
 		base, err := os.UserCacheDir()
@@ -161,9 +167,20 @@ func (s *TextToSpeechService) synthesizeSegment(ctx context.Context, input Reque
 	if encoding == "LINEAR16" {
 		config["sampleRateHertz"] = 24000
 	}
+	textInput := map[string]string{"text": input.Text}
+	voice := map[string]string{"languageCode": input.Language, "name": input.Voice}
+	if input.IsGemini() {
+		delete(config, "pitch")
+		delete(config, "speakingRate")
+		textInput["prompt"] = input.narrationPrompt()
+		voice["modelName"] = NarrationModel
+		if len(input.Text) > 4000 || len(textInput["prompt"]) > 4000 {
+			return nil, ErrInvalidInput
+		}
+	}
 	body, _ := json.Marshal(map[string]any{
-		"input":       map[string]string{"text": input.Text},
-		"voice":       map[string]string{"languageCode": input.Language, "name": input.Voice},
+		"input":       textInput,
+		"voice":       voice,
 		"audioConfig": config,
 	})
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, s.endpoint, bytes.NewReader(body))

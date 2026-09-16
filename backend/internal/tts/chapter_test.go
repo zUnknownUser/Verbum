@@ -51,7 +51,7 @@ func TestChirpOmitsPitch(t *testing.T) {
 		json.NewEncoder(w).Encode(map[string][]byte{"audioContent": []byte("mp3")})
 	})
 	speed := 0.9
-	input := Request{Text: "Texto", Language: "pt-BR", Speed: &speed}
+	input := Request{Text: "Texto", Language: "pt-BR", Voice: "pt-BR-Chirp3-HD-Aoede", Speed: &speed}
 	if _, err := s.Synthesize(context.Background(), input); err != nil {
 		t.Fatal(err)
 	}
@@ -68,7 +68,7 @@ func TestCacheConcurrentPersistentAndIdentity(t *testing.T) {
 		json.NewEncoder(w).Encode(map[string][]byte{"audioContent": []byte("complete mp3")})
 	})
 	s.cacheDir = t.TempDir()
-	input := Request{Text: "Capítulo exato", Language: "pt-BR"}
+	input := Request{Text: "Capítulo exato", Language: "pt-BR", Voice: "pt-BR-Chirp3-HD-Aoede"}
 	var group sync.WaitGroup
 	for i := 0; i < 12; i++ {
 		group.Add(1)
@@ -92,7 +92,7 @@ func TestCacheConcurrentPersistentAndIdentity(t *testing.T) {
 	if calls.Load() != 1 {
 		t.Fatal("cache not persistent or defaults inconsistent")
 	}
-	for _, r := range []Request{{Text: "Outra tradução", Language: "pt-BR"}, {Text: input.Text, Language: "pt-BR", Voice: "pt-BR-Chirp3-HD-Kore"}, {Text: input.Text, Language: "en-US"}} {
+	for _, r := range []Request{{Text: "Outra tradução", Language: "pt-BR", Voice: "pt-BR-Chirp3-HD-Aoede"}, {Text: input.Text, Language: "pt-BR", Voice: "pt-BR-Chirp3-HD-Kore"}, {Text: input.Text, Language: "en-US"}} {
 		if _, err := s.Synthesize(context.Background(), r); err != nil {
 			t.Fatal(err)
 		}
@@ -112,7 +112,7 @@ func TestFailureNotCachedAndCancelledWait(t *testing.T) {
 	var calls atomic.Int32
 	s := testService(t, func(w http.ResponseWriter, r *http.Request) { calls.Add(1); w.WriteHeader(503) })
 	s.cacheDir = t.TempDir()
-	input := Request{Text: "Texto", Language: "pt-BR"}
+	input := Request{Text: "Texto", Language: "pt-BR", Voice: "pt-BR-Chirp3-HD-Aoede"}
 	for i := 0; i < 2; i++ {
 		if _, err := s.Synthesize(context.Background(), input); !errors.Is(err, ErrUnavailable) {
 			t.Fatal(err)
@@ -177,7 +177,7 @@ func TestChapterContinuousMP3(t *testing.T) {
 	})
 	s.ffmpeg = ffmpeg
 	s.cacheDir = t.TempDir()
-	input := Request{Text: strings.Repeat("Leitura de teste. ", 350), Language: "pt-BR"}
+	input := Request{Text: strings.Repeat("Leitura de teste. ", 350), Language: "pt-BR", Voice: "pt-BR-Chirp3-HD-Aoede"}
 	audio, err := s.Synthesize(context.Background(), input)
 	if err != nil {
 		t.Fatal(err)

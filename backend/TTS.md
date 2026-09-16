@@ -1,5 +1,7 @@
 # Google Cloud TTS: continuous chapter audio
 
+> **Narração atual (16/09/2026):** [Gemini 2.5 Pro TTS e perfis editoriais](../docs/NARRACAO_GEMINI_2026-09-16.md). O restante desta página registra a implementação anterior de Chirp e não define o novo modelo, direção, segmentação ou preço.
+
 > Atualização de 16/09/2026: [COST_CONTROL.md](../docs/COST_CONTROL.md) define as cotas persistentes, planos, texto TTS canônico obrigatório e voz via relay. Exemplos antigos de texto livre não são aceitos pelo backend protegido.
 
 **Access update (2026-09-15):** `POST /v1/tts` now requires a Firebase ID token in

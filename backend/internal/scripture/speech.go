@@ -35,10 +35,7 @@ func (r *Resolver) Verify(ctx context.Context, in tts.Request) (tts.Request, err
 	if (in.Language != "pt-BR" || in.Translation != "por_blj") && (in.Language != "en-US" || in.Translation != "BSB") {
 		return invalid()
 	}
-	voice := "pt-BR-Chirp3-HD-Aoede"
-	if in.Language == "en-US" {
-		voice = "en-US-Standard-A"
-	}
+	voice := tts.DefaultVoice(in.Language)
 	// Playback speed belongs to the device player; it must not create a new paid artifact.
 	if (in.Voice != "" && in.Voice != voice) || (in.Speed != nil && *in.Speed != 1) || in.Pitch != 0 {
 		return invalid()
