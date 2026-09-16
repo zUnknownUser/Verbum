@@ -26,6 +26,7 @@ import (
 )
 
 type handlers struct {
+	playback *playbackHub
 	store    store.Store
 	now      func() time.Time
 	realtime realtimeBroker

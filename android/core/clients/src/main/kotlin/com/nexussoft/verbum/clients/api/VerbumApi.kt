@@ -309,6 +309,20 @@ class VerbumApi(
         return response.bytes to decodeAudioCues(header)
     }
 
+    suspend fun startSpeechPlayback(verses:List<com.nexussoft.verbum.models.BiblePassage>, revision:String?):String {
+        val body=json.encodeToString(WireTimedSpeech.serializer(),WireTimedSpeech(verses.first().bookId,verses.first().chapter,verses.first().translationId,verses.joinToString("\n"){it.text},"pt-BR",revision,verses.map{WireSpeechVerse(it.verseStart,it.text)}))
+        val path=post("/v1/tts/playback",body,SpeechPlaybackStart.serializer()).statusPath
+        playbackUrl(path)
+        return path
+    }
+    fun playbackUrl(path:String):String {
+        if(!Regex("/v1/tts/playback/[a-f0-9]{64}/(status|index\\.m3u8|chapter\\.mp3)").matches(path)) throw VerbumApiException.MalformedResponse
+        return url(path,emptyList())
+    }
+    suspend fun speechPlaybackStatus(path:String):SpeechPlaybackStatus =
+        decode(send(HttpRequest("GET",playbackUrl(path))),SpeechPlaybackStatus.serializer())
+    suspend fun speechPlaybackData(path:String):ByteArray = sendBinary(HttpRequest("GET",playbackUrl(path)))
+
     // ---- plumbing
 
     /**

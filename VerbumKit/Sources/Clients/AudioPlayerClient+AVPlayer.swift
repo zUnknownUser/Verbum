@@ -34,6 +34,7 @@ final class AVPlayerEngine {
     private var preferredRate: Float = 1
     private var commandsInstalled = false
     private var artwork: MPMediaItemArtwork?
+    private var reportedDuration: Double = -1
 
     nonisolated init() {}
 
@@ -49,7 +50,7 @@ final class AVPlayerEngine {
                 // current state; KVO only reports subsequent changes.
                 if let item = self.player.currentItem {
                     if item.status == .readyToPlay {
-                        let duration = item.duration.seconds
+                        let duration = self.playbackDuration(item)
                         continuation.yield(.ready(duration: duration.isFinite ? duration : 0))
                     } else if item.status == .failed {
                         continuation.yield(.failed)
@@ -74,7 +75,9 @@ final class AVPlayerEngine {
         await AudioSessionActivation.activate()
 
         teardownItemObservers()
+        reportedDuration = -1
         let item = AVPlayerItem(url: url)
+        if url.pathExtension == "m3u8" { item.preferredForwardBufferDuration = 3 }
         player.replaceCurrentItem(with: item)
 
         statusObservation = item.observe(\.status, options: [.initial, .new]) { [weak self] item, _ in
@@ -82,7 +85,7 @@ final class AVPlayerEngine {
                 guard let self, self.player.currentItem === item else { return }
                 switch item.status {
                 case .readyToPlay:
-                    let seconds = item.duration.seconds
+                    let seconds = self.playbackDuration(item)
                     self.continuation?.yield(.ready(duration: seconds.isFinite ? seconds : 0))
                 case .failed:
                     self.continuation?.yield(.failed)
@@ -100,9 +103,22 @@ final class AVPlayerEngine {
         timeObserver = player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1, preferredTimescale: 600), queue: .main) { [weak self] time in
             Task { @MainActor [weak self] in
                 guard let self, self.player.timeControlStatus == .playing, time.seconds.isFinite else { return }
+                if let item = self.player.currentItem {
+                    let duration = self.playbackDuration(item)
+                    if duration.isFinite, duration > 0, abs(duration - self.reportedDuration) > 0.2 {
+                        self.reportedDuration = duration
+                        self.continuation?.yield(.ready(duration: duration))
+                    }
+                }
                 self.continuation?.yield(.time(time.seconds))
             }
         }
+    }
+
+    private func playbackDuration(_ item: AVPlayerItem) -> Double {
+        let seconds = item.duration.seconds
+        if seconds.isFinite { return seconds }
+        return item.seekableTimeRanges.last.map { CMTimeRangeGetEnd($0.timeRangeValue).seconds } ?? 0
     }
 
     func play() {

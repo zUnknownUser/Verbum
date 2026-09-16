@@ -87,6 +87,66 @@ paths:
                   version: { type: string, pattern: '^[a-f0-9]{64}$' }
         '400':
           description: Unsupported or missing language.
+  /v1/tts/playback:
+    post:
+      security:
+        - FirebaseIDToken: []
+      tags: [tts]
+      operationId: startSpeechPlayback
+      summary: Start or join progressive chapter narration.
+      description: |
+        Validates canonical chapter text and uses the same TTS admission limits, global
+        reservation, idempotency and permanent audio cache as whole-file generation.
+        Returns a short-lived same-origin status capability immediately. Poll that path
+        without HTTP caching; quota/provider failures are returned by the status resource.
+        Only this authenticated POST can initiate generation. GET media cannot generate audio.
+        Active jobs are shared by canonical audio identity; 32 jobs per process, expiring after one hour.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SpeechRequest' }
+      responses:
+        '200':
+          description: Playback preparation accepted or already in progress.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [statusPath]
+                properties:
+                  statusPath: { type: string }
+        '400': { description: Invalid canonical chapter request. }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { description: App attestation required. }
+        '409': { description: Idempotency conflict. }
+        '429': { description: Request rate or playback capacity exceeded. }
+        '503': { description: Speech unavailable. }
+  /v1/tts/playback/{token}/{asset}:
+    get:
+      security: []
+      tags: [tts]
+      operationId: speechPlaybackMedia
+      summary: Read prepared HLS media or playback status using a one-hour capability.
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema: { type: string, pattern: '^[a-f0-9]{64}$' }
+        - name: asset
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: |
+            status returns ready, complete, playlistPath, audioPath and optional final MP3 cues.
+            index.m3u8 is an append-only EVENT playlist with EXT-X-ENDLIST only on success.
+            Listed TS segments contain AAC audio. chapter.mp3 is available only after completion.
+            Poll status/playlist without caching; never interpret partial media as a complete chapter.
+        '404': { description: Unknown or expired capability or unpublished asset. }
+        '429': { description: Budget, pending generation or read rate limit. }
+        '503': { description: Generation failed; incomplete chapter must not be cached. }
   /v1/tts:
     post:
       security:
@@ -102,7 +162,7 @@ paths:
         Automatically segments at 2200 bytes (below Google's 5000-byte limit) and returns one complete MP3,
         crossfading segment joins to avoid an audible seam, cached persistently by exact chapter text and
         normalized voice/audio settings.
-        Defaults to pt-BR-Chirp3-HD-Aoede for Portuguese and en-US-Standard-A for English.
+        Defaults to Gemini 2.5 Pro TTS / Charon for Portuguese; optional chirp3 rollback uses pt-BR-Chirp3-HD-Aoede. English uses en-US-Standard-A.
         Speed defaults to 1.0; pitch must be omitted or zero for Chirp 3 HD.
         Generation can take up to 10 minutes; no response audio is sent until complete.
         Voice availability and support for speed/pitch depend on Google; invalid combinations

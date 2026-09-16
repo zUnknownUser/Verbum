@@ -2,6 +2,7 @@ package tts
 
 import (
 	"errors"
+	"strings"
 	"testing"
 )
 
@@ -40,5 +41,17 @@ func TestRollbackAcceptsRecentlyPublishedGeminiManifest(t *testing.T) {
 	r, err := (Request{Text: "passage", Language: "pt-BR", Revision: previous}).normalized()
 	if err != nil || r.Voice != "pt-BR-Chirp3-HD-Aoede" {
 		t.Fatalf("stale mobile revision failed to use Portuguese rollback: %v %s", err, r.Voice)
+	}
+}
+
+func TestPreviouslyCachedGeminiVersionRemainsReusable(t *testing.T) {
+	input, _ := (Request{Text: "audio-version", Language: "pt-BR", Voice: NarrationVoice}).normalized()
+	old := LegacyEconomicIdentity(input)
+	if old != "2f259b36683fd3a97aa2b6d6f2939454178a0717067d9c6bf9b4489ca74cae30.mp3" {
+		t.Fatal("legacy cache changed", old)
+	}
+	_, err := (Request{Text: "Text", Language: "pt-BR", Revision: strings.TrimSuffix(old, ".mp3")}).normalized()
+	if err != nil {
+		t.Fatal(err)
 	}
 }

@@ -163,7 +163,7 @@ public struct VerbumAPI: Sendable {
 
     /// One place that turns transport outcomes into `VerbumAPIError` (spec §52:
     /// network, content and malformed answers are different states).
-    private func send(_ request: URLRequest) async throws -> Data {
+    func send(_ request: URLRequest) async throws -> Data {
         try await exchange(request).0
     }
     private func exchange(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {

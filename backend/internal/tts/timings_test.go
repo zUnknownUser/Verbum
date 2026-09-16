@@ -14,6 +14,7 @@ import (
 	"strings"
 	"sync"
 	"testing"
+	"time"
 )
 
 func TestTimedSpeechUsesMeasuredDurationsAndPersistentCache(t *testing.T) {
@@ -90,4 +91,44 @@ func TestWaveDurationRejectsTruncatedAndNonPCMData(t *testing.T) {
 	if _, err = waveDuration([]byte("not WAV")); err == nil {
 		t.Fatal("invalid audio accepted")
 	}
+}
+
+func TestProgressPublishesFirstExcerptBeforeLastCompletes(t *testing.T) {
+	release := make(chan struct{})
+	defer close(release)
+	service := testService(t, func(w http.ResponseWriter, r *http.Request) {
+		var body struct{ Input struct{ Text string } }
+		json.NewDecoder(r.Body).Decode(&body)
+		if body.Input.Text == "B" {
+			select {
+			case <-release:
+			case <-r.Context().Done():
+				return
+			}
+		}
+		json.NewEncoder(w).Encode(map[string][]byte{"audioContent": testWAV()})
+	})
+	input, _ := (Request{Text: "A", Language: "pt-BR", Voice: "pt-BR-Chirp3-HD-Aoede"}).normalized()
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	published := make(chan struct{}, 1)
+	ctx = WithProgress(ctx, func(_ context.Context, path string, duration float64) error {
+		if _, err := os.Stat(path); err != nil || duration <= 0 {
+			t.Error("incomplete excerpt")
+		}
+		published <- struct{}{}
+		cancel()
+		return nil
+	})
+	finished := make(chan struct{})
+	go func() {
+		defer close(finished)
+		service.timedWaves(ctx, input, t.TempDir(), []speechPart{{text: "A"}, {text: "B"}})
+	}()
+	select {
+	case <-published:
+	case <-time.After(2 * time.Second):
+		t.Fatal("first excerpt waited for last")
+	}
+	<-finished
 }

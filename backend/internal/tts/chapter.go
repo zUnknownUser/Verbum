@@ -73,11 +73,17 @@ func AudioVersion(language string) (string, error) {
 	return strings.TrimSuffix(cacheKey(input), ".mp3"), nil
 }
 
-func cacheKey(input Request) string {
+func cacheKey(input Request) string { return cacheKeyFor(input, narrationRevision()) }
+
+// Legacy audio remains reusable: only new generation uses shorter excerpts.
+func LegacyEconomicIdentity(input Request) string {
+	return cacheKeyFor(input, narrationRevisionFor(3800))
+}
+func cacheKeyFor(input Request, narration string) string {
 	raw, _ := json.Marshal(input)
 	revision := audioRevision
 	if input.IsGemini() {
-		revision += "\n" + narrationRevision() + fmt.Sprintf("\n%s/%d/%s", input.literaryBook, input.literaryChapter, input.style)
+		revision += "\n" + narration + fmt.Sprintf("\n%s/%d/%s", input.literaryBook, input.literaryChapter, input.style)
 	}
 	hash := sha256.Sum256(append([]byte(revision+"\n"), raw...))
 	return hex.EncodeToString(hash[:]) + ".mp3"
@@ -263,6 +269,9 @@ func (s *TextToSpeechService) Cached(input Request, timed bool) (TimedAudio, boo
 		return TimedAudio{Audio: v}, e == nil
 	}
 	raw, e := os.ReadFile(filepath.Join(s.cacheDir, "sync-v1-"+strings.TrimSuffix(cacheKey(input), ".mp3")+".json"))
+	if e != nil && input.IsGemini() {
+		raw, e = os.ReadFile(filepath.Join(s.cacheDir, "sync-v1-"+strings.TrimSuffix(LegacyEconomicIdentity(input), ".mp3")+".json"))
+	}
 	if e != nil || len(raw) > maxAudioBytes*2 {
 		return TimedAudio{}, false
 	}

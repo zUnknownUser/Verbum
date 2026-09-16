@@ -124,6 +124,17 @@ func (e economicSpeech) run(ctx context.Context, input tts.Request, timed bool) 
 			return v, nil
 		}
 	}
+	if input.IsGemini() && timed && e.usage.Store != nil {
+		legacyKey := usage.Hash("cost-v1", "tts", usage.Hash(tts.LegacyEconomicIdentity(input), strconv.FormatBool(timed)))
+		if b, lookupErr := e.usage.Store.Cached(ctx, legacyKey, e.usage.Now()); lookupErr != nil {
+			return empty, usage.Unavailable()
+		} else if b != nil {
+			var cached tts.TimedAudio
+			if json.Unmarshal(b, &cached) == nil && len(cached.Audio) > 0 {
+				return cached, nil
+			}
+		}
+	}
 	cost := tts.EstimateCost(input, timed)
 	data, err := e.usage.Do(ctx, usage.Operation{Kind: "tts", Key: key, Estimate: cost, Permanent: true}, func(ctx context.Context) ([]byte, error) {
 		usage.Attempt(ctx)

@@ -14,7 +14,7 @@ import (
 const NarrationModel = "gemini-2.5-pro-tts"
 const NarrationVoice = "Charon"
 const narrationPromptVersion = 1
-const geminiSegmentBytes = 3800 // Cloud TTS accepts at most 4000 UTF-8 bytes per field.
+const geminiSegmentBytes = 1500 // Cloud TTS accepts at most 4000 UTF-8 bytes per field.
 
 // Editorial instructions are trusted server data, never a client prompt or a paid classifier.
 const narrationBase = `Narre somente o texto fornecido, integralmente e na ordem original, em português brasileiro. Não acrescente introdução, comentários, títulos, números de versículos, sons ou música. Não resuma, omita, repita nem modernize palavras.
@@ -86,8 +86,13 @@ func (r Request) narrationPrompt() string {
 	p := narrationProfiles[style]
 	return fmt.Sprintf("%s\nDireção deste trecho: %s Ritmo %s. Expressividade %s.", narrationBase, p.Direction, p.Pace, p.Expressiveness)
 }
-func narrationRevision() string {
-	raw, _ := json.Marshal([]any{NarrationModel, NarrationVoice, narrationPromptVersion, narrationBase, narrationProfiles, narrationBooks, narrationOverrides, geminiSegmentBytes})
+func narrationRevision() string { return narrationRevisionFor(geminiSegmentBytes) }
+func narrationRevisionFor(segmentBytes int) string {
+	identity := []any{NarrationModel, NarrationVoice, narrationPromptVersion, narrationBase, narrationProfiles, narrationBooks, narrationOverrides, segmentBytes}
+	if segmentBytes != 3800 {
+		identity = append(identity, "progressive-first450-adaptive9-v1")
+	}
+	raw, _ := json.Marshal(identity)
 	h := sha256.Sum256(raw)
 	return hex.EncodeToString(h[:])
 }
@@ -114,12 +119,18 @@ func (r Request) speechParts() []speechPart {
 		current = speechPart{}
 	}
 	for _, v := range r.Verses {
+		// Very long chapters retain larger excerpts to avoid multiplying the
+		// conservative per-call budget reservation just for faster startup.
+		limit := max(geminiSegmentBytes, min(3800, len(r.Text)/9))
+		if len(out) == 0 {
+			limit = 450
+		}
 		style := literaryStyle(r.literaryBook, r.literaryChapter, v.Number)
-		if current.text != "" && (current.style != style || len(current.text)+1+len(v.Text) > geminiSegmentBytes) {
+		if current.text != "" && (current.style != style || len(current.text)+1+len(v.Text) > limit) {
 			flush()
 		}
-		if len(v.Text) > geminiSegmentBytes {
-			for _, part := range splitTextAt(v.Text, geminiSegmentBytes) {
+		if len(v.Text) > limit {
+			for _, part := range splitTextAt(v.Text, limit) {
 				out = append(out, speechPart{text: part, first: v.Number, last: v.Number, style: style})
 			}
 			continue
@@ -173,4 +184,10 @@ func (r Request) measuredCost(seconds float64) int64 {
 func geminiAudioVersion() string {
 	r, _ := (Request{Text: "audio-version", Language: "pt-BR", Voice: NarrationVoice}).normalized()
 	return strings.TrimSuffix(cacheKey(r), ".mp3")
+}
+
+func legacyGeminiAudioVersion() string {
+	speed := 1.0
+	input := Request{Text: "audio-version", Language: "pt-BR", Voice: NarrationVoice, Speed: &speed, Format: "MP3"}
+	return strings.TrimSuffix(LegacyEconomicIdentity(input), ".mp3")
 }

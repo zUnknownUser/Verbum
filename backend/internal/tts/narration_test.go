@@ -139,3 +139,34 @@ func TestGeminiTimedArtifactAndCache(t *testing.T) {
 		t.Fatal("untimed Gemini encoding", err)
 	}
 }
+
+func TestProgressiveSegmentsKeepFirstShortAndLongChapterBounded(t *testing.T) {
+	var verses []Verse
+	var text []string
+	for n := 1; n <= 176; n++ {
+		verse := strings.Repeat("Palavra ", 15) + "fim."
+		verses = append(verses, Verse{n, verse})
+		text = append(text, verse)
+	}
+	input, err := Prepare(Request{BookID: "Ps", Chapter: 119, Language: "pt-BR", Text: strings.Join(text, "\n"), Verses: verses})
+	if err != nil {
+		t.Fatal(err)
+	}
+	parts := input.speechParts()
+	if len(parts) < 2 || len(parts) > 12 || len(parts[0].text) > 450 {
+		t.Fatalf("unexpected segmentation: %d excerpts, first %d bytes", len(parts), len(parts[0].text))
+	}
+	var reconstructed []string
+	for _, p := range parts {
+		reconstructed = append(reconstructed, p.text)
+		if len(p.text) > 3800 {
+			t.Fatal("provider limit exceeded")
+		}
+	}
+	if strings.Join(reconstructed, "\n") != input.Text {
+		t.Fatal("chapter text changed")
+	}
+	if EstimateCost(input, true) > 5_000_000 {
+		t.Fatal("progressive segmentation made this chapter unaffordable")
+	}
+}

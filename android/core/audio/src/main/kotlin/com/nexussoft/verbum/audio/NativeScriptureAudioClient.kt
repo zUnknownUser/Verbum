@@ -37,6 +37,8 @@ class LiveScriptureAudioClient(language: BookLanguage, context: Context, bible: 
 class CloudScriptureAudioClient(context: Context, private val bible: BibleClient, private val api: VerbumApi) : ScriptureAudioClient {
     private val context = context.applicationContext
     private val mutex = Mutex()
+    private val downloads = java.util.concurrent.ConcurrentHashMap<String, Job>()
+    private val downloadScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     override suspend fun chapterAudio(bookId: BookId, chapter: Int): ChapterAudio? {
         val audio = renderChapter(bookId, chapter)
@@ -49,13 +51,13 @@ class CloudScriptureAudioClient(context: Context, private val bible: BibleClient
         val text = verses.joinToString("\n") { it.text }
         val (file,cues) = render(verses)
         ChapterAudio(first.translationId, "Leitura automática · Português", PassageReference(bookId, chapter),
-            listOf(AudioNarrator(AudioNarrator.SYNTHESISED_PREFIX + "pt-BR", "Leitura automática", file.toURI().toString(), null,cues)))
+            listOf(AudioNarrator(AudioNarrator.SYNTHESISED_PREFIX + "pt-BR", "Leitura automática", file, null,cues)))
     }
 
     /** One MP3 per exact chapter text and server voice version, cached on disk. The backend also caches server-side by
      * the same text, so a cold local cache (after reinstall, or a pruned entry) still answers
      * without paying for a new generation — only the round trip. */
-    private suspend fun render(verses:List<BiblePassage>): Pair<File,List<AudioCue>> {
+    private suspend fun render(verses:List<BiblePassage>): Pair<String,List<AudioCue>> {
         val text=verses.joinToString("\n") {it.text}
         val directory = File(context.cacheDir, "cloud-speech-pt-BR-v1").also { check(it.isDirectory || it.mkdirs()) }
         // One manifest check/hour, with the API cache's offline fallback. Older servers
@@ -68,17 +70,43 @@ class CloudScriptureAudioClient(context: Context, private val bible: BibleClient
         val output = File(directory, "$key.mp3")
         if (output.exists()) {
             output.setLastModified(System.currentTimeMillis())
-            return output to decodeAudioCues(runCatching {File(output.path+".json").readText()}.getOrNull())
+            return output.toURI().toString() to decodeAudioCues(runCatching {File(output.path+".json").readText()}.getOrNull())
         }
-        // Never retry an ambiguous paid failure through a second synthesis endpoint.
-        val (audio,cues) = withContext(Dispatchers.IO) {api.synthesizeChapterSpeech(verses,"pt-BR",revision=version)}
-        check(audio.isNotEmpty())
-        currentCoroutineContext().ensureActive()
-        val temporary = File(directory, "${UUID.randomUUID()}.partial.mp3")
+        val statusPath = api.startSpeechPlayback(verses,version)
+        repeat(315) {
+            currentCoroutineContext().ensureActive()
+            val status=api.speechPlaybackStatus(statusPath)
+            if(status.complete) {
+                save(status,output,directory)
+                return output.toURI().toString() to status.cues.orEmpty().map {AudioCue(it.verseStart,it.verseEnd,it.start,it.end)}
+            }
+            if(status.ready) {
+                if(!downloads.containsKey(key)) {
+                    downloads[key]=downloadScope.launch {
+                        try {
+                            repeat(210) {
+                                delay(3000)
+                                val next=api.speechPlaybackStatus(statusPath)
+                                if(next.complete) {save(next,output,directory);return@launch}
+                            }
+                        } catch(_:Exception) { /* Only complete chapters enter the offline cache. */ }
+                        finally {downloads.remove(key)}
+                    }
+                }
+                return api.playbackUrl(status.playlistPath) to emptyList()
+            }
+            delay(2000)
+        }
+        throw IllegalStateException("Speech preparation timed out")
+    }
+    private suspend fun save(status:com.nexussoft.verbum.clients.api.SpeechPlaybackStatus,output:File,directory:File) = withContext(Dispatchers.IO) {
+        val audio=api.speechPlaybackData(status.audioPath)
+        check(audio.isNotEmpty() && audio.size <= 64*1024*1024)
+        val temporary=File(directory,"${UUID.randomUUID()}.partial.mp3")
         temporary.writeBytes(audio)
-        if (output.exists()) temporary.delete() else check(temporary.renameTo(output))
-        val metadata=File(output.path+".json");val metadataTemp=File(directory,"${UUID.randomUUID()}.partial.json")
-        runCatching {metadataTemp.writeText(encodeAudioCues(cues));check(metadataTemp.renameTo(metadata))}.onFailure {metadataTemp.delete()}
+        check(temporary.renameTo(output))
+        val cues=status.cues.orEmpty().map {AudioCue(it.verseStart,it.verseEnd,it.start,it.end)}
+        File(output.path+".json").writeText(encodeAudioCues(cues))
         // Newest first: at most 40 chapters (MP3 at 128 kbit/s is ~1 MB/minute; Psalm 119 is ~13 MB).
         var bytes = 0L
         directory.listFiles().orEmpty().filter { it.extension == "mp3" && !it.name.endsWith(".partial.mp3") }
@@ -86,6 +114,5 @@ class CloudScriptureAudioClient(context: Context, private val bible: BibleClient
                 bytes += file.length()
                 if (file != output && (index >= 40 || bytes > 150_000_000L)) {file.delete();File(file.path+".json").delete()}
             }
-        return output to cues
     }
 }

@@ -22,7 +22,7 @@ import (
 // unlike the store). Pass a literal nil at the call site for any of them, never a nil-valued
 // variable of the concrete pointer type — see cmd/api/main.go's comment on why.
 func New(s store.Store, now func() time.Time, rt realtimeBroker, embedder queryEmbedder, asker asker, speech TextToSpeech, economic ...EconomicOptions) http.Handler {
-	h := &handlers{store: s, now: now, realtime: rt, embedder: embedder, asker: asker, tts: speech}
+	h := &handlers{store: s, now: now, realtime: rt, embedder: embedder, asker: asker, tts: speech, playback: newPlaybackHub()}
 	mux := http.NewServeMux()
 	if len(economic) > 0 {
 		e := economic[0]
@@ -58,6 +58,8 @@ func New(s store.Store, now func() time.Time, rt realtimeBroker, embedder queryE
 	mux.HandleFunc("POST /v1/realtime/session", h.realtimeSession)
 	mux.HandleFunc("POST /v1/ask", h.ask)
 	mux.HandleFunc("POST /v1/tts", h.synthesizeSpeech)
+	mux.HandleFunc("POST /v1/tts/playback", h.startPlayback)
+	mux.HandleFunc("GET /v1/tts/playback/{token}/{asset}", h.playbackMedia)
 	mux.HandleFunc("GET /v1/tts/config", h.speechConfiguration)
 	return logging(mux)
 }
@@ -92,7 +94,11 @@ func logging(next http.Handler) http.Handler {
 		start := time.Now()
 		rec := &statusRecorder{ResponseWriter: w, status: http.StatusOK}
 		next.ServeHTTP(rec, r.WithContext(ctx))
-		slog.Info("request", "reqID", reqid.From(ctx), "method", r.Method, "path", r.URL.Path, "status", rec.status, "ms", time.Since(start).Milliseconds())
+		path := r.URL.Path
+		if strings.HasPrefix(path, "/v1/tts/playback/") {
+			path = "/v1/tts/playback/[redacted]"
+		}
+		slog.Info("request", "reqID", reqid.From(ctx), "method", r.Method, "path", path, "status", rec.status, "ms", time.Since(start).Milliseconds())
 	})
 }
 

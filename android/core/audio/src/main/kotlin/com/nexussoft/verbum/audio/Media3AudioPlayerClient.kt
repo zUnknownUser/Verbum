@@ -37,7 +37,7 @@ class Media3AudioPlayerClient(private val context: Context) : AudioPlayerClient 
             .setUri(url)
             .setMediaMetadata(MediaMetadata.Builder().setTitle(nowPlaying.title).setArtist(nowPlaying.subtitle).build())
             .build()
-        c.setMediaItem(item)
+        c.setMediaItem(item, 0L) // Event narration always starts at the first verse, not the live edge.
         c.prepare()
     }
 
@@ -69,8 +69,13 @@ class Media3AudioPlayerClient(private val context: Context) : AudioPlayerClient 
         if (c.playerError != null) trySend(AudioPlayerEvent.Failed)
         trySend(AudioPlayerEvent.Playing(c.isPlaying))
         trySend(AudioPlayerEvent.Time(c.currentPosition.coerceAtLeast(0) / 1000.0))
+        var reportedDuration = -1L
         val ticker = launch {
             while (isActive) {
+                if (c.duration > 0 && c.duration != reportedDuration) {
+                    reportedDuration = c.duration
+                    trySend(AudioPlayerEvent.Ready(c.duration / 1000.0))
+                }
                 if (c.isPlaying) trySend(AudioPlayerEvent.Time(c.currentPosition / 1000.0))
                 delay(1000)
             }

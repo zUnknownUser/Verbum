@@ -24,6 +24,7 @@ extension ScriptureAudioClient {
 private enum CloudSpeechRenderer {
     /// Cached files are reused; rendering the same chapter twice at once is
     /// collapsed into one job (multiple taps can race).
+    private static var downloads: [String: Task<Void, Never>] = [:]
     private static var inFlight: [PassageReference: Task<ChapterAudio, Error>] = [:]
 
     static func chapterAudio(_ reference: PassageReference) async throws -> ChapterAudio {
@@ -67,22 +68,40 @@ private enum CloudSpeechRenderer {
             let cues = (try? JSONDecoder().decode([AudioCue].self, from: Data(contentsOf: metadata))) ?? []
             return (output, AudioCue.validated(cues))
         }
-        let audio: Data
-        let cues: [AudioCue]
-        // A failed paid request is not retried through a second synthesis endpoint.
-        (audio, cues) = try await VerbumAPI.shared.synthesizeChapterSpeech(verses: verses, language: "pt-BR", revision: version)
-        guard !audio.isEmpty else { throw SpeechFailure.emptyAudio }
-        try Task.checkCancellation()
-        let temporary = directory.appendingPathComponent(UUID().uuidString + ".partial.mp3")
-        try audio.write(to: temporary, options: .atomic)
-        if FileManager.default.fileExists(atPath: output.path) {
-            try? FileManager.default.removeItem(at: temporary)
-        } else {
-            try FileManager.default.moveItem(at: temporary, to: output)
+        let statusPath = try await VerbumAPI.shared.startSpeechPlayback(verses: verses, revision: version)
+        for _ in 0..<315 {
+            try Task.checkCancellation()
+            let status = try await VerbumAPI.shared.speechPlaybackStatus(statusPath)
+            if status.complete {
+                try await save(status, output: output, directory: directory)
+                return (output, status.cues ?? [])
+            }
+            if status.ready {
+                if downloads[key] == nil {
+                    downloads[key] = Task {
+                        defer { downloads[key] = nil }
+                        do {
+                            for _ in 0..<210 {
+                                try await Task.sleep(for: .seconds(3))
+                                let status = try await VerbumAPI.shared.speechPlaybackStatus(statusPath)
+                                if status.complete { try await save(status, output: output, directory: directory); return }
+                            }
+                        } catch { /* Playback reports transport errors; incomplete audio is never cached. */ }
+                    }
+                }
+                return (try VerbumAPI.shared.playbackURL(status.playlistPath), [])
+            }
+            try await Task.sleep(for: .seconds(2))
         }
-        try? JSONEncoder().encode(cues).write(to: output.appendingPathExtension("json"), options: .atomic)
+        throw SpeechFailure.emptyAudio
+    }
+
+    private static func save(_ status: SpeechPlaybackStatus, output: URL, directory: URL) async throws {
+        let audio = try await VerbumAPI.shared.speechPlaybackData(status.audioPath)
+        guard !audio.isEmpty, audio.count <= 64 * 1024 * 1024 else { throw SpeechFailure.emptyAudio }
+        try audio.write(to: output, options: .atomic)
+        try JSONEncoder().encode(status.cues ?? []).write(to: output.appendingPathExtension("json"), options: .atomic)
         prune(directory, keeping: output)
-        return (output, cues)
     }
 
     /// Only generated files, newest first: at most 40 chapters (MP3 at 128 kbit/s is ~1 MB per

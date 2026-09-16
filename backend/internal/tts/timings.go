@@ -30,6 +30,16 @@ type TimedAudio struct {
 	Audio []byte `json:"audio"`
 	Cues  []Cue  `json:"cues"`
 }
+
+// Progress receives ordered, complete WAV excerpts while later excerpts generate.
+// It is internal server context, never a field accepted from a client.
+type progressKey struct{}
+type Progress func(context.Context, string, float64) error
+
+func WithProgress(ctx context.Context, publish Progress) context.Context {
+	return context.WithValue(ctx, progressKey{}, publish)
+}
+
 type speechPart struct {
 	text        string
 	first, last int
@@ -250,6 +260,10 @@ func (s *TextToSpeechService) timedWaves(ctx context.Context, input Request, dir
 	defer cancel()
 	names := make([]string, len(parts))
 	durations := make([]float64, len(parts))
+	ready := make([]chan struct{}, len(parts))
+	for i := range ready {
+		ready[i] = make(chan struct{})
+	}
 	var wg sync.WaitGroup
 	var once sync.Once
 	var failure error
@@ -284,8 +298,23 @@ func (s *TextToSpeechService) timedWaves(ctx context.Context, input Request, dir
 				}
 				names[i] = name
 				durations[i] = duration
+				close(ready[i])
 			}
 		}(worker)
+	}
+	if publish, ok := ctx.Value(progressKey{}).(Progress); ok {
+		for i := range parts {
+			select {
+			case <-ready[i]:
+				if err := publish(ctx, filepath.Join(dir, names[i]), durations[i]); err != nil {
+					fail(err)
+				}
+			case <-ctx.Done():
+			}
+			if ctx.Err() != nil {
+				break
+			}
+		}
 	}
 	wg.Wait()
 	return names, durations, failure

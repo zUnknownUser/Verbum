@@ -63,6 +63,9 @@ func newAccess(next http.Handler, options AccessOptions, now func() time.Time) h
 			method = http.MethodGet
 		}
 		route := method + " " + r.URL.Path
+		if route == "POST /v1/tts/playback" {
+			route = "POST /v1/tts"
+		}
 		public := false
 		if _, exists := accessBudgets[route]; !exists && method == http.MethodGet && strings.HasPrefix(r.URL.Path, "/v1/") {
 			route = "GET /v1/public"
