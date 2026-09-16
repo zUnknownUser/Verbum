@@ -38,3 +38,11 @@ Na primeira escuta progressiva, a marcação por versículo fica desativada para
 - Áudio sintético de silêncio nos testes; nenhuma nova síntese paga de capítulo nem avaliação auditiva nesta implementação.
 
 Referências de formato: [playlist EVENT da Apple](https://developer.apple.com/documentation/http-live-streaming/event-playlist-construction) e [HLS no Media3](https://developer.android.com/media/media3/exoplayer/hls).
+
+## Deploy confirmado
+
+- Código: `01d977ab8cb6f5aa47dccca24e0c02f662f414cf`, enviado para `main`.
+- Railway produção: `4744a069-9e0e-46e4-ac40-0f21af7e3e05`, `SUCCESS`.
+- Checagens posteriores ao sucesso: `/healthz` e `/readyz` 200; POST anônimo em `/v1/tts/playback` 401; capacidade inexistente em `/status` 404. Nenhuma síntese paga nesses probes.
+- Manifesto PT-BR: `bd66a2958747418105ff40d2c11d608a94cb30d7c6c1b47073cb6169484609f6`. Manifesto EN inalterado: `b9889517f9d5f54f39eca42c2e7d94fe45037a40a02b304e017530b69f3337e1`.
+- Builds móveis gerados e validados; publicação nas lojas não realizada.

@@ -47,6 +47,8 @@ import com.nexussoft.verbum.feature.scripture.ReaderTextScale
 import com.nexussoft.verbum.feature.scripture.ui.AppScreen
 import com.nexussoft.verbum.models.BookLanguage
 import java.io.File
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 /**
  * The app shell (docs/PRODUCT.md §6). Dependencies are assembled here, explicitly:
@@ -114,8 +116,11 @@ private fun AccountRootScreen(uid: String?, accountViewModel: AccountViewModel) 
             ),
         )
     }
-    val appState by viewModel.store.state.collectAsStateWithLifecycle()
-    val dark = when(appState.profile.appearance) {
+    val appearanceFlow = remember(viewModel) {
+        viewModel.store.state.map { it.profile.appearance }.distinctUntilChanged()
+    }
+    val appearance by appearanceFlow.collectAsStateWithLifecycle(initialValue = viewModel.store.state.value.profile.appearance)
+    val dark = when(appearance) {
         ProfileFeature.Appearance.AUTOMATIC -> isSystemInDarkTheme()
         ProfileFeature.Appearance.DARK -> true
         ProfileFeature.Appearance.LIGHT -> false

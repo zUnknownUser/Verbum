@@ -41,14 +41,13 @@ class CloudScriptureAudioClient(context: Context, private val bible: BibleClient
     private val downloadScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     override suspend fun chapterAudio(bookId: BookId, chapter: Int): ChapterAudio? {
-        val audio = renderChapter(bookId, chapter)
+        val audio = withContext(Dispatchers.IO) { renderChapter(bookId, chapter) }
         return audio
     }
 
     private suspend fun renderChapter(bookId: BookId, chapter: Int): ChapterAudio? = mutex.withLock {
         val verses = bible.chapter(bookId, chapter)
         val first = verses.firstOrNull() ?: return@withLock null
-        val text = verses.joinToString("\n") { it.text }
         val (file,cues) = render(verses)
         ChapterAudio(first.translationId, "Leitura automática · Português", PassageReference(bookId, chapter),
             listOf(AudioNarrator(AudioNarrator.SYNTHESISED_PREFIX + "pt-BR", "Leitura automática", file, null,cues)))

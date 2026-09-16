@@ -3,6 +3,14 @@ import Models
 import Testing
 
 @Suite struct ReaderStudyTests {
+    @Test func canonLookupIgnoresVerseSelectionAndHandlesInvalidChapters() {
+        for (index, reference) in ReaderCanon.chapters.enumerated() {
+            #expect(ReaderCanon.index(reference) == index)
+            #expect(ReaderCanon.index(.init(bookId: reference.bookId, chapter: reference.chapter, verses: 2...3)) == index)
+        }
+        #expect(ReaderCanon.index(.init(bookId: "Rev", chapter: 23)) == 0)
+        #expect(ReaderCanon.index(.init(bookId: "missing", chapter: 1)) == 0)
+    }
     @Test func exactNamesKeepUnicodeAndHomonymCandidates() {
         let entities = [BibleEntity(id: "m1", type: .person, name: "Moisés", summary: nil), BibleEntity(id: "m2", type: .person, name: "Moisés", summary: nil)]
         let text = "Moisés, Moisésa e MOISÉS; λόγος."

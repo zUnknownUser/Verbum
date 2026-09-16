@@ -13,6 +13,10 @@ import com.nexussoft.verbum.models.BibleEntityType
 import com.nexussoft.verbum.models.BookLanguage
 import com.nexussoft.verbum.models.PassageReference
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.withContext
+import java.util.concurrent.Executors
+import kotlin.test.assertNotSame
 import java.io.File
 import java.io.IOException
 import kotlin.test.Test
@@ -37,6 +41,27 @@ class VerbumApiTest {
     }
 
     private val base = "http://test.local:8080"
+
+    @Test fun editorialRequestsLeaveTheCallerThreadAndKeepCacheHits() = runTest {
+        Executors.newSingleThreadExecutor().asCoroutineDispatcher().use { ui ->
+            withContext(ui) {
+                val caller = Thread.currentThread()
+                var requests = 0
+                val api = VerbumApi(base, HttpTransport {
+                    assertNotSame(caller, Thread.currentThread())
+                    requests++
+                    HttpResponse(200, """{"entities":[]}""")
+                }, now = {
+                    // Runs both when saving a response and when checking a fresh cache hit.
+                    assertNotSame(caller, Thread.currentThread())
+                    0L
+                })
+                repeat(2) { assertTrue(api.entities(BibleEntityType.PERSON).isEmpty()) }
+                assertEquals(1, requests)
+                assertTrue(Thread.currentThread() === caller, "caller resumes on its own dispatcher")
+            }
+        }
+    }
 
     @Test fun speechManifestIsCachedAndRefreshesAfterOneHour() = runTest {
         val script = Script()
@@ -73,8 +98,8 @@ class VerbumApiTest {
         assertEquals(
             listOf(
                 "$base/v1/entities?type=person&lang=en",
-                "$base/v1/entities/a/graph?limit=24",
-                "$base/v1/timeline?entity=fixture.person.david",
+                "$base/v1/entities/a/graph?limit=24&lang=${BookLanguage.current.tag}",
+                "$base/v1/timeline?entity=fixture.person.david&lang=${BookLanguage.current.tag}",
                 "$base/v1/search?q=x%20y&lang=pt",
                 "$base/v1/daily-verse?from=2026-09-13&days=7",
             ),
@@ -98,8 +123,8 @@ class VerbumApiTest {
         assertEquals(VerbumApiException.Problem(ProblemCode.ASK_UNAVAILABLE, 503), assertFailsWith<VerbumApiException.Problem> { api.entityDetail("x") })
         assertEquals(VerbumApiException.Problem(ProblemCode.UNKNOWN, 500), assertFailsWith<VerbumApiException.Problem> { api.entityDetail("x") })
         assertFailsWith<VerbumApiException.MalformedResponse> { api.entityDetail("x") }
-        // The context path is Book.Chapter — verses never reach the URL.
-        assertEquals("$base/v1/passages/Gen.1/context", script.requests[1].url)
+        // Context stays per chapter; the starting verse narrows related occurrences.
+        assertEquals("$base/v1/passages/Gen.1/context?lang=${BookLanguage.current.tag}&verse=3", script.requests[1].url)
     }
 
     @Test

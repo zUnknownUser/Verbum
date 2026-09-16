@@ -30,8 +30,9 @@ public enum ReaderCanon {
     public static let chapters: [PassageReference] = BibleBook.canon.flatMap { book in
         (1...book.chapterCount).map { PassageReference(bookId: book.id, chapter: $0) }
     }
+    private static let indices = Dictionary(uniqueKeysWithValues: chapters.enumerated().map { (key($0.element), $0.offset) })
     public static func index(_ reference: PassageReference) -> Int {
-        chapters.firstIndex { $0.bookId == reference.bookId && $0.chapter == reference.chapter } ?? 0
+        indices[key(reference)] ?? 0
     }
     public static func key(_ reference: PassageReference) -> String { "\(reference.bookId).\(reference.chapter)" }
 }

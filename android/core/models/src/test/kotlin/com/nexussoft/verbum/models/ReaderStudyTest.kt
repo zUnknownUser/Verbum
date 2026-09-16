@@ -3,6 +3,14 @@ package com.nexussoft.verbum.models
 import kotlin.test.*
 
 class ReaderStudyTest {
+    @Test fun canonLookupIgnoresVersesAndHandlesInvalidChapters() {
+        ReaderCanon.chapters.forEachIndexed { index, reference ->
+            assertEquals(index, ReaderCanon.index(reference))
+            assertEquals(index, ReaderCanon.index(reference.copy(verses = 2..3)))
+        }
+        assertEquals(0, ReaderCanon.index(PassageReference("Rev", 23)))
+        assertEquals(0, ReaderCanon.index(PassageReference("missing", 1)))
+    }
     @Test fun preservesTextAndKeepsAmbiguousNames() {
         val entities=listOf(BibleEntity("m1",BibleEntityType.PERSON,"Moisés",null),BibleEntity("m2",BibleEntityType.PERSON,"Moisés",null))
         val text="Moisés, Moisésa e MOISÉS; λόγος."

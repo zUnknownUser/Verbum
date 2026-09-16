@@ -329,22 +329,22 @@ class VerbumApi(
      * `GET path?query`, decoded. Cache-first while fresh; on a network failure the last good
      * answer is returned even if stale, and only when there is none does the call fail.
      */
-    internal suspend fun <T> get(path: String, strategy: DeserializationStrategy<T>, vararg query: Pair<String, String>): T {
+    internal suspend fun <T> get(path: String, strategy: DeserializationStrategy<T>, vararg query: Pair<String, String>): T = withContext(Dispatchers.IO) {
         val url = url(path, query.toList())
         val token = if (path == "/v1/search") {
             try { tokenProvider(false) } catch (e: CancellationException) { throw e } catch (_: Exception) { null }
         } else null
         val cacheKey = url + if (path == "/v1/search") (if (token == null) "#lexical" else "#semantic") else ""
-        cache.read(cacheKey)?.let { hit -> if (now() - hit.storedAt < FRESH_FOR_MS) return decode(hit.body, strategy) }
+        cache.read(cacheKey)?.let { hit -> if (now() - hit.storedAt < FRESH_FOR_MS) return@withContext decode(hit.body, strategy) }
         val body = try {
             send(HttpRequest("GET", url, headers = token?.let { mapOf("Authorization" to "Bearer $it", "X-Verbum-Installation" to installationId) } ?: emptyMap()))
         } catch (e: VerbumApiException.NetworkUnavailable) {
             val stale = cache.read(cacheKey) ?: throw e
-            return decode(stale.body, strategy)
+            return@withContext decode(stale.body, strategy)
         }
         val value = decode(body, strategy)
         cache.write(cacheKey, body, now())
-        return value
+        value
     }
 
     /** `POST path` with a JSON body, decoded. Never cached. */

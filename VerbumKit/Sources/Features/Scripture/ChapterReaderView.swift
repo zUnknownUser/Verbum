@@ -17,6 +17,7 @@ struct ChapterReaderView: View {
         ZStack(alignment: .topTrailing) {
             Palette.paper.ignoresSafeArea().onTapGesture { if store.focusMode { store.send(.focusToggled) } }
             if store.readingMode == .pages {
+                let currentIndex = ReaderCanon.index(store.reference)
                 TabView(selection: Binding(get: { ReaderCanon.index(store.reference) }, set: { index in
                     guard ReaderCanon.chapters.indices.contains(index), index != ReaderCanon.index(store.reference) else { return }
                     followsAudio = false
@@ -24,7 +25,7 @@ struct ChapterReaderView: View {
                 })) {
                     ForEach(ReaderCanon.chapters.indices, id: \.self) { index in
                         Group {
-                            if abs(index - ReaderCanon.index(store.reference)) <= 1 {
+                            if abs(index - currentIndex) <= 1 {
                                 ReaderScrollPage(store: store, reference: ReaderCanon.chapters[index], continuous: false, followsAudio: $followsAudio)
                             } else { Palette.paper }
                         }.tag(index)
@@ -128,6 +129,10 @@ private struct ReaderScrollPage: View {
     }
 }
 
+private final class ReaderScrollSnapshot {
+    var offset = 0.0
+}
+
 @available(iOS 18.0, *)
 private struct ModernReaderScrollPage: View {
     let store: StoreOf<ChapterReaderFeature>
@@ -137,7 +142,8 @@ private struct ModernReaderScrollPage: View {
     @Environment(\.audioReading) private var audioReading
     @State private var visibleVerses: Set<String> = []
     @State private var position = ScrollPosition()
-    @State private var offset = 0.0
+    // Position is persisted on idle/disappear; pixel changes do not render the view.
+    @State private var scrollSnapshot = ReaderScrollSnapshot()
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     private var key: String { continuous ? "flow" : ReaderCanon.key(reference) }
 
@@ -147,16 +153,16 @@ private struct ModernReaderScrollPage: View {
         }
         .scrollPosition($position)
         .scrollIndicators(.hidden)
-        .onScrollGeometryChange(for: Double.self, of: { Double($0.contentOffset.y + $0.contentInsets.top) }) { _, value in offset = value }
+        .onScrollGeometryChange(for: Double.self, of: { Double($0.contentOffset.y + $0.contentInsets.top) }) { _, value in scrollSnapshot.offset = value }
         .onScrollTargetVisibilityChange(idType: String.self) { visibleVerses = Set($0) }
         .onChange(of: audioReading) { _, _ in followReading() }
         .onChange(of: store.chapters[ReaderCanon.key(audioReading?.reference ?? reference)]?.count) { _, _ in followReading() }
         .onChange(of: followsAudio) { _, enabled in if enabled { followReading() } }
         .onScrollPhaseChange { _, phase in
             if phase == .interacting { followsAudio = false }
-            if phase == .idle { store.send(.scrollOffsetChanged(key, offset)) }
+            if phase == .idle { store.send(.scrollOffsetChanged(key, scrollSnapshot.offset)) }
         }
-        .onDisappear { store.send(.scrollOffsetChanged(key, offset)) }
+        .onDisappear { store.send(.scrollOffsetChanged(key, scrollSnapshot.offset)) }
         .task { store.send(.ensureChapter(reference)) }
         .task(id: store.navigationRevision) { restore() }
         .onChange(of: store.chapters[ReaderCanon.key(reference)]?.count) { _, _ in restore(); followReading() }

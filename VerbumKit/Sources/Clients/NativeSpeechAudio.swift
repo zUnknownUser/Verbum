@@ -15,19 +15,21 @@ extension ScriptureAudioClient {
     /// substitute English. New generation is requested only for the chapter the listener opens.
     static let cloudPortuguese = ScriptureAudioClient(chapterAudio: { bookID, chapter in
         let reference = PassageReference(bookId: bookID, chapter: chapter)
-        let audio = try await CloudSpeechRenderer.chapterAudio(reference)
+        let audio = try await CloudSpeechRenderer.shared.chapterAudio(reference)
         return audio
     })
 }
 
-@MainActor
-private enum CloudSpeechRenderer {
+private actor CloudSpeechRenderer {
+    static let shared = CloudSpeechRenderer()
+
+    // Disk access and MP3 processing stay on this actor, away from UI rendering.
     /// Cached files are reused; rendering the same chapter twice at once is
     /// collapsed into one job (multiple taps can race).
-    private static var downloads: [String: Task<Void, Never>] = [:]
-    private static var inFlight: [PassageReference: Task<ChapterAudio, Error>] = [:]
+    private var downloads: [String: Task<Void, Never>] = [:]
+    private var inFlight: [PassageReference: Task<ChapterAudio, Error>] = [:]
 
-    static func chapterAudio(_ reference: PassageReference) async throws -> ChapterAudio {
+    func chapterAudio(_ reference: PassageReference) async throws -> ChapterAudio {
         if let running = inFlight[reference] { return try await running.value }
         let task = Task<ChapterAudio, Error> {
             let verses = try await BibleClient.liveValue.chapter(bookId: reference.bookId, chapter: reference.chapter)
@@ -48,7 +50,7 @@ private enum CloudSpeechRenderer {
     /// One MP3 per exact chapter text and server voice version, cached on disk. The backend also caches server-side by
     /// the same text, so a cold local cache (after reinstall, or a pruned entry) still answers
     /// without paying for a new generation — only the round trip.
-    static func render(_ verses: [BiblePassage]) async throws -> (URL, [AudioCue]) {
+    func render(_ verses: [BiblePassage]) async throws -> (URL, [AudioCue]) {
         let text = verses.map(\.text).joined(separator: "\n")
         let directory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
             .appendingPathComponent("CloudSpeech-pt-BR-v1", isDirectory: true)
@@ -96,7 +98,7 @@ private enum CloudSpeechRenderer {
         throw SpeechFailure.emptyAudio
     }
 
-    private static func save(_ status: SpeechPlaybackStatus, output: URL, directory: URL) async throws {
+    private func save(_ status: SpeechPlaybackStatus, output: URL, directory: URL) async throws {
         let audio = try await VerbumAPI.shared.speechPlaybackData(status.audioPath)
         guard !audio.isEmpty, audio.count <= 64 * 1024 * 1024 else { throw SpeechFailure.emptyAudio }
         try audio.write(to: output, options: .atomic)
@@ -106,7 +108,7 @@ private enum CloudSpeechRenderer {
 
     /// Only generated files, newest first: at most 40 chapters (MP3 at 128 kbit/s is ~1 MB per
     /// minute; Psalm 119 is ~13 MB — well under the server's per-chapter cap).
-    private static func prune(_ directory: URL, keeping output: URL) {
+    private func prune(_ directory: URL, keeping output: URL) {
         let files = (try? FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: [.contentModificationDateKey, .fileSizeKey])) ?? []
         let ordered = files.filter { $0.pathExtension == "mp3" && !$0.lastPathComponent.hasSuffix(".partial.mp3") }.sorted {
             ((try? $0.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast) >

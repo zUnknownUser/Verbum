@@ -45,7 +45,7 @@ class ContractTest {
 
     @Test
     fun entityDetail() = runTest {
-        val live = LiveGraphClient(api("entities/david.json", "/v1/entities/fixture.person.david"))
+        val live = LiveGraphClient(api("entities/david.json", "/v1/entities/fixture.person.david?lang=${BookLanguage.current.tag}"))
         assertEquals(FixtureGraphClient.detail("fixture.person.david"), live.detail("fixture.person.david"))
         assertEquals(FixtureGraphClient.entity("fixture.person.david"), live.entity("fixture.person.david"))
     }
@@ -65,7 +65,7 @@ class ContractTest {
      */
     @Test
     fun graph() = runTest {
-        val live = LiveGraphClient(api("graph/david.json", "/v1/entities/fixture.person.david/graph?limit=24"))
+        val live = LiveGraphClient(api("graph/david.json", "/v1/entities/fixture.person.david/graph?limit=24&lang=${BookLanguage.current.tag}"))
         val got = live.neighbors("fixture.person.david", 24)
         val expected = FixtureGraphClient.neighbors("fixture.person.david", 24)
         assertEquals(expected.root, got.root)
@@ -78,7 +78,7 @@ class ContractTest {
 
     @Test
     fun context() = runTest {
-        val live = LiveContextClient(api("context/1Sam.17.json", "/v1/passages/1Sam.17/context"))
+        val live = LiveContextClient(api("context/1Sam.17.json", "/v1/passages/1Sam.17/context?lang=${BookLanguage.current.tag}&verse=45"))
         val reference = PassageReference("1Sam", 17, 45..47)
         val got = assertNotNull(live.chapter(reference))
         val expected = assertNotNull(FixtureContextClient.chapter(reference))
@@ -92,7 +92,7 @@ class ContractTest {
 
     @Test
     fun timeline() = runTest {
-        val live = LiveTimelineClient(api("timeline/all.json", "/v1/timeline"))
+        val live = LiveTimelineClient(api("timeline/all.json", "/v1/timeline?lang=${BookLanguage.current.tag}"))
         assertEquals(FixtureTimelineClient.events(), live.events())
     }
 

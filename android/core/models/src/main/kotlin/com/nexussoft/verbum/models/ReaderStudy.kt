@@ -9,7 +9,8 @@ data class ReaderAnnotation(val reference: PassageReference, val highlight: High
 }
 object ReaderCanon {
     val chapters: List<PassageReference> = BibleBook.canon.flatMap { book -> (1..book.chapterCount).map { PassageReference(book.id,it) } }
-    fun index(reference: PassageReference): Int = chapters.indexOfFirst { it.bookId==reference.bookId && it.chapter==reference.chapter }.coerceAtLeast(0)
+    private val indices = chapters.mapIndexed { index, reference -> key(reference) to index }.toMap()
+    fun index(reference: PassageReference): Int = indices[key(reference)] ?: 0
     fun key(reference: PassageReference): String = "${reference.bookId}.${reference.chapter}"
 }
 data class StudyTextSegment(val text: String, val entityIds: List<String>)
