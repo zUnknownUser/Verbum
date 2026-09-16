@@ -30,3 +30,10 @@ Região Brasil **ou** idioma português resolve para PT-BR no iOS e Android. Iss
 As correções móveis exigem instalar uma nova versão; compilar e enviar ao Git não publica nas lojas. Conteúdo editorial sem tradução ainda precisa de tradução revisada; agora não será silenciosamente substituído por inglês. Requisições antigas podem conservar o cache editorial anterior até sua atualização; os novos apps usam namespace novo.
 
 O narrador de produção permanece Chirp 3 em PT-BR. Esta alteração não reativa Gemini nem altera orçamento ou credenciais.
+
+### Recibo de produção
+
+- Commit de implementação: `1afbbb479b8fb2d7ea6b2b2017687cd6ba31b4d6`, enviado ao `main`.
+- Railway: deployment `f7743ddb-1e64-469a-a79a-b4194110fb30`, status `SUCCESS`.
+- `/readyz` retornou 200; `/v1/entities?type=person&lang=en-BR` retornou 200 e `Content-Language: pt-BR`.
+- Testes Android selecionados: 5 de localização dos livros, 10 do cliente de texto, 2 de áudio, sem falhas. Build de ambos os apps aprovado.
