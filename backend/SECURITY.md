@@ -1,5 +1,7 @@
 # Paid API access — 2026-09-15
 
+> Correções de 16/09/2026: HEAD compartilha a política de GET, rotas públicas têm limites agregados, dependências foram atualizadas e App Check foi integrado. A exigência de atestação depende do rollout descrito em [APP_CHECK.md](../docs/APP_CHECK.md); monitoramento não bloqueia clientes sem token.
+
 > Atualização de 16/09/2026: [COST_CONTROL.md](../docs/COST_CONTROL.md) define as cotas persistentes, planos, texto TTS canônico obrigatório e voz via relay. Exemplos antigos de texto livre não são aceitos pelo backend protegido.
 
 ## Behavior

@@ -22,19 +22,21 @@ public struct VerbumAPI: Sendable {
     let cache: ResponseCache
     let now: @Sendable () -> Date
     let tokenProvider: TokenProvider
+    let appCheckProvider: @Sendable () async -> String?
 
-    public init(baseURL: URL, transport: @escaping Transport = Self.urlSession, cache: ResponseCache = .onDisk, tokenProvider: @escaping TokenProvider = { _ in nil }, now: @escaping @Sendable () -> Date = { Date() }) {
+    public init(baseURL: URL, transport: @escaping Transport = Self.urlSession, cache: ResponseCache = .onDisk, tokenProvider: @escaping TokenProvider = { _ in nil }, now: @escaping @Sendable () -> Date = { Date() }, appCheckProvider: @escaping @Sendable () async -> String? = { nil }) {
         self.baseURL = baseURL
         self.transport = transport
         self.cache = cache
         self.now = now
         self.tokenProvider = tokenProvider
+        self.appCheckProvider = appCheckProvider
     }
 
     /// The backend the app is built against — see `VerbumAPI.Configuration`.
     public static let shared = VerbumAPI(baseURL: Configuration.baseURL, tokenProvider: {
         try await FirebaseAPITokens.shared.token(createIfNeeded: $0)
-    })
+    }, appCheckProvider: { await FirebaseAppAttestation.token() })
 
     /// Plain `URLSession` with a short timeout: the API answers from a database,
     /// and the reader must not hang on a dead server.
@@ -165,6 +167,10 @@ public struct VerbumAPI: Sendable {
         try await exchange(request).0
     }
     private func exchange(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
+        var request = request
+        if request.value(forHTTPHeaderField: "Authorization") != nil, let token = await appCheckProvider() {
+            request.setValue(token, forHTTPHeaderField: "X-Firebase-AppCheck")
+        }
         let data: Data
         let response: HTTPURLResponse
         do {

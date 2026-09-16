@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import FirebaseAuth
+import FirebaseAppCheck
 import FirebaseCore
 import Foundation
 import Models
@@ -12,6 +13,7 @@ public enum FirebaseBootstrap {
               let path = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist"),
               let options = FirebaseOptions(contentsOfFile: path),
               options.bundleID == Bundle.main.bundleIdentifier else { return }
+        AppCheck.setAppCheckProviderFactory(VerbumAttestationFactory())
         FirebaseApp.configure(options: options)
         Auth.auth().useAppLanguage()
     }
@@ -36,9 +38,13 @@ extension AccountClient {
                 let auth = try configuredAuth()
                 // Preserve a guest's Firebase UID when they create a new account.
                 if let guest = auth.currentUser, guest.isAnonymous {
-                    return snapshot(try await guest.link(with: EmailAuthProvider.credential(withEmail: email, password: password)).user)
+                    let user = try await guest.link(with: EmailAuthProvider.credential(withEmail: email, password: password)).user
+                    try LocalAccountData.promoteGuest(to: user.uid)
+                    return snapshot(user)
                 }
-                return snapshot(try await auth.createUser(withEmail: email, password: password).user)
+                let user = try await auth.createUser(withEmail: email, password: password).user
+                try LocalAccountData.promoteGuest(to: user.uid)
+                return snapshot(user)
             }
         },
         anonymous: {
@@ -78,7 +84,9 @@ extension AccountClient {
                     guard let email = user.email, !password.isEmpty else { throw AccountFailure.passwordRequired }
                     try await user.reauthenticate(with: EmailAuthProvider.credential(withEmail: email, password: password))
                 }
+                let uid = user.uid
                 try await user.delete()
+                try LocalAccountData.delete(uid: uid)
             }
         },
         updateName: { name in
@@ -155,5 +163,26 @@ private func mapFailure(_ error: Error) -> AccountFailure {
     case .operationNotAllowed, .invalidAPIKey, .appNotAuthorized: return .configuration
     case .requiresRecentLogin: return .recentLoginRequired
     default: return .unexpected
+    }
+}
+
+private final class VerbumAttestationFactory: NSObject, AppCheckProviderFactory {
+    func createProvider(with app: FirebaseApp) -> AppCheckProvider? {
+        // Simulator builds never install a debug attestation bypass in a release app.
+        #if targetEnvironment(simulator)
+        return nil
+        #else
+        return AppAttestProvider(app: app)
+        #endif
+    }
+}
+public enum FirebaseAppAttestation {
+    public static func token() async -> String? {
+        #if targetEnvironment(simulator)
+        return nil
+        #else
+        guard FirebaseApp.app() != nil else { return nil }
+        return try? await AppCheck.appCheck().token(forcingRefresh: false).token
+        #endif
     }
 }

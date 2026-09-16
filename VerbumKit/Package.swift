@@ -42,6 +42,7 @@ let package = Package(
             name: "Clients",
             dependencies: [
                 .product(name: "FirebaseAuth", package: "firebase-ios-sdk"),
+                .product(name: "FirebaseAppCheck", package: "firebase-ios-sdk"),
                 .product(name: "FirebaseCore", package: "firebase-ios-sdk"),
                 "Models",
                 "Core",

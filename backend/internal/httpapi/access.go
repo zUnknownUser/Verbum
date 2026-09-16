@@ -24,15 +24,18 @@ type accessContextKey struct{}
 // AccessOptions configures the public edge. A nil verifier disables paid operations
 // (fail closed); public search still works without a paid query embedding.
 type AccessOptions struct {
-	Identify       func(context.Context, string) (usage.Principal, error)
-	Verify         VerifyIdentity
-	TrustedProxies []netip.Prefix
+	VerifyApp       func(string) error
+	RequireAppCheck bool
+	Identify        func(context.Context, string) (usage.Principal, error)
+	Verify          VerifyIdentity
+	TrustedProxies  []netip.Prefix
 }
 
 type routeBudget struct{ perUser, perIP, global, concurrent int }
 
 var accessBudgets = map[string]routeBudget{
 	"GET /v1/realtime/connect":  {3, 10, 30, 4},
+	"GET /v1/public":            {120, 240, 1200, 32},
 	"GET /v1/me/usage":          {30, 60, 300, 8},
 	"GET /v1/search":            {60, 120, 600, 16},
 	"POST /v1/ask":              {10, 30, 60, 8},
@@ -54,7 +57,17 @@ func newAccess(next http.Handler, options AccessOptions, now func() time.Time) h
 		gates[route] = make(chan struct{}, b.concurrent)
 	}
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		route := r.Method + " " + r.URL.Path
+		method := r.Method
+		// ServeMux routes HEAD to GET handlers. Admission must use the same identity.
+		if method == http.MethodHead {
+			method = http.MethodGet
+		}
+		route := method + " " + r.URL.Path
+		public := false
+		if _, exists := accessBudgets[route]; !exists && method == http.MethodGet && strings.HasPrefix(r.URL.Path, "/v1/") {
+			route = "GET /v1/public"
+			public = true
+		}
 		budget, protected := accessBudgets[route]
 		if !protected {
 			next.ServeHTTP(w, r)
@@ -72,7 +85,7 @@ func newAccess(next http.Handler, options AccessOptions, now func() time.Time) h
 			rejectAccess(w, route, http.StatusTooManyRequests, CodeRateLimited)
 			return
 		}
-		if route == "GET /v1/realtime/connect" {
+		if public || route == "GET /v1/realtime/connect" {
 			next.ServeHTTP(w, r)
 			return
 		}
@@ -110,6 +123,26 @@ func newAccess(next http.Handler, options AccessOptions, now func() time.Time) h
 				rejectAccess(w, route, http.StatusUnauthorized, CodeUnauthenticated)
 			}
 			return
+		}
+		// App attestation is separate from user authentication and the untrusted installation hint.
+		if uid != "" && route != "GET /v1/me/usage" {
+			raw := r.Header.Get("X-Firebase-AppCheck")
+			valid := false
+			if raw != "" && len(raw) <= 8192 && len(r.Header.Values("X-Firebase-AppCheck")) == 1 && options.VerifyApp != nil {
+				valid = options.VerifyApp(raw) == nil
+			}
+			if options.VerifyApp != nil {
+				slog.Info("app attestation", "route", route, "valid", valid)
+			}
+			if options.RequireAppCheck && !valid {
+				if isSearch {
+					uid = ""
+					principal = usage.Principal{Anonymous: true}
+				} else {
+					rejectAccess(w, route, http.StatusForbidden, CodeAppAttestationRequired)
+					return
+				}
+			}
 		}
 		if uid != "" && !limits.allow(route+"/uid/"+uid, budget.perUser, now()) {
 			rejectAccess(w, route, http.StatusTooManyRequests, CodeRateLimited)

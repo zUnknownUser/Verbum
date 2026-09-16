@@ -1,3 +1,4 @@
+import Clients
 import ComposableArchitecture
 import DesignSystem
 import Models
@@ -40,7 +41,7 @@ public struct AccountContainer<Content: View>: View {
 struct AccountView: View {
     let store: StoreOf<AccountFeature>
     let onOpenPassage: (PassageReference) -> Void
-    @State private var profile = Store(initialState: ProfileFeature.State()) { ProfileFeature() }
+    @State private var profile = Store(initialState: ProfileFeature.State()) { ProfileFeature() } withDependencies: { $0.readerAnnotations = .forCurrentAccount() }
     @State private var showPassword = false
     @State private var confirmSignOut = false
     @FocusState private var focus: Field?

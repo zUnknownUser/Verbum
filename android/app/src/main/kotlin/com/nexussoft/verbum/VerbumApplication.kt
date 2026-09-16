@@ -17,6 +17,10 @@ internal fun localizedContext(base: Context): Context {
 }
 
 class VerbumApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        com.nexussoft.verbum.auth.FirebaseAppAttestation.configure()
+    }
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(localizedContext(base))
     }

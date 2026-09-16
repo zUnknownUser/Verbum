@@ -9,10 +9,11 @@ public struct ReaderAnnotationsClient: Sendable {
 }
 
 extension ReaderAnnotationsClient: DependencyKey {
-    public static let liveValue = Self(
-        load: { try await AnnotationFile.shared.load() },
-        save: { try await AnnotationFile.shared.save($0) }
-    )
+    public static var liveValue: Self { forCurrentAccount() }
+    public static func forCurrentAccount() -> Self {
+        let file = AnnotationFile.shared(owner: LocalAccountData.owner)
+        return Self(load: { try await file.load() }, save: { try await file.save($0) })
+    }
     public static let previewValue = Self(load: { [] }, save: { _ in })
 }
 
@@ -24,24 +25,31 @@ extension DependencyValues {
 }
 
 /// Serialized, atomic writes; annotations remain on this device and never enter RAG prompts.
-private actor AnnotationFile {
-    static let shared = AnnotationFile()
-    private var cache: [ReaderAnnotation]?
+actor AnnotationFile {
+    private static let files = LockIsolated<[String: AnnotationFile]>([:])
+    static func shared(owner: String) -> AnnotationFile {
+        files.withValue { files in
+            if let file = files[owner] { return file }
+            let file = AnnotationFile(owner: owner); files[owner] = file; return file
+        }
+    }
+    let owner: String
+    private let fileURL: URL?
+    private let writable: (@Sendable () -> Bool)?
+    init(owner: String, url: URL? = nil, writable: (@Sendable () -> Bool)? = nil) { self.owner = owner; fileURL = url; self.writable = writable }
     private var url: URL {
-        FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("Verbum", isDirectory: true).appendingPathComponent("reader-annotations.json")
+        fileURL ?? LocalAccountData.url("reader-annotations.json", owner: owner)
     }
     func load() throws -> [ReaderAnnotation] {
-        if let cache { return cache }
-        guard FileManager.default.fileExists(atPath: url.path) else { cache = []; return [] }
+        guard FileManager.default.fileExists(atPath: url.path) else { return [] }
         let result = try JSONDecoder().decode([ReaderAnnotation].self, from: Data(contentsOf: url))
-        cache = result; return result
+        return result
     }
     func save(_ annotation: ReaderAnnotation) throws {
+        guard writable?() ?? !LocalAccountData.isDeleted(owner) else { throw CocoaError(.fileWriteNoPermission) }
         var values = try load().filter { $0.id != annotation.id }
         if annotation.highlight != nil || !annotation.note.isEmpty || annotation.bookmarked == true { values.append(annotation) }
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
         try JSONEncoder().encode(values).write(to: url, options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
-        cache = values
     }
 }

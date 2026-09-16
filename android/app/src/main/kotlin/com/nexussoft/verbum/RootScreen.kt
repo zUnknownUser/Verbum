@@ -1,6 +1,18 @@
 package com.nexussoft.verbum
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.produceState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.material3.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.compose.runtime.getValue
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -41,13 +53,42 @@ import java.io.File
  * Scripture from bible.helloao.org (cached, WEB offline fallback); everything else from the Verbum
  * backend (`BuildConfig.VERBUM_API_BASE_URL`, cached on disk for offline re-reading).
  */
+private data class LocalIdentity(val uid: String?)
+
 @Composable
 fun RootScreen() {
     val context = LocalContext.current.applicationContext
+    val accountViewModel: AccountViewModel = viewModel { AccountViewModel(FirebaseAccountClient(onDeleted = { AccountPreferencesClient.delete(context,it) }, onRegistered = { AccountPreferencesClient.promote(context,it) })) }
+    var retry by remember { mutableStateOf(0) }
+    var failed by remember { mutableStateOf(false) }
+    val identity by produceState<LocalIdentity?>(null, retry) {
+        FirebaseAccountClient().sessions().collect {
+            val uid = it?.takeUnless { session -> session.isAnonymous }?.id
+            if(value == null) {
+                try { AccountPreferencesClient.prepare(context,uid) }
+                catch(_: Exception) { failed = true; return@collect }
+            }
+            value = LocalIdentity(uid)
+        }
+    }
+    if(identity == null) {
+        if(failed) Button(onClick = { failed = false; retry++ }) {
+            Text(if(BookLanguage.current == BookLanguage.PORTUGUESE) "Não foi possível abrir seus dados. Tentar novamente" else "Could not open saved data. Try again")
+        } else CircularProgressIndicator()
+        return
+    }
+    val uid = identity!!.uid
+    val owner = remember(uid) { object : ViewModelStoreOwner { override val viewModelStore = ViewModelStore() } }
+    DisposableEffect(owner) { onDispose { owner.viewModelStore.clear() } }
+    CompositionLocalProvider(LocalViewModelStoreOwner provides owner) { AccountRootScreen(uid, accountViewModel) }
+}
+@Composable
+private fun AccountRootScreen(uid: String?, accountViewModel: AccountViewModel) {
+    val context = LocalContext.current.applicationContext
     val viewModel: AppViewModel = viewModel {
-        val preferences = SharedPreferencesClient(context)
+        val preferences = AccountPreferencesClient(context, uid)
         val installation = preferences.string("verbumInstallation") ?: java.util.UUID.randomUUID().toString().also { preferences.setString("verbumInstallation", it) }
-        val api = VerbumApi(BuildConfig.VERBUM_API_BASE_URL, cache = ResponseCache(File(context.cacheDir, "verbum-api")), tokenProvider = FirebaseApiTokens::token, installationId = installation)
+        val api = VerbumApi(BuildConfig.VERBUM_API_BASE_URL, cache = ResponseCache(File(context.cacheDir, "verbum-api")), tokenProvider = FirebaseApiTokens::token, installationId = installation, appCheckProvider = com.nexussoft.verbum.auth.FirebaseAppAttestation::token)
         val bible = LiveBibleClient(
             language = BookLanguage.current,
             remote = HelloAOBibleClient(HelloAOTranslation.id(BookLanguage.current), cache = ChapterCache(File(context.cacheDir, "scripture"))),
@@ -73,7 +114,6 @@ fun RootScreen() {
             ),
         )
     }
-    val accountViewModel: AccountViewModel = viewModel { AccountViewModel(FirebaseAccountClient()) }
     val appState by viewModel.store.state.collectAsStateWithLifecycle()
     val dark = when(appState.profile.appearance) {
         ProfileFeature.Appearance.AUTOMATIC -> isSystemInDarkTheme()

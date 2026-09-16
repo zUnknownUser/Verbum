@@ -21,6 +21,7 @@ As cotas de IA e conversa por voz são tetos de geração, não garantias de que
 - Minuto: UID 20, IP 60, instalação 40 operações novas, persistentes.
 - Hora: IP 300 e instalação 150, além do limite do plano.
 - Os limites rápidos por rota e de concorrência já existentes continuam antes desses controles, inclusive em acessos ao cache. São locais à réplica; cotas, orçamento e deduplicação são compartilhados.
+- App Check foi integrado para atestar os apps oficiais, com ativação gradual em [APP_CHECK.md](APP_CHECK.md). Não fornece identidade física única.
 - A instalação é um sinal adicional, alterável pelo cliente; não equivale a atestação de dispositivo. UID verificado, IP confiável e orçamento global continuam sendo os controles principais. Configure `VERBUM_TRUSTED_PROXIES` apenas para proxies reais.
 
 ## Reservas, cache e falhas

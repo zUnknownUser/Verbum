@@ -122,7 +122,7 @@ paths:
                 externalValue: examples/tts/request-en-US.json
       responses:
         '403':
-          description: This plan cannot start the operation.
+          description: Plan does not allow the operation, or app attestation is required when App Check enforcement is enabled.
           content:
             application/problem+json:
               schema: { $ref: '#/components/schemas/Problem' }
@@ -434,7 +434,7 @@ paths:
                   description: Optional reader anchor. Must select 1–6 verses; corpus text is verified before synthesis.
       responses:
         '403':
-          description: This plan cannot start the operation.
+          description: Plan does not allow the operation, or app attestation is required when App Check enforcement is enabled.
           content:
             application/problem+json:
               schema: { $ref: '#/components/schemas/Problem' }
@@ -491,7 +491,7 @@ paths:
           # Clients cannot select an arbitrary paid model.
       responses:
         '403':
-          description: This plan cannot start the operation.
+          description: Plan does not allow the operation, or app attestation is required when App Check enforcement is enabled.
           content:
             application/problem+json:
               schema: { $ref: '#/components/schemas/Problem' }
@@ -661,7 +661,7 @@ components:
       properties:
         code:
           type: string
-          enum: [unauthenticated, auth_unavailable, rate_limited, unknown_entity, unknown_book, content_unavailable, malformed_request, internal, realtime_unavailable, ask_unavailable, tts_unavailable, tts_rate_limited, tts_timeout, tts_failed, quota_exceeded, budget_exhausted, plan_required, usage_unavailable, request_in_progress, idempotency_conflict]
+          enum: [unauthenticated, app_attestation_required, auth_unavailable, rate_limited, unknown_entity, unknown_book, content_unavailable, malformed_request, internal, realtime_unavailable, ask_unavailable, tts_unavailable, tts_rate_limited, tts_timeout, tts_failed, quota_exceeded, budget_exhausted, plan_required, usage_unavailable, request_in_progress, idempotency_conflict]
         message: { type: string }
         retryAt: { type: string, format: date-time }
         fallback: { type: string, enum: [scripture_search] }

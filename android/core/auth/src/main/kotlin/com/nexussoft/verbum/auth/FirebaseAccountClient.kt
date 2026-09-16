@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 /** Android-only Firebase adapter; domain and feature modules have no SDK dependency. */
-class FirebaseAccountClient : AccountClient {
+class FirebaseAccountClient(private val onDeleted: suspend (String) -> Unit = {}, private val onRegistered: suspend (String) -> Unit = {}) : AccountClient {
     private fun auth(): FirebaseAuth = try {
         FirebaseAuth.getInstance().also { it.useAppLanguage() }
     } catch (_: IllegalStateException) { throw AccountException(AccountFailure.configuration) }
@@ -37,7 +37,9 @@ class FirebaseAccountClient : AccountClient {
         val guest = auth.currentUser?.takeIf { it.isAnonymous }
         val result = if (guest != null) guest.linkWithCredential(EmailAuthProvider.getCredential(email, password)).await()
             else auth.createUserWithEmailAndPassword(email, password).await()
-        requireNotNull(result.user).snapshot()
+        val user = requireNotNull(result.user)
+        onRegistered(user.uid)
+        user.snapshot()
     }
     override suspend fun anonymous() = mapped {
         FirebaseApiTokens.token(createIfNeeded = true)
@@ -78,7 +80,8 @@ class FirebaseAccountClient : AccountClient {
             val email = user.email ?: throw AccountException(AccountFailure.credentials)
             user.reauthenticate(EmailAuthProvider.getCredential(email, password)).await()
         }
-        user.delete().await(); Unit
+        val uid = user.uid
+        user.delete().await(); onDeleted(uid); Unit
     }
 }
 private fun FirebaseUser.snapshot() = AuthSession(uid, email, isAnonymous, isEmailVerified, displayName, metadata?.creationTimestamp, providerData.map { it.providerId }.filter { it != "firebase" })

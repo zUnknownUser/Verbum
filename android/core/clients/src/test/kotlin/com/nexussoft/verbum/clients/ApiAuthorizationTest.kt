@@ -17,13 +17,15 @@ class ApiAuthorizationTest {
             else HttpResponse(200, """{"clientSecret":"ek_test","expiresAt":1,"model":"gpt-realtime"}""")
         }, binaryTransport = BinaryHttpTransport {
             requests += it; BinaryHttpResponse(200, byteArrayOf(1))
-        }, tokenProvider = { tokenRequests += it; "test-id-token" })
+        }, tokenProvider = { tokenRequests += it; "test-id-token" }, appCheckProvider = { "verified-app-token" })
         api.entities(BibleEntityType.PERSON)
         api.realtimeSession()
         api.synthesizeSpeech("Texto", "pt-BR")
         assertEquals(emptyMap(), requests[0].headers)
         assertEquals("Bearer test-id-token", requests[1].headers["Authorization"])
         assertEquals("Bearer test-id-token", requests[2].headers["Authorization"])
+        assertEquals("verified-app-token", requests[1].headers["X-Firebase-AppCheck"])
+        assertEquals("verified-app-token", requests[2].headers["X-Firebase-AppCheck"])
         assertEquals(listOf(true, true), tokenRequests)
     }
 
@@ -34,7 +36,7 @@ class ApiAuthorizationTest {
         val base = "https://api.example.test"
         VerbumApi(base, transport, cache).search("David")
         val tokenRequests = mutableListOf<Boolean>()
-        VerbumApi(base, transport, cache, tokenProvider = { tokenRequests += it; "test-id-token" }).search("David")
+        VerbumApi(base, transport, cache, tokenProvider = { tokenRequests += it; "test-id-token" }, appCheckProvider = { "verified-app-token" }).search("David")
         assertEquals(2, calls.size)
         kotlin.test.assertTrue(calls[1].headers["X-Verbum-Installation"]?.isNotBlank() == true)
         assertEquals(listOf(false), tokenRequests)

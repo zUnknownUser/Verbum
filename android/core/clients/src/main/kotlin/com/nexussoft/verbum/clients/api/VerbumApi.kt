@@ -195,6 +195,7 @@ class VerbumApi(
     private val binaryTransport: BinaryHttpTransport = UrlConnectionBinaryHttpTransport,
     private val tokenProvider: suspend (createIfNeeded: Boolean) -> String? = { null },
     private val installationId: String = java.util.UUID.randomUUID().toString(),
+    private val appCheckProvider: suspend () -> String? = { null },
     private val now: () -> Long = System::currentTimeMillis,
 ) {
     companion object {
@@ -347,7 +348,7 @@ class VerbumApi(
     /** One place that turns transport outcomes into [VerbumApiException] (§52). */
     private suspend fun send(request: HttpRequest): String {
         val response = try {
-            transport.send(authorize(request))
+            transport.send(attest(authorize(request)))
         } catch (e: VerbumApiException) {
             throw e
         } catch (e: CancellationException) {
@@ -368,7 +369,7 @@ class VerbumApi(
     private suspend fun sendBinary(request: HttpRequest): ByteArray = sendBinaryResponse(request).bytes
     private suspend fun sendBinaryResponse(request: HttpRequest): BinaryHttpResponse {
         val response = try {
-            binaryTransport.send(authorize(request))
+            binaryTransport.send(attest(authorize(request)))
         } catch (e: VerbumApiException) {
             throw e
         } catch (e: CancellationException) {
@@ -388,6 +389,12 @@ class VerbumApi(
     suspend fun usageStatus(): UsageStatus? {
         val token = tokenProvider(false) ?: return null
         return decode(send(HttpRequest("GET", url("/v1/me/usage", emptyList()), headers = mapOf("Authorization" to "Bearer $token", "X-Verbum-Installation" to installationId))), WireUsageStatus.serializer()).let { UsageStatus(it.plan,it.resetsAt,it.remaining,it.voiceSeconds,it.restricted) }
+    }
+
+    private suspend fun attest(request: HttpRequest): HttpRequest {
+        if (!request.headers.containsKey("Authorization")) return request
+        val token = appCheckProvider() ?: return request
+        return request.copy(headers = request.headers + ("X-Firebase-AppCheck" to token))
     }
 
     private suspend fun authorize(request: HttpRequest): HttpRequest {

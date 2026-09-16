@@ -16,20 +16,21 @@ type Problem struct {
 }
 
 const (
-	CodeUnknownEntity       = "unknown_entity"
-	CodeUnknownBook         = "unknown_book"
-	CodeContentUnavailable  = "content_unavailable"
-	CodeMalformedRequest    = "malformed_request"
-	CodeInternal            = "internal"
-	CodeRealtimeUnavailable = "realtime_unavailable"
-	CodeAskUnavailable      = "ask_unavailable"
-	CodeTTSUnavailable      = "tts_unavailable"
-	CodeTTSRateLimited      = "tts_rate_limited"
-	CodeTTSTimeout          = "tts_timeout"
-	CodeTTSFailed           = "tts_failed"
-	CodeUnauthenticated     = "unauthenticated"
-	CodeAuthUnavailable     = "auth_unavailable"
-	CodeRateLimited         = "rate_limited"
+	CodeUnknownEntity          = "unknown_entity"
+	CodeUnknownBook            = "unknown_book"
+	CodeContentUnavailable     = "content_unavailable"
+	CodeMalformedRequest       = "malformed_request"
+	CodeInternal               = "internal"
+	CodeRealtimeUnavailable    = "realtime_unavailable"
+	CodeAskUnavailable         = "ask_unavailable"
+	CodeTTSUnavailable         = "tts_unavailable"
+	CodeTTSRateLimited         = "tts_rate_limited"
+	CodeTTSTimeout             = "tts_timeout"
+	CodeTTSFailed              = "tts_failed"
+	CodeUnauthenticated        = "unauthenticated"
+	CodeAppAttestationRequired = "app_attestation_required"
+	CodeAuthUnavailable        = "auth_unavailable"
+	CodeRateLimited            = "rate_limited"
 )
 
 func writeProblem(w http.ResponseWriter, status int, code, message string) {

@@ -214,3 +214,75 @@ func TestLimitStorageIsBoundedWithoutResettingActiveQuotas(t *testing.T) {
 		t.Fatal("idle records not expired")
 	}
 }
+
+func TestHEADSharesGETAdmissionAndAuthentication(t *testing.T) {
+	now := time.Now()
+	calls := 0
+	mux := http.NewServeMux()
+	mux.HandleFunc("GET /v1/search", func(w http.ResponseWriter, r *http.Request) { calls++; w.WriteHeader(204) })
+	h := newAccess(mux, AccessOptions{}, func() time.Time { return now })
+	for i := 0; i < 120; i++ {
+		if w := accessRequest(h, "GET", "/v1/search?q=peace", "", "192.0.2.1:1"); w.Code != 204 {
+			t.Fatal(w.Code)
+		}
+	}
+	if w := accessRequest(h, "HEAD", "/v1/search?q=peace", "", "192.0.2.1:1"); w.Code != 429 || calls != 120 {
+		t.Fatalf("HEAD bypass: %d calls=%d", w.Code, calls)
+	}
+	protected := Protect(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { t.Fatal("unauthenticated HEAD reached usage") }), AccessOptions{Verify: validIdentity})
+	if w := accessRequest(protected, "HEAD", "/v1/me/usage", "", "192.0.2.1:1"); w.Code != 401 {
+		t.Fatal(w.Code)
+	}
+}
+func TestPublicRoutesShareBoundedAdmission(t *testing.T) {
+	now := time.Now()
+	h := newAccess(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(204) }), AccessOptions{}, func() time.Time { return now })
+	for i := 0; i < 240; i++ {
+		if w := accessRequest(h, "GET", fmt.Sprintf("/v1/entities/%d", i), "", "192.0.2.1:1"); w.Code != 204 {
+			t.Fatal(w.Code)
+		}
+	}
+	if w := accessRequest(h, "HEAD", "/v1/timeline", "", "192.0.2.1:1"); w.Code != 429 {
+		t.Fatal(w.Code)
+	}
+	if w := accessRequest(h, "GET", "/healthz", "", "192.0.2.1:1"); w.Code != 204 {
+		t.Fatal(w.Code)
+	}
+}
+
+func TestAttestationEnforcement(t *testing.T) {
+	for _, token := range []string{"", "forged", "approved"} {
+		called := false
+		h := Protect(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { called = true; w.WriteHeader(204) }), AccessOptions{Verify: validIdentity, RequireAppCheck: true, VerifyApp: func(v string) error {
+			if v == "approved" {
+				return nil
+			}
+			return errors.New("invalid")
+		}})
+		r := httptest.NewRequest("POST", "/v1/ask", nil)
+		r.Header.Set("Authorization", "Bearer valid-user")
+		r.Header.Set("X-Firebase-AppCheck", token)
+		r.Header.Set("X-Verbum-Installation", "arbitrary-installation")
+		w := httptest.NewRecorder()
+		h.ServeHTTP(w, r)
+		if called != (token == "approved") {
+			t.Fatalf("token=%q called=%v status=%d", token, called, w.Code)
+		}
+		if !called && w.Code != 403 {
+			t.Fatal(w.Code)
+		}
+	}
+}
+
+func TestAttestationFailureLeavesSearchLexical(t *testing.T) {
+	h := Protect(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		lexical, _ := r.Context().Value(accessContextKey{}).(bool)
+		if !lexical {
+			t.Fatal("unattested request enabled embeddings")
+		}
+		w.WriteHeader(204)
+	}), AccessOptions{Verify: validIdentity, RequireAppCheck: true})
+	if w := accessRequest(h, "GET", "/v1/search?q=peace", "valid-user", "192.0.2.1:1"); w.Code != 204 {
+		t.Fatal(w.Code)
+	}
+}

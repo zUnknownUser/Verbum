@@ -10,7 +10,7 @@ extension SharedKey where Self == AppStorageKey<ProfileAppearance>.Default {
 }
 extension SharedKey where Self == FileStorageKey<ReadingActivity>.Default {
     static var readingActivity: Self {
-        Self[.fileStorage(.documentsDirectory.appending(component: "reading-activity.json")), default: ReadingActivity()]
+        Self[.fileStorage(LocalAccountData.url("reading-activity.json")), default: ReadingActivity()]
     }
 }
 

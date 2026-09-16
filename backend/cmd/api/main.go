@@ -177,7 +177,29 @@ func main() {
 	} else {
 		slog.Warn("paid API routes disabled: VERBUM_FIREBASE_PROJECT_ID not set; public search remains lexical")
 	}
-	handler = httpapi.Protect(handler, httpapi.AccessOptions{Identify: identify, TrustedProxies: proxies})
+	var verifyApp func(string) error
+	appMode := env("VERBUM_APP_CHECK_MODE", "monitor")
+	if appMode != "monitor" && appMode != "enforce" {
+		slog.Error("invalid App Check mode")
+		os.Exit(1)
+	}
+	if raw := os.Getenv("VERBUM_APP_CHECK_APP_IDS"); raw != "" {
+		ids := strings.Split(raw, ",")
+		for i := range ids {
+			ids[i] = strings.TrimSpace(ids[i])
+		}
+		verifyApp, err = identity.NewAppCheck(context.Background(), os.Getenv("VERBUM_FIREBASE_PROJECT_ID"), ids)
+		if err != nil {
+			slog.Error("App Check initialization failed")
+			os.Exit(1)
+		}
+	}
+	if appMode == "enforce" && verifyApp == nil {
+		slog.Error("App Check enforcement requires app IDs")
+		os.Exit(1)
+	}
+	slog.Info("app attestation policy", "mode", appMode, "configured", verifyApp != nil)
+	handler = httpapi.Protect(handler, httpapi.AccessOptions{Identify: identify, TrustedProxies: proxies, VerifyApp: verifyApp, RequireAppCheck: appMode == "enforce"})
 	server := &http.Server{
 		Addr:              addr,
 		Handler:           handler,

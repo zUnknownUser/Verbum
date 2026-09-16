@@ -1,7 +1,7 @@
 # Build with Go; Debian runtime includes FFmpeg for continuous chapter MP3s.
 # Runs as nonroot. Build from the repo root:
 #   docker build -f backend/Dockerfile -t verbum-api .
-FROM golang:1.24 AS build
+FROM golang:1.27.1 AS build
 WORKDIR /src
 COPY backend/go.mod backend/go.sum ./
 RUN go mod download
