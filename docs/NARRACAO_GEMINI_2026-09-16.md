@@ -35,3 +35,15 @@ Testes Go com race detector; testes de contrato HTTP com servidor simulado; perf
 Referências consultadas em 16/09/2026:
 - https://docs.cloud.google.com/text-to-speech/docs/gemini-tts
 - https://cloud.google.com/text-to-speech/pricing
+
+## Recibo de publicação
+
+- Commit da narração: `bcf6ebc`.
+- Commit conjunto publicado (inclui Luna): `efe3999b41ea045ca3df1cb457ac62a518180ea2`.
+- Railway deployment: `d8fe0825-f41d-4880-aa01-892b4a2c6ccf`, **SUCCESS**, criado em 16/09/2026 às 18:22:24 UTC.
+- Configuração confirmada: `VERBUM_TTS_NARRATOR=gemini`, `VERBUM_ASK_MODEL=gpt-5.6-luna`.
+- API pública: `https://api.vendlydigital.com.br`; `/healthz` e `/readyz` retornaram 200.
+- Manifesto português em produção: `2f259b36683fd3a97aa2b6d6f2939454178a0717067d9c6bf9b4489ca74cae30` (diferente do anterior).
+- Manifesto inglês preservado: `b9889517f9d5f54f39eca42c2e7d94fe45037a40a02b304e017530b69f3337e1`.
+- Nenhuma versão mobile foi publicada; os clientes existentes já consultam o manifesto.
+- A síntese real, a permissão específica do modelo e a qualidade auditiva não foram validadas por geração: o usuário pediu para testar o áudio pessoalmente.
