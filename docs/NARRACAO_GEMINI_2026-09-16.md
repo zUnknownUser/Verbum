@@ -59,3 +59,9 @@ O código Gemini permanece pronto e pode ser reativado após conferir a permiss�
 ### Publicação da correção
 
 Commit `696ba578a219b151d5aee7dd12ac04e599d710a1` enviado para `main`. Deploy Railway `77be9bc2-09cd-4fb9-94ab-76964350ef94` **SUCCESS**. A variável `VERBUM_TTS_NARRATOR=chirp3` foi confirmada; `/healthz` e `/readyz` responderam HTTP 200 e o manifesto português voltou a `12abd06af4eda81e138c979a7a11f0c07461dab65b23a9a7074eac2a66011627`. O seletor de horário e a retirada do fallback inglês estão no código iOS/Android e precisam de nova versão dos apps para chegar aos aparelhos.
+
+## Diagnóstico confirmado da ativação
+
+Após autorização de Lucas para uma síntese técnica curta, a chamada direta com `gemini-2.5-pro-tts`, `Charon` e `pt-BR` retornou HTTP 403: API `aiplatform.googleapis.com` desativada/não utilizada no projeto `verbum-app1` (944218527462). Nenhum áudio foi gerado. Essa é uma causa concreta observada; não é atraso de manifesto nem prova de falta do papel `roles/aiplatform.user`.
+
+A tentativa de ativar apenas essa API via Service Usage também retornou HTTP 403, negando à conta de serviço a permissão de ativação. É necessário que um administrador do projeto ative a API em https://console.cloud.google.com/apis/library/aiplatform.googleapis.com?project=verbum-app1 . Depois disso, repetir a síntese técnica; se surgir uma negativa de IAM específica, tratar a permissão indicada antes da reativação. Não trocar a variável de produção para Gemini enquanto a chamada permanecer bloqueada.
