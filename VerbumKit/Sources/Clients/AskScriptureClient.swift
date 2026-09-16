@@ -7,6 +7,7 @@ import Models
 @DependencyClient
 public struct AskScriptureClient: Sendable {
     public var ask: @Sendable (_ question: String) async throws -> ScriptureAnswer
+    public var askAbout: @Sendable (_ question: String, _ reference: PassageReference) async throws -> ScriptureAnswer = { _, _ in throw AskScriptureError.unavailable }
 }
 
 /// Why a question could not be answered, in the states the page shows (§52).
@@ -52,15 +53,20 @@ extension AskScriptureClient {
             } catch {
                 throw AskScriptureError.failed
             }
+        }, askAbout: { question, reference in
+            do { return try await api.ask(String(question.prefix(500)), reference: reference) }
+            catch is CancellationError { throw CancellationError() }
+            catch VerbumAPIError.networkUnavailable { throw AskScriptureError.networkUnavailable }
+            catch { throw AskScriptureError.failed }
         })
     }
 }
 
 extension VerbumAPI {
     /// `POST /v1/ask {"question"}` → the §30 contract. Never cached.
-    public func ask(_ question: String) async throws -> ScriptureAnswer {
-        struct Body: Encodable { let question: String }
-        return try await post("/v1/ask", body: Body(question: question))
+    public func ask(_ question: String, reference: PassageReference? = nil) async throws -> ScriptureAnswer {
+        struct Body: Encodable { let question: String; let reference: PassageReference? }
+        return try await post("/v1/ask", body: Body(question: question, reference: reference))
     }
 }
 
@@ -77,4 +83,13 @@ extension ScriptureAnswer {
         confidence: .high,
         interpretiveVariance: false
     )
+}
+
+extension AskScriptureClient {
+    /// Compatibility for existing injected fixtures. Live composition supplies the anchored endpoint.
+    public init(ask: @escaping @Sendable (String) async throws -> ScriptureAnswer) {
+        self.init(ask: ask, askAbout: { question, reference in
+            try await ask("\(reference.formatted): \(question)")
+        })
+    }
 }

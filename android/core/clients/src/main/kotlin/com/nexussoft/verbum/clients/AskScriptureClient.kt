@@ -11,6 +11,7 @@ import com.nexussoft.verbum.models.SourceReference
  */
 fun interface AskScriptureClient {
     suspend fun ask(question: String): ScriptureAnswer
+    suspend fun askAbout(question: String, reference: PassageReference): ScriptureAnswer = ask("${reference.formatted}: $question")
 }
 
 /** Why a question could not be answered, in the states the page shows (§52). */

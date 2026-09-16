@@ -248,7 +248,9 @@ paths:
       summary: Chapter-level context (§10) — entities, related passages, sources.
       description: |
         Backs `ContextClient.chapter(reference)`. `reference` is `Book.Chapter` in OSIS ids
-        (`1Sam.17`, `Ps.23`); verses in the path are ignored — context is per chapter.
+        (`1Sam.17`, `Ps.23`). Context is per chapter. Optional `verse` adds up to 24
+        references to other occurrences of the same STEP entities attested in that verse.
+        These are sourced entity associations, not asserted quotations or thematic parallels.
         **Missing coverage is 404 with code `content_unavailable`**, which the apps show as
         "no context yet" — never a generated explanation (§3.5).
       parameters:
@@ -258,6 +260,10 @@ paths:
           required: true
           schema: { type: string, pattern: '^[1-3]?[A-Za-z]+\.[0-9]+$' }
           example: 1Sam.17
+        - name: verse
+          in: query
+          required: false
+          schema: { type: integer, minimum: 1, maximum: 176 }
       responses:
         '200':
           description: OK
@@ -407,6 +413,9 @@ paths:
               additionalProperties: false
               properties:
                 question: { type: string, minLength: 1, maxLength: 500 }
+                reference:
+                  $ref: '#/components/schemas/PassageReference'
+                  description: Optional reader anchor. Must select 1–6 verses; corpus text is verified before synthesis.
       responses:
         '415':
           description: Content-Type must be application/json.

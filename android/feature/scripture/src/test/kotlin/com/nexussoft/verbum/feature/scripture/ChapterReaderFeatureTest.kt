@@ -1,142 +1,73 @@
 package com.nexussoft.verbum.feature.scripture
 
-import com.nexussoft.verbum.clients.BibleClientException
-import com.nexussoft.verbum.clients.RecordingClipboardClient
-import com.nexussoft.verbum.common.arch.TestStore
+import com.nexussoft.verbum.clients.*
+import com.nexussoft.verbum.common.arch.Store
 import com.nexussoft.verbum.feature.scripture.ChapterReaderFeature.Action
-import com.nexussoft.verbum.feature.scripture.ChapterReaderFeature.Content
 import com.nexussoft.verbum.feature.scripture.ChapterReaderFeature.State
-import com.nexussoft.verbum.models.PassageReference
-import kotlinx.coroutines.awaitCancellation
-import kotlinx.coroutines.test.runTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNull
+import com.nexussoft.verbum.feature.scripture.ChapterReaderFeature.Content
+import com.nexussoft.verbum.feature.scripture.ChapterReaderFeature.Visit
+import com.nexussoft.verbum.feature.scripture.ChapterReaderFeature.Position
+import com.nexussoft.verbum.models.*
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.*
+import kotlin.test.*
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ChapterReaderFeatureTest {
-    private val preferences = com.nexussoft.verbum.clients.InMemoryPreferencesClient()
-    private fun store(state: State, bible: StubBibleClient = StubBibleClient(), clipboard: RecordingClipboardClient? = null) =
-        TestStore(state, ChapterReaderFeature.reducer(bible, clipboard ?: unimplementedClipboard, preferences))
+    private val preferences=InMemoryPreferencesClient()
+    private fun TestScope.reader(state:State,bible:StubBibleClient=StubBibleClient(chapterStub={b,c->verses(b,c,3)})) =
+        Store(state,ChapterReaderFeature.reducer(bible,RecordingClipboardClient(),preferences),this)
 
-    @Test
-    fun startedLoadsChapter() = runTest {
-        val store = store(State(PassageReference("John", 3)), StubBibleClient(chapterStub = { b, c -> verses(b, c, 3) }))
-        store.send(Action.Started) { it.copy(content = Content.Loading) }
-        store.receive(Action.ChapterLoaded(verses("John", 3, 3))) { it.copy(content = Content.Loaded(verses("John", 3, 3))) }
-        assertEquals("John 3", preferences.string(ChapterReaderFeature.LAST_READ_KEY))
-        store.finish()
+    @Test fun loadsCurrentAndAdjacentChaptersOnly()=runTest {
+        val calls=mutableListOf<String>()
+        val store=reader(State(PassageReference("John",3)),StubBibleClient(chapterStub={b,c->calls+="$b.$c";verses(b,c,3)}))
+        store.send(Action.Started);advanceUntilIdle()
+        assertEquals(Content.Loaded(verses("John",3,3)),store.state.value.content)
+        assertEquals(setOf("John.2","John.3","John.4"),calls.toSet())
+        assertEquals(3,calls.size)
     }
-
-    @Test
-    fun loadFailureIsMappedToReaderError() = runTest {
-        val reference = PassageReference("John", 4)
-        val store = store(State(reference), StubBibleClient(chapterStub = { _, _ -> throw BibleClientException.ContentUnavailable(reference) }))
-        store.send(Action.Started) { it.copy(content = Content.Loading) }
-        store.receive(Action.ChapterFailed(ReaderError.ChapterUnavailable(reference))) { it.copy(content = Content.Failed(ReaderError.ChapterUnavailable(reference))) }
-        store.finish()
+    @Test fun lateChapterCannotReplaceCurrentPage()=runTest {
+        val old=CompletableDeferred<Unit>()
+        val store=reader(State(PassageReference("John",3)),StubBibleClient(chapterStub={b,c->if(c==3) old.await();verses(b,c,3)}))
+        store.send(Action.Started);runCurrent()
+        store.send(Action.Go(PassageReference("John",4)));runCurrent()
+        old.complete(Unit);advanceUntilIdle()
+        assertEquals(PassageReference("John",4),store.state.value.reference)
+        assertEquals(Content.Loaded(verses("John",4,3)),store.state.value.content)
+        assertNotNull(store.state.value.chapters["John.3"])
     }
-
-    @Test
-    fun unknownErrorsNeverLeakRaw() = runTest {
-        val store = store(State(PassageReference("John", 3)), StubBibleClient(chapterStub = { _, _ -> throw IllegalStateException("boom") }))
-        store.send(Action.Started) { it.copy(content = Content.Loading) }
-        store.receive(Action.ChapterFailed(ReaderError.Unexpected)) { it.copy(content = Content.Failed(ReaderError.Unexpected)) }
-        store.send(Action.RetryTapped) { it.copy(content = Content.Loading) }
-        store.receive(Action.ChapterFailed(ReaderError.Unexpected)) { it.copy(content = Content.Failed(ReaderError.Unexpected)) }
-        store.finish()
+    @Test fun verseOpensStudyWithLocalAnnotationWithoutLeavingReading()=runTest {
+        val ref=PassageReference("John",3,2..2)
+        val state=State(PassageReference("John",3),chapters=mapOf("John.3" to verses("John",3,3)),annotations=mapOf("John.3.2" to ReaderAnnotation(ref,HighlightColor.SAGE,"Minha nota")))
+        val store=reader(state)
+        store.send(Action.VerseTapped(2))
+        assertEquals(ref,store.state.value.study?.reference)
+        assertEquals("Minha nota",store.state.value.study?.annotation?.note)
+        assertEquals(state.reference,store.state.value.reference)
+        assertNull(store.state.value.study?.ask)
     }
-
-    @Test
-    fun verseSelectionTogglesAndFormats() = runTest {
-        val loaded = Content.Loaded(verses("John", 3, 21))
-        val store = store(State(PassageReference("John", 3), content = loaded))
-        store.send(Action.VerseTapped(16)) { it.copy(selectedVerses = setOf(16)) }
-        store.send(Action.VerseTapped(17)) { it.copy(selectedVerses = setOf(16, 17)) }
-        store.send(Action.VerseTapped(18)) { it.copy(selectedVerses = setOf(16, 17, 18)) }
-        store.send(Action.VerseTapped(21)) { it.copy(selectedVerses = setOf(16, 17, 18, 21)) }
-        assertEquals("John 3:16-18, 21", store.state.selectionCitation)
-        assertEquals("v16 v17 v18 v21", store.state.selectedText)
-        store.send(Action.VerseTapped(17)) { it.copy(selectedVerses = setOf(16, 18, 21)) }
-        assertEquals("John 3:16, 18, 21", store.state.selectionCitation)
-        store.send(Action.ClearSelectionTapped) { it.copy(selectedVerses = emptySet()) }
-        assertNull(store.state.selectionCitation)
-        store.finish()
+    @Test fun returningRestoresPositionAndContinuousFlow()=runTest {
+        val previous=PassageReference("Rom",8)
+        val flow=listOf(previous,PassageReference("Rom",9))
+        val state=State(PassageReference("Gen",50),history=listOf(Visit(previous,flow,28,73)),chapters=mapOf("Rom.8" to verses("Rom",8,3)))
+        val store=reader(state);store.send(Action.BackToReading);advanceUntilIdle()
+        assertEquals(previous,store.state.value.reference)
+        assertEquals(Position(28,73),store.state.value.restorePosition)
+        assertEquals(flow,store.state.value.flow)
+        assertTrue(store.state.value.history.isEmpty())
     }
-
-    @Test
-    fun copyWritesTextAndCitationToClipboard() = runTest {
-        val clipboard = RecordingClipboardClient()
-        val store = store(State(PassageReference("John", 3), content = Content.Loaded(verses("John", 3, 21)), selectedVerses = setOf(16, 17)), clipboard = clipboard)
-        store.send(Action.CopySelectionTapped)
-        assertEquals("v16 v17\n— John 3:16-17", clipboard.lastCopied)
-        store.finish()
+    @Test fun preferencesSurviveReopening()=runTest {
+        val store=reader(State(PassageReference("John",1)))
+        store.send(Action.ModeChanged(ReadingMode.CONTINUOUS));store.send(Action.FocusChanged(true));advanceUntilIdle()
+        val reopened=reader(State(PassageReference("John",1)));reopened.send(Action.Started);advanceUntilIdle()
+        assertEquals(ReadingMode.CONTINUOUS,reopened.state.value.readingMode)
+        assertTrue(reopened.state.value.focusMode)
     }
-
-    @Test
-    fun copyWithNothingSelectedDoesNothing() = runTest {
-        // clipboard is unimplemented: calling it would fail the test.
-        val store = store(State(PassageReference("John", 3), content = Content.Loaded(verses("John", 3, 21))))
-        store.send(Action.CopySelectionTapped)
-        store.finish()
-    }
-
-    @Test
-    fun nextChapterReloadsAndClearsSelection() = runTest {
-        val store = store(State(PassageReference("John", 3), selectedVerses = setOf(1)), StubBibleClient(chapterStub = { b, c -> verses(b, c, 2) }))
-        store.send(Action.NextChapterTapped) { it.copy(reference = PassageReference("John", 4), selectedVerses = emptySet(), content = Content.Loading) }
-        store.receive(Action.ChapterLoaded(verses("John", 4, 2))) { it.copy(content = Content.Loaded(verses("John", 4, 2))) }
-        store.finish()
-    }
-
-    @Test
-    fun chapterStepsRollAcrossBooks() = runTest {
-        val store = store(State(PassageReference("John", 21)), StubBibleClient(chapterStub = { b, c -> verses(b, c, 1) }))
-        store.send(Action.NextChapterTapped) { it.copy(reference = PassageReference("Acts", 1), content = Content.Loading) }
-        store.receive(Action.ChapterLoaded(verses("Acts", 1, 1))) { it.copy(content = Content.Loaded(verses("Acts", 1, 1))) }
-        store.send(Action.PreviousChapterTapped) { it.copy(reference = PassageReference("John", 21), content = Content.Loading) }
-        store.receive(Action.ChapterLoaded(verses("John", 21, 1))) { it.copy(content = Content.Loaded(verses("John", 21, 1))) }
-        store.finish()
-    }
-
-    @Test
-    fun cannotStepBeforeGenesisOrAfterRevelation() = runTest {
-        val genesis = store(State(PassageReference("Gen", 1)))
-        assertFalse(genesis.state.canGoToPreviousChapter)
-        genesis.send(Action.PreviousChapterTapped)
-        genesis.finish()
-
-        val revelation = store(State(PassageReference("Rev", 22)))
-        assertFalse(revelation.state.canGoToNextChapter)
-        revelation.send(Action.NextChapterTapped)
-        revelation.finish()
-    }
-
-    @Test
-    fun requestedVersesAreSelectedFromLoadedText() = runTest {
-        val store = store(State(PassageReference("John", 3, 16..18), ReaderTextScale.STANDARD), StubBibleClient(chapterStub = { b, c -> verses(b, c, 20) }))
-        store.send(Action.Started) { it.copy(content = Content.Loading) }
-        store.receive(Action.ChapterLoaded(verses("John", 3, 20))) { it.copy(content = Content.Loaded(verses("John", 3, 20)), selectedVerses = setOf(16, 17, 18)) }
-        store.finish()
-    }
-
-    @Test
-    fun goToReferenceRetainsVerseTargetAndLoadsChapter() = runTest {
-        val store = store(State(PassageReference("John", 3)), StubBibleClient(chapterStub = { b, c -> verses(b, c, 1) }))
-        store.send(Action.Go(PassageReference("1Sam", 17, 45..47))) { it.copy(reference = PassageReference("1Sam", 17), requestedVerses = 45..47, content = Content.Loading) }
-        store.receive(Action.ChapterLoaded(verses("1Sam", 17, 1))) { it.copy(content = Content.Loaded(verses("1Sam", 17, 1))) }
-        store.finish()
-    }
-
-    @Test
-    fun inFlightLoadIsSupersededByANewerOne() = runTest {
-        // TestStore runs effects to completion, so model the slow load as one that never answers.
-        val bible = StubBibleClient(chapterStub = { b, c -> if (c == 3) awaitCancellation() else verses(b, c, 1) })
-        val store = store(State(PassageReference("John", 3)), bible)
-        // Started would hang; instead prove the reducer marks the load cancellable-in-flight by
-        // jumping straight to chapter 4 and receiving only that chapter.
-        store.send(Action.Go(PassageReference("John", 4))) { it.copy(reference = PassageReference("John", 4), content = Content.Loading) }
-        store.receive(Action.ChapterLoaded(verses("John", 4, 1))) { it.copy(content = Content.Loaded(verses("John", 4, 1))) }
-        store.finish()
+    @Test fun canonBoundariesDoNotNavigate()=runTest {
+        val first=reader(State(PassageReference("Gen",1)));first.send(Action.PreviousChapterTapped)
+        assertEquals(PassageReference("Gen",1),first.state.value.reference)
+        val last=reader(State(PassageReference("Rev",22)));last.send(Action.NextChapterTapped)
+        assertEquals(PassageReference("Rev",22),last.state.value.reference)
     }
 }

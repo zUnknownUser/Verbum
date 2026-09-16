@@ -189,3 +189,44 @@ func TestPortuguesePresentationCoversDetailsTimelineAndSources(t *testing.T) {
 		t.Fatalf("timeline: %+v %v", timeline, err)
 	}
 }
+
+func TestVerseReferencesReuseAttestedEntityOccurrences(t *testing.T) {
+	ctx := context.Background()
+	conn, url := testdb.Open(t, "../../../db/migrations")
+	_, err := conn.Exec(ctx, `
+ INSERT INTO sources(id,citation,position) VALUES ('step','STEP TIPNR CC BY 4.0',0);
+ INSERT INTO source_datasets VALUES('step','https://github.com/STEPBible/STEPBible-Data',repeat('a',40),'TIPNR.tsv',repeat('b',64),'https://creativecommons.org/licenses/by/4.0/','STEP Bible','Structured occurrences');
+ INSERT INTO entities(id,type,name,position) VALUES ('david','person','David',0),('saul','person','Saul',1);
+ INSERT INTO entity_source_records(id,entity_id,source_id,revision,external_id,source_line,identifiers) VALUES
+ ('record.david','david','step',repeat('a',40),'david',1,'{}'),('record.saul','saul','step',repeat('a',40),'saul',2,'{}');
+ INSERT INTO entity_occurrences VALUES
+ ('record.david','1Sa.17.49a','1Sam',17,49),('record.david','1Sa.17.49b','1Sam',17,49),
+ ('record.david','1Sa.18.1a','1Sam',18,1),('record.david','1Sa.18.1b','1Sam',18,1),
+ ('record.saul','1Sa.17.55','1Sam',17,55),('record.saul','1Sa.19.1','1Sam',19,1);
+ `)
+	if err != nil {
+		t.Fatal(err)
+	}
+	db, err := postgres.Open(ctx, url)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(db.Close)
+	got, err := db.Context(store.WithVerse(ctx, 49), "1Sam", 17)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(got.RelatedPassages) != 1 || got.RelatedPassages[0].Key() != "1Sam.18.1" {
+		t.Fatalf("unrelated or duplicate references: %+v", got.RelatedPassages)
+	}
+	if len(got.Sources) != 1 || got.Sources[0].ID != "step" {
+		t.Fatal("lost provenance")
+	}
+	chapter, err := db.Context(ctx, "1Sam", 17)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(chapter.RelatedPassages) != 0 {
+		t.Fatal("chapter-only API contract changed")
+	}
+}

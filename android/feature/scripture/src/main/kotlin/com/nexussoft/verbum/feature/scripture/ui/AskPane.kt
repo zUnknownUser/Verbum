@@ -41,7 +41,7 @@ import com.nexussoft.verbum.models.ScriptureAnswer
  * beyond what the server says it is. Twin of iOS `AskView`.
  */
 @Composable
-internal fun AskPane(state: AskFeature.State, onBack: () -> Unit, send: (Action) -> Unit) {
+internal fun AskPane(state: AskFeature.State, onBack: () -> Unit, embedded: Boolean = false, send: (Action) -> Unit) {
     LaunchedEffect(state.question) { send(Action.Started) }
     val uriHandler = LocalUriHandler.current
     var sourceFailed by remember { mutableStateOf(false) }
@@ -61,16 +61,16 @@ internal fun AskPane(state: AskFeature.State, onBack: () -> Unit, send: (Action)
                     CircularProgressIndicator()
                     Text(stringResource(R.string.ask_loading), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
-                is Content.Failed -> item { Failure(content.error, send) }
-                is Content.Answered -> if (content.page.answer.isEmpty) noAnswer(content.page.answer, send) else answered(content.page, send, { address ->
+                is Content.Failed -> item { Failure(content.error, send, embedded) }
+                is Content.Answered -> if (content.page.answer.isEmpty) noAnswer(content.page.answer, send, embedded) else answered(content.page, send, { address ->
                     sourceFailed = runCatching { uriHandler.openUri(address) }.isFailure
-                }, sourceFailed)
+                }, sourceFailed, embedded)
             }
         }
     }
 }
 
-private fun androidx.compose.foundation.lazy.LazyListScope.answered(page: AskFeature.Page, send: (Action) -> Unit, openSource: (String) -> Unit, sourceFailed: Boolean) {
+private fun androidx.compose.foundation.lazy.LazyListScope.answered(page: AskFeature.Page, send: (Action) -> Unit, openSource: (String) -> Unit, sourceFailed: Boolean, embedded: Boolean) {
     val answer = page.answer
     item {
         AskHeading(stringResource(R.string.ask_short_answer))
@@ -90,7 +90,7 @@ private fun androidx.compose.foundation.lazy.LazyListScope.answered(page: AskFea
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        TextButton(onClick = { send(Action.TalkTapped) }) { Text(stringResource(R.string.voice_go_on)) }
+        if (!embedded) TextButton(onClick = { send(Action.TalkTapped) }) { Text(stringResource(R.string.voice_go_on)) }
     }
     if (answer.passageReferences.isNotEmpty()) {
         item { AskHeading(stringResource(R.string.key_passages)) }
@@ -128,14 +128,14 @@ private fun androidx.compose.foundation.lazy.LazyListScope.answered(page: AskFea
 }
 
 /** Nothing to stand behind (§51). */
-private fun androidx.compose.foundation.lazy.LazyListScope.noAnswer(answer: ScriptureAnswer, send: (Action) -> Unit) {
+private fun androidx.compose.foundation.lazy.LazyListScope.noAnswer(answer: ScriptureAnswer, send: (Action) -> Unit, embedded: Boolean) {
     item {
         Text(stringResource(R.string.ask_no_answer), style = VerbumTypography.editorialHeadline)
         Text(
             stringResource(if (answer.passageReferences.isEmpty()) R.string.ask_no_answer_body else R.string.ask_no_answer_body_closest),
             style = MaterialTheme.typography.bodyMedium,
         )
-        TextButton(onClick = { send(Action.SearchInsteadTapped) }) { Text(stringResource(R.string.ask_see_search)) }
+        if (!embedded) TextButton(onClick = { send(Action.SearchInsteadTapped) }) { Text(stringResource(R.string.ask_see_search)) }
     }
     if (answer.passageReferences.isNotEmpty()) {
         item { AskHeading(stringResource(R.string.ask_closest_passages)) }
@@ -145,7 +145,7 @@ private fun androidx.compose.foundation.lazy.LazyListScope.noAnswer(answer: Scri
 
 /** Failed (§52): the state is named; unavailable is not retryable, the rest is. */
 @Composable
-private fun Failure(error: AskScriptureException, send: (Action) -> Unit) {
+private fun Failure(error: AskScriptureException, send: (Action) -> Unit, embedded: Boolean) {
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {
         when (error) {
             AskScriptureException.Unavailable -> {
@@ -162,7 +162,7 @@ private fun Failure(error: AskScriptureException, send: (Action) -> Unit) {
                 TextButton(onClick = { send(Action.RetryTapped) }) { Text(stringResource(R.string.try_again)) }
             }
         }
-        TextButton(onClick = { send(Action.SearchInsteadTapped) }) { Text(stringResource(R.string.ask_see_search)) }
+        if (!embedded) TextButton(onClick = { send(Action.SearchInsteadTapped) }) { Text(stringResource(R.string.ask_see_search)) }
     }
 }
 

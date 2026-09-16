@@ -28,7 +28,7 @@ extension VerbumAPI {
 
     // MARK: context
 
-    /// `GET /v1/passages/{Book.Chapter}/context` (§10). Verses are ignored:
+    /// `GET /v1/passages/{Book.Chapter}/context` (§10). An optional verse narrows related occurrences:
     /// context is per chapter. Missing coverage is `nil`, never invented (§3.5).
     public func context(_ reference: PassageReference, language: BookLanguage = .current) async throws -> PassageContext? {
         struct Wire: Decodable {
@@ -38,7 +38,7 @@ extension VerbumAPI {
             let sources: [SourceReference]
         }
         do {
-            let wire: Wire = try await get("/v1/passages/\(reference.bookId).\(reference.chapter)/context", query: [Self.lang(language)])
+            let wire: Wire = try await get("/v1/passages/\(reference.bookId).\(reference.chapter)/context", query: [Self.lang(language)] + (reference.verses.map { [URLQueryItem(name: "verse", value: String($0.lowerBound))] } ?? []))
             return PassageContext(reference: wire.reference, entities: wire.entities, relatedPassages: wire.relatedPassages, sources: wire.sources, isFixture: false)
         } catch VerbumAPIError.problem(.contentUnavailable, _) {
             return nil

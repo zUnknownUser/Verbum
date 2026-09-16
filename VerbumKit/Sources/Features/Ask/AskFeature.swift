@@ -13,9 +13,11 @@ public struct AskFeature {
     @ObservableState
     public struct State: Equatable {
         public let question: String
+        public let reference: PassageReference?
         public var content: Content = .idle
 
-        public init(question: String) {
+        public init(question: String, reference: PassageReference? = nil) {
+            self.reference = reference
             self.question = question.trimmingCharacters(in: .whitespacesAndNewlines)
         }
     }
@@ -121,9 +123,12 @@ public struct AskFeature {
 
     private func ask(_ state: inout State) -> Effect<Action> {
         state.content = .asking
-        return .run { [askScriptureClient, question = state.question] send in
+        return .run { [askScriptureClient, question = state.question, reference = state.reference] send in
             do {
-                await send(.response(.success(try await askScriptureClient.ask(question: question))))
+                let answer: ScriptureAnswer
+                if let reference { answer = try await askScriptureClient.askAbout(question: question, reference: reference) }
+                else { answer = try await askScriptureClient.ask(question: question) }
+                await send(.response(.success(answer)))
             } catch let error as AskScriptureError {
                 await send(.response(.failure(error)))
             } catch is CancellationError {

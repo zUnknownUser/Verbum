@@ -1,418 +1,192 @@
 package com.nexussoft.verbum.feature.scripture.ui
 
-import com.nexussoft.verbum.models.localizedName
-import androidx.compose.ui.res.stringResource
-import com.nexussoft.verbum.feature.scripture.R
-import android.view.HapticFeedbackConstants
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.animation.togetherWith
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.windowInsetsTopHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Headphones
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.Mic
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
+import androidx.compose.material.icons.outlined.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.heading
-import androidx.compose.ui.semantics.selected
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.*
+import androidx.compose.ui.text.*
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import com.nexussoft.verbum.designsystem.tokens.Elevation
-import com.nexussoft.verbum.designsystem.tokens.Motion
-import com.nexussoft.verbum.designsystem.tokens.Radius
 import com.nexussoft.verbum.designsystem.tokens.Spacing
 import com.nexussoft.verbum.designsystem.tokens.VerbumTypography
 import com.nexussoft.verbum.feature.scripture.ChapterNavigation
+import com.nexussoft.verbum.feature.scripture.ChapterReaderFeature
 import com.nexussoft.verbum.feature.scripture.ChapterReaderFeature.Action
-import com.nexussoft.verbum.feature.scripture.ChapterReaderFeature.Content
 import com.nexussoft.verbum.feature.scripture.ChapterReaderFeature.State
-import com.nexussoft.verbum.models.BibleBook
-import com.nexussoft.verbum.models.BiblePassage
-import com.nexussoft.verbum.models.PassageReference
+import com.nexussoft.verbum.feature.scripture.R
+import com.nexussoft.verbum.models.*
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 
-/**
- * The reading page. Paper, warm ink, serif; verse numerals hang in the margin
- * like a printed Bible. Chrome hides while you read and returns on a tap or an
- * upward scroll. Swipe sideways to turn the chapter.
- */
+/** Text stays on its page; native pager physics never replace it with a fade. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun ChapterReaderPane(
-    state: State,
-    send: (Action) -> Unit,
-    onTitleTapped: () -> Unit,
-    onSettingsTapped: () -> Unit,
-    showTitleChevron: Boolean,
-) {
-    var chromeHidden by remember { mutableStateOf(false) }
-    val view = LocalView.current
-    LaunchedEffect(state.selectedVerses) {
-        if (state.selectedVerses.isNotEmpty()) view.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
+internal fun ChapterReaderPane(state:State,send:(Action)->Unit,onTitleTapped:()->Unit,onSettingsTapped:()->Unit,showTitleChevron:Boolean) {
+    val pager=rememberPagerState(initialPage=ReaderCanon.index(state.reference),pageCount={ReaderCanon.chapters.size})
+    val currentReference by rememberUpdatedState(state.reference)
+    var menu by remember {mutableStateOf(false)}
+    LaunchedEffect(Unit) {send(Action.Started)}
+    LaunchedEffect(state.reference,state.readingMode) {
+        val target=ReaderCanon.index(state.reference)
+        if(state.readingMode==ReadingMode.PAGES && pager.currentPage!=target && !pager.isScrollInProgress) pager.animateScrollToPage(target)
     }
-    LaunchedEffect(state.reference) { chromeHidden = false }
-    // Twin of iOS's `.task { store.send(.task) }`: loads on first appearance, reloads when the
-    // reference changes (Go/next/previous), and is a no-op if the reducer already has it loaded.
-    LaunchedEffect(state.reference) { send(Action.Started) }
-
-    val chooseLabel = stringResource(R.string.choose_book_and_chapter, state.title)
+    LaunchedEffect(pager,state.readingMode) {
+        if(state.readingMode==ReadingMode.PAGES) snapshotFlow {pager.settledPage}.distinctUntilChanged().collect {index->
+            if(index!=ReaderCanon.index(currentReference)) send(Action.Go(ReaderCanon.chapters[index]))
+        }
+    }
+    BackHandler(enabled=state.history.isNotEmpty() && state.study==null) {send(Action.BackToReading)}
     Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
-        AnimatedContent(
-            targetState = state.reference to state.content,
-            transitionSpec = {
-                val forward = isForward(initialState.first, targetState.first)
-                (slideInHorizontally(tween(Motion.Duration.SPATIAL_MS)) { if (forward) it / 6 else -it / 6 } + fadeIn(tween(Motion.Duration.SPATIAL_MS)))
-                    .togetherWith(fadeOut(tween(Motion.Duration.STANDARD_MS)))
-            },
-            contentKey = { it.first },
-            label = "chapter",
-        ) { (_, content) ->
-            when (content) {
-                Content.Idle, Content.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.outline)
+        if(state.readingMode==ReadingMode.PAGES) HorizontalPager(state=pager,beyondViewportPageCount=1,modifier=Modifier.fillMaxSize(),key={ReaderCanon.key(ReaderCanon.chapters[it])}) {index->
+            ReaderPage(state,ReaderCanon.chapters[index],false,send)
+        } else ReaderPage(state,state.flow.firstOrNull() ?: state.reference,true,send)
+        if(!state.focusMode) TopAppBar(
+            title={Row(Modifier.clickable(onClick=onTitleTapped),verticalAlignment=Alignment.CenterVertically) {
+                Text(state.title,style=VerbumTypography.navigationSerif)
+                if(showTitleChevron) Icon(Icons.Outlined.KeyboardArrowDown,contentDescription=stringResource(R.string.choose_book_and_chapter,state.title))
+            }},
+            actions={
+                IconButton(onClick={send(Action.FocusToggled)}) {Icon(Icons.Outlined.VisibilityOff,contentDescription=stringResource(R.string.reader_quiet))}
+                Box {
+                    IconButton(onClick={menu=true}) {Icon(Icons.Outlined.MoreHoriz,contentDescription=stringResource(R.string.reader_settings))}
+                    DropdownMenu(expanded=menu,onDismissRequest={menu=false}) {
+                        DropdownMenuItem(text={Text(stringResource(R.string.listen))},onClick={menu=false;send(Action.ListenTapped)})
+                        DropdownMenuItem(text={Text(stringResource(R.string.voice_talk_chapter))},onClick={menu=false;send(Action.TalkTapped)})
+                        DropdownMenuItem(text={Text(stringResource(R.string.reader_settings))},onClick={menu=false;onSettingsTapped()})
+                    }
                 }
-
-                is Content.Failed -> Unavailable(
-                    title = content.error.argument?.let { stringResource(content.error.titleRes, it) } ?: stringResource(content.error.titleRes),
-                    message = content.error.argument?.let { stringResource(content.error.messageRes, it) } ?: stringResource(content.error.messageRes),
-                ) { send(Action.RetryTapped) }
-
-                is Content.Loaded -> Page(
-                    state = state,
-                    verses = content.verses,
-                    send = send,
-                    onChromeToggle = { chromeHidden = !chromeHidden },
-                    onScrollDirection = { down -> chromeHidden = down },
-                )
+            },colors=TopAppBarDefaults.topAppBarColors(containerColor=MaterialTheme.colorScheme.background.copy(alpha=0.96f)),modifier=Modifier.align(Alignment.TopCenter),
+        ) else Surface(Modifier.align(Alignment.TopEnd).statusBarsPadding().padding(Spacing.sm),shape=RoundedCornerShape(24.dp),color=MaterialTheme.colorScheme.surface.copy(alpha=0.9f)) {
+            IconButton(onClick={send(Action.FocusToggled)}) {Icon(Icons.Outlined.Visibility,contentDescription=stringResource(R.string.reader_show_controls))}
+        }
+        state.history.lastOrNull()?.let {previous->
+            Surface(Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(Spacing.sm),shape=RoundedCornerShape(28.dp),tonalElevation=2.dp) {
+                TextButton(onClick={send(Action.BackToReading)}) {Icon(Icons.Outlined.Undo,contentDescription=null);Text(stringResource(R.string.reader_return,previous.reference.formatted))}
             }
         }
+    }
+    state.study?.let {study->VerseStudySheet(study,{send(Action.Study(it))},{send(Action.StudyDismissed)})}
+}
 
-        // Paper behind the status bar so text never runs under the clock while chrome is hidden.
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .windowInsetsTopHeight(WindowInsets.statusBars)
-                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.94f))
-                .align(Alignment.TopCenter),
-        )
+private data class ReaderItem(val key:String,val reference:PassageReference,val verse:BiblePassage?=null,val header:Boolean=false,val footer:Boolean=false)
 
-        AnimatedVisibility(
-            visible = !chromeHidden,
-            enter = slideInVertically { -it } + fadeIn(),
-            exit = slideOutVertically { -it } + fadeOut(),
-            modifier = Modifier.align(Alignment.TopCenter),
-        ) {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background.copy(alpha = 0.94f)),
-                title = {
-                    Row(
-                        Modifier
-                            .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null, onClick = onTitleTapped)
-                            .semantics { contentDescription = chooseLabel },
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Text(state.title, style = VerbumTypography.navigationSerif)
-                        if (showTitleChevron) {
-                            Icon(Icons.Filled.KeyboardArrowDown, contentDescription = null, tint = MaterialTheme.colorScheme.outline)
+@Composable private fun ReaderPage(state:State,reference:PassageReference,continuous:Boolean,send:(Action)->Unit) {
+    val cacheKey=if(continuous) "flow" else ReaderCanon.key(reference)
+    val refs=if(continuous) state.flow else listOf(reference)
+    val rows=remember(refs,state.chapters) {refs.flatMap {chapter->
+        val key=ReaderCanon.key(chapter)
+        listOf(ReaderItem("$key.header",chapter,header=true)) +
+            (state.chapters[key]?.map {ReaderItem("${it.bookId}.${it.chapter}.${it.verseStart}",chapter,it)} ?: listOf(ReaderItem("$key.loading",chapter))) +
+            listOf(ReaderItem("$key.footer",chapter,footer=true))
+    }}
+    val previous=state.positions[cacheKey] ?: ChapterReaderFeature.Position()
+    val list=rememberLazyListState(initialFirstVisibleItemIndex=previous.index,initialFirstVisibleItemScrollOffset=previous.offset)
+    var restored by remember {mutableIntStateOf(-1)}
+    val latestRows by rememberUpdatedState(rows)
+    val latestReference by rememberUpdatedState(state.reference)
+    LaunchedEffect(reference) {send(Action.EnsureChapter(reference))}
+    LaunchedEffect(state.navigationRevision,state.chapters[ReaderCanon.key(state.reference)]?.size) {
+        if((continuous || reference==state.reference) && state.chapters[ReaderCanon.key(state.reference)]!=null && restored!=state.navigationRevision) {
+            val requested=state.requestedVerses?.first
+            val target=if(requested!=null) rows.indexOfFirst {it.key=="${state.reference.bookId}.${state.reference.chapter}.$requested"}.coerceAtLeast(0) else state.restorePosition?.index ?: previous.index
+            val offset=if(requested!=null) 0 else state.restorePosition?.offset ?: previous.offset
+            if(rows.isNotEmpty()) list.scrollToItem(target.coerceAtMost(rows.lastIndex),offset)
+            restored=state.navigationRevision
+        }
+    }
+    LaunchedEffect(list,cacheKey) {
+        snapshotFlow {list.isScrollInProgress}.filter {!it}.collect {
+            send(Action.PositionChanged(cacheKey,list.firstVisibleItemIndex,list.firstVisibleItemScrollOffset))
+        }
+    }
+    LaunchedEffect(list,continuous) {
+        if(continuous) snapshotFlow {list.firstVisibleItemIndex}.distinctUntilChanged().collect {index->
+            latestRows.getOrNull(index)?.reference?.takeIf {it!=latestReference}?.let {send(Action.ChapterVisible(it))}
+        }
+    }
+    DisposableEffect(cacheKey) {onDispose {send(Action.PositionChanged(cacheKey,list.firstVisibleItemIndex,list.firstVisibleItemScrollOffset))}}
+    LazyColumn(state=list,modifier=Modifier.fillMaxSize().statusBarsPadding(),contentPadding=PaddingValues(start=Spacing.readingMargin,end=Spacing.readingMargin,top=if(state.focusMode) Spacing.xl else 76.dp,bottom=100.dp)) {
+        itemsIndexed(rows,key={_,item->item.key}) {_,item->
+            when {
+                item.header -> Column(Modifier.fillMaxWidth().padding(top=Spacing.xxl,bottom=Spacing.xxl).semantics {heading()},horizontalAlignment=Alignment.CenterHorizontally) {
+                    Text(BibleBook.book(item.reference.bookId)?.localizedName ?: item.reference.bookId,style=VerbumTypography.overline,color=MaterialTheme.colorScheme.primary)
+                    Text(item.reference.chapter.toString(),style=VerbumTypography.chapterNumeral)
+                    Spacer(Modifier.height(Spacing.md));HorizontalDivider(Modifier.width(28.dp),color=MaterialTheme.colorScheme.primary)
+                }
+                item.verse!=null -> ReaderVerse(item.verse,state,send)
+                item.footer -> {
+                    val next=ChapterNavigation.next(item.reference)
+                    if(continuous) {
+                        if(item.reference==state.flow.lastOrNull() && state.chapters[ReaderCanon.key(item.reference)]!=null && next!=null) {
+                            LaunchedEffect(item.key) {send(Action.AppendChapter)}
+                            Text(next.formatted,style=VerbumTypography.editorialHeadline,modifier=Modifier.fillMaxWidth().padding(vertical=Spacing.xxl))
+                        }
+                    } else if(next!=null) TextButton(onClick={send(Action.NextChapterTapped)},modifier=Modifier.fillMaxWidth().padding(vertical=Spacing.xxl)) {
+                        Column(horizontalAlignment=Alignment.CenterHorizontally) {
+                            Text(next.formatted,style=VerbumTypography.editorialHeadline)
+                            Text(stringResource(R.string.reader_swipe_continue),style=MaterialTheme.typography.bodySmall)
                         }
                     }
-                },
-                actions = {
-                    IconButton(onClick = { send(Action.ListenTapped) }) {
-                        Icon(Icons.Filled.Headphones, contentDescription = stringResource(R.string.listen), tint = MaterialTheme.colorScheme.onSurface)
-                    }
-                    IconButton(onClick = { send(Action.TalkTapped) }) {
-                        Icon(Icons.Filled.Mic, contentDescription = stringResource(R.string.voice_talk_chapter), tint = MaterialTheme.colorScheme.onSurface)
-                    }
-                    TextButton(onClick = onSettingsTapped) {
-                        Text("Aa", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
-                    }
-                },
-            )
-        }
-
-        val citation = state.selectionCitation
-        AnimatedVisibility(
-            visible = citation != null,
-            enter = slideInVertically { it } + fadeIn(),
-            exit = slideOutVertically { it } + fadeOut(),
-            modifier = Modifier.align(Alignment.BottomCenter),
-        ) {
-            SelectionBar(
-                citation = citation ?: "",
-                onCopy = { send(Action.CopySelectionTapped) },
-                onClear = { send(Action.ClearSelectionTapped) },
-            )
-        }
-    }
-}
-
-@Composable
-private fun Page(
-    state: State,
-    verses: List<BiblePassage>,
-    send: (Action) -> Unit,
-    onChromeToggle: () -> Unit,
-    onScrollDirection: (down: Boolean) -> Unit,
-) {
-    val listState = rememberLazyListState()
-    LaunchedEffect(state.reference, state.requestedVerses) {
-        val range = state.requestedVerses ?: return@LaunchedEffect
-        val index = verses.indexOfFirst { it.verseStart in range }
-        if (index >= 0) listState.scrollToItem(index + 1)
-    }
-    LaunchedEffect(listState) {
-        var last = 0
-        snapshotFlow { listState.firstVisibleItemIndex * 10_000 + listState.firstVisibleItemScrollOffset }
-            .collect { offset ->
-                val delta = offset - last
-                if (listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset < 200 || delta < -40) onScrollDirection(false)
-                else if (delta > 40) onScrollDirection(true)
-                last = offset
-            }
-    }
-    val fontSize = VerbumTypography.scripture.fontSize * state.textScale.factor
-
-    Box(
-        Modifier
-            .fillMaxSize()
-            .pointerInput(Unit) { detectTapGestures { onChromeToggle() } }
-            .pointerInput(state.canGoToNextChapter, state.canGoToPreviousChapter) {
-                var drag = 0f
-                detectHorizontalDragGestures(
-                    onDragStart = { drag = 0f },
-                    onDragEnd = {
-                        if (drag < -120 && state.canGoToNextChapter) send(Action.NextChapterTapped)
-                        else if (drag > 120 && state.canGoToPreviousChapter) send(Action.PreviousChapterTapped)
-                    },
-                ) { _, dragAmount -> drag += dragAmount }
-            },
-        contentAlignment = Alignment.TopCenter,
-    ) {
-        LazyColumn(
-            state = listState,
-            modifier = Modifier.widthIn(max = READING_MAX_WIDTH).fillMaxWidth(),
-            contentPadding = PaddingValues(start = Spacing.readingMargin, end = Spacing.readingMargin, top = 0.dp, bottom = Spacing.xxxl * 2),
-        ) {
-            item {
-                ChapterOpener(state.book?.localizedName ?: state.reference.bookId, state.reference.chapter)
-                if (state.requestedVerses != null && verses.none { it.verseStart in state.requestedVerses }) {
-                    Text(stringResource(R.string.book_search_verse_missing), style = MaterialTheme.typography.bodyMedium)
                 }
-                TextButton(onClick = { send(Action.ContextTapped) }) { Text(stringResource(R.string.context_title)) }
-            }
-            items(verses, key = { it.id }) { verse ->
-                VerseRow(
-                    number = verse.verseStart,
-                    text = verse.text,
-                    fontSize = fontSize,
-                    isSelected = verse.verseStart in state.selectedVerses,
-                    onTap = { send(Action.VerseTapped(verse.verseStart)) },
-                )
-            }
-            item {
-                TextButton(onClick = { send(Action.ContextTapped) }) { Text(stringResource(R.string.context_title)) }
-                ChapterFoot(
-                    next = ChapterNavigation.next(state.reference),
-                    previous = ChapterNavigation.previous(state.reference),
-                    onNext = { send(Action.NextChapterTapped) },
-                    onPrevious = { send(Action.PreviousChapterTapped) },
-                )
-            }
-        }
-    }
-}
-
-/** `1 SAMUEL` / `17` / a short bronze rule — centred like a book's chapter page. */
-@Composable
-private fun ChapterOpener(bookName: String, chapter: Int) {
-    val openerLabel = stringResource(R.string.book_comma_chapter, bookName, chapter)
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .statusBarsPadding()
-            .padding(top = 88.dp, bottom = Spacing.xxl)
-            .semantics(mergeDescendants = true) { heading(); contentDescription = openerLabel },
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(Spacing.sm),
-    ) {
-        Text(bookName.uppercase(), style = VerbumTypography.overline, color = MaterialTheme.colorScheme.primary)
-        Text(chapter.toString(), style = VerbumTypography.chapterNumeral, color = MaterialTheme.colorScheme.onSurface)
-        Box(Modifier.padding(top = Spacing.xs).width(28.dp).height(1.dp).background(MaterialTheme.colorScheme.primary))
-    }
-}
-
-/** One verse: numeral hanging in the margin, text flush. Selection is a bronze wash. */
-@Composable
-private fun VerseRow(number: Int, text: String, fontSize: TextUnit, isSelected: Boolean, onTap: () -> Unit) {
-    val accent = MaterialTheme.colorScheme.primary
-    val wash = if (isSelected) accent.copy(alpha = 0.16f) else Color.Transparent
-    val verseLabel = stringResource(R.string.verse_n, number, text)
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onTap)
-            .semantics {
-                contentDescription = verseLabel
-                selected = isSelected
-            }
-            .background(wash, RoundedCornerShape(Radius.md))
-            .padding(vertical = Spacing.sm, horizontal = Spacing.xs),
-        horizontalArrangement = Arrangement.spacedBy(Spacing.sm),
-    ) {
-        Text(
-            number.toString(),
-            style = VerbumTypography.verseNumeral(fontSize),
-            color = if (isSelected) accent else MaterialTheme.colorScheme.outline,
-            textAlign = TextAlign.End,
-            modifier = Modifier.width(28.dp).padding(top = 3.dp),
-        )
-        Text(
-            text,
-            style = VerbumTypography.scripture.copy(fontSize = fontSize, lineHeight = fontSize * 1.65f),
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.weight(1f),
-        )
-    }
-}
-
-/** End-of-chapter mark and the way onward. */
-@Composable
-private fun ChapterFoot(next: PassageReference?, previous: PassageReference?, onNext: () -> Unit, onPrevious: () -> Unit) {
-    Column(
-        Modifier.fillMaxWidth().padding(top = Spacing.xxxl),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(Spacing.xl),
-    ) {
-        Box(Modifier.width(28.dp).height(1.dp).background(MaterialTheme.colorScheme.primary))
-        if (next != null) {
-            val continueLabel = stringResource(R.string.continue_to, next.formatted)
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .clickable(onClick = onNext)
-                    .semantics { contentDescription = continueLabel }
-                    .padding(vertical = Spacing.lg),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(Spacing.xs),
-            ) {
-                Text(stringResource(R.string.continue_label).uppercase(), style = VerbumTypography.overline, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.xs)) {
-                    Text(next.formatted, style = VerbumTypography.editorialHeadline, color = MaterialTheme.colorScheme.onSurface)
-                    Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                else -> {
+                    LaunchedEffect(item.key) {send(Action.EnsureChapter(item.reference))}
+                    val error=state.chapterErrors[ReaderCanon.key(item.reference)]
+                    if(error!=null) Column(Modifier.fillMaxWidth().padding(vertical=Spacing.xxl)) {
+                        Text(error.argument?.let {stringResource(error.messageRes,it)} ?: stringResource(error.messageRes))
+                        TextButton(onClick={send(Action.EnsureChapter(item.reference))}) {Text(stringResource(R.string.try_again))}
+                    } else Box(Modifier.fillMaxWidth().height(220.dp),contentAlignment=Alignment.Center) {CircularProgressIndicator()}
                 }
             }
-        } else {
-            Text(stringResource(R.string.end_of_the_book).uppercase(), style = VerbumTypography.overline, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        }
-        if (previous != null) {
-            TextButton(onClick = onPrevious) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = MaterialTheme.colorScheme.outline, modifier = Modifier.width(14.dp))
-                Spacer(Modifier.width(Spacing.xs))
-                Text(previous.formatted, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.outline)
-            }
         }
     }
 }
 
-@Composable
-private fun Unavailable(title: String, message: String, onRetry: () -> Unit) {
-    Column(
-        Modifier.fillMaxSize().padding(Spacing.xxl),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        Text(title, style = VerbumTypography.editorialHeadline, textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onSurface)
-        Spacer(Modifier.height(Spacing.sm))
-        Text(message, style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Spacer(Modifier.height(Spacing.lg))
-        Button(onClick = onRetry) { Text(stringResource(R.string.try_again)) }
-    }
-}
-
-@Composable
-private fun SelectionBar(citation: String, onCopy: () -> Unit, onClear: () -> Unit) {
-    Surface(
-        shape = RoundedCornerShape(50),
-        color = MaterialTheme.colorScheme.surfaceContainerLowest,
-        tonalElevation = Elevation.Floating.dp,
-        shadowElevation = Elevation.Floating.dp,
-        modifier = Modifier.navigationBarsPadding().padding(horizontal = Spacing.screenMargin, vertical = Spacing.md),
-    ) {
-        Row(
-            Modifier.padding(start = Spacing.lg, end = Spacing.sm, top = Spacing.xs, bottom = Spacing.xs),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(Spacing.sm),
-        ) {
-            Text(citation, style = VerbumTypography.navigationSerif, color = MaterialTheme.colorScheme.onSurface)
-            TextButton(onClick = onCopy) { Text(stringResource(R.string.copy)) }
-            IconButton(onClick = onClear) { Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.clear_selection), tint = MaterialTheme.colorScheme.primary) }
+@Composable private fun ReaderVerse(verse:BiblePassage,state:State,send:(Action)->Unit) {
+    val id="${verse.bookId}.${verse.chapter}.${verse.verseStart}"
+    val annotation=state.annotations[id]
+    val reference=PassageReference(verse.bookId,verse.chapter)
+    val color=MaterialTheme.colorScheme.onSurface
+    val accent=MaterialTheme.colorScheme.primary
+    val currentSend by rememberUpdatedState(send)
+    val segments=state.mentions[id].orEmpty()
+    val text=remember(verse.text,segments,color,accent) {buildAnnotatedString {
+        fun plain(value:String) {
+            withLink(LinkAnnotation.Clickable("verse",TextLinkStyles(style=SpanStyle(color=color))) {
+                currentSend(Action.StudyVerse(reference,verse.verseStart))
+            }) {append(value)}
         }
+        if(segments.isEmpty()) plain(verse.text)
+        else segments.forEachIndexed {index,segment->
+            if(segment.entityIds.isEmpty()) plain(segment.text)
+            else withLink(LinkAnnotation.Clickable("entity-$index",TextLinkStyles(style=SpanStyle(color=color,textDecoration=TextDecoration.Underline))) {
+                currentSend(Action.StudyVerse(reference,verse.verseStart,segment.entityIds))
+            }) {append(segment.text)}
+        }
+    }}
+    val size=VerbumTypography.scripture.fontSize*state.textScale.factor
+    val wash=annotation?.highlight?.let {highlightColor(it).copy(alpha=0.2f)} ?: Color.Transparent
+    Row(Modifier.fillMaxWidth().background(wash,RoundedCornerShape(4.dp)).padding(vertical=Spacing.sm),verticalAlignment=Alignment.Top) {
+        Column(Modifier.width(32.dp).clickable {send(Action.StudyVerse(reference,verse.verseStart))}.semantics {contentDescription="${verse.verseStart}"},horizontalAlignment=Alignment.End) {
+            Text(verse.verseStart.toString(),style=VerbumTypography.verseNumeral(size),color=MaterialTheme.colorScheme.outline)
+            if(!annotation?.note.isNullOrEmpty()) Icon(Icons.Outlined.EditNote,contentDescription=stringResource(R.string.reader_your_note),modifier=Modifier.size(12.dp))
+        }
+        Spacer(Modifier.width(Spacing.sm))
+        Text(text,style=VerbumTypography.scripture.copy(fontSize=size,lineHeight=size*1.65f),color=color,
+            modifier=Modifier.weight(1f))
     }
 }
-
-private fun isForward(old: PassageReference, new: PassageReference): Boolean {
-    val o = BibleBook.book(old.bookId)?.order ?: 0
-    val n = BibleBook.book(new.bookId)?.order ?: 0
-    return if (n == o) new.chapter >= old.chapter else n > o
-}
-
-private val READING_MAX_WIDTH = 680.dp

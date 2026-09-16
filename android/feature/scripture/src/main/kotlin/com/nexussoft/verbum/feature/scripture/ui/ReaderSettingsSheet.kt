@@ -14,6 +14,9 @@ import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.Switch
+import androidx.compose.foundation.layout.Row
+import com.nexussoft.verbum.models.ReadingMode
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -31,6 +34,18 @@ internal fun ReaderSettingsSheet(state: State, send: (Action) -> Unit, onDismiss
             Modifier.padding(horizontal = Spacing.xl).padding(bottom = Spacing.xxl),
             verticalArrangement = Arrangement.spacedBy(Spacing.lg),
         ) {
+            Text(stringResource(R.string.reader_reading), style=VerbumTypography.overline)
+            SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
+                ReadingMode.entries.forEachIndexed { index, mode ->
+                    SegmentedButton(selected=state.readingMode==mode,onClick={send(Action.ModeChanged(mode))},shape=SegmentedButtonDefaults.itemShape(index,2)) {
+                        Text(stringResource(if(mode==ReadingMode.PAGES) R.string.reader_pages else R.string.reader_continuous))
+                    }
+                }
+            }
+            Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween) {
+                Text(stringResource(R.string.reader_quiet))
+                Switch(checked=state.focusMode,onCheckedChange={send(Action.FocusChanged(it))})
+            }
             Text(stringResource(R.string.text_size).uppercase(), style = VerbumTypography.overline, color = MaterialTheme.colorScheme.onSurfaceVariant)
             SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
                 ReaderTextScale.entries.forEachIndexed { index, scale ->

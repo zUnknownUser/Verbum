@@ -303,3 +303,49 @@ func TestAskDefaultsUnknownConfidenceToLow(t *testing.T) {
 		t.Errorf("confidence = %q, want low for an unrecognized value (never trust the model's enum blindly)", got.Confidence)
 	}
 }
+
+func TestSelectedPassageAnchorsAnOtherwiseAmbiguousQuestion(t *testing.T) {
+	selected := ref("John", 1, 14)
+	st := twoVerseStore()
+	st.text[selected.Key()] = "The Word became flesh and lived among us."
+	synth := &fakeSynthesizer{reply: `{"answer":"The Word became flesh.","summary":"Incarnation","citedPassageIndexes":[0],"confidence":"medium","interpretiveVariance":false}`}
+	svc := &Service{Store: st, Synthesizer: synth}
+	got, err := svc.Ask(WithPassage(context.Background(), selected), "What does this expression mean?")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(got.PassageReferences) != 1 || got.PassageReferences[0].Key() != selected.Key() {
+		t.Fatalf("lost selected verse: %+v", got)
+	}
+	if !strings.Contains(synth.gotUser, "[0] John 1:14") || !strings.Contains(synth.gotUser, "reader selected the first 1") {
+		t.Fatal("selected evidence is not identified")
+	}
+}
+
+func TestSelectedPassageRequiresRealCorpusEvenWhenOtherEvidenceExists(t *testing.T) {
+	synth := &fakeSynthesizer{}
+	svc := &Service{Store: twoVerseStore(), Synthesizer: synth}
+	got, err := svc.Ask(WithPassage(context.Background(), ref("John", 1, 14)), "What does this mean?")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if synth.called || got.Answer != "" {
+		t.Fatal("must not substitute unrelated evidence for a missing selected passage")
+	}
+}
+
+func TestSelectedRangeIsKeptWhenRetrievalLimitIsSmaller(t *testing.T) {
+	selected := ref("Job", 1, 21)
+	end := 22
+	selected.VerseEnd = &end
+	st := &fakeStore{text: map[string]string{"Job.1.21": "Verse twenty one", "Job.1.22": "Verse twenty two"}}
+	synth := &fakeSynthesizer{reply: `{"answer":"a","summary":"s","citedPassageIndexes":[0,1],"confidence":"medium","interpretiveVariance":false}`}
+	svc := &Service{Store: st, Synthesizer: synth, EvidenceLimit: 1}
+	got, err := svc.Ask(WithPassage(context.Background(), selected), "Explain this passage")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(got.PassageReferences) != 2 || !strings.Contains(synth.gotUser, "[1] Job 1:22") {
+		t.Fatalf("range truncated: %+v", got)
+	}
+}

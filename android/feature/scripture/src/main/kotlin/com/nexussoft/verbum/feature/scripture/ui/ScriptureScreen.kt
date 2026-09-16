@@ -36,7 +36,7 @@ fun ScriptureScreen(state: ScriptureFeature.State, send: (Action) -> Unit) {
         )
     }
 
-    if (expanded) {
+    if (expanded && !state.reader.focusMode) {
         Row(Modifier.fillMaxSize()) {
             Box(Modifier.width(340.dp)) { BookPickerPane(state.books, send = { send(Action.Books(it)) }) }
             VerticalDivider(color = MaterialTheme.colorScheme.outlineVariant)

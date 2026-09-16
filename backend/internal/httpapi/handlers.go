@@ -14,6 +14,7 @@ import (
 	"time"
 	"unicode/utf8"
 
+	"verbum/backend/internal/ask"
 	"verbum/backend/internal/dailyverse"
 	"verbum/backend/internal/domain"
 	"verbum/backend/internal/realtime"
@@ -117,7 +118,16 @@ func (h *handlers) passageContext(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	chapter, _ := strconv.Atoi(m[2])
-	c, err := h.store.Context(r.Context(), m[1], chapter)
+	ctx := r.Context()
+	if value := r.URL.Query().Get("verse"); value != "" {
+		verse, err := strconv.Atoi(value)
+		if err != nil || verse < 1 || verse > 176 {
+			writeProblem(w, http.StatusBadRequest, CodeMalformedRequest, "verse must be 1–176")
+			return
+		}
+		ctx = store.WithVerse(ctx, verse)
+	}
+	c, err := h.store.Context(ctx, m[1], chapter)
 	if err != nil {
 		writeError(w, err, CodeContentUnavailable)
 		return
@@ -273,7 +283,8 @@ func (h *handlers) ask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var body struct {
-		Question string `json:"question"`
+		Question  string                   `json:"question"`
+		Reference *domain.PassageReference `json:"reference,omitempty"`
 	}
 	decoder := json.NewDecoder(http.MaxBytesReader(w, r.Body, 8<<10))
 	decoder.DisallowUnknownFields()
@@ -291,6 +302,21 @@ func (h *handlers) ask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
+	if body.Reference != nil {
+		ref := *body.Reference
+		if ref.VerseStart == nil || ref.Chapter < 1 || ref.Chapter > 150 || *ref.VerseStart < 1 || *ref.VerseStart > 176 {
+			cancel()
+			writeProblem(w, http.StatusBadRequest, CodeMalformedRequest, "reference must select 1–6 verses")
+			return
+		}
+		parsed, ok := reference.ParseVerse(fmt.Sprintf("%s %d:%d", ref.BookID, ref.Chapter, *ref.VerseStart))
+		if !ok || parsed.BookID != ref.BookID || (ref.VerseEnd != nil && (*ref.VerseEnd < *ref.VerseStart || *ref.VerseEnd-*ref.VerseStart > 5)) {
+			cancel()
+			writeProblem(w, http.StatusBadRequest, CodeMalformedRequest, "invalid passage reference")
+			return
+		}
+		ctx = ask.WithPassage(ctx, ref)
+	}
 	defer cancel()
 	// Ask's 30-second operation must fit inside the connection's write deadline.
 	_ = http.NewResponseController(w).SetWriteDeadline(time.Now().Add(35 * time.Second))

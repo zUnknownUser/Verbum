@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import DesignSystem
+import Models
 import SwiftUI
 
 struct ReaderSettingsView: View {
@@ -8,6 +9,12 @@ struct ReaderSettingsView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.lg) {
+            Text(L10n.t("Reading")).overline()
+            Picker(L10n.t("Reading mode"), selection: Binding(get: { store.readingMode }, set: { store.send(.readingModeChanged($0)) })) {
+                Text(L10n.t("Pages")).tag(ReadingMode.pages)
+                Text(L10n.t("Continuous")).tag(ReadingMode.continuous)
+            }.pickerStyle(.segmented)
+            Toggle(L10n.t("Quiet reading"), isOn: Binding(get: { store.focusMode }, set: { store.send(.focusModeChanged($0)) }))
             Text(L10n.t("Text Size")).overline()
 
             Picker(L10n.t("Text Size"), selection: Binding(
@@ -30,7 +37,7 @@ struct ReaderSettingsView: View {
                 .accessibilityLabel(L10n.t("Preview: In the beginning, God created the heavens and the earth. Genesis 1:1"))
         }
         .padding(Spacing.xl)
-        .presentationDetents([.height(250)])
+        .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
         .presentationBackground(Palette.paper)
     }

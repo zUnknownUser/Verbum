@@ -1,5 +1,14 @@
 # Roadmap
 
+## Reader de estudo e PT-BR — 2026-09-15
+
+- iOS 🟡 · Android 🟡: reader com destaques/notas locais, ficha contextual, comparação,
+  referências com proveniência, Ask ancorado, modos Páginas/Contínua e leitura discreta.
+- Camada de apresentação PT-BR independente do STEP, com originais e identificadores preservados.
+- Reutiliza modelos, clientes, reducers, corpus e publicação existentes.
+- Roteiro, arquitetura, validação e limites: [READER_STUDY.md](READER_STUDY.md).
+- Publicação do backend/dados e instalação do novo app são etapas distintas.
+
 ## STEP Bible — publicado em produção, 2026-09-15
 
 Integração TIPNR/TBESH/TBESG publicada após revisão e aprovação explícita de Lucas: 26.760 registros,
@@ -14,7 +23,8 @@ Detalhes em [STEP_BIBLE.md](STEP_BIBLE.md); roteiro em [QA_STEP_2026-09-15.md](Q
 
 **Próximo item recomendado do MVP:** Contexto editorial completo e localizado, começando por um
 recorte pequeno com resumo, interlocutores, cenário histórico/literário e fontes revisadas.
-Depois, camada pessoal (salvos/notas/Biblioteca/Jornada) e onboarding ainda pendentes.
+Depois, Biblioteca/Jornada, sincronização pessoal e onboarding. Notas e destaques locais
+já estão implementados no reader; aceitação em aparelho continua pendente.
 
 ## Audit item 1 — paid API protection — 2026-09-15
 

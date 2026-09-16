@@ -85,6 +85,11 @@ class LiveTimelineClient(private val api: VerbumApi) : TimelineClient {
 
 /** `POST /v1/ask`. 503 and a route the server does not have are both [AskScriptureException.Unavailable]; the page says so instead of failing. */
 class LiveAskScriptureClient(private val api: VerbumApi) : AskScriptureClient {
+    override suspend fun askAbout(question: String, reference: com.nexussoft.verbum.models.PassageReference): ScriptureAnswer =
+        try { api.ask(question.trim().take(500),reference) }
+        catch(e: kotlinx.coroutines.CancellationException) { throw e }
+        catch(e: Exception) { throw AskScriptureException.Failed }
+
     override suspend fun ask(question: String): ScriptureAnswer = try {
         api.ask(question.trim().take(500))
     } catch (e: VerbumApiException.Problem) {

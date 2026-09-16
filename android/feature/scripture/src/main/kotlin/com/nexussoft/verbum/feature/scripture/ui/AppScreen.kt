@@ -22,6 +22,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -68,7 +71,10 @@ fun AppScreen(store: Store<AppFeature.State, Action>) {
             ) { store.send(Action.Voice(it)) }
         }
     }
+    val reading = (when(state.tab) { Tab.HOME -> state.homePath.lastOrNull(); Tab.EXPLORE -> state.explorePath.lastOrNull(); else -> null }) as? Destination.Reader
+    val quiet = reading?.state?.reader?.focusMode == true
     NavigationSuiteScaffold(
+        layoutType = if(quiet) NavigationSuiteType.None else NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(currentWindowAdaptiveInfo()),
         navigationSuiteItems = {
             item(selected = state.tab == Tab.HOME, onClick = { store.send(Action.TabChanged(Tab.HOME)) }, icon = { Icon(Icons.Filled.Home, null) }, label = { Text(stringResource(R.string.tab_home)) })
             item(selected = state.tab == Tab.EXPLORE, onClick = { store.send(Action.TabChanged(Tab.EXPLORE)) }, icon = { Icon(Icons.Outlined.Explore, null) }, label = { Text(stringResource(R.string.tab_explore)) })
@@ -97,7 +103,7 @@ fun AppScreen(store: Store<AppFeature.State, Action>) {
                 Tab.SEARCH -> SearchPane(state.search) { store.send(Action.Search(it)) }
             }
           }
-          AudioAccessory(store)
+          if (!quiet) AudioAccessory(store)
         }
     }
 }

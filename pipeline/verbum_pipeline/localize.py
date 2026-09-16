@@ -84,7 +84,12 @@ def translation_strings(rows):
 
 def translate(rows, cache_path: Path, client, model: str, batch_size=60):
     """Resumable proposal generation. Never approves or publishes."""
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
     cache = read(cache_path) if cache_path.exists() else dict(model=model, values={})
+    instructions_hash = digest(INSTRUCTIONS)
+    if cache.get("instructionsHash", instructions_hash) != instructions_hash:
+        raise ValueError("translation instructions differ from cache provenance")
+    cache["instructionsHash"] = instructions_hash
     if cache["model"] != model:
         raise ValueError("translation model differs from cache provenance")
     missing = [s for s in translation_strings(rows) if s not in cache["values"]]

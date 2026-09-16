@@ -128,6 +128,27 @@ func (s *Service) Ask(ctx context.Context, question string) (domain.AskResponse,
 	if err != nil {
 		return domain.AskResponse{}, fmt.Errorf("ask: retrieve evidence: %w", err)
 	}
+	anchors := selectedPassages(ctx)
+	if len(anchors) > limit {
+		limit = len(anchors)
+	}
+	if len(anchors) > 0 {
+		combined := append([]domain.PassageReference{}, anchors...)
+		seen := map[string]bool{}
+		for _, ref := range anchors {
+			seen[ref.Key()] = true
+		}
+		for _, ref := range refs {
+			if !seen[ref.Key()] {
+				combined = append(combined, ref)
+				seen[ref.Key()] = true
+			}
+		}
+		if len(combined) > limit {
+			combined = combined[:limit]
+		}
+		refs = combined
+	}
 	if len(refs) == 0 {
 		slog.Info("ask: retrieval", "reqID", id, "ms", time.Since(retrievalStart).Milliseconds(), "hits", 0)
 		return noEvidenceResponse(store.Language(ctx)), nil
@@ -135,6 +156,11 @@ func (s *Service) Ask(ctx context.Context, question string) (domain.AskResponse,
 	texts, err := s.Store.PassageText(ctx, translation, refs)
 	if err != nil {
 		return domain.AskResponse{}, fmt.Errorf("ask: load evidence text: %w", err)
+	}
+	for _, ref := range anchors {
+		if texts[ref.Key()] == "" {
+			return noEvidenceResponse(store.Language(ctx)), nil
+		}
 	}
 	items := make([]evidence, 0, len(refs))
 	for _, ref := range refs {
@@ -150,7 +176,11 @@ func (s *Service) Ask(ctx context.Context, question string) (domain.AskResponse,
 	}
 
 	synthStart := time.Now()
-	raw, err := s.Synthesizer.Complete(ctx, localizedSystemPrompt(store.Language(ctx)), buildUserPrompt(q, items))
+	prompt := buildUserPrompt(q, items)
+	if len(anchors) > 0 {
+		prompt += fmt.Sprintf("\nThe reader selected the first %d excerpt(s). Interpret the question in that specific passage context; use other excerpts only when relevant. Do not invent who is speaking or historical context absent from the evidence.", len(anchors))
+	}
+	raw, err := s.Synthesizer.Complete(ctx, localizedSystemPrompt(store.Language(ctx)), prompt)
 	slog.Info("ask: synthesis", "reqID", id, "ms", time.Since(synthStart).Milliseconds(), "ok", err == nil)
 	if err != nil {
 		return domain.AskResponse{}, fmt.Errorf("ask: synthesize: %w", err)

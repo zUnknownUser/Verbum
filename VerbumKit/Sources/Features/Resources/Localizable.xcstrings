@@ -2554,6 +2554,386 @@
           }
         }
       }
+    },
+    "Reading": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leitura"
+          }
+        }
+      }
+    },
+    "Pages": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Páginas"
+          }
+        }
+      }
+    },
+    "Continuous": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Contínua"
+          }
+        }
+      }
+    },
+    "Quiet reading": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leitura sem distrações"
+          }
+        }
+      }
+    },
+    "Reading settings": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajustes de leitura"
+          }
+        }
+      }
+    },
+    "Show reading controls": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostrar controles de leitura"
+          }
+        }
+      }
+    },
+    "Study": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estudo"
+          }
+        }
+      }
+    },
+    "Highlight": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Destacar"
+          }
+        }
+      }
+    },
+    "Note": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nota"
+          }
+        }
+      }
+    },
+    "Compare": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comparar"
+          }
+        }
+      }
+    },
+    "References": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Referências"
+          }
+        }
+      }
+    },
+    "Mark what speaks to you": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Destaque o que toca você"
+          }
+        }
+      }
+    },
+    "Gold highlight": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Destaque dourado"
+          }
+        }
+      }
+    },
+    "Sage highlight": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Destaque verde"
+          }
+        }
+      }
+    },
+    "Rose highlight": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Destaque rosa"
+          }
+        }
+      }
+    },
+    "Remove highlight": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remover destaque"
+          }
+        }
+      }
+    },
+    "Highlights and notes stay on this device.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Destaques e notas ficam neste dispositivo."
+          }
+        }
+      }
+    },
+    "Your note": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sua nota"
+          }
+        }
+      }
+    },
+    "Only you write here.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Só você escreve aqui."
+          }
+        }
+      }
+    },
+    "Save note": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salvar nota"
+          }
+        }
+      }
+    },
+    "Saved": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salvo"
+          }
+        }
+      }
+    },
+    "Could not save. Your note is still here; try again.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não foi possível salvar. Sua nota continua aqui; tente novamente."
+          }
+        }
+      }
+    },
+    "Public domain": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Domínio público"
+          }
+        }
+      }
+    },
+    "Public domain · translation under revision": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Domínio público · tradução em revisão"
+          }
+        }
+      }
+    },
+    "People and places in this chapter": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pessoas e lugares neste capítulo"
+          }
+        }
+      }
+    },
+    "Connections documented for this chapter; not every link is a direct parallel to this verse.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conexões documentadas para este capítulo; nem toda ligação é um paralelo direto deste versículo."
+          }
+        }
+      }
+    },
+    "No sourced context is available for this passage yet.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ainda não há contexto com fontes disponível para esta passagem."
+          }
+        }
+      }
+    },
+    "Follow the references": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siga as referências"
+          }
+        }
+      }
+    },
+    "Related passages from the chapter’s documented connections.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passagens relacionadas pelas conexões documentadas do capítulo."
+          }
+        }
+      }
+    },
+    "No sourced references are available here yet.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ainda não há referências com fontes disponíveis aqui."
+          }
+        }
+      }
+    },
+    "Investigate this passage": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Investigue esta passagem"
+          }
+        }
+      }
+    },
+    "What would you like to understand?": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O que você gostaria de entender?"
+          }
+        }
+      }
+    },
+    "The answer will use this passage and show its biblical references. Your note is never included.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A resposta usará esta passagem e mostrará as referências bíblicas. Sua nota nunca é incluída."
+          }
+        }
+      }
+    },
+    "Ask about this passage": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Perguntar sobre esta passagem"
+          }
+        }
+      }
+    },
+    "Could not load this study layer.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não foi possível carregar esta parte do estudo."
+          }
+        }
+      }
+    },
+    "Swipe to continue": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deslize para continuar"
+          }
+        }
+      }
+    },
+    "Reading mode": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modo de leitura"
+          }
+        }
+      }
+    },
+    "Study verse %lld": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estudar versículo %lld"
+          }
+        }
+      }
     }
   },
   "version": "1.1"

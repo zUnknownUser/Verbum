@@ -13,7 +13,7 @@ public struct ScriptureView: View {
 
     public var body: some View {
         Group {
-            if sizeClass == .regular {
+            if sizeClass == .regular && !store.reader.focusMode {
                 HStack(spacing: 0) {
                     BookPickerView(store: store.scope(state: \.books, action: \.books))
                         .frame(width: 340)

@@ -9,8 +9,9 @@ import SwiftUI
 /// revelation and nothing is certain beyond what the server says it is.
 public struct AskView: View {
     let store: StoreOf<AskFeature>
+    let embedded: Bool
 
-    public init(store: StoreOf<AskFeature>) { self.store = store }
+    public init(store: StoreOf<AskFeature>, embedded: Bool = false) { self.store = store; self.embedded = embedded }
 
     public var body: some View {
         ScrollView {
@@ -62,11 +63,11 @@ public struct AskView: View {
                 .font(Typography.scripture)
                 .lineSpacing(Typography.scriptureLineSpacing)
             confidenceLine(answer.confidence)
-            Button { store.send(.talkTapped) } label: {
+            if !embedded { Button { store.send(.talkTapped) } label: {
                 Label(L10n.t("Go on out loud"), systemImage: "waveform.and.mic")
                     .font(Typography.subheadline.weight(.semibold))
             }
-            .padding(.top, Spacing.xs)
+            .padding(.top, Spacing.xs) }
         }
         if !answer.passageReferences.isEmpty {
             section(L10n.t("Key passages")) {
@@ -134,8 +135,8 @@ public struct AskView: View {
                  ? L10n.t("I could not build a reliable answer from the available sources.")
                  : L10n.t("I could not build a reliable answer from the available sources. Here are the closest passages I found."))
                 .font(Typography.subheadline)
-            Button(L10n.t("See search results")) { store.send(.searchInsteadTapped) }
-                .font(Typography.subheadline.weight(.semibold))
+            if !embedded { Button(L10n.t("See search results")) { store.send(.searchInsteadTapped) }
+                .font(Typography.subheadline.weight(.semibold)) }
         }
         if !answer.passageReferences.isEmpty {
             section(L10n.t("Closest passages")) {
@@ -160,8 +161,8 @@ public struct AskView: View {
                 Text(L10n.t("Couldn't answer this time")).font(Typography.editorialHeadline)
                 Button(L10n.t("Try Again")) { store.send(.retryTapped) }.font(Typography.subheadline.weight(.semibold))
             }
-            Button(L10n.t("See search results")) { store.send(.searchInsteadTapped) }
-                .font(Typography.subheadline.weight(.semibold))
+            if !embedded { Button(L10n.t("See search results")) { store.send(.searchInsteadTapped) }
+                .font(Typography.subheadline.weight(.semibold)) }
         }
     }
 

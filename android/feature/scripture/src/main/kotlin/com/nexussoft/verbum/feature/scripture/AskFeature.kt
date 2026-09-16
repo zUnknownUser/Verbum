@@ -20,7 +20,7 @@ import kotlinx.coroutines.CancellationException
  * behind, the page says so and offers the search results instead (§51). Twin of iOS `AskFeature`.
  */
 object AskFeature {
-    data class State(val question: String, val content: Content = Content.Idle) {
+    data class State(val question: String, val content: Content = Content.Idle, val reference: PassageReference? = null) {
         constructor(question: String) : this(question.trim(), Content.Idle)
     }
 
@@ -65,7 +65,7 @@ object AskFeature {
     fun reducer(askClient: AskScriptureClient, graphClient: GraphClient): Reducer<State, Action> = Reducer { state, action ->
         fun ask(): Pair<State, Effect<Action>> = state.copy(content = Content.Asking) to runEffect(id = AskId, cancelInFlight = true) { send ->
             try {
-                send(Action.Response(askClient.ask(state.question)))
+                send(Action.Response(state.reference?.let { askClient.askAbout(state.question,it) } ?: askClient.ask(state.question)))
             } catch (e: CancellationException) {
                 throw e
             } catch (e: AskScriptureException) {

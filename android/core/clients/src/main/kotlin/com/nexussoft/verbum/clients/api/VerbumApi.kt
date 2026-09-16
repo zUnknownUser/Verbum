@@ -221,11 +221,11 @@ class VerbumApi(
     // ---- context
 
     /**
-     * `GET /v1/passages/{Book.Chapter}/context` (§10). Verses are ignored: context is per chapter.
+     * `GET /v1/passages/{Book.Chapter}/context` (§10). An optional verse narrows related occurrences; context stays per chapter.
      * Missing coverage is `null`, never invented (§3.5).
      */
     suspend fun context(reference: PassageReference, language: BookLanguage = BookLanguage.current): PassageContext? = try {
-        get("/v1/passages/${reference.bookId}.${reference.chapter}/context", WirePassageContext.serializer(), "lang" to language.tag).toModel()
+        get("/v1/passages/${reference.bookId}.${reference.chapter}/context", WirePassageContext.serializer(), *listOfNotNull("lang" to language.tag, reference.verses?.let { "verse" to it.first.toString() }).toTypedArray()).toModel()
     } catch (e: VerbumApiException.Problem) {
         if (e.code == ProblemCode.CONTENT_UNAVAILABLE) null else throw e
     }
@@ -266,8 +266,8 @@ class VerbumApi(
     // ---- ask
 
     /** `POST /v1/ask {"question"}` → the §30 contract. Never cached. */
-    suspend fun ask(question: String): ScriptureAnswer =
-        post("/v1/ask", json.encodeToString(WireAskRequest.serializer(), WireAskRequest(question)), WireAskResponse.serializer()).toModel()
+    suspend fun ask(question: String, reference: PassageReference? = null): ScriptureAnswer =
+        post("/v1/ask", json.encodeToString(WireAskRequest.serializer(), WireAskRequest(question, reference?.let { WirePassageReference(it.bookId,it.chapter,it.verses?.first,it.verses?.last) })), WireAskResponse.serializer()).toModel()
 
     // ---- realtime
 

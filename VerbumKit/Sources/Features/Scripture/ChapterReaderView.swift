@@ -3,365 +3,262 @@ import DesignSystem
 import Models
 import SwiftUI
 
-/// The reading page. Paper, warm ink, New York; verse numerals hang in the
-/// margin like a printed Bible. Navigation stays visible so scrolling cannot
-/// feed safe-area changes back into navigation-bar visibility.
+/// Native page physics and a lazy continuous flow share the same chapter cache and study sheet.
 struct ChapterReaderView: View {
-    let store: StoreOf<ChapterReaderFeature>
+    @Bindable var store: StoreOf<ChapterReaderFeature>
     let onTitleTapped: () -> Void
     let onSettingsTapped: () -> Void
-
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @ScaledMetric(relativeTo: .body) private var basePointSize = Typography.scriptureBasePointSize
-
-    @State private var pageDirection: Edge = .trailing
-
-    private var pointSize: CGFloat { basePointSize * store.textScale.factor }
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .topTrailing) {
             Palette.paper.ignoresSafeArea()
-
-            switch store.content {
-            case .idle, .loading:
-                ProgressView()
-                    .tint(Palette.inkTertiary)
-                    .accessibilityLabel(L10n.t("Loading \(store.title)"))
-
-            case .failed(let error):
-                unavailable(error)
-
-            case .loaded(let verses):
-                page(verses)
-                    .id(store.reference)
-                    .transition(.asymmetric(
-                        insertion: .move(edge: pageDirection).combined(with: .opacity),
-                        removal: .opacity
-                    ))
+            if store.readingMode == .pages {
+                TabView(selection: Binding(get: { ReaderCanon.index(store.reference) }, set: { index in
+                    guard ReaderCanon.chapters.indices.contains(index), index != ReaderCanon.index(store.reference) else { return }
+                    store.send(.go(to: ReaderCanon.chapters[index]))
+                })) {
+                    ForEach(ReaderCanon.chapters.indices, id: \.self) { index in
+                        Group {
+                            if abs(index - ReaderCanon.index(store.reference)) <= 1 {
+                                ReaderScrollPage(store: store, reference: ReaderCanon.chapters[index], continuous: false)
+                            } else { Palette.paper }
+                        }.tag(index)
+                    }
+                }
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                .animation(reduceMotion ? nil : .snappy(duration: 0.3), value: store.reference)
+            } else {
+                ReaderScrollPage(store: store, reference: store.flow.first ?? store.reference, continuous: true)
+            }
+            if store.focusMode {
+                Button { store.send(.focusToggled) } label: {
+                    Image(systemName: "eye").padding(12)
+                }
+                .accessibilityLabel(L10n.t("Show reading controls"))
+                .tint(Palette.inkSecondary)
+                .glassEffect(.regular.interactive(), in: .circle)
+                .padding(Spacing.md)
             }
         }
-        .animation(Motion.resolved(Motion.spatial, reduceMotion: reduceMotion), value: store.reference)
-        .onChange(of: store.reference) { old, new in
-            pageDirection = isForward(from: old, to: new) ? .trailing : .leading
-        }
+        .onChange(of: store.readingMode) { _, _ in store.send(.readingModeChanged) }
         .navigationTitle(store.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.hidden, for: .navigationBar)
-        // Do not toggle bar visibility from scroll geometry. Hiding the bars
-        // changes the insets/offset being observed and can continuously restart
-        // navigation layout and animations (observed on the iOS 27 simulator).
-        .toolbar(.visible, for: .navigationBar)
-        .toolbar { toolbar }
-        .safeAreaInset(edge: .bottom) {
-            if let citation = store.selectionCitation {
-                SelectionBar(
-                    citation: citation,
-                    onCopy: { store.send(.copySelectionTapped) },
-                    onClear: { store.send(.clearSelectionTapped) }
-                )
-                .transition(.move(edge: .bottom).combined(with: .opacity))
+        .toolbar(store.focusMode ? .hidden : .visible, for: .navigationBar)
+        .toolbar(store.focusMode ? .hidden : .visible, for: .tabBar)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Button(action: onTitleTapped) {
+                    HStack(spacing: Spacing.xs) {
+                        Text(store.title).font(Typography.navigationSerif)
+                        Image(systemName: "chevron.down").font(.caption)
+                    }
+                }.tint(Palette.ink)
+            }
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                Button { store.send(.focusToggled) } label: { Label(L10n.t("Quiet reading"), systemImage: "eye.slash") }
+                Menu {
+                    Button { store.send(.listenTapped) } label: { Label(L10n.t("Listen"), systemImage: "headphones") }
+                    Button { store.send(.talkTapped) } label: { Label(L10n.t("Talk about this chapter"), systemImage: "waveform.and.mic") }
+                    Button(action: onSettingsTapped) { Label(L10n.t("Reading settings"), systemImage: "textformat.size") }
+                } label: { Image(systemName: "ellipsis") }
+                .accessibilityLabel(L10n.t("Reading settings"))
             }
         }
-        .animation(Motion.resolved(Motion.standard, reduceMotion: reduceMotion), value: store.selectionCitation)
-        .sensoryFeedback(.selection, trigger: store.selectedVerses)
+        .safeAreaInset(edge: .bottom) {
+            if let previous = store.history.last {
+                Button { store.send(.backToReading) } label: {
+                    Label(L10n.t("Back to \(previous.reference.formatted)"), systemImage: "arrow.uturn.backward")
+                        .font(Typography.footnote).padding(.horizontal, Spacing.lg).padding(.vertical, Spacing.md)
+                }.tint(Palette.ink).glassEffect(.regular.interactive(), in: .capsule)
+                    .padding(.bottom, Spacing.sm)
+            }
+        }
+        .overlay(alignment: .leading) {
+            if !store.history.isEmpty {
+                Color.clear.frame(width: 22).contentShape(Rectangle()).gesture(
+                    DragGesture(minimumDistance: 30).onEnded { value in
+                        if value.translation.width > 70, abs(value.translation.width) > abs(value.translation.height)*2 { store.send(.backToReading) }
+                    }
+                )
+            }
+        }
+        .sheet(item: $store.scope(state: \.study, action: \.study)) { study in
+            VerseStudyView(store: study)
+                .presentationDetents([.height(360), .large])
+                .presentationDragIndicator(.visible)
+                .presentationBackground(.regularMaterial)
+        }
         .task { await store.send(.task).finish() }
     }
+}
 
-    // MARK: Page
+private struct ReaderScrollPage: View {
+    let store: StoreOf<ChapterReaderFeature>
+    let reference: PassageReference
+    let continuous: Bool
+    @State private var position = ScrollPosition()
+    @State private var offset = 0.0
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private var key: String { continuous ? "flow" : ReaderCanon.key(reference) }
 
-    private func page(_ verses: [BiblePassage]) -> some View {
-        ScrollViewReader { proxy in
+    var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 0) {
-                ChapterOpener(
-                    bookName: store.book?.localizedName ?? store.reference.bookId,
-                    chapter: store.reference.chapter
-                )
-                .padding(.top, Spacing.xxxl)
-                .padding(.bottom, Spacing.xxl)
-
-                if let requested = store.requestedVerses, !verses.contains(where: { requested.contains($0.verseStart) }) {
-                    Text(L10n.t("Verse not found in this chapter."))
-                        .font(Typography.subheadline).foregroundStyle(Palette.inkSecondary)
+            LazyVStack(alignment: .leading, spacing: 0) {
+                ForEach(continuous ? store.flow : [reference], id: \.self) { chapter in
+                    ReaderChapterBody(store: store, reference: chapter, continuous: continuous)
                 }
-
-                Button { store.send(.contextTapped) } label: {
-                    Label(L10n.t("Chapter context"), systemImage: "text.book.closed")
-                        .font(Typography.subheadline)
-                        .padding(.vertical, Spacing.md)
+                if continuous, let last = store.flow.last, store.chapters[ReaderCanon.key(last)] != nil,
+                   let next = ChapterNavigation.next(after: last) {
+                    VStack(spacing: Spacing.sm) {
+                        Text(next.formatted).font(Typography.editorialHeadline)
+                        Label(L10n.t("Continue reading"), systemImage: "arrow.down").font(Typography.footnote)
+                    }.foregroundStyle(Palette.inkTertiary).frame(maxWidth: .infinity).padding(Spacing.xxl)
+                        .onAppear { store.send(.appendChapter) }
                 }
-                .tint(Palette.accent)
-                .padding(.bottom, Spacing.lg)
-
-                VStack(alignment: .leading, spacing: Spacing.xs) {
-                    ForEach(verses) { verse in
-                        VerseRow(
-                            number: verse.verseStart,
-                            text: verse.text,
-                            pointSize: pointSize,
-                            isSelected: store.selectedVerses.contains(verse.verseStart),
-                            reduceMotion: reduceMotion
-                        ) {
-                            store.send(.verseTapped(verse.verseStart))
-                        }
-                        .id(verse.verseStart)
-                    }
-                }
-
-                Button { store.send(.contextTapped) } label: {
-                    Label(L10n.t("Explore chapter context"), systemImage: "text.book.closed")
-                        .font(Typography.subheadline)
-                        .padding(.vertical, Spacing.md)
-                }
-                .tint(Palette.accent)
-                .padding(.top, Spacing.xxl)
-
-                ChapterFoot(
-                    next: ChapterNavigation.next(after: store.reference),
-                    previous: ChapterNavigation.previous(before: store.reference),
-                    onNext: { store.send(.nextChapterTapped) },
-                    onPrevious: { store.send(.previousChapterTapped) }
-                )
-                .padding(.top, Spacing.xxxl)
             }
-            .frame(maxWidth: Spacing.readingMaxWidth, alignment: .leading)
+            .scrollTargetLayout()
+            .frame(maxWidth: Spacing.readingMaxWidth)
             .frame(maxWidth: .infinity)
             .padding(.horizontal, Spacing.readingMargin)
-            .padding(.bottom, Spacing.xxxl * 2)
+            .padding(.bottom, Spacing.xxxl)
         }
+        .scrollPosition($position)
         .scrollIndicators(.hidden)
-        .contentShape(Rectangle())
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 40)
-                .onEnded { value in
-                    // Horizontal page turn; vertical scrolling keeps the scroll view.
-                    guard abs(value.translation.width) > abs(value.translation.height) * 1.5 else { return }
-                    if value.translation.width < 0, store.canGoToNextChapter {
-                        store.send(.nextChapterTapped)
-                    } else if value.translation.width > 0, store.canGoToPreviousChapter {
-                        store.send(.previousChapterTapped)
-                    }
-                }
-        )
+        .onScrollGeometryChange(for: Double.self, of: { Double($0.contentOffset.y + $0.contentInsets.top) }) { _, value in offset = value }
+        .onScrollPhaseChange { _, phase in
+            if phase == .idle { store.send(.scrollOffsetChanged(key, offset)) }
+        }
+        .onDisappear { store.send(.scrollOffsetChanged(key, offset)) }
+        .task { store.send(.ensureChapter(reference)) }
+        .task(id: store.navigationRevision) { restore() }
+        .onChange(of: store.chapters[ReaderCanon.key(reference)]?.count) { _, _ in restore() }
         .accessibilityAction(named: L10n.t("Next chapter")) { store.send(.nextChapterTapped) }
         .accessibilityAction(named: L10n.t("Previous chapter")) { store.send(.previousChapterTapped) }
-        .task(id: store.requestedVerses) {
-            if let requested = store.requestedVerses,
-               let verse = verses.first(where: { requested.contains($0.verseStart) }) {
-                proxy.scrollTo(verse.verseStart, anchor: .top)
-            }
-        }
-        }
     }
-
-    private func unavailable(_ error: ReaderError) -> some View {
-        VStack(spacing: Spacing.md) {
-            Image(systemName: "book.closed")
-                .font(.system(size: 34, weight: .light))
-                .foregroundStyle(Palette.inkTertiary)
-            Text(error.title)
-                .font(Typography.editorialHeadline)
-                .foregroundStyle(Palette.ink)
-                .multilineTextAlignment(.center)
-            Text(error.message)
-                .font(Typography.subheadline)
-                .foregroundStyle(Palette.inkSecondary)
-                .multilineTextAlignment(.center)
-            Button(L10n.t("Try Again")) { store.send(.retryTapped) }
-                .buttonStyle(.borderedProminent)
-                .padding(.top, Spacing.sm)
-        }
-        .padding(Spacing.xxl)
-        .frame(maxWidth: Spacing.readingMaxWidth)
+    private func restore() {
+        guard continuous || reference == store.reference else { return }
+        if let value = store.restoreOffset ?? store.scrollOffsets[key], store.requestedVerses == nil {
+            position.scrollTo(y: value)
+        } else if let verse = store.requestedVerses?.lowerBound {
+            position.scrollTo(id: "\(store.reference.bookId).\(store.reference.chapter).\(verse)", anchor: .top)
+        } else { position.scrollTo(y: 0) }
     }
+}
 
-    // MARK: Chrome
+private struct ReaderChapterBody: View {
+    let store: StoreOf<ChapterReaderFeature>
+    let reference: PassageReference
+    let continuous: Bool
+    @ScaledMetric(relativeTo: .body) private var basePointSize = Typography.scriptureBasePointSize
+    private var pointSize: CGFloat { basePointSize * store.textScale.factor }
+    private var key: String { ReaderCanon.key(reference) }
 
-    @ToolbarContentBuilder
-    private var toolbar: some ToolbarContent {
-        ToolbarItem(placement: .principal) {
-            Button(action: onTitleTapped) {
-                HStack(spacing: Spacing.xs) {
-                    Text(store.title).font(Typography.navigationSerif)
-                    Image(systemName: "chevron.down")
-                        .font(Typography.caption.weight(.semibold))
-                        .foregroundStyle(Palette.inkTertiary)
+    var body: some View {
+        VStack(alignment: .leading, spacing: Spacing.xs) {
+            VStack(spacing: Spacing.sm) {
+                Text(BibleBook.book(id: reference.bookId)?.localizedName ?? reference.bookId).overline(color: Palette.accent)
+                Text(verbatim: String(reference.chapter)).font(Typography.chapterNumeral).foregroundStyle(Palette.ink)
+                Rectangle().fill(Palette.accent).frame(width: 28, height: 1).padding(.top, Spacing.xs)
+            }.frame(maxWidth: .infinity).padding(.top, Spacing.xxxl).padding(.bottom, Spacing.xxl)
+                .accessibilityElement(children: .combine).accessibilityAddTraits(.isHeader)
+                .onScrollVisibilityChange(threshold: 0.8) { visible in
+                    if visible && continuous { store.send(.chapterVisible(reference)) }
                 }
-            }
-            .tint(Palette.ink)
-            .accessibilityLabel(L10n.t("\(store.title). Choose book and chapter"))
-        }
-
-        ToolbarItemGroup(placement: .topBarTrailing) {
-            Button { store.send(.listenTapped) } label: {
-                Label(L10n.t("Listen"), systemImage: "headphones")
-            }
-            Button { store.send(.talkTapped) } label: {
-                Label(L10n.t("Talk about this chapter"), systemImage: "waveform.and.mic")
-            }
-            Button(action: onSettingsTapped) {
-                Label(L10n.t("Text Size"), systemImage: "textformat.size")
-            }
-        }
-    }
-
-    private func isForward(from old: PassageReference, to new: PassageReference) -> Bool {
-        let o = BibleBook.book(id: old.bookId)?.order ?? 0
-        let n = BibleBook.book(id: new.bookId)?.order ?? 0
-        return n == o ? new.chapter >= old.chapter : n > o
-    }
-}
-
-// MARK: - Visual components (no state of their own)
-
-/// `1 SAMUEL` / `17` / a short bronze rule — centred like a book's chapter page.
-private struct ChapterOpener: View {
-    let bookName: String
-    let chapter: Int
-
-    var body: some View {
-        VStack(spacing: Spacing.sm) {
-            Text(bookName).overline(color: Palette.accent)
-            Text(verbatim: String(chapter))
-                .font(Typography.chapterNumeral)
-                .foregroundStyle(Palette.ink)
-            Rectangle()
-                .fill(Palette.accent)
-                .frame(width: 28, height: 1)
-                .padding(.top, Spacing.xs)
-        }
-        .frame(maxWidth: .infinity)
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel(L10n.t("\(bookName), chapter \(chapter)"))
-        .accessibilityAddTraits(.isHeader)
-    }
-}
-
-/// One verse: numeral hanging in the margin, text flush. Poetry keeps its
-/// line breaks. Selection is a bronze wash, never a grey box.
-private struct VerseRow: View {
-    let number: Int
-    let text: String
-    let pointSize: CGFloat
-    let isSelected: Bool
-    let reduceMotion: Bool
-    let onTap: () -> Void
-
-    private var gutter: CGFloat { max(28, pointSize * 1.7) }
-
-    var body: some View {
-        Button(action: onTap) {
-            HStack(alignment: .firstTextBaseline, spacing: Spacing.sm) {
-                Text(verbatim: String(number))
-                    .font(Typography.verseNumeral(for: pointSize))
-                    .foregroundStyle(isSelected ? Palette.accent : Palette.inkTertiary)
-                    .frame(width: gutter, alignment: .trailing)
-                Text(text)
-                    .font(Typography.scripture(pointSize: pointSize))
-                    .foregroundStyle(Palette.ink)
-                    .lineSpacing(pointSize * Typography.scriptureLineSpacingRatio)
-                    .multilineTextAlignment(.leading)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .padding(.vertical, Spacing.sm)
-            .padding(.trailing, Spacing.md)
-            .padding(.leading, Spacing.xs)
-            .background(
-                isSelected ? Palette.selectionWash : Color.clear,
-                in: .rect(cornerRadius: Radius.md)
-            )
-            .padding(.leading, -gutter - Spacing.sm - Spacing.xs)
-            .padding(.leading, gutter + Spacing.sm + Spacing.xs)
-        }
-        .buttonStyle(.plain)
-        .animation(Motion.resolved(Motion.quick, reduceMotion: reduceMotion), value: isSelected)
-        .accessibilityLabel(L10n.t("Verse \(number)"))
-        .accessibilityValue(text)
-        .accessibilityAddTraits(isSelected ? [.isSelected] : [])
-        .accessibilityHint(isSelected ? L10n.t("Deselects this verse") : L10n.t("Selects this verse"))
-    }
-}
-
-/// End-of-chapter mark and the way onward. Swiping does the same; this is
-/// the visible, accessible version.
-private struct ChapterFoot: View {
-    let next: PassageReference?
-    let previous: PassageReference?
-    let onNext: () -> Void
-    let onPrevious: () -> Void
-
-    var body: some View {
-        VStack(spacing: Spacing.xl) {
-            Rectangle()
-                .fill(Palette.accent)
-                .frame(width: 28, height: 1)
-
-            if let next {
-                Button(action: onNext) {
-                    VStack(spacing: Spacing.xs) {
-                        Text(L10n.t("Continue")).overline()
-                        HStack(spacing: Spacing.xs) {
-                            Text(next.formatted)
-                                .font(Typography.editorialHeadline)
-                                .foregroundStyle(Palette.ink)
-                            Image(systemName: "arrow.right")
-                                .font(Typography.subheadline.weight(.semibold))
-                                .foregroundStyle(Palette.accent)
-                        }
+            if let verses = store.chapters[key] {
+                ForEach(verses) { verse in
+                    let id = "\(verse.bookId).\(verse.chapter).\(verse.verseStart)"
+                    StudyVerseRow(verse: verse, pointSize: pointSize, annotation: store.annotations[id],
+                        segments: store.mentions[id] ?? [],
+                        requested: reference == store.reference && (store.requestedVerses?.contains(verse.verseStart) ?? false)) { ids in
+                            store.send(.studyVerse(reference, verse.verseStart, ids))
+                        }.id(id)
+                }
+                if !continuous {
+                    if let next = ChapterNavigation.next(after: reference) {
+                        Button { store.send(.nextChapterTapped) } label: {
+                            VStack(spacing: Spacing.sm) {
+                                Text(next.formatted).font(Typography.editorialHeadline)
+                                Label(L10n.t("Swipe to continue"), systemImage: "arrow.right").font(Typography.footnote)
+                            }.frame(maxWidth: .infinity).padding(.vertical, Spacing.xxxl)
+                        }.buttonStyle(.plain).foregroundStyle(Palette.inkTertiary)
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, Spacing.lg)
-                    .contentShape(Rectangle())
                 }
-                .buttonStyle(.plain)
-                .accessibilityLabel(L10n.t("Continue to \(next.formatted)"))
+            } else if let error = store.chapterErrors[key] {
+                VStack(spacing: Spacing.md) {
+                    Text(error.title).font(Typography.editorialHeadline)
+                    Text(error.message).font(Typography.subheadline)
+                    Button(L10n.t("Try Again")) { store.send(.ensureChapter(reference)) }
+                }.frame(maxWidth: .infinity).padding(.vertical, Spacing.xxxl)
             } else {
-                Text(L10n.t("End of the book")).overline()
-            }
-
-            if let previous {
-                Button(action: onPrevious) {
-                    Label(previous.formatted, systemImage: "arrow.left")
-                        .font(Typography.footnote)
-                        .foregroundStyle(Palette.inkTertiary)
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(L10n.t("Back to \(previous.formatted)"))
+                ProgressView().frame(maxWidth: .infinity, minHeight: 220)
+                    .accessibilityLabel(L10n.t("Loading \(reference.formatted)"))
             }
         }
-        .frame(maxWidth: .infinity)
+        .task { store.send(.ensureChapter(reference)) }
     }
 }
 
-private struct SelectionBar: View {
-    let citation: String
-    let onCopy: () -> Void
-    let onClear: () -> Void
-
-    var body: some View {
-        HStack(spacing: Spacing.md) {
-            Text(citation)
-                .font(Typography.navigationSerif)
-                .foregroundStyle(Palette.ink)
-                .lineLimit(1)
-                .minimumScaleFactor(0.8)
-            Spacer(minLength: Spacing.sm)
-            Button(action: onCopy) {
-                Label(L10n.t("Copy"), systemImage: "doc.on.doc")
-            }
-            .labelStyle(.iconOnly)
-            Button(action: onClear) {
-                Label(L10n.t("Clear Selection"), systemImage: "xmark")
-            }
-            .labelStyle(.iconOnly)
+private struct StudyVerseRow: View {
+    let verse: BiblePassage
+    let pointSize: CGFloat
+    let annotation: ReaderAnnotation?
+    let segments: [StudyTextSegment]
+    let requested: Bool
+    let onTap: ([String]) -> Void
+    private var linkedText: AttributedString {
+        if segments.isEmpty {
+            var text = AttributedString(verse.text)
+            text.link = URL(string: "verbum-study://verse")
+            text.foregroundColor = Palette.ink
+            return text
         }
-        .tint(Palette.accent)
-        .padding(.vertical, Spacing.md)
-        .padding(.horizontal, Spacing.lg)
-        .glassEffect(.regular.interactive(), in: .capsule)
-        .padding(.horizontal, Spacing.screenMargin)
-        .padding(.bottom, Spacing.sm)
+        var result = AttributedString()
+        for (index, segment) in segments.enumerated() {
+            var part = AttributedString(segment.text)
+            part.link = URL(string: "verbum-study://verse")
+            part.foregroundColor = Palette.ink
+            if !segment.entityIDs.isEmpty {
+                part.link = URL(string: "verbum-study://mention/\(index)")
+                part.foregroundColor = Palette.ink
+                part.underlineStyle = Text.LineStyle(pattern: .dot, color: Palette.accent.opacity(0.5))
+            }
+            result += part
+        }
+        return result
+    }
+    var body: some View {
+        HStack(alignment: .firstTextBaseline, spacing: Spacing.sm) {
+            Button { onTap([]) } label: {
+                VStack(spacing: 2) {
+                    Text(verbatim: String(verse.verseStart)).font(Typography.verseNumeral(for: pointSize))
+                    if !(annotation?.note.isEmpty ?? true) { Image(systemName: "pencil.line").font(.system(size: 8)) }
+                }.frame(width: max(28, pointSize * 1.7), alignment: .trailing)
+            }.buttonStyle(.plain).foregroundStyle(Palette.inkTertiary)
+                .accessibilityLabel(L10n.t("Study verse \(verse.verseStart)"))
+            Text(linkedText)
+                .font(Typography.scripture(pointSize: pointSize)).foregroundStyle(Palette.ink)
+                .lineSpacing(pointSize * Typography.scriptureLineSpacingRatio)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .environment(\.openURL, OpenURLAction { url in
+                    guard url.scheme == "verbum-study" else { return .discarded }
+                    if url.host == "verse" { onTap([]); return .handled }
+                    guard let index = Int(url.lastPathComponent), segments.indices.contains(index) else { return .discarded }
+                    onTap(segments[index].entityIDs); return .handled
+                })
+
+        }
+        .padding(.vertical, Spacing.sm).padding(.horizontal, Spacing.xs)
+        .background(highlight, in: .rect(cornerRadius: Radius.sm))
         .accessibilityElement(children: .contain)
-        .accessibilityLabel(L10n.t("Selected \(citation)"))
+    }
+    private var highlight: Color {
+        switch annotation?.highlight {
+        case .gold: Color.yellow.opacity(0.19)
+        case .sage: Color.green.opacity(0.12)
+        case .rose: Color.pink.opacity(0.13)
+        case nil: requested ? Palette.selectionWash : .clear
+        }
     }
 }

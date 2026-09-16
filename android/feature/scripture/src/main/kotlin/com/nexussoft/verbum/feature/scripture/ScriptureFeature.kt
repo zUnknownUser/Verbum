@@ -49,12 +49,16 @@ object ScriptureFeature {
         data class OpenContext(val reference: PassageReference) : DelegateAction
     }
 
-    fun reducer(bibleClient: BibleClient, clipboard: ClipboardClient, preferences: PreferencesClient): Reducer<State, Action> = combine(
+    fun reducer(bibleClient: BibleClient, clipboard: ClipboardClient, preferences: PreferencesClient,
+        contextClient: com.nexussoft.verbum.clients.ContextClient = com.nexussoft.verbum.clients.fixtures.FixtureContextClient,
+        graphClient: com.nexussoft.verbum.clients.GraphClient = com.nexussoft.verbum.clients.fixtures.FixtureGraphClient,
+        askClient: com.nexussoft.verbum.clients.AskScriptureClient = com.nexussoft.verbum.clients.AskScriptureClient { throw com.nexussoft.verbum.clients.AskScriptureException.Unavailable },
+    ): Reducer<State, Action> = combine(
         BookPickerFeature.reducer.pullback(
             get = { it.books }, set = { s, c -> s.copy(books = c) },
             extractAction = { (it as? Action.Books)?.action }, embedAction = { Action.Books(it) },
         ),
-        ChapterReaderFeature.reducer(bibleClient, clipboard, preferences).pullback(
+        ChapterReaderFeature.reducer(bibleClient, clipboard, preferences, contextClient, graphClient, askClient).pullback(
             get = { it.reader }, set = { s, c -> s.copy(reader = c) },
             extractAction = { (it as? Action.Reader)?.action }, embedAction = { Action.Reader(it) },
         ),
@@ -66,7 +70,7 @@ object ScriptureFeature {
             when (action) {
                 Action.TitleTapped -> state.copy(isShelfPresented = true).only()
                 Action.ShelfDismissed -> state.copy(isShelfPresented = false).only()
-                Action.SettingsButtonTapped -> state.copy(settings = ReaderSettingsFeature.State(state.reader.textScale)).only()
+                Action.SettingsButtonTapped -> state.copy(settings = ReaderSettingsFeature.State(state.reader.textScale, state.reader.readingMode, state.reader.focusMode)).only()
                 Action.SettingsDismissed -> state.copy(settings = null).only()
                 is Action.Books -> when (val a = action.action) {
                     is BookPickerFeature.Action.Delegate -> when (val d = a.delegate) {
@@ -86,6 +90,8 @@ object ScriptureFeature {
                 }
                 is Action.Delegate -> state.only()
                 is Action.Settings -> when (val a = action.action) {
+                    is ReaderSettingsFeature.Action.ModeChanged -> state.with(Effect.Send(Action.Reader(ChapterReaderFeature.Action.ModeChanged(a.mode))))
+                    is ReaderSettingsFeature.Action.FocusChanged -> state.with(Effect.Send(Action.Reader(ChapterReaderFeature.Action.FocusChanged(a.enabled))))
                     is ReaderSettingsFeature.Action.TextScaleChanged ->
                         state.with(Effect.Send(Action.Reader(ChapterReaderFeature.Action.TextScaleChanged(a.scale))))
                 }

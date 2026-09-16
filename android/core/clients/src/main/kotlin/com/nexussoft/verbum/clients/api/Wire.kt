@@ -128,7 +128,7 @@ internal data class WireDailyVerse(val date: String, val reference: WirePassageR
 internal data class WireDailyVerses(val verses: List<WireDailyVerse>)
 
 @Serializable
-internal data class WireAskRequest(val question: String)
+internal data class WireAskRequest(val question: String, val reference: WirePassageReference? = null)
 
 @Serializable
 internal data class WireAskResponse(
