@@ -60,7 +60,7 @@ private data class LocalIdentity(val uid: String?)
 @Composable
 fun RootScreen() {
     val context = LocalContext.current.applicationContext
-    val accountViewModel: AccountViewModel = viewModel { AccountViewModel(FirebaseAccountClient(onDeleted = { AccountPreferencesClient.delete(context,it) }, onRegistered = { AccountPreferencesClient.promote(context,it) })) }
+    val accountViewModel: AccountViewModel = viewModel { AccountViewModel(FirebaseAccountClient(beforeDeleted = { personalApi(it).deletePersonalData() }, onDeleted = { AccountPreferencesClient.delete(context,it) }, onRegistered = { AccountPreferencesClient.promote(context,it) })) }
     var retry by remember { mutableStateOf(0) }
     var failed by remember { mutableStateOf(false) }
     val identity by produceState<LocalIdentity?>(null, retry) {
@@ -126,6 +126,6 @@ private fun AccountRootScreen(uid: String?, accountViewModel: AccountViewModel) 
         ProfileFeature.Appearance.LIGHT -> false
     }
     VerbumTheme(darkTheme = dark) {
-        AccountHost(accountViewModel.store, viewModel.store) { AppScreen(viewModel.store) }
+        PersonalDataSync(uid) { AccountHost(accountViewModel.store, viewModel.store) { AppScreen(viewModel.store) } }
     }
 }

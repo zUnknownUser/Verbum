@@ -9,7 +9,7 @@ import kotlinx.serialization.json.Json
 class ReadingActivityClient(private val preferences: PreferencesClient, private val clock: Clock = Clock.systemDefaultZone()) {
     @Serializable private data class Visit(val book: String, val chapter: Int, val lastOpened: Long)
     @Serializable private data class Snapshot(val visits: List<Visit> = emptyList(), val days: Set<String> = emptySet())
-    companion object { private val lock = Any(); const val KEY = "readingActivity" }
+    companion object { private val lock = com.nexussoft.verbum.clients.sync.PersonalDataLock.monitor; const val KEY = "readingActivity" }
     fun load(): ReadingActivity = synchronized(lock) {
         val raw = preferences.string(KEY) ?: return@synchronized ReadingActivity()
         val snapshot = Json.decodeFromString<Snapshot>(raw)
@@ -20,5 +20,15 @@ class ReadingActivityClient(private val preferences: PreferencesClient, private 
         preferences.setString(KEY, Json.encodeToString(Snapshot(updated.visits.map {
             Visit(it.reference.bookId, it.reference.chapter, it.lastOpened)
         }, updated.days)))
+    }
+    fun mergeVisit(reference: PassageReference, time: Long) = synchronized(lock) {
+        val old=load()
+        if ((old.visits.firstOrNull { it.reference==reference }?.lastOpened ?: 0)>=time) return@synchronized
+        val visits=(old.visits.filter { it.reference!=reference } + ReadingActivity.Visit(reference,time)).sortedByDescending { it.lastOpened }
+        preferences.setString(KEY,Json.encodeToString(Snapshot(visits.map { Visit(it.reference.bookId,it.reference.chapter,it.lastOpened) },old.days)))
+    }
+    fun mergeDay(day: String) = synchronized(lock) {
+        val old=load()
+        preferences.setString(KEY,Json.encodeToString(Snapshot(old.visits.map { Visit(it.reference.bookId,it.reference.chapter,it.lastOpened) },old.days+day)))
     }
 }

@@ -42,6 +42,6 @@ func NewPrincipal(ctx context.Context, projectID string) (func(context.Context, 
 		}
 		firebaseClaims, _ := token.Claims["firebase"].(map[string]interface{})
 		provider, _ := firebaseClaims["sign_in_provider"].(string)
-		return usage.Principal{UID: token.UID, Anonymous: provider == "anonymous" || provider == ""}, nil
+		return usage.Principal{AuthenticatedAt: token.AuthTime, UID: token.UID, Anonymous: provider == "anonymous" || provider == ""}, nil
 	}, nil
 }

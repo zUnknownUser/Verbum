@@ -1,5 +1,6 @@
 package com.nexussoft.verbum.clients.api
 
+import com.nexussoft.verbum.clients.sync.*
 import com.nexussoft.verbum.models.UsageRestriction
 import com.nexussoft.verbum.models.UsageStatus
 import com.nexussoft.verbum.clients.RealtimeSession
@@ -309,7 +310,7 @@ class VerbumApi(
         return path
     }
     fun playbackUrl(path:String):String {
-        if(!Regex("/v1/tts/playback/[a-f0-9]{64}/(status|index\\.m3u8|chapter\\.mp3)").matches(path)) throw VerbumApiException.MalformedResponse
+        if(!Regex("/v1/tts/playback/[a-f0-9]{64}/(status|index\\.m3u8|snapshot-[0-9]{6}\\.m3u8|chapter\\.mp3)").matches(path)) throw VerbumApiException.MalformedResponse
         return url(path,emptyList())
     }
     suspend fun speechPlaybackStatus(path:String):SpeechPlaybackStatus =
@@ -398,6 +399,15 @@ class VerbumApi(
         return decode(send(HttpRequest("GET", url("/v1/me/usage", emptyList()), headers = mapOf("Authorization" to "Bearer $token", "X-Verbum-Installation" to installationId))), WireUsageStatus.serializer()).let { UsageStatus(it.plan,it.resetsAt,it.remaining,it.voiceSeconds,it.restricted) }
     }
 
+    suspend fun syncPersonalData(body: PersonalSyncRequest): PersonalSyncResponse {
+        val token=tokenProvider(false) ?: throw VerbumApiException.NetworkUnavailable
+        return decode(send(HttpRequest("POST",url("/v1/me/sync",emptyList()),json.encodeToString(body),mapOf("Authorization" to "Bearer $token"))),PersonalSyncResponse.serializer())
+    }
+    suspend fun deletePersonalData() {
+        val token=tokenProvider(false) ?: throw VerbumApiException.NetworkUnavailable
+        send(HttpRequest("DELETE",url("/v1/me/data",emptyList()),headers=mapOf("Authorization" to "Bearer $token")))
+    }
+
     private suspend fun attest(request: HttpRequest): HttpRequest {
         if (!request.headers.containsKey("Authorization")) return request
         val token = appCheckProvider() ?: return request
@@ -405,7 +415,7 @@ class VerbumApi(
     }
 
     private suspend fun authorize(request: HttpRequest): HttpRequest {
-        if (request.method != "POST") return request
+        if (request.method != "POST" || request.headers.containsKey("Authorization")) return request
         val token = tokenProvider(true) ?: return request
         return request.copy(headers = request.headers + mapOf("Authorization" to "Bearer $token", "X-Verbum-Installation" to installationId, "Idempotency-Key" to java.util.UUID.randomUUID().toString()))
     }

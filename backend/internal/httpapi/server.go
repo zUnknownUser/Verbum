@@ -26,6 +26,7 @@ func New(s store.Store, now func() time.Time, rt realtimeBroker, embedder queryE
 	mux := http.NewServeMux()
 	if len(economic) > 0 {
 		e := economic[0]
+		h.personal = e.PersonalData
 		h.asker = e.WrapAsk(asker)
 		h.embedder = e.WrapEmbeddings(embedder)
 		h.tts = e.WrapSpeech(speech)
@@ -46,6 +47,8 @@ func New(s store.Store, now func() time.Time, rt realtimeBroker, embedder queryE
 			mux.Handle("GET /v1/realtime/connect", e.VoiceRelay)
 		}
 	}
+	mux.HandleFunc("POST /v1/me/sync", h.personalSync)
+	mux.HandleFunc("DELETE /v1/me/data", h.deletePersonalData)
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, _ *http.Request) { w.Write([]byte("ok\n")) })
 	mux.HandleFunc("GET /readyz", h.ready)
 	mux.HandleFunc("GET /v1/entities", h.listEntities)

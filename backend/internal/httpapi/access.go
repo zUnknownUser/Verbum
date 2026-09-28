@@ -34,6 +34,8 @@ type AccessOptions struct {
 type routeBudget struct{ perUser, perIP, global, concurrent int }
 
 var accessBudgets = map[string]routeBudget{
+	"POST /v1/me/sync":          {30, 60, 600, 16},
+	"DELETE /v1/me/data":        {3, 10, 60, 4},
 	"GET /v1/realtime/connect":  {3, 10, 30, 4},
 	"GET /v1/public":            {120, 240, 1200, 32},
 	"GET /v1/me/usage":          {30, 60, 300, 8},

@@ -15,6 +15,7 @@ import (
 )
 
 type EconomicOptions struct {
+	PersonalData   PersonalDataStore
 	Usage          *usage.Service
 	SpeechVerifier func(context.Context, tts.Request) (tts.Request, error)
 	AskModel       string

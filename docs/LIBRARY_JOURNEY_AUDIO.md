@@ -1,5 +1,8 @@
 # Biblioteca, Jornada e recuperação de áudio — 2026-09-28
 
+> Registro da primeira entrega. A sincronização privada e o transporte progressivo
+> foram atualizados em [PERSONAL_SYNC_PLAYBACK.md](PERSONAL_SYNC_PLAYBACK.md).
+
 Entrega nas duas plataformas, com textos em português brasileiro e inglês.
 
 - Biblioteca reúne passagens salvas, destaques e notas já persistidos pelo leitor, com filtros e busca local por referência/nome do livro/nota. Busca ignora caixa e acentos e aceita nomes de livros nos dois idiomas. Registros removidos não aparecem.

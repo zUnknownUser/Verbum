@@ -13,11 +13,14 @@ extension ScriptureAudioClient {
 
     /// Speak the exact cached reading translation via the backend's `POST /v1/tts`; never
     /// substitute English. New generation is requested only for the chapter the listener opens.
-    static let cloudPortuguese = ScriptureAudioClient(chapterAudio: { bookID, chapter in
-        let reference = PassageReference(bookId: bookID, chapter: chapter)
-        let audio = try await CloudSpeechRenderer.shared.chapterAudio(reference)
-        return audio
-    })
+    static let cloudPortuguese: ScriptureAudioClient = {
+        var client = ScriptureAudioClient(chapterAudio: { bookID, chapter in
+            try await CloudSpeechRenderer.shared.chapterAudio(.init(bookId: bookID, chapter: chapter))
+        })
+        client.continueAudio = { audio, after in try await CloudSpeechRenderer.shared.nextExcerpt(audio, after: after) }
+        return client
+    }()
+
 }
 
 private actor CloudSpeechRenderer {
@@ -34,12 +37,12 @@ private actor CloudSpeechRenderer {
         let task = Task<ChapterAudio, Error> {
             let verses = try await BibleClient.liveValue.chapter(bookId: reference.bookId, chapter: reference.chapter)
             guard let first = verses.first else { throw SpeechFailure.emptyAudio }
-            let (url, cues) = try await render(verses)
+            let (url, cues, statusPath) = try await render(verses)
             return ChapterAudio(
                 translationId: first.translationId,
                 translationName: "Leitura automática · Português",
                 reference: reference,
-                narrators: [AudioNarrator(id: AudioNarrator.synthesisedPrefix + "pt-BR", name: "Leitura automática", url: url.absoluteString, timingsPath: nil, cues: cues)]
+                narrators: [AudioNarrator(id: AudioNarrator.synthesisedPrefix + "pt-BR", name: "Leitura automática", url: url.absoluteString, timingsPath: nil, cues: cues, playbackStatusPath: statusPath)]
             )
         }
         inFlight[reference] = task
@@ -50,7 +53,7 @@ private actor CloudSpeechRenderer {
     /// One MP3 per exact chapter text and server voice version, cached on disk. The backend also caches server-side by
     /// the same text, so a cold local cache (after reinstall, or a pruned entry) still answers
     /// without paying for a new generation — only the round trip.
-    func render(_ verses: [BiblePassage]) async throws -> (URL, [AudioCue]) {
+    func render(_ verses: [BiblePassage]) async throws -> (URL, [AudioCue], String?) {
         let text = verses.map(\.text).joined(separator: "\n")
         let directory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
             .appendingPathComponent("CloudSpeech-pt-BR-v1", isDirectory: true)
@@ -68,7 +71,7 @@ private actor CloudSpeechRenderer {
             try? FileManager.default.setAttributes([.modificationDate: Date()], ofItemAtPath: output.path)
             let metadata = output.appendingPathExtension("json")
             let cues = (try? JSONDecoder().decode([AudioCue].self, from: Data(contentsOf: metadata))) ?? []
-            return (output, AudioCue.validated(cues))
+            return (output, AudioCue.validated(cues), nil)
         }
         let statusPath = try await VerbumAPI.shared.startSpeechPlayback(verses: verses, revision: version)
         for _ in 0..<315 {
@@ -76,9 +79,9 @@ private actor CloudSpeechRenderer {
             let status = try await VerbumAPI.shared.speechPlaybackStatus(statusPath)
             if status.complete {
                 try await save(status, output: output, directory: directory)
-                return (output, status.cues ?? [])
+                return (output, status.cues ?? [], nil)
             }
-            if status.ready {
+            if status.ready, let snapshotPath = status.snapshotPath, !snapshotPath.isEmpty {
                 if downloads[key] == nil {
                     downloads[key] = Task {
                         defer { downloads[key] = nil }
@@ -91,9 +94,29 @@ private actor CloudSpeechRenderer {
                         } catch { /* Playback reports transport errors; incomplete audio is never cached. */ }
                     }
                 }
-                return (try VerbumAPI.shared.playbackURL(status.playlistPath), [])
+                return (try VerbumAPI.shared.playbackURL(snapshotPath), [], statusPath)
             }
             try await Task.sleep(for: .seconds(2))
+        }
+        throw SpeechFailure.emptyAudio
+    }
+
+    func nextExcerpt(_ audio: ChapterAudio, after: Double) async throws -> ChapterAudio? {
+        guard let narrator = audio.narrators.first, let path = narrator.playbackStatusPath else { return nil }
+        // Only GETs against the existing job: waiting never starts a new paid generation.
+        for _ in 0..<210 {
+            try Task.checkCancellation()
+            let status = try await VerbumAPI.shared.speechPlaybackStatus(path)
+            if status.complete || (status.duration ?? 0) > after + 0.5 {
+                let media = status.complete ? status.audioPath : status.snapshotPath
+                if let media, !media.isEmpty {
+                    let next = AudioNarrator(id: narrator.id, name: narrator.name,
+                        url: try VerbumAPI.shared.playbackURL(media).absoluteString, timingsPath: nil,
+                        cues: status.cues, playbackStatusPath: status.complete ? nil : path)
+                    return ChapterAudio(translationId: audio.translationId, translationName: audio.translationName, reference: audio.reference, narrators: [next])
+                }
+            }
+            try await Task.sleep(for: .seconds(3))
         }
         throw SpeechFailure.emptyAudio
     }

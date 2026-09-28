@@ -7,6 +7,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.CompareArrows
+import androidx.compose.material.icons.automirrored.outlined.MenuBook
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -52,7 +54,7 @@ internal fun VerseStudySheet(state: VerseStudyFeature.State, send: (Action)->Uni
                     Tab.entries.forEach {tab->
                         TextButton(onClick={send(Action.TabChanged(tab))},modifier=Modifier.semantics {selected=tab==state.tab}) {
                             Column(horizontalAlignment=Alignment.CenterHorizontally) {
-                                Icon(when(tab) {Tab.HIGHLIGHT->Icons.Outlined.BorderColor;Tab.NOTE->Icons.Outlined.EditNote;Tab.COMPARE->Icons.Outlined.CompareArrows;Tab.CONTEXT->Icons.Outlined.MenuBook;Tab.REFERENCES->Icons.Outlined.AccountTree;Tab.ASK->Icons.Outlined.QuestionAnswer},contentDescription=null)
+                                Icon(when(tab) {Tab.HIGHLIGHT->Icons.Outlined.BorderColor;Tab.NOTE->Icons.Outlined.EditNote;Tab.COMPARE->Icons.AutoMirrored.Outlined.CompareArrows;Tab.CONTEXT->Icons.AutoMirrored.Outlined.MenuBook;Tab.REFERENCES->Icons.Outlined.AccountTree;Tab.ASK->Icons.Outlined.QuestionAnswer},contentDescription=null)
                                 Text(stringResource(tabTitle(tab)),style=MaterialTheme.typography.labelSmall)
                             }
                         }

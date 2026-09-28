@@ -1,0 +1,3 @@
+<resources>
+    <string name="annotations_load_failed">Não foi possível carregar suas notas e marcações. Seu texto continua disponível.</string>
+</resources>

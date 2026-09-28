@@ -279,6 +279,37 @@ import Testing
         await store.send(.sessionEvent(2, .playing(true)))
     }
 
+    @Test func finiteExcerptWaitsForSameChapterAndResumesWithoutNewGeneration() async {
+        let player = FakePlayer()
+        let excerptNarrator = AudioNarrator(id: "native.pt-BR", name: "Narrador", url: "https://example.test/snapshot-000003.m3u8", timingsPath: nil, playbackStatusPath: "/existing/status")
+        let excerpt = ChapterAudio(translationId: "POR", translationName: "Português", reference: Self.john3, narrators: [excerptNarrator])
+        let complete = ChapterAudio(translationId: "POR", translationName: "Português", reference: Self.john3, narrators: [Self.david])
+        var state = AudioPlayerFeature.State()
+        state.reference = Self.john3; state.audio = excerpt; state.narrator = excerptNarrator
+        state.duration = 30; state.currentTime = 29; state.isPlaying = true
+        let store = TestStore(initialState: state) { AudioPlayerFeature() } withDependencies: {
+            $0.audioPlayer = player.client
+            $0.scriptureAudio.continueAudio = { audio, after in
+                #expect(audio.reference == Self.john3); #expect(after == 30)
+                return complete
+            }
+            $0.continuousClock = TestClock()
+        }
+        store.exhaustivity = .off(showSkippedAssertions: false)
+        await store.send(.event(.ended))
+        #expect(store.state.reference == Self.john3)
+        #expect(store.state.isLoading)
+        await store.receive(\.loaded)
+        await Task.yield()
+        player.continuation.yield(.ready(duration: 100))
+        await store.receive(\.sessionEvent)
+        #expect(player.calls.value.contains("seek 30"))
+        #expect(store.state.reference == Self.john3)
+        #expect(store.state.narrator?.playbackStatusPath == nil)
+        await store.send(.stopTapped)
+        await store.finish()
+    }
+
     @Test func miniPlayerTapAsksTheShellToOpenTheChapter() async {
         var state = AudioPlayerFeature.State()
         state.reference = Self.john3

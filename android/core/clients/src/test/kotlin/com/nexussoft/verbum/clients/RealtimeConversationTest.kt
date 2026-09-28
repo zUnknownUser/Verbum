@@ -29,6 +29,7 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 /** The Realtime protocol, scripted: what the conversation sends for what it receives, without a socket or a microphone. Twin of iOS `RealtimeConversationTests`. */
+@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
 class RealtimeConversationTest {
     private class FakeTransport : RealtimeTransport {
         val sent = mutableListOf<JsonObject>()

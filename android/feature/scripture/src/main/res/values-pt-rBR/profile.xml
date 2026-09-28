@@ -25,7 +25,7 @@
     <string name="profile_highlights">Destaques</string>
     <string name="profile_notes">Notas</string>
     <string name="profile_reading_history">Histórico de leitura</string>
-    <string name="profile_history_body">Os capítulos que você abre são registrados neste dispositivo a partir desta versão. Abrir um capítulo não significa ter concluído sua leitura.</string>
+    <string name="profile_history_body">Os capítulos que você abre entram no seu histórico. Abrir um capítulo não significa que você terminou de lê-lo.</string>
     <string name="profile_history_empty">Seu próximo capítulo começa essa história.</string>
     <string name="profile_preferences_section">Preferências</string>
     <string name="profile_appearance">Aparência</string>
@@ -42,7 +42,7 @@
     <string name="profile_help_saving">Toque em um versículo para abrir o painel de estudo. Use o marcador para salvar a passagem, escolha um destaque ou escreva uma nota. Encontre essas passagens novamente em Seu Verbum.</string>
     <string name="profile_help_offline">Capítulos abertos anteriormente podem estar disponíveis no cache. Busca, contexto de estudo, voz e novos áudios podem precisar de conexão com a internet.</string>
     <string name="profile_privacy">Privacidade</string>
-    <string name="profile_privacy_local">Passagens salvas, destaques, notas e histórico ficam neste dispositivo. Entrar na conta não sincroniza esses dados, e eles permanecem no aparelho após sair. Notas pessoais não são enviadas junto das perguntas de estudo.</string>
+    <string name="profile_privacy_local">Suas notas, destaques, passagens salvas e histórico são salvos offline e sincronizados de forma privada quando você entra na conta. Notas pessoais nunca acompanham perguntas de estudo. Ao sair, os dados locais desta conta continuam separados de outras contas.</string>
     <string name="profile_privacy_account">Sua conta é usada para autenticar o acesso. Em Detalhes da conta, gerencie email, senha e exclusão da conta. Excluir a conta não apaga os dados locais de leitura.</string>
     <string name="profile_privacy_a_i">Ao fazer uma pergunta ou usar voz, sua pergunta e o contexto relevante de estudo são enviados ao serviço para produzir uma resposta. O acesso ao microfone é solicitado ao iniciar uma conversa por voz.</string>
     <string name="profile_about">Sobre o Verbum</string>
@@ -66,7 +66,7 @@
     <string name="profile_email_change_sent">Confira seu novo email para confirmar a alteração e depois atualize os dados da conta.</string>
     <string name="profile_change_password">Alterar senha</string>
     <string name="profile_password_reset_body">Enviaremos um link para redefinir a senha ao email da sua conta.</string>
-    <string name="profile_device_local">Sua leitura, guardada neste dispositivo.</string>
+    <string name="profile_device_local">Sua leitura disponível offline. Entre na conta para sincronizar entre aparelhos.</string>
     <string name="profile_collection_empty">Toque em um versículo durante a leitura para salvar, destacar ou adicionar uma nota.</string>
     <string name="profile_collection_load_failed">Não foi possível carregar suas passagens.</string>
     <string name="profile_save_passage">Salvar passagem</string>

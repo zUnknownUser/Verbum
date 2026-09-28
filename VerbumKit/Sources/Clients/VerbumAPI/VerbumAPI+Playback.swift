@@ -7,6 +7,8 @@ public struct SpeechPlaybackStatus: Decodable, Sendable {
     public let playlistPath: String
     public let audioPath: String
     public let cues: [AudioCue]?
+    public let snapshotPath: String?
+    public let duration: Double?
 }
 
 extension VerbumAPI {
@@ -23,7 +25,7 @@ extension VerbumAPI {
         let pieces = path.split(separator: "/")
         guard pieces.count == 5, pieces[0] == "v1", pieces[1] == "tts", pieces[2] == "playback",
               pieces[3].count == 64, pieces[3].allSatisfy({ $0.isHexDigit }),
-              ["status", "index.m3u8", "chapter.mp3"].contains(String(pieces[4])) else { throw VerbumAPIError.malformedResponse }
+              (["status", "index.m3u8", "chapter.mp3"].contains(String(pieces[4])) || String(pieces[4]).range(of: "^snapshot-[0-9]{6}\\.m3u8$", options: .regularExpression) != nil) else { throw VerbumAPIError.malformedResponse }
         return baseURL.appendingPathComponent(path)
     }
     public func speechPlaybackStatus(_ path: String) async throws -> SpeechPlaybackStatus {

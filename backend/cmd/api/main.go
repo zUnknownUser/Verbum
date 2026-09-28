@@ -26,6 +26,7 @@ import (
 	"verbum/backend/internal/embeddings"
 	"verbum/backend/internal/httpapi"
 	"verbum/backend/internal/identity"
+	"verbum/backend/internal/personalsync"
 	"verbum/backend/internal/scripture"
 	"verbum/backend/internal/store"
 	"verbum/backend/internal/store/memory"
@@ -137,6 +138,17 @@ func main() {
 		slog.Warn("paid generation disabled: persistent usage database is required")
 	}
 	economy := httpapi.EconomicOptions{Usage: spending, AskModel: env("VERBUM_ASK_MODEL", synthesis.DefaultModel)}
+	if databaseURL := os.Getenv("VERBUM_DATABASE_URL"); databaseURL != "" {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		personal, openErr := personalsync.Open(ctx, databaseURL)
+		cancel()
+		if openErr != nil {
+			slog.Error("personal storage unavailable: apply migration 0008")
+			os.Exit(1)
+		}
+		defer personal.Close()
+		economy.PersonalData = personal
+	}
 	if usageDB != nil {
 		economy.SpeechVerifier = scripture.New(usageDB).Verify
 	}

@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Verbum API
-  version: 0.2.0
+  version: 0.3.0
   description: |
     Scripture, editorial knowledge, grounded answers and chapter narration for Verbum on iOS and Android.
 
@@ -50,6 +50,71 @@ tags:
     description: Service availability / Disponibilidade do serviço
 
 paths:
+  /v1/me/sync:
+    post:
+      tags: [account]
+      operationId: syncPersonalData
+      summary: Sync private reading data / Sincronizar dados pessoais
+      description: |
+        Registered Firebase accounts only (anonymous users receive 403). Changes are account-private,
+        never included in AI prompts. Up to 100 changes per request and 200 downloaded records per page.
+        Keep mutationId stable across retries. Cursor and baseRevision are server revisions.
+        A null annotation value is a deletion tombstone; reading history cannot be deleted by sync.
+        Independent annotation fields merge; simultaneous note
+        edits preserve both texts separated by a divider. Concurrent deletion wins over an unseen edit.
+        Visits and last position use event timestamps. Read offline from device storage; retry with backoff.
+        Account storage is bounded to 50,000 records, 32 MiB and 100,000 mutation receipts; notes to 32 KiB.
+      security:
+        - FirebaseIDToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonalSyncRequest'
+      responses:
+        '200':
+          description: Accepted changes and a page of account changes. Persist cursor only after records reach durable device storage.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalSyncResponse'
+        '400':
+          description: Invalid payload, reference, timestamp or cursor
+        '401':
+          description: Firebase authentication required
+        '403':
+          description: Registered account required, App Check required, or account deletion pending
+        '409':
+          description: Storage limit reached; preserve the local outbox
+        '429':
+          description: Too many requests; respect Retry-After
+        '503':
+          description: Storage temporarily unavailable; keep local edits
+  /v1/me/data:
+    delete:
+      tags: [account]
+      operationId: deletePersonalData
+      summary: Remove private account data / Excluir dados pessoais da conta
+      description: |
+        Account-deletion step. Removes synced notes, marks and reading history and permanently blocks
+        new sync writes for this UID, including delayed requests from other devices. Idempotent.
+        The server requires authentication within the last five minutes for registered users.
+        Clients reauthenticate before calling and then delete the Firebase identity. Never call on sign-out.
+      security:
+        - FirebaseIDToken: []
+      responses:
+        '204':
+          description: Data removed; account UID closed for synchronization
+        '401':
+          description: Authentication required
+        '403':
+          description: App Check required
+        '429':
+          description: Too many requests
+        '503':
+          description: Deletion not completed; retry before deleting the Firebase identity
+
   /healthz:
     get:
       tags: [health]
@@ -158,7 +223,10 @@ paths:
       responses:
         '200':
           description: |
-            status returns ready, complete, playlistPath, audioPath and optional final MP3 cues.
+            status returns ready, complete, playlistPath, snapshotPath, duration, audioPath and optional final MP3 cues.
+            snapshot-NNNNNN.m3u8 is immutable finite VOD for the currently available excerpt, with ENDLIST.
+            New clients play snapshots, then poll the same status capability for more audio and resume at
+            the previous endpoint. They advance chapters only when complete=true. No new POST is needed.
             index.m3u8 is an append-only EVENT playlist with EXT-X-ENDLIST only on success.
             Listed TS segments contain AAC audio. chapter.mp3 is available only after completion.
             Poll status/playlist without caching; never interpret partial media as a complete chapter.
@@ -718,6 +786,68 @@ components:
           example: { code: unknown_entity, message: "no entity with id 'nope'" }
 
   schemas:
+    PersonalValue:
+      type: object
+      additionalProperties: false
+      properties:
+        book: {type: string, example: Job}
+        chapter: {type: integer, minimum: 1, example: 38}
+        verse: {type: integer, minimum: 1, maximum: 176, example: 4}
+        highlight: {type: string, enum: [gold, sage, rose]}
+        style: {type: string, enum: [background, underline, margin]}
+        note: {type: string, description: Maximum 32768 UTF-8 bytes}
+        bookmarked: {type: boolean}
+        time: {type: integer, format: int64, description: Unix milliseconds for visit and position}
+        day: {type: string, format: date}
+    PersonalRecord:
+      type: object
+      required: [id, revision, value]
+      properties:
+        id: {type: string, example: 'annotation:Job.38.4'}
+        revision: {type: integer, format: int64}
+        value:
+          oneOf:
+            - $ref: '#/components/schemas/PersonalValue'
+            - {type: 'null'}
+    PersonalChange:
+      type: object
+      required: [id, mutationId]
+      properties:
+        id: {type: string, description: 'annotation:Book.chapter.verse, visit:Book.chapter, day:YYYY-MM-DD, position:last'}
+        mutationId: {type: string, minLength: 16, maxLength: 80, description: Durable unique ID for this local edit}
+        baseRevision: {type: integer, format: int64, default: 0}
+        base:
+          oneOf:
+            - $ref: '#/components/schemas/PersonalValue'
+            - {type: 'null'}
+        value:
+          oneOf:
+            - $ref: '#/components/schemas/PersonalValue'
+            - {type: 'null'}
+    PersonalSyncRequest:
+      type: object
+      required: [cursor, changes]
+      properties:
+        cursor: {type: integer, format: int64, minimum: 0}
+        changes:
+          type: array
+          maxItems: 100
+          items: {$ref: '#/components/schemas/PersonalChange'}
+    PersonalSyncResponse:
+      type: object
+      required: [cursor, more, records, accepted]
+      properties:
+        cursor: {type: integer, format: int64}
+        more: {type: boolean}
+        records:
+          type: array
+          maxItems: 200
+          items: {$ref: '#/components/schemas/PersonalRecord'}
+        accepted:
+          type: array
+          maxItems: 100
+          items: {$ref: '#/components/schemas/PersonalRecord'}
+
     UsageRestriction:
       type: object
       required: [code]

@@ -213,7 +213,7 @@ final class AVPlayerEngine {
         let center = MPRemoteCommandCenter.shared()
         // Same rule as the artwork: MediaRemote may call these off the main
         // thread, so the handlers are @Sendable and hop to the actor themselves.
-        func remote(_ command: AudioPlayerEvent.RemoteCommand) {
+        let remote: @Sendable (AudioPlayerEvent.RemoteCommand) -> Void = { [weak self] command in
             Task { @MainActor [weak self] in self?.continuation?.yield(.remote(command)) }
         }
         center.playCommand.addTarget { @Sendable _ in remote(.play); return .success }

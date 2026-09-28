@@ -26,15 +26,28 @@ extension AccountClient {
             return AsyncStream { continuation in
                 // SDK listener tokens are opaque NSObjectProtocol values, not Sendable.
                 // The token is only accessed under the lock for listener removal.
-                let handle = LockIsolated(auth.addStateDidChangeListener { _, user in continuation.yield(user.map(snapshot)) })
-                continuation.onTermination = { _ in handle.withValue { auth.removeStateDidChangeListener($0) } }
+                let handle = LockIsolated(auth.addStateDidChangeListener { _, user in
+                    if !RegistrationPublication.pending.value { continuation.yield(user.map(snapshot)) }
+                })
+                let promotion = LockIsolated(NotificationCenter.default.addObserver(forName: RegistrationPublication.finished, object: nil, queue: .main) { _ in
+                    continuation.yield(auth.currentUser.map(snapshot))
+                })
+                continuation.onTermination = { _ in
+                    handle.withValue { auth.removeStateDidChangeListener($0) }
+                    promotion.withValue { NotificationCenter.default.removeObserver($0) }
+                }
             }
         },
         signIn: { email, password in
             try await mapped { snapshot(try await configuredAuth().signIn(withEmail: email, password: password).user) }
         },
         register: { email, password in
-            try await mapped {
+            RegistrationPublication.pending.setValue(true)
+            defer {
+                RegistrationPublication.pending.setValue(false)
+                NotificationCenter.default.post(name: RegistrationPublication.finished, object: nil)
+            }
+            return try await mapped {
                 let auth = try configuredAuth()
                 // Preserve a guest's Firebase UID when they create a new account.
                 if let guest = auth.currentUser, guest.isAnonymous {
@@ -85,6 +98,7 @@ extension AccountClient {
                     try await user.reauthenticate(with: EmailAuthProvider.credential(withEmail: email, password: password))
                 }
                 let uid = user.uid
+                try await VerbumAPI.shared.deletePersonalData(uid: uid)
                 try await user.delete()
                 try LocalAccountData.delete(uid: uid)
             }
@@ -185,4 +199,11 @@ public enum FirebaseAppAttestation {
         return try? await AppCheck.appCheck().token(forcingRefresh: false).token
         #endif
     }
+}
+
+/// Publish the new account only after its guest data has been promoted. Otherwise
+/// the sync task could import remote data into the destination before migration.
+private enum RegistrationPublication {
+    static let pending = LockIsolated(false)
+    static let finished = Notification.Name("verbum.registrationDataReady")
 }

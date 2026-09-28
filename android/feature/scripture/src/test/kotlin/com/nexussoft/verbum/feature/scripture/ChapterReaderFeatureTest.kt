@@ -19,6 +19,21 @@ class ChapterReaderFeatureTest {
     private fun TestScope.reader(state:State,bible:StubBibleClient=StubBibleClient(chapterStub={b,c->verses(b,c,3)})) =
         Store(state,ChapterReaderFeature.reducer(bible,preferences),this)
 
+    @Test fun annotationRetryPreservesTextAndDoesNotReloadBible()=runTest {
+        preferences.setString("readerAnnotations","broken-json")
+        var calls=0
+        val bible=StubBibleClient(chapterStub={b,c->calls++;verses(b,c,3)})
+        val state=State(PassageReference("Job",36),content=Content.Loaded(verses("Job",36,3)))
+        val store=reader(state,bible)
+        store.send(Action.RetryAnnotations);advanceUntilIdle()
+        assertTrue(store.state.value.annotationLoadFailed)
+        assertFalse(store.state.value.annotationsLoading)
+        assertEquals(state.content,store.state.value.content)
+        preferences.setString("readerAnnotations","[]")
+        store.send(Action.RetryAnnotations);advanceUntilIdle()
+        assertFalse(store.state.value.annotationLoadFailed)
+        assertEquals(0,calls)
+    }
     @Test fun loadsCurrentAndAdjacentChaptersOnly()=runTest {
         val calls=mutableListOf<String>()
         val store=reader(State(PassageReference("John",3)),StubBibleClient(chapterStub={b,c->calls+="$b.$c";verses(b,c,3)}))

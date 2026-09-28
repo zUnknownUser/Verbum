@@ -252,7 +252,7 @@
     <string name="reader_sage">Destaque verde</string>
     <string name="reader_rose">Destaque rosa</string>
     <string name="reader_remove">Remover destaque</string>
-    <string name="reader_local">Destaques e notas ficam neste dispositivo.</string>
+    <string name="reader_local">Salvo offline. Entre na conta para sincronizar notas e marcações.</string>
     <string name="reader_your_note">Sua nota</string>
     <string name="reader_only_you">Só você escreve aqui.</string>
     <string name="reader_save_note">Salvar nota</string>

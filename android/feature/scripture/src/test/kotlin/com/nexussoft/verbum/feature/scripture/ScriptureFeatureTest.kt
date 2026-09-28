@@ -1,6 +1,9 @@
 package com.nexussoft.verbum.feature.scripture
 
 import com.nexussoft.verbum.clients.InMemoryPreferencesClient
+import com.nexussoft.verbum.common.arch.Store
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import com.nexussoft.verbum.common.arch.TestStore
 import com.nexussoft.verbum.feature.scripture.ScriptureFeature.Action
 import com.nexussoft.verbum.models.BibleBook
@@ -27,28 +30,25 @@ class ScriptureFeatureTest {
         assertNull(state.settings)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun titleOpensTheShelfAndAChapterClosesItIntoTheReader() = runTest {
-        val store = store(StubBibleClient(chapterStub = { b, c -> verses(b, c, 1) }))
-        val samuel = assertNotNull(BibleBook.book("1Sam"))
-        store.send(Action.TitleTapped) { it.copy(isShelfPresented = true) }
-        store.send(Action.Books(BookPickerFeature.Action.BookTapped(samuel))) { it.copy(books = it.books.copy(selectedBook = samuel)) }
-        store.send(Action.Books(BookPickerFeature.Action.ChapterTapped(17)))
-        store.receive(Action.Books(BookPickerFeature.Action.Delegate(BookPickerFeature.DelegateAction.ChapterSelected(PassageReference("1Sam", 17))))) {
-            it.copy(isShelfPresented = false)
-        }
-        store.receive(Action.Reader(ChapterReaderFeature.Action.Go(PassageReference("1Sam", 17)))) {
-            it.copy(
-                reader = it.reader.copy(reference = PassageReference("1Sam", 17), content = ChapterReaderFeature.Content.Loading),
-                books = it.books.copy(current = PassageReference("1Sam", 17)),
-            )
-        }
-        store.receive(Action.Reader(ChapterReaderFeature.Action.ChapterLoaded(verses("1Sam", 17, 1)))) {
-            it.copy(reader = it.reader.copy(content = ChapterReaderFeature.Content.Loaded(verses("1Sam", 17, 1))))
-        }
-        assertEquals("1Sam 17", preferences.string(ChapterReaderFeature.LAST_READ_KEY))
-        assertEquals(samuel, store.state.books.selectedBook)
-        store.finish()
+        val runtime=Store(ScriptureFeature.State.initial(PassageReference("John",3)),ScriptureFeature.reducer(StubBibleClient(chapterStub={b,c->verses(b,c,1)}),preferences),this)
+        val samuel=assertNotNull(BibleBook.book("1Sam"))
+        runtime.send(Action.TitleTapped)
+        assertEquals(true,runtime.state.value.isShelfPresented)
+        runtime.send(Action.Books(BookPickerFeature.Action.BookTapped(samuel)))
+        runtime.send(Action.Books(BookPickerFeature.Action.ChapterTapped(17)))
+        advanceUntilIdle()
+        val state=runtime.state.value
+        val destination=PassageReference("1Sam",17)
+        assertFalse(state.isShelfPresented)
+        assertEquals(destination,state.reader.reference)
+        assertEquals(listOf(destination),state.reader.flow)
+        assertEquals(destination,state.books.current)
+        assertEquals(ChapterReaderFeature.Content.Loaded(verses("1Sam",17,1)),state.reader.content)
+        assertEquals("1Sam 17",preferences.string(ChapterReaderFeature.LAST_READ_KEY))
+        assertEquals(samuel,state.books.selectedBook)
     }
 
     @Test

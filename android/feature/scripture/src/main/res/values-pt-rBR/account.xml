@@ -37,7 +37,7 @@
     <string name="account_sign_out_body">Sair neste aparelho? O acesso de visitante não poderá ser recuperado se você não criar uma conta antes.</string>
     <string name="account_delete">Excluir conta</string>
     <string name="account_delete_title">Excluir sua conta?</string>
-    <string name="account_delete_body">Isso exclui permanentemente sua conta de autenticação. Não apaga os dados de leitura armazenados localmente neste aparelho. Digite sua senha para confirmar.</string>
+    <string name="account_delete_body">Isso exclui permanentemente sua conta, os dados pessoais sincronizados e os dados de leitura desta conta neste aparelho. Digite sua senha para confirmar.</string>
     <string name="account_delete_guest_body">Isso exclui permanentemente sua conta de visitante. Esta ação não pode ser desfeita. Os dados locais de leitura não são apagados.</string>
     <string name="account_deleted">Conta excluída.</string>
     <string name="account_cancel">Cancelar</string>

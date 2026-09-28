@@ -36,7 +36,7 @@ public struct AppFeature {
         case home, explore, journey, library, search
     }
 
-    @Reducer(state: .equatable, action: .equatable)
+    @Reducer
     public enum Path {
         case reader(ScriptureFeature)
         case entity(EntityDetailFeature)
@@ -251,3 +251,6 @@ public struct AppFeature {
         return .none
     }
 }
+
+extension AppFeature.Path.State: Equatable {}
+extension AppFeature.Path.Action: Equatable {}

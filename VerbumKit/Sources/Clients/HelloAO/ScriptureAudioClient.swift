@@ -7,7 +7,12 @@ import Models
 /// labelled as such — the mismatch is shown, never hidden.
 @DependencyClient
 public struct ScriptureAudioClient: Sendable {
+    public var continueAudio: @Sendable (_ audio: ChapterAudio, _ after: Double) async throws -> ChapterAudio? = { _, _ in nil }
     public var chapterAudio: @Sendable (_ bookId: BookID, _ chapter: Int) async throws -> ChapterAudio?
+
+    public init(chapterAudio: @escaping @Sendable (BookID, Int) async throws -> ChapterAudio?) {
+        self.chapterAudio = chapterAudio
+    }
 }
 
 extension ScriptureAudioClient: DependencyKey {

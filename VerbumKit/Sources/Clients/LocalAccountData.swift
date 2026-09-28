@@ -1,3 +1,4 @@
+import ComposableArchitecture
 import CryptoKit
 import FirebaseAuth
 import FirebaseCore
@@ -6,6 +7,7 @@ import Foundation
 /// No UID is used as a path. Existing installation data is assigned once, at startup,
 /// to the already signed-in identity (or the local guest), never on a later login.
 public enum LocalAccountData {
+    private static let preparedDirectories = LockIsolated<Set<String>>([])
     public static var owner: String {
         let user = FirebaseApp.app() == nil ? nil : Auth.auth().currentUser
         let uid = user?.isAnonymous == false ? user?.uid : nil
@@ -18,10 +20,17 @@ public enum LocalAccountData {
         FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0].appendingPathComponent("Verbum/accounts", isDirectory: true)
     }
     public static func url(_ name: String, owner: String? = nil) -> URL {
-        var directory = base.appendingPathComponent(owner ?? self.owner, isDirectory: true)
-        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        var values = URLResourceValues(); values.isExcludedFromBackup = true
-        try? directory.setResourceValues(values)
+        let directory = base.appendingPathComponent(owner ?? self.owner, isDirectory: true)
+        preparedDirectories.withValue { prepared in
+            guard !prepared.contains(directory.path) else { return }
+            do {
+                try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+                var values = URLResourceValues(); values.isExcludedFromBackup = true
+                var resourceURL = directory
+                try resourceURL.setResourceValues(values)
+                prepared.insert(directory.path)
+            } catch { /* The actual read/write reports storage failures to its caller. */ }
+        }
         return directory.appendingPathComponent(name)
     }
     static func isDeleted(_ owner: String) -> Bool { UserDefaults.standard.bool(forKey: "deleted-local-account." + owner) }

@@ -45,7 +45,7 @@
   let language = navigator.language.toLowerCase().startsWith("pt")
     ? "pt-BR"
     : "en";
-  let count = 17;
+  let count = 19;
   const renderLanguage = () => {
     document.documentElement.lang = language;
     document.querySelectorAll("[data-copy]").forEach((element) => {

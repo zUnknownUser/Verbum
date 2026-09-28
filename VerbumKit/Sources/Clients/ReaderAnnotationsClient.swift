@@ -24,7 +24,7 @@ extension DependencyValues {
     }
 }
 
-/// Serialized, atomic writes; annotations remain on this device and never enter RAG prompts.
+/// Serialized, atomic writes; local saves work offline; annotations never enter RAG prompts.
 actor AnnotationFile {
     private static let files = LockIsolated<[String: AnnotationFile]>([:])
     static func shared(owner: String) -> AnnotationFile {
@@ -51,5 +51,25 @@ actor AnnotationFile {
         if annotation.highlight != nil || !annotation.note.isEmpty || annotation.bookmarked == true { values.append(annotation) }
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
         try JSONEncoder().encode(values).write(to: url, options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
+    }
+}
+
+public enum PersonalAnnotationStorage {
+    public static func snapshot(owner: String) async throws -> [String: PersonalValue] {
+        try await AnnotationFile.shared(owner: owner).load().reduce(into: [:]) { result, item in
+            result["annotation:" + item.id] = PersonalValue(item)
+        }
+    }
+    public static func apply(_ record: PersonalRecord, expected: PersonalValue?, owner: String) async throws {
+        try await AnnotationFile.shared(owner: owner).apply(record, expected: expected)
+    }
+}
+extension AnnotationFile {
+    func apply(_ record: PersonalRecord, expected: PersonalValue?) throws {
+        let id = String(record.id.dropFirst("annotation:".count))
+        let current = try load().first { $0.id == id }
+        guard current.map(PersonalValue.init) == expected else { return }
+        if let annotation = record.value?.annotation { try save(annotation) }
+        else if var current { current.highlight = nil; current.note = ""; current.bookmarked = false; try save(current) }
     }
 }

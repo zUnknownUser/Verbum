@@ -252,7 +252,7 @@
     <string name="reader_sage">Sage highlight</string>
     <string name="reader_rose">Rose highlight</string>
     <string name="reader_remove">Remove highlight</string>
-    <string name="reader_local">Highlights and notes stay on this device.</string>
+    <string name="reader_local">Saved offline. Sign in to sync notes and markings.</string>
     <string name="reader_your_note">Your note</string>
     <string name="reader_only_you">Only you write here.</string>
     <string name="reader_save_note">Save note</string>

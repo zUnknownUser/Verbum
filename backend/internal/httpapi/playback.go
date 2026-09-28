@@ -235,7 +235,15 @@ func (h *handlers) playbackMedia(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		base := "/v1/tts/playback/" + j.token + "/"
-		writeJSONNoStore(w, map[string]any{"ready": len(j.segments) > 0 || (j.done && j.err == nil), "complete": j.done, "playlistPath": base + "index.m3u8", "audioPath": base + "chapter.mp3", "cues": j.cues})
+		duration := 0.0
+		for _, segment := range j.segments {
+			duration += segment.duration
+		}
+		snapshot := ""
+		if len(j.segments) > 0 {
+			snapshot = base + fmt.Sprintf("snapshot-%06d.m3u8", len(j.segments))
+		}
+		writeJSONNoStore(w, map[string]any{"snapshotPath": snapshot, "duration": duration, "ready": len(j.segments) > 0 || (j.done && j.err == nil), "complete": j.done, "playlistPath": base + "index.m3u8", "audioPath": base + "chapter.mp3", "cues": j.cues})
 		return
 	}
 	if asset == "chapter.mp3" && j.done && j.err == nil {
@@ -247,20 +255,34 @@ func (h *handlers) playbackMedia(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "audio unavailable", 503)
 		return
 	}
-	if asset == "index.m3u8" {
+	snapshotCount := 0
+	if strings.HasPrefix(asset, "snapshot-") && strings.HasSuffix(asset, ".m3u8") {
+		snapshotCount, _ = strconv.Atoi(strings.TrimSuffix(strings.TrimPrefix(asset, "snapshot-"), ".m3u8"))
+		if snapshotCount < 1 || snapshotCount > len(j.segments) {
+			http.NotFound(w, r)
+			return
+		}
+	}
+	if asset == "index.m3u8" || snapshotCount > 0 {
 		if len(j.segments) == 0 {
 			http.NotFound(w, r)
 			return
 		}
 		w.Header().Set("Content-Type", "application/vnd.apple.mpegurl")
-		fmt.Fprint(w, "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:10\n#EXT-X-MEDIA-SEQUENCE:0\n#EXT-X-PLAYLIST-TYPE:EVENT\n#EXT-X-START:TIME-OFFSET=0,PRECISE=YES\n")
-		for _, s := range j.segments {
+		kind := "EVENT"
+		segments := j.segments
+		if snapshotCount > 0 {
+			kind = "VOD"
+			segments = segments[:snapshotCount]
+		}
+		fmt.Fprintf(w, "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:10\n#EXT-X-MEDIA-SEQUENCE:0\n#EXT-X-PLAYLIST-TYPE:%s\n#EXT-X-START:TIME-OFFSET=0,PRECISE=YES\n", kind)
+		for _, s := range segments {
 			if s.discontinuity {
 				fmt.Fprint(w, "#EXT-X-DISCONTINUITY\n")
 			}
 			fmt.Fprintf(w, "#EXTINF:%.6f,\n%s\n", s.duration, s.name)
 		}
-		if j.done {
+		if j.done || snapshotCount > 0 {
 			fmt.Fprint(w, "#EXT-X-ENDLIST\n")
 		}
 		return

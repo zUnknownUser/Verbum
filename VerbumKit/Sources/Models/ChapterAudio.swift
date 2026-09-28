@@ -6,8 +6,11 @@ public struct AudioNarrator: Identifiable, Codable, Equatable, Hashable, Sendabl
     /// Where per-verse timings can be fetched later (phase 2: timestamp → verse).
     public let timingsPath: String?
     public let cues: [AudioCue]?
+    /// Non-nil while a finite excerpt is playing and the chapter is still being prepared.
+    public let playbackStatusPath: String?
 
-    public init(id: String, name: String, url: String, timingsPath: String?, cues: [AudioCue]? = nil) {
+    public init(id: String, name: String, url: String, timingsPath: String?, cues: [AudioCue]? = nil, playbackStatusPath: String? = nil) {
+        self.playbackStatusPath = playbackStatusPath
         self.id = id
         self.name = name
         self.url = url

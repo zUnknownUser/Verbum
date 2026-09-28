@@ -14,5 +14,5 @@ fun decodeAudioCues(value:String?):List<AudioCue> = runCatching {
 }.getOrDefault(emptyList())
 fun encodeAudioCues(cues:List<AudioCue>):String = audioJSON.encodeToString(ListSerializer(WireAudioCue.serializer()),cues.map {WireAudioCue(it.verseStart,it.verseEnd,it.start,it.end)})
 
-@Serializable data class SpeechPlaybackStatus(val ready:Boolean,val complete:Boolean,val playlistPath:String,val audioPath:String,val cues:List<WireAudioCue>?=null)
+@Serializable data class SpeechPlaybackStatus(val ready:Boolean,val complete:Boolean,val playlistPath:String,val audioPath:String,val cues:List<WireAudioCue>?=null,val snapshotPath:String?=null,val duration:Double?=null)
 @Serializable internal data class SpeechPlaybackStart(val statusPath:String)

@@ -26,6 +26,7 @@ import (
 )
 
 type handlers struct {
+	personal PersonalDataStore
 	playback *playbackHub
 	store    store.Store
 	now      func() time.Time

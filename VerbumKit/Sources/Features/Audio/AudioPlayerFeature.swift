@@ -202,6 +202,18 @@ public struct AudioPlayerFeature {
             case .event(.ended):
                 guard state.audio != nil else { return .none }
                 guard !state.failed else { return .none }
+                if let audio = state.audio, state.narrator?.playbackStatusPath != nil {
+                    let resume = max(state.currentTime, state.duration)
+                    state.currentTime = resume; state.resumeTime = resume
+                    state.isLoading = true; state.isPlaying = false; state.isBuffering = false
+                    state.revision += 1
+                    let revision = state.revision
+                    return .merge(.cancel(id: CancelID.player), .cancel(id: CancelID.stall),
+                        .run { [scriptureAudio] send in
+                            do { await send(.loaded(revision, try await scriptureAudio.continueAudio(audio: audio, after: resume))) }
+                            catch is CancellationError {} catch { await send(.preparationFailed(revision, .preparation)) }
+                        }.cancellable(id: CancelID.load, cancelInFlight: true))
+                }
                 state.isPlaying = false; state.isBuffering = false
                 guard let reference = state.reference, let next = ChapterNavigation.next(after: reference) else {
                     return .cancel(id: CancelID.stall)

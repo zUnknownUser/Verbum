@@ -31,7 +31,8 @@ import java.util.Locale
 
 @Composable
 internal fun ReadingCollectionScreen(state: ReadingCollectionFeature.State, journey: Boolean, send: (Action) -> Unit) {
-    LaunchedEffect(journey) { send(Action.Started) }
+    val sync = LocalPersonalSync.current
+    LaunchedEffect(journey, sync.revision) { send(if (journey) Action.JourneyStarted else Action.Started) }
     val entries = remember(state.annotations, state.filter, state.query) { ReadingCollection.entries(state.annotations, state.filter, state.query) }
     val locale = if (BookLanguage.current == BookLanguage.PORTUGUESE) Locale.forLanguageTag("pt-BR") else Locale.US
     val dateFormat = remember(locale) { DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT).withLocale(locale).withZone(ZoneId.systemDefault()) }
@@ -46,7 +47,7 @@ internal fun ReadingCollectionScreen(state: ReadingCollectionFeature.State, jour
         if (state.loading && state.annotations.isEmpty() && (!journey || state.activity.visits.isEmpty())) item { CircularProgressIndicator() }
         if (state.failed) item {
             Text(stringResource(R.string.collection_load_failed), style = MaterialTheme.typography.bodyMedium)
-            TextButton(onClick = { send(Action.Retry) }) { Text(stringResource(R.string.try_again)) }
+            TextButton(onClick = { send(if (journey) Action.JourneyStarted else Action.Retry) }) { Text(stringResource(R.string.try_again)) }
         }
         if (journey) {
             item {
@@ -104,7 +105,7 @@ internal fun ReadingCollectionScreen(state: ReadingCollectionFeature.State, jour
                 }
             }
         }
-        item { Text(stringResource(R.string.collection_device_local), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
+        item { Text(sync.message, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
     }
 }
 

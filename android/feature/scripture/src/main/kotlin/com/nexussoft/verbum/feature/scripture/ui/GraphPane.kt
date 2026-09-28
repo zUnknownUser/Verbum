@@ -28,12 +28,12 @@ import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.AccessTime
 import androidx.compose.material.icons.outlined.AutoStories
 import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material.icons.outlined.FormatQuote
-import androidx.compose.material.icons.outlined.Label
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material.icons.outlined.Star
@@ -285,7 +285,7 @@ private fun kindIcon(kind: BibleEntityType): ImageVector = when (kind) {
     BibleEntityType.PERSON -> Icons.Outlined.Person
     BibleEntityType.PLACE -> Icons.Outlined.Place
     BibleEntityType.EVENT -> Icons.Outlined.Flag
-    BibleEntityType.THEME -> Icons.Outlined.Label
+    BibleEntityType.THEME -> Icons.AutoMirrored.Outlined.Label
     BibleEntityType.PASSAGE -> Icons.Outlined.FormatQuote
     BibleEntityType.BOOK -> Icons.Outlined.AutoStories
     BibleEntityType.PROPHECY -> Icons.Outlined.Star

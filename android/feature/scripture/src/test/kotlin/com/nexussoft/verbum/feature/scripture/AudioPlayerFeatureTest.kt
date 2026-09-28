@@ -27,6 +27,24 @@ class AudioPlayerFeatureTest {
         override suspend fun setRate(rate: Float) { calls += "rate:$rate" }
         override suspend fun stop() { calls += "stop" }
     }
+    @Test fun finiteExcerptContinuesSameChapterWithoutAnotherGeneration()=runTest {
+        val player=Player()
+        val excerpt=audio.copy(narrators=listOf(narrator.copy(playbackStatusPath="/existing/status")))
+        val client=object:ScriptureAudioClient {
+            override suspend fun chapterAudio(bookId:BookId,chapter:Int):ChapterAudio?=error("Must not request a new generation")
+            override suspend fun continueAudio(audio:ChapterAudio,after:Double):ChapterAudio {
+                assertEquals(chapter,audio.reference);assertEquals(30.0,after)
+                return this@AudioPlayerFeatureTest.audio
+            }
+        }
+        val store=Store(State(reference=chapter,audio=excerpt,narrator=excerpt.narrators.first(),duration=30.0,currentTime=29.0,isPlaying=true),AudioPlayerFeature.reducer(client,player),backgroundScope)
+        store.send(Action.Event(AudioPlayerEvent.Ended));runCurrent()
+        assertEquals(chapter,store.state.value.reference)
+        player.events.emit(AudioPlayerEvent.Ready(100.0));runCurrent()
+        assertTrue(player.calls.contains("seek:30.0"))
+        assertNull(store.state.value.narrator?.playbackStatusPath)
+    }
+
     @Test fun preparesThenLoadsAndPlays() = runTest {
         val player = Player()
         val store = Store(State(), AudioPlayerFeature.reducer(ScriptureAudioClient { _, _ -> audio }, player), backgroundScope)

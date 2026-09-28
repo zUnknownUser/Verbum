@@ -16,6 +16,7 @@ import kotlinx.serialization.json.jsonPrimitive
 
 /** Which recordings exist for a chapter. */
 fun interface ScriptureAudioClient {
+    suspend fun continueAudio(audio: ChapterAudio, after: Double): ChapterAudio? = null
     suspend fun chapterAudio(bookId: BookId, chapter: Int): ChapterAudio?
 }
 

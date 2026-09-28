@@ -33,6 +33,18 @@ class ReadingCollectionFeatureTest {
         assertEquals("broken-json", prefs.string("readerAnnotations"))
         store.finish()
     }
+    @Test fun journeyLoadsEvenWhenAnnotationsAreCorrupt() = runTest {
+        val prefs=InMemoryPreferencesClient()
+        prefs.setString("readerAnnotations","broken-json")
+        prefs.setString("lastRead","Job 38")
+        ReadingActivityClient(prefs).record(PassageReference("Job",38))
+        val activity=ReadingActivityClient(prefs).load()
+        val store=TestStore(ReadingCollectionFeature.State(),ReadingCollectionFeature.reducer(prefs))
+        store.send(ReadingCollectionFeature.Action.JourneyStarted) { it.copy(loading=true) }
+        store.receive(ReadingCollectionFeature.Action.JourneyLoaded(activity,PassageReference("Job",38))) { it.copy(activity=activity,lastRead=PassageReference("Job",38),loading=false) }
+        assertEquals("broken-json",prefs.string("readerAnnotations"))
+        store.finish()
+    }
     @Test fun libraryAndJourneyKeepTheirOwnNavigation() {
         val deps = AppFeature.Dependencies(bibleClient = StubBibleClient(), preferences = InMemoryPreferencesClient(), searchClient = unimplementedSearch, graphClient = StubGraphClient(), audioClient = unimplementedAudio, player = FakePlayer())
         val reducer = AppFeature.reducer(deps)

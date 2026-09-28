@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.automirrored.outlined.Undo
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
@@ -39,6 +40,8 @@ import kotlinx.coroutines.flow.filter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ChapterReaderPane(state:State,send:(Action)->Unit,onTitleTapped:()->Unit,onSettingsTapped:()->Unit,showTitleChevron:Boolean) {
+    val sync = LocalPersonalSync.current
+    LaunchedEffect(sync.revision) { if(sync.revision>0) send(Action.RetryAnnotations) }
     val audioReading=LocalAudioReading.current
     var followsAudio by remember {mutableStateOf(true)}
     var previousAudioReference by remember {mutableStateOf<PassageReference?>(null)}
@@ -63,14 +66,22 @@ internal fun ChapterReaderPane(state:State,send:(Action)->Unit,onTitleTapped:()-
     LaunchedEffect(state.reference, state.chapters[ReaderCanon.key(state.reference)]?.firstOrNull()?.id) {
         if(!state.chapters[ReaderCanon.key(state.reference)].isNullOrEmpty()) send(Action.RecordReading)
     }
+    var programmaticPage by remember { mutableStateOf<Int?>(null) }
     LaunchedEffect(state.reference,state.readingMode) {
         val target=ReaderCanon.index(state.reference)
-        if(state.readingMode==ReadingMode.PAGES && pager.currentPage!=target && !pager.isScrollInProgress) pager.animateScrollToPage(target)
+        if(state.readingMode==ReadingMode.PAGES && pager.settledPage!=target) {
+            programmaticPage=target
+            try {
+                if(kotlin.math.abs(pager.currentPage-target)==1) pager.animateScrollToPage(target)
+                else pager.scrollToPage(target)
+            } finally { programmaticPage=null }
+        }
     }
     LaunchedEffect(pager,state.readingMode) {
-        if(state.readingMode==ReadingMode.PAGES) snapshotFlow {pager.settledPage}.distinctUntilChanged().collect {index->
-            if(index!=ReaderCanon.index(currentReference)) send(Action.Go(ReaderCanon.chapters[index]))
-        }
+        if(state.readingMode==ReadingMode.PAGES) snapshotFlow { Triple(pager.settledPage,pager.isScrollInProgress,programmaticPage) }
+            .distinctUntilChanged().collect {(index,moving,programmatic)->
+                if(!moving && programmatic==null && index!=ReaderCanon.index(currentReference)) send(Action.Go(ReaderCanon.chapters[index]))
+            }
     }
     BackHandler(enabled=state.history.isNotEmpty() && state.study==null) {send(Action.BackToReading)}
     Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).then(if(state.focusMode) Modifier.clickable {send(Action.FocusToggled)} else Modifier)) {
@@ -94,11 +105,17 @@ internal fun ChapterReaderPane(state:State,send:(Action)->Unit,onTitleTapped:()-
                 }
             },colors=TopAppBarDefaults.topAppBarColors(containerColor=MaterialTheme.colorScheme.background.copy(alpha=0.96f)),modifier=Modifier.align(Alignment.TopCenter),
         )
+        if(state.annotationLoadFailed) Surface(Modifier.align(Alignment.TopCenter).statusBarsPadding().padding(top=if(state.focusMode) 0.dp else 64.dp), tonalElevation=2.dp) {
+            Row(Modifier.padding(Spacing.md), verticalAlignment=Alignment.CenterVertically) {
+                Text(stringResource(R.string.annotations_load_failed), modifier=Modifier.weight(1f), style=MaterialTheme.typography.bodySmall)
+                TextButton(enabled=!state.annotationsLoading, onClick={send(Action.RetryAnnotations)}) { Text(stringResource(R.string.try_again)) }
+            }
+        }
         if(!state.focusMode && !followsAudio && audioReading?.isPlaying==true && state.chapters[ReaderCanon.key(state.reference)]?.firstOrNull()?.translationId==audioReading.translationId) Surface(Modifier.align(Alignment.BottomCenter).padding(Spacing.md),shape=RoundedCornerShape(28.dp),tonalElevation=2.dp) {
             TextButton(onClick={followsAudio=true;if(audioReading.reference!=state.reference) send(Action.Go(audioReading.reference))}) {Text(stringResource(R.string.audio_follow_reading))}
         } else if(!state.focusMode) state.history.lastOrNull()?.let {previous->
             Surface(Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(Spacing.sm),shape=RoundedCornerShape(28.dp),tonalElevation=2.dp) {
-                TextButton(onClick={send(Action.BackToReading)}) {Icon(Icons.Outlined.Undo,contentDescription=null);Text(stringResource(R.string.reader_return,previous.reference.formatted))}
+                TextButton(onClick={send(Action.BackToReading)}) {Icon(Icons.AutoMirrored.Outlined.Undo,contentDescription=null);Text(stringResource(R.string.reader_return,previous.reference.formatted))}
             }
         }
     }

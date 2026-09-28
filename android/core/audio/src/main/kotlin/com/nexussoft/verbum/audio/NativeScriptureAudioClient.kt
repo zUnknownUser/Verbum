@@ -24,6 +24,8 @@ class LiveScriptureAudioClient(language: BookLanguage, context: Context, bible: 
     private val recordings = HelloAOScriptureAudioClient(language)
     private val cloud: ScriptureAudioClient? = if (language == BookLanguage.PORTUGUESE) CloudScriptureAudioClient(context, bible, api) else null
 
+    override suspend fun continueAudio(audio: ChapterAudio, after: Double): ChapterAudio? = cloud?.continueAudio(audio, after)
+
     override suspend fun chapterAudio(bookId: BookId, chapter: Int): ChapterAudio? {
         val cloud = cloud ?: return recordings.chapterAudio(bookId, chapter)
         return cloud.chapterAudio(bookId, chapter)
@@ -48,15 +50,15 @@ class CloudScriptureAudioClient(context: Context, private val bible: BibleClient
     private suspend fun renderChapter(bookId: BookId, chapter: Int): ChapterAudio? = mutex.withLock {
         val verses = bible.chapter(bookId, chapter)
         val first = verses.firstOrNull() ?: return@withLock null
-        val (file,cues) = render(verses)
+        val (file,cues,statusPath) = render(verses)
         ChapterAudio(first.translationId, "Leitura automática · Português", PassageReference(bookId, chapter),
-            listOf(AudioNarrator(AudioNarrator.SYNTHESISED_PREFIX + "pt-BR", "Leitura automática", file, null,cues)))
+            listOf(AudioNarrator(AudioNarrator.SYNTHESISED_PREFIX + "pt-BR", "Leitura automática", file, null,cues,statusPath)))
     }
 
     /** One MP3 per exact chapter text and server voice version, cached on disk. The backend also caches server-side by
      * the same text, so a cold local cache (after reinstall, or a pruned entry) still answers
      * without paying for a new generation — only the round trip. */
-    private suspend fun render(verses:List<BiblePassage>): Pair<String,List<AudioCue>> {
+    private suspend fun render(verses:List<BiblePassage>): Triple<String,List<AudioCue>,String?> {
         val text=verses.joinToString("\n") {it.text}
         val directory = File(context.cacheDir, "cloud-speech-pt-BR-v1").also { check(it.isDirectory || it.mkdirs()) }
         // One manifest check/hour, with the API cache's offline fallback. Older servers
@@ -69,7 +71,7 @@ class CloudScriptureAudioClient(context: Context, private val bible: BibleClient
         val output = File(directory, "$key.mp3")
         if (output.exists()) {
             output.setLastModified(System.currentTimeMillis())
-            return output.toURI().toString() to decodeAudioCues(runCatching {File(output.path+".json").readText()}.getOrNull())
+            return Triple(output.toURI().toString(),decodeAudioCues(runCatching {File(output.path+".json").readText()}.getOrNull()),null)
         }
         val statusPath = api.startSpeechPlayback(verses,version)
         repeat(315) {
@@ -77,9 +79,9 @@ class CloudScriptureAudioClient(context: Context, private val bible: BibleClient
             val status=api.speechPlaybackStatus(statusPath)
             if(status.complete) {
                 save(status,output,directory)
-                return output.toURI().toString() to status.cues.orEmpty().map {AudioCue(it.verseStart,it.verseEnd,it.start,it.end)}
+                return Triple(output.toURI().toString(),status.cues.orEmpty().map {AudioCue(it.verseStart,it.verseEnd,it.start,it.end)},null)
             }
-            if(status.ready) {
+            if(status.ready && !status.snapshotPath.isNullOrEmpty()) {
                 if(!downloads.containsKey(key)) {
                     downloads[key]=downloadScope.launch {
                         try {
@@ -92,12 +94,29 @@ class CloudScriptureAudioClient(context: Context, private val bible: BibleClient
                         finally {downloads.remove(key)}
                     }
                 }
-                return api.playbackUrl(status.playlistPath) to emptyList()
+                return Triple(api.playbackUrl(requireNotNull(status.snapshotPath)),emptyList(),statusPath)
             }
             delay(2000)
         }
         throw IllegalStateException("Speech preparation timed out")
     }
+    override suspend fun continueAudio(audio: ChapterAudio, after: Double): ChapterAudio? {
+        val narrator=audio.narrators.firstOrNull() ?: return null
+        val path=narrator.playbackStatusPath ?: return null
+        repeat(210) {
+            currentCoroutineContext().ensureActive()
+            val status=api.speechPlaybackStatus(path)
+            if(status.complete || (status.duration ?: 0.0)>after+0.5) {
+                val media=if(status.complete) status.audioPath else status.snapshotPath
+                if(!media.isNullOrEmpty()) return audio.copy(narrators=listOf(narrator.copy(url=api.playbackUrl(media),
+                    cues=status.cues.orEmpty().map { AudioCue(it.verseStart,it.verseEnd,it.start,it.end) },
+                    playbackStatusPath=if(status.complete) null else path)))
+            }
+            delay(3000)
+        }
+        throw IllegalStateException("Speech preparation timed out")
+    }
+
     private suspend fun save(status:com.nexussoft.verbum.clients.api.SpeechPlaybackStatus,output:File,directory:File) = withContext(Dispatchers.IO) {
         val audio=api.speechPlaybackData(status.audioPath)
         check(audio.isNotEmpty() && audio.size <= 64*1024*1024)

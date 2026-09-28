@@ -26,6 +26,7 @@ public struct ChapterReaderFeature {
         public var mentions: [String: [StudyTextSegment]] = [:]
         public var annotations: [String: ReaderAnnotation] = [:]
         public var annotationLoadFailed = false
+        public var annotationsLoading = false
         public var flow: [PassageReference] = []
         public var history: [Visit] = []
         public var scrollOffsets: [String: Double] = [:]
@@ -62,7 +63,7 @@ public struct ChapterReaderFeature {
         case ensureChapter(PassageReference)
         case cachedChapter(PassageReference, Result<[BiblePassage], ReaderError>)
         case contextResponse(PassageReference, PassageContext?)
-        case annotationsResponse([ReaderAnnotation]), annotationsFailed
+        case annotationsResponse([ReaderAnnotation]), annotationsFailed, retryAnnotations
         case study(PresentationAction<VerseStudyFeature.Action>)
         case studyVerse(PassageReference, Int, [String])
         case appendChapter
@@ -103,16 +104,17 @@ public struct ChapterReaderFeature {
                 state.$readingActivity.withLock { $0.record(state.reference, at: now, calendar: calendar) }
                 return .none
             case .task:
-                let annotationEffect: Effect<Action> = .run { [readerAnnotations] send in
-                    do { await send(.annotationsResponse(try await readerAnnotations.load())) }
-                    catch { await send(.annotationsFailed) }
-                }.cancellable(id: CancelID.annotations, cancelInFlight: true)
-                if case .loaded = state.content { return annotationEffect }
-                return .merge(load(&state), annotationEffect)
+                state.annotationsLoading = true
+                if case .loaded = state.content { return annotationsEffect() }
+                return .merge(load(&state), annotationsEffect())
+            case .retryAnnotations:
+                guard !state.annotationsLoading else { return .none }
+                state.annotationsLoading = true
+                return annotationsEffect()
             case .annotationsResponse(let values):
                 state.annotations = Dictionary(values.map { ($0.id, $0) }, uniquingKeysWith: { _, newest in newest })
-                state.annotationLoadFailed = false; return .none
-            case .annotationsFailed: state.annotationLoadFailed = true; return .none
+                state.annotationLoadFailed = false; state.annotationsLoading = false; return .none
+            case .annotationsFailed: state.annotationLoadFailed = true; state.annotationsLoading = false; return .none
             case .ensureChapter(let reference):
                 let key = ReaderCanon.key(reference)
                 guard state.chapters[key] == nil, !state.loadingChapters.contains(key) else { return .none }
@@ -250,6 +252,13 @@ public struct ChapterReaderFeature {
         // Every response carries its chapter identity, including rapid navigation.
         // Shared per-chapter requests finish into the cache without changing another page.
         return .send(.ensureChapter(state.reference))
+    }
+
+    private func annotationsEffect() -> Effect<Action> {
+        .run { [readerAnnotations] send in
+            do { await send(.annotationsResponse(try await readerAnnotations.load())) }
+            catch is CancellationError {} catch { await send(.annotationsFailed) }
+        }.cancellable(id: CancelID.annotations, cancelInFlight: true)
     }
 
     private enum CancelID { case annotations }

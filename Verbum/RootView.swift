@@ -42,6 +42,7 @@ private struct AccountRootView: View {
     }
     var body: some View {
         AccountContainer(onOpenPassage: { store.send(.profilePassageOpened($0)) }) { AppView(store: store) }
+            .personalDataSync()
     }
 }
 #Preview { RootView() }

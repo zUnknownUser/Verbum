@@ -14,6 +14,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.HelpOutline
+import androidx.compose.material.icons.automirrored.outlined.MenuBook
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.ArrowForward
 import androidx.compose.material.icons.automirrored.outlined.Logout
@@ -89,7 +91,7 @@ internal fun ProfileScreen(account: AccountFeature.State, state: ProfileFeature.
                         val email = account.session?.email
                         if(email != null) Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.xs)) {
                             Text(email, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                            if(account.session?.isEmailVerified == true) Icon(Icons.Outlined.Verified, accountText("verified"), Modifier.size(16.dp), tint = primary)
+                            if(account.session.isEmailVerified) Icon(Icons.Outlined.Verified, accountText("verified"), Modifier.size(16.dp), tint = primary)
                         } else Text(accountText("profileGuestBody"), style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         if(account.session == null || account.session.isAnonymous) TextButton(onClick = { sendAccount(AccountFeature.Action.Navigate(AccountFeature.Page.WELCOME)) }) { Text(accountText("createYourAccount")) }
                     }
@@ -132,7 +134,7 @@ internal fun ProfileScreen(account: AccountFeature.State, state: ProfileFeature.
                         }
                     }
                     ProfileSection("readingSection") {
-                        ProfileRow("bibleVersion", Icons.Outlined.MenuBook, HelloAOTranslation.name(HelloAOTranslation.id(BookLanguage.current))) { page = "bibleVersion" }
+                        ProfileRow("bibleVersion", Icons.AutoMirrored.Outlined.MenuBook, HelloAOTranslation.name(HelloAOTranslation.id(BookLanguage.current))) { page = "bibleVersion" }
                         ProfileDivider()
                         ProfileRow("bibleLanguage", Icons.Outlined.Translate, language) { page = "bibleLanguage" }
                         ProfileDivider()
@@ -157,7 +159,7 @@ internal fun ProfileScreen(account: AccountFeature.State, state: ProfileFeature.
                         ProfileRow("appLanguage", Icons.Outlined.Language, language) { page = "appLanguage" }
                     }
                     ProfileSection("verbumSection") {
-                        ProfileRow("help", Icons.Outlined.HelpOutline) { page = "help" }
+                        ProfileRow("help", Icons.AutoMirrored.Outlined.HelpOutline) { page = "help" }
                         ProfileDivider()
                         ProfileRow("privacy", Icons.Outlined.PrivacyTip) { page = "privacy" }
                         ProfileDivider()
@@ -179,10 +181,10 @@ internal fun ProfileScreen(account: AccountFeature.State, state: ProfileFeature.
                             TextButton(onClick = { send(ProfileFeature.Action.Started) }) { Text(accountText("tryAgain")) }
                         } else if(page == "readingHistory") {
                             Text(accountText("historyBody"), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                            if(state.activity.visits.isEmpty()) ProfileEmpty("historyEmpty", Icons.Outlined.MenuBook)
+                            if(state.activity.visits.isEmpty()) ProfileEmpty("historyEmpty", Icons.AutoMirrored.Outlined.MenuBook)
                             state.activity.visits.forEach { visit ->
                                 val date = Instant.ofEpochMilli(visit.lastOpened).atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
-                                ProfileRow(visit.reference.formatted, Icons.Outlined.MenuBook, date, literal = true) { openPassage(visit.reference) }
+                                ProfileRow(visit.reference.formatted, Icons.AutoMirrored.Outlined.MenuBook, date, literal = true) { openPassage(visit.reference) }
                                 ProfileDivider()
                             }
                         } else {

@@ -7,6 +7,7 @@ import SwiftUI
 struct ReadingCollectionView: View {
     let store: StoreOf<ReadingCollectionFeature>
     let journey: Bool
+    @Environment(\.personalSync) private var sync
 
     var body: some View {
         ScrollView {
@@ -16,7 +17,7 @@ struct ReadingCollectionView: View {
                 Text(L10n.t(journey ? "Revisit the chapters you have opened and continue at your own pace." : "Your saved passages, highlights and notes, together."))
                     .font(Typography.subheadline).foregroundStyle(Palette.inkSecondary)
                 if journey { journeyContent } else { libraryContent }
-                Text(L10n.t("Stored on this device. Signing in does not sync these items yet."))
+                Text(sync.message)
                     .font(Typography.caption).foregroundStyle(Palette.inkTertiary)
                     .padding(.top, Spacing.lg)
             }
@@ -26,8 +27,8 @@ struct ReadingCollectionView: View {
         }
         .background(Palette.paper)
         .navigationTitle(L10n.t(journey ? "Journey" : "Library"))
-        .task { await store.send(.task).finish() }
-        .refreshable { await store.send(.retry).finish() }
+        .task(id: sync.revision) { if !journey { await store.send(.task).finish() } }
+        .refreshable { if !journey { await store.send(.retry).finish() } }
     }
 
     @ViewBuilder private var libraryContent: some View {

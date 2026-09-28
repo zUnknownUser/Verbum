@@ -47,7 +47,7 @@ object AudioPlayerFeature {
         }
         val isActive: Boolean get() = reference != null
         val progress: Float get() = if (duration > 0) (currentTime / duration).coerceAtMost(1.0).toFloat() else 0f
-        fun isPlaying(reference: PassageReference) = isPlaying && this.reference?.bookId == reference.bookId && this.reference?.chapter == reference.chapter
+        fun isPlaying(reference: PassageReference) = isPlaying && this.reference?.bookId == reference.bookId && this.reference.chapter == reference.chapter
     }
 
     sealed interface Action {
@@ -151,6 +151,18 @@ object AudioPlayerFeature {
                 AudioPlayerEvent.Ended -> {
                     val next = state.reference?.let(ChapterNavigation::next)
                     if (state.failed) state.only()
+                    else if (state.narrator?.playbackStatusPath != null) {
+                        val resume=maxOf(state.currentTime,state.duration)
+                        val revision=state.revision+1
+                        state.copy(currentTime=resume,resumeTime=resume,isLoading=true,isPlaying=false,isBuffering=false,revision=revision).with(Effect.Merge(listOf(
+                            cancelStall(),runEffect(id=PlayerId,cancelInFlight=true) {},
+                            runEffect(id=LoadId,cancelInFlight=true) { send ->
+                                try { send(Action.Loaded(revision,audioClient.continueAudio(state.audio,resume))) }
+                                catch(error:CancellationException) { throw error }
+                                catch(_:Exception) { send(Action.PreparationFailed(revision,Failure.PREPARATION)) }
+                            }
+                        )))
+                    }
                     else if (next == null) state.copy(isPlaying = false, isBuffering = false).with(cancelStall())
                     else state.copy(isPlaying = false, isBuffering = false).with(Effect.Send(Action.Play(next)))
                 }

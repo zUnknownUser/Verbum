@@ -177,13 +177,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This permanently deletes your authentication account. It does not erase reading data stored locally on this device. Enter your password to confirm."
+            "value" : "This permanently deletes your account, synced personal data and this account’s saved reading data on this device. Enter your password to confirm."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Isso exclui permanentemente sua conta de autenticação. Não apaga os dados de leitura armazenados localmente neste aparelho. Digite sua senha para confirmar."
+            "value" : "Isso exclui permanentemente sua conta, os dados pessoais sincronizados e os dados de leitura desta conta neste aparelho. Digite sua senha para confirmar."
           }
         }
       }
@@ -1350,13 +1350,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Chapters you open are recorded on this device from this version onward. Opening a chapter does not mean you have finished reading it."
+            "value" : "Chapters you open are recorded in your reading history. Opening a chapter does not mean you have finished reading it."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Os capítulos que você abre são registrados neste dispositivo a partir desta versão. Abrir um capítulo não significa ter concluído sua leitura."
+            "value" : "Os capítulos que você abre entram no seu histórico. Abrir um capítulo não significa que você terminou de lê-lo."
           }
         }
       }
@@ -1639,13 +1639,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Saved passages, highlights, notes and reading history stay on this device. They are not synced by signing in, and they remain on the device after signing out. Personal notes are not sent with study questions."
+            "value" : "Your notes, highlights, saved passages and reading history are saved offline and synced privately when you sign in. Personal notes are never included in study questions. Signing out keeps this account’s local data separate from other accounts."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Passagens salvas, destaques, notas e histórico ficam neste dispositivo. Entrar na conta não sincroniza esses dados, e eles permanecem no aparelho após sair. Notas pessoais não são enviadas junto das perguntas de estudo."
+            "value" : "Suas notas, destaques, passagens salvas e histórico são salvos offline e sincronizados de forma privada quando você entra na conta. Notas pessoais nunca acompanham perguntas de estudo. Ao sair, os dados locais desta conta continuam separados de outras contas."
           }
         }
       }
@@ -2047,13 +2047,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your reading, saved on this device."
+            "value" : "Your reading, available offline. Sign in to sync across devices."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sua leitura, guardada neste dispositivo."
+            "value" : "Sua leitura disponível offline. Entre na conta para sincronizar entre aparelhos."
           }
         }
       }

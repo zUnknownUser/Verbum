@@ -20,6 +20,8 @@ object ReadingCollectionFeature {
     sealed interface Action {
         data object Started : Action
         data object Retry : Action
+        data object JourneyStarted : Action
+        data class JourneyLoaded(val activity: ReadingActivity, val lastRead: PassageReference?) : Action
         data class Loaded(val activity: ReadingActivity, val lastRead: PassageReference?, val annotations: List<ReaderAnnotation>) : Action
         data object Failed : Action
         data class QueryChanged(val query: String) : Action
@@ -34,10 +36,19 @@ object ReadingCollectionFeature {
     }
     fun reducer(preferences: PreferencesClient, annotations: ReaderAnnotationsClient = PreferenceReaderAnnotationsClient(preferences)): Reducer<State, Action> = Reducer { state, action ->
         when (action) {
+            Action.JourneyStarted -> state.copy(loading = true, failed = false).with(runEffect(id = "reading-collection", cancelInFlight = true) { send ->
+                try {
+                    send(withContext(Dispatchers.IO) {
+                        Action.JourneyLoaded(ReadingActivityClient(preferences).load(), preferences.string(ChapterReaderFeature.LAST_READ_KEY)?.let(LastRead::decode))
+                    })
+                } catch (error: CancellationException) { throw error }
+                catch (_: Exception) { send(Action.Failed) }
+            })
+            is Action.JourneyLoaded -> state.copy(activity = action.activity, lastRead = action.lastRead, loading = false, failed = false).only()
             Action.Started, Action.Retry -> state.copy(loading = true, failed = false).with(runEffect(id = "reading-collection", cancelInFlight = true) { send ->
                 try {
                     val loaded = withContext(Dispatchers.IO) {
-                        Action.Loaded(ReadingActivityClient(preferences).load(), preferences.string(ChapterReaderFeature.LAST_READ_KEY)?.let(LastRead::decode), annotations.load())
+                        Action.Loaded(state.activity, state.lastRead, annotations.load())
                     }
                     send(loaded)
                 } catch (error: CancellationException) { throw error }

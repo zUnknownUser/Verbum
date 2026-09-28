@@ -75,7 +75,7 @@ struct VerseStudyView: View {
             }
             .disabled(store.saving)
             saveStatus
-            Text(L10n.t("Highlights and notes stay on this device.")).font(Typography.footnote).foregroundStyle(Palette.inkSecondary)
+            Text(BookLanguage.current == .portuguese ? "Salvo offline. Entre na conta para sincronizar notas e marcações." : "Saved offline. Sign in to sync notes and markings.").font(Typography.footnote).foregroundStyle(Palette.inkSecondary)
         case .note:
             Text(L10n.t("Your note")).font(Typography.editorialHeadline)
             TextEditor(text: Binding(get: { store.annotation.note }, set: { store.send(.noteChanged($0)) }))

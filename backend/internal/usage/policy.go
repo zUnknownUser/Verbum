@@ -15,10 +15,11 @@ import (
 )
 
 type Principal struct {
-	UID       string
-	Anonymous bool
-	Device    string
-	IP        string
+	AuthenticatedAt int64
+	UID             string
+	Anonymous       bool
+	Device          string
+	IP              string
 }
 type principalKey struct{}
 

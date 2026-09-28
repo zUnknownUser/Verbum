@@ -19,6 +19,22 @@ import Testing
         store.exhaustivity = .off(showSkippedAssertions: false)
         return store
     }
+    @Test func annotationFailureAndRetryLeaveReadingAvailable() async {
+        enum Failure: Error { case unreadable }
+        let fail = LockIsolated(true)
+        var state = ChapterReaderFeature.State(reference: .init(bookId: "Job", chapter: 36))
+        state.content = .loaded(Self.verses("Job", 36, count: 3))
+        let store = TestStore(initialState: state) { ChapterReaderFeature() } withDependencies: {
+            $0.readerAnnotations.load = { if fail.value { throw Failure.unreadable }; return [] }
+        }
+        await store.send(.retryAnnotations) { $0.annotationsLoading = true }
+        await store.receive(\.annotationsFailed) { $0.annotationLoadFailed = true; $0.annotationsLoading = false }
+        #expect(store.state.content == state.content)
+        fail.setValue(false)
+        await store.send(.retryAnnotations) { $0.annotationsLoading = true }
+        await store.receive(\.annotationsResponse) { $0.annotationLoadFailed = false; $0.annotationsLoading = false }
+        #expect(store.state.content == state.content)
+    }
     @Test func loadsOnlyCurrentChapterAndNeighbors() async {
         let s = store(.init(reference: .init(bookId: "John", chapter: 3)))
         await s.send(.task)

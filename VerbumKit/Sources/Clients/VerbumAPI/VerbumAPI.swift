@@ -144,7 +144,7 @@ public struct VerbumAPI: Sendable {
     /// plus 30 s to reply; the client waits slightly longer still.
     static let speechTimeout: TimeInterval = 630
 
-    private func url(_ path: String, query: [URLQueryItem] = []) -> URL {
+    func url(_ path: String, query: [URLQueryItem] = []) -> URL {
         var components = URLComponents(url: baseURL.appending(path: path), resolvingAgainstBaseURL: false)!
         if !query.isEmpty { components.queryItems = query }
         return components.url!

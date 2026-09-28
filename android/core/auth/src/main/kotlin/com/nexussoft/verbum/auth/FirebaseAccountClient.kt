@@ -18,28 +18,38 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 /** Android-only Firebase adapter; domain and feature modules have no SDK dependency. */
-class FirebaseAccountClient(private val onDeleted: suspend (String) -> Unit = {}, private val onRegistered: suspend (String) -> Unit = {}) : AccountClient {
+class FirebaseAccountClient(private val beforeDeleted: suspend (String) -> Unit = {}, private val onDeleted: suspend (String) -> Unit = {}, private val onRegistered: suspend (String) -> Unit = {}) : AccountClient {
     private fun auth(): FirebaseAuth = try {
         FirebaseAuth.getInstance().also { it.useAppLanguage() }
     } catch (_: IllegalStateException) { throw AccountException(AccountFailure.configuration) }
 
     override fun sessions(): Flow<AuthSession?> = callbackFlow {
         val auth = try { auth() } catch (_: AccountException) { trySend(null); close(); return@callbackFlow }
-        val listener = FirebaseAuth.AuthStateListener { trySend(it.currentUser?.snapshot()) }
+        val publish = { trySend(auth.currentUser?.snapshot()); Unit }
+        val listener = FirebaseAuth.AuthStateListener { if(!RegistrationPublication.pending.get()) publish() }
+        RegistrationPublication.listeners.add(publish)
         auth.addAuthStateListener(listener)
-        awaitClose { auth.removeAuthStateListener(listener) }
+        awaitClose { auth.removeAuthStateListener(listener); RegistrationPublication.listeners.remove(publish) }
     }
     override suspend fun signIn(email: String, password: String) = mapped {
         requireNotNull(auth().signInWithEmailAndPassword(email, password).await().user).snapshot()
     }
-    override suspend fun register(email: String, password: String) = mapped {
-        val auth = auth()
-        val guest = auth.currentUser?.takeIf { it.isAnonymous }
-        val result = if (guest != null) guest.linkWithCredential(EmailAuthProvider.getCredential(email, password)).await()
-            else auth.createUserWithEmailAndPassword(email, password).await()
-        val user = requireNotNull(result.user)
-        onRegistered(user.uid)
-        user.snapshot()
+    override suspend fun register(email: String, password: String): AuthSession {
+        RegistrationPublication.pending.set(true)
+        try {
+            return mapped {
+                val auth = auth()
+                val guest = auth.currentUser?.takeIf { it.isAnonymous }
+                val result = if (guest != null) guest.linkWithCredential(EmailAuthProvider.getCredential(email, password)).await()
+                    else auth.createUserWithEmailAndPassword(email, password).await()
+                val user = requireNotNull(result.user)
+                onRegistered(user.uid)
+                user.snapshot()
+            }
+        } finally {
+            RegistrationPublication.pending.set(false)
+            RegistrationPublication.listeners.forEach { it() }
+        }
     }
     override suspend fun anonymous() = mapped {
         FirebaseApiTokens.token(createIfNeeded = true)
@@ -81,6 +91,7 @@ class FirebaseAccountClient(private val onDeleted: suspend (String) -> Unit = {}
             user.reauthenticate(EmailAuthProvider.getCredential(email, password)).await()
         }
         val uid = user.uid
+        beforeDeleted(uid)
         user.delete().await(); onDeleted(uid); Unit
     }
 }
@@ -104,4 +115,9 @@ private suspend fun <T> mapped(block: suspend () -> T): T = try { block() } catc
         else -> AccountFailure.unexpected
     }
     throw AccountException(failure)
+}
+
+private object RegistrationPublication {
+    val pending = java.util.concurrent.atomic.AtomicBoolean(false)
+    val listeners = java.util.concurrent.CopyOnWriteArrayList<() -> Unit>()
 }

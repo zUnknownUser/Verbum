@@ -3,7 +3,7 @@ package com.nexussoft.verbum.clients
 /** Immutable account binding: an old request cannot write into the next account. */
 class ScopedAccountPreferences(private val global: PreferencesClient, private val personal: PreferencesClient, private val scope: String) : PreferencesClient {
     companion object {
-        private val keys = setOf("readerAnnotations", "readingActivity", "lastRead")
+        private val keys = setOf("readerAnnotations", "readingActivity", "lastRead", "syncLedger")
         private val lock = Any()
         fun scope(uid: String?, generation: String = "initial"): String = java.security.MessageDigest.getInstance("SHA-256")
             .digest((uid?.let { "uid:$it" } ?: "local-guest:$generation").toByteArray()).joinToString("") { "%02x".format(it) }

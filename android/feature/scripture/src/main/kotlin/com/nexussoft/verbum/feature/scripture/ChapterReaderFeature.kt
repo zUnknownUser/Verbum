@@ -24,6 +24,7 @@ object ChapterReaderFeature {
         val mentions: Map<String,List<StudyTextSegment>> = emptyMap(),
         val annotations: Map<String,ReaderAnnotation> = emptyMap(),
         val annotationLoadFailed: Boolean=false,
+        val annotationsLoading: Boolean=false,
         val flow: List<PassageReference> = listOf(PassageReference(reference.bookId,reference.chapter)),
         val history: List<Visit> = emptyList(),
         val positions: Map<String,Position> = emptyMap(),
@@ -51,6 +52,7 @@ object ChapterReaderFeature {
         data class ContextLoaded(val reference:PassageReference,val context:PassageContext?):Action
         data class AnnotationsLoaded(val values:List<ReaderAnnotation>):Action
         data object AnnotationsFailed:Action
+        data object RetryAnnotations:Action
         data class PreferencesLoaded(val mode:ReadingMode,val focus:Boolean):Action
         data class Study(val action:VerseStudyFeature.Action):Action
         data object StudyDismissed:Action
@@ -93,17 +95,22 @@ object ChapterReaderFeature {
                 send(Action.ContextLoaded(reference,value))
             }
             when(action) {
-                Action.RecordReading -> if(state.chapters[ReaderCanon.key(state.reference)].isNullOrEmpty()) state.only() else state.with(runEffect { runCatching { ReadingActivityClient(preferences).record(state.reference) }; Unit })
+                Action.RecordReading -> if(state.chapters[ReaderCanon.key(state.reference)].isNullOrEmpty()) state.only() else state.with(runEffect { runCatching { ReadingActivityClient(preferences).record(state.reference) } })
                 Action.Started -> state.with(runEffect {send->
                     val mode=preferences.string(MODE_KEY)?.let { runCatching { ReadingMode.valueOf(it) }.getOrNull() } ?: ReadingMode.PAGES
                     send(Action.PreferencesLoaded(mode,preferences.string(FOCUS_KEY)=="true"))
-                    try {send(Action.AnnotationsLoaded(annotations.load()))} catch(e:CancellationException){throw e} catch(e:Exception){send(Action.AnnotationsFailed)}
+                    send(Action.RetryAnnotations)
                     if(state.content !is Content.Loaded) send(Action.RetryTapped)
+                })
+                Action.RetryAnnotations -> if (state.annotationsLoading) state.only() else state.copy(annotationsLoading=true).with(runEffect(id="reader-annotations",cancelInFlight=true) { send ->
+                    try { send(Action.AnnotationsLoaded(annotations.load())) }
+                    catch (error: CancellationException) { throw error }
+                    catch (_: Exception) { send(Action.AnnotationsFailed) }
                 })
                 Action.RetryTapped -> load(state,bibleClient)
                 is Action.PreferencesLoaded -> state.copy(readingMode=action.mode,focusMode=action.focus).only()
-                is Action.AnnotationsLoaded -> state.copy(annotations=action.values.associateBy { it.id },annotationLoadFailed=false).only()
-                Action.AnnotationsFailed -> state.copy(annotationLoadFailed=true).only()
+                is Action.AnnotationsLoaded -> state.copy(annotations=action.values.associateBy { it.id },annotationLoadFailed=false,annotationsLoading=false).only()
+                Action.AnnotationsFailed -> state.copy(annotationLoadFailed=true,annotationsLoading=false).only()
                 is Action.ChapterLoaded -> {
                     val first=action.verses.firstOrNull()
                     if(first!=null && (first.bookId!=state.reference.bookId || first.chapter!=state.reference.chapter)) return@Reducer state.only()

@@ -190,3 +190,43 @@ func TestCompleteCachedAudioDoesNotRequireHLSOrProvider(t *testing.T) {
 		t.Fatal("cached audio missing")
 	}
 }
+
+// A generated excerpt is immutable VOD. Slow model output must not make AVPlayer
+// treat an unchanged live playlist as a broken transmission (CoreMedia -12888).
+func TestExcerptSnapshotIsFiniteAndStableWhileGenerationContinues(t *testing.T) {
+	token := strings.Repeat("b", 64)
+	job := &playbackJob{token: token, expires: time.Now().Add(time.Hour), segments: []hlsSegment{{name: "first.ts", duration: 6}, {name: "second.ts", duration: 4}}}
+	h := &handlers{playback: newPlaybackHub()}
+	h.playback.tokens[token] = job
+	get := func(asset string) *httptest.ResponseRecorder {
+		r := httptest.NewRequest("GET", "/", nil)
+		r.SetPathValue("token", token)
+		r.SetPathValue("asset", asset)
+		w := httptest.NewRecorder()
+		h.playbackMedia(w, r)
+		return w
+	}
+	first := get("snapshot-000002.m3u8")
+	if first.Code != 200 || !strings.Contains(first.Body.String(), "#EXT-X-PLAYLIST-TYPE:VOD") || !strings.Contains(first.Body.String(), "#EXT-X-ENDLIST") {
+		t.Fatal(first.Body.String())
+	}
+	job.segments = append(job.segments, hlsSegment{name: "third.ts", duration: 6, discontinuity: true})
+	if later := get("snapshot-000002.m3u8"); later.Body.String() != first.Body.String() {
+		t.Fatal("snapshot changed")
+	}
+	if get("snapshot-999999.m3u8").Code != 404 {
+		t.Fatal("out-of-range snapshot accepted")
+	}
+	status := get("status")
+	var body struct {
+		SnapshotPath string
+		Duration     float64
+		Complete     bool
+	}
+	if err := json.Unmarshal(status.Body.Bytes(), &body); err != nil {
+		t.Fatal(err)
+	}
+	if !strings.HasSuffix(body.SnapshotPath, "snapshot-000003.m3u8") || body.Duration != 16 || body.Complete {
+		t.Fatal(status.Body.String())
+	}
+}

@@ -24,7 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -79,7 +79,7 @@ fun AppScreen(store: Store<AppFeature.State, Action>) {
     val audioReading by readingFlow.collectAsStateWithLifecycle(initialValue=store.state.value.audio.readingPosition)
     CompositionLocalProvider(LocalAudioReading provides audioReading) {
     NavigationSuiteScaffold(
-        layoutType = if(quiet) NavigationSuiteType.None else NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(currentWindowAdaptiveInfo()),
+        layoutType = if(quiet) NavigationSuiteType.None else NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(currentWindowAdaptiveInfoV2()),
         navigationSuiteItems = {
             item(selected = state.tab == Tab.HOME, onClick = { store.send(Action.TabChanged(Tab.HOME)) }, icon = { Icon(Icons.Filled.Home, null) }, label = { Text(stringResource(R.string.tab_home)) })
             item(selected = state.tab == Tab.EXPLORE, onClick = { store.send(Action.TabChanged(Tab.EXPLORE)) }, icon = { Icon(Icons.Outlined.Explore, null) }, label = { Text(stringResource(R.string.tab_explore)) })

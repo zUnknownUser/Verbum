@@ -13,31 +13,24 @@ struct ChapterReaderView: View {
     let onSettingsTapped: () -> Void
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
+    @Environment(\.personalSync) private var sync
     var body: some View {
         ZStack(alignment: .topTrailing) {
             Palette.paper.ignoresSafeArea().onTapGesture { if store.focusMode { store.send(.focusToggled) } }
             if store.readingMode == .pages {
-                let currentIndex = ReaderCanon.index(store.reference)
-                TabView(selection: Binding(get: { ReaderCanon.index(store.reference) }, set: { index in
-                    guard ReaderCanon.chapters.indices.contains(index), index != ReaderCanon.index(store.reference) else { return }
+                ChapterPager(reference: store.reference, reduceMotion: reduceMotion, onSelect: { reference in
+                    guard reference != store.reference else { return }
                     followsAudio = false
-                    store.send(.go(to: ReaderCanon.chapters[index]))
-                })) {
-                    ForEach(ReaderCanon.chapters.indices, id: \.self) { index in
-                        Group {
-                            if abs(index - currentIndex) <= 1 {
-                                ReaderScrollPage(store: store, reference: ReaderCanon.chapters[index], continuous: false, followsAudio: $followsAudio)
-                            } else { Palette.paper }
-                        }.tag(index)
-                    }
+                    store.send(.go(to: reference))
+                }) { reference in
+                    ReaderScrollPage(store: store, reference: reference, continuous: false, followsAudio: $followsAudio)
                 }
-                .tabViewStyle(.page(indexDisplayMode: .never))
-                .animation(reduceMotion ? nil : .snappy(duration: 0.3), value: store.reference)
             } else {
                 ReaderScrollPage(store: store, reference: store.flow.first ?? store.reference, continuous: true, followsAudio: $followsAudio)
             }
 
         }
+        .onChange(of: sync.revision) { _, _ in store.send(.retryAnnotations) }
         .onChange(of: store.study != nil) { _, open in if open { followsAudio = false } }
         .onChange(of: audioReading) { _, value in
             guard let value, value.isPlaying, store.chapters[ReaderCanon.key(store.reference)]?.first?.translationId == value.translationID else { return }
@@ -73,6 +66,16 @@ struct ChapterReaderView: View {
                     Button(action: onSettingsTapped) { Label(L10n.t("Reading settings"), systemImage: "textformat.size") }
                 } label: { Image(systemName: "ellipsis") }
                 .accessibilityLabel(L10n.t("Reading settings"))
+            }
+        }
+        .safeAreaInset(edge: .top) {
+            if store.annotationLoadFailed {
+                HStack {
+                    Text(PersonalDataCopy.annotationsFailed).font(Typography.footnote)
+                    Spacer()
+                    Button(L10n.t("Try Again")) { store.send(.retryAnnotations) }
+                        .disabled(store.annotationsLoading)
+                }.padding(Spacing.md).background(Palette.paper)
             }
         }
         .safeAreaInset(edge: .bottom) {

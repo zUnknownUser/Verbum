@@ -6,8 +6,10 @@
   builds e testes selecionados registrados em [LIBRARY_JOURNEY_AUDIO.md](LIBRARY_JOURNEY_AUDIO.md).
 - Busca/RAG revisados e Swagger publicado: [RELEASE_2026_09_28.md](RELEASE_2026_09_28.md).
 - Nova revisão de código sem uso e fricções: [CODIGO_MORTO_2026-09-28.md](CODIGO_MORTO_2026-09-28.md).
-- Sincronização pessoal, aceite amplo em dispositivos e validação específica do Duo
-  não estão demonstrados por esses builds. O registro de publicação distingue deploy e push.
+- Sincronização privada offline, recuperação de anotações, Jornada independente e navegação
+  do leitor revisadas: [PERSONAL_SYNC_PLAYBACK.md](PERSONAL_SYNC_PLAYBACK.md).
+- Aceite amplo em dispositivos, duas contas reais em dois aparelhos e validação específica
+  do Duo ainda precisam de QA. Os registros distinguem deploy, instalação local e push.
 
 As entradas datadas abaixo preservam o histórico; seus próximos passos e limites
 devem ser lidos junto aos registros mais recentes acima.
