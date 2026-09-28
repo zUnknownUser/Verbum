@@ -2,7 +2,7 @@ import ComposableArchitecture
 import DesignSystem
 import SwiftUI
 
-/// Reader, with the shelf as a sheet (compact) or a leading column (regular).
+/// Reader adapts to the available window width, including changes in foldable poses.
 public struct ScriptureView: View {
     @Bindable var store: StoreOf<ScriptureFeature>
     @Environment(\.horizontalSizeClass) private var sizeClass
@@ -12,24 +12,27 @@ public struct ScriptureView: View {
     }
 
     public var body: some View {
-        Group {
-            if sizeClass == .regular && !store.reader.focusMode {
-                HStack(spacing: 0) {
+        GeometryReader { geometry in
+            // A regular size class alone does not guarantee room for two columns.
+            let showsShelf = sizeClass == .regular && geometry.size.width >= 820 && !store.reader.focusMode
+            HStack(spacing: 0) {
+                if showsShelf {
                     BookPickerView(store: store.scope(state: \.books, action: \.books))
-                        .frame(width: 340)
+                        .frame(width: min(340, max(280, geometry.size.width * 0.3)))
                     Rectangle().fill(Palette.rule).frame(width: 1)
-                    reader
                 }
-            } else {
                 reader
-                    .sheet(isPresented: shelfPresented) {
-                        NavigationStack {
-                            BookPickerView(store: store.scope(state: \.books, action: \.books))
-                        }
-                        .presentationBackground(Palette.paper)
-                        .presentationDetents([.large])
-                        .presentationDragIndicator(.visible)
-                    }
+            }
+            .sheet(isPresented: shelfPresented(inline: showsShelf)) {
+                NavigationStack {
+                    BookPickerView(store: store.scope(state: \.books, action: \.books))
+                }
+                .presentationBackground(Palette.paper)
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+            }
+            .onChange(of: showsShelf) { _, isInline in
+                if isInline && store.isShelfPresented { store.send(.shelfDismissed) }
             }
         }
         .sheet(item: $store.scope(state: \.settings, action: \.settings)) { settingsStore in
@@ -38,8 +41,8 @@ public struct ScriptureView: View {
     }
 
     /// Presenting is the title's job; only dismissal flows back from the sheet.
-    private var shelfPresented: Binding<Bool> {
-        Binding(get: { store.isShelfPresented }, set: { if !$0 { store.send(.shelfDismissed) } })
+    private func shelfPresented(inline: Bool) -> Binding<Bool> {
+        Binding(get: { !inline && store.isShelfPresented }, set: { if !$0 { store.send(.shelfDismissed) } })
     }
 
     private var reader: some View {

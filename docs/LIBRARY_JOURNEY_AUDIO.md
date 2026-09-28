@@ -19,3 +19,19 @@ Entrega nas duas plataformas, com textos em português brasileiro e inglês.
 - Nenhuma geração TTS paga foi disparada. Avaliação subjetiva da narração fica com o proprietário, conforme solicitado.
 
 Não há retomada persistida de áudio após encerrar o processo; recuperação preserva o ponto dentro da sessão atual. Métricas de leitura representam aberturas, não leitura integral.
+
+## iPhone Duo na matriz de dispositivos
+
+Requisito permanente do proprietário: incluir iPhone Duo nas validações de layout e
+navegação, junto aos demais iPhones, iPad e Android, em PT-BR e EN. A lista de livros
+agora usa largura real da janela e size class: abaixo de 820 pontos abre em sheet;
+com espaço suficiente usa coluna entre 280 e 340 pontos. O leitor permanece no mesmo
+store e a sheet é dispensada ao passar para a coluna. Não se presume largura pela
+identidade do aparelho ou por `UIScreen.main`.
+
+Build desse ajuste passou no Xcode 27.0 / iOS Simulator 27.0. Este Mac não possui
+Xcode 27.1 nem o simulador do Duo, exigidos para a validação específica das poses e
+safe areas desse aparelho. Essa validação permanece pendente, sem confundir um build
+de iPhone comum com um teste no Duo. Referências oficiais:
+[iPhone Duo](https://developer.apple.com/iphone-duo/) e
+[adaptação de apps](https://developer.apple.com/videos/play/tech-talks/111461/).
