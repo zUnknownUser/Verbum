@@ -107,53 +107,6 @@ func vectorLiteral(v []float32) string {
 	return "[" + strings.Join(parts, ",") + "]"
 }
 
-// SearchPassages combines lexical (full-text), semantic (pgvector cosine) and exact
-// structured-name/identifier retrieval. Each channel proposes bounded candidates; the
-// union is ranked by summed scores. Structured hits must have stored Scripture text.
-// This is a first, documented-as-tunable heuristic (§27-28), not a calibrated relevance model —
-// citation-grade validation is Task 12's job (§31), not this endpoint's.
-func (s *Store) SearchPassages(ctx context.Context, queryText string, queryEmbedding []float32, limit int) ([]domain.PassageReference, error) {
-	text := strings.TrimSpace(queryText)
-	var vector *string
-	if len(queryEmbedding) > 0 {
-		v := vectorLiteral(queryEmbedding)
-		vector = &v
-	}
-	if text == "" && vector == nil {
-		return []domain.PassageReference{}, nil
-	}
-	return readJSON[[]domain.PassageReference](ctx, s, `WITH structured_entities AS (
- SELECT e.id FROM entities e WHERE $1<>'' AND (
- EXISTS (SELECT 1 FROM entity_localizations l WHERE l.entity_id=e.id AND
- (lower(l.name)=lower($1) OR EXISTS (SELECT 1 FROM unnest(l.aliases) a WHERE lower(a)=lower($1))))
- OR EXISTS (SELECT 1 FROM entity_source_records r WHERE r.entity_id=e.id AND
- EXISTS (SELECT 1 FROM jsonb_each(r.identifiers) kv,jsonb_array_elements_text(kv.value) v WHERE lower(v)=lower($1))))
- ORDER BY e.id LIMIT 64
- ), structured AS (
- SELECT DISTINCT p.book_id,p.chapter,p.verse_start verse,1.0::real score
- FROM entity_passage_associations p JOIN structured_entities e ON e.id=p.entity_id
- WHERE p.verse_start IS NOT NULL AND EXISTS (SELECT 1 FROM scripture_verses sv
- WHERE sv.book_id=p.book_id AND sv.chapter=p.chapter AND sv.verse=p.verse_start)
- ORDER BY p.book_id,p.chapter,p.verse_start LIMIT $3
- ), lexical AS (
- SELECT book_id,chapter,verse,ts_rank_cd(to_tsvector('english',text),plainto_tsquery('english',$1)) score
- FROM scripture_verses WHERE $1<>'' AND to_tsvector('english',text) @@ plainto_tsquery('english',$1)
- ORDER BY score DESC LIMIT $3
- ), semantic AS (
- SELECT book_id,chapter,verse,1-(embedding OPERATOR(public.<=>) $2::public.vector) score
- FROM scripture_verses WHERE $2::public.vector IS NOT NULL
- ORDER BY embedding OPERATOR(public.<=>) $2::public.vector LIMIT $3
- ), combined AS (
- SELECT book_id,chapter,verse,SUM(score) score FROM (
- SELECT * FROM lexical UNION ALL SELECT * FROM semantic UNION ALL SELECT * FROM structured
- ) hits GROUP BY book_id,chapter,verse
- ), ranked AS (
- SELECT * FROM combined ORDER BY score DESC,book_id,chapter,verse LIMIT $3
- )
- SELECT COALESCE(jsonb_agg(jsonb_build_object('bookId',book_id,'chapter',chapter,'verseStart',verse,'verseEnd',verse) ORDER BY score DESC),'[]'::jsonb)
- FROM ranked`, text, vector, limit)
-}
-
 // PassageText batches a lookup for exactly the references given (via unnest, not N round
 // trips). References with no stored row are simply absent from the result.
 func (s *Store) PassageText(ctx context.Context, translation string, refs []domain.PassageReference) (map[string]string, error) {

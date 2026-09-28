@@ -22,6 +22,7 @@ import (
 	"time"
 
 	"verbum/backend/internal/domain"
+	"verbum/backend/internal/reference"
 	"verbum/backend/internal/reqid"
 	"verbum/backend/internal/store"
 )
@@ -106,13 +107,17 @@ func (s *Service) Ask(ctx context.Context, question string) (domain.AskResponse,
 	if limit <= 0 {
 		limit = 6
 	}
+	if limit > 12 {
+		limit = 12
+	}
 
 	id := reqid.From(ctx)
 
 	// A failed/unconfigured embedder degrades to lexical-only retrieval, same policy as
 	// /v1/search (internal/httpapi.search) — never a failed Ask over this alone.
 	var embedding []float32
-	if s.Embedder != nil {
+	_, direct := reference.ParseVerse(q)
+	if s.Embedder != nil && !direct {
 		embedStart := time.Now()
 		v, err := s.Embedder.Embed(ctx, q)
 		slog.Info("ask: query embedding", "reqID", id, "ms", time.Since(embedStart).Milliseconds(), "ok", err == nil)
@@ -124,10 +129,11 @@ func (s *Service) Ask(ctx context.Context, question string) (domain.AskResponse,
 	}
 
 	retrievalStart := time.Now()
-	refs, err := s.Store.SearchPassages(ctx, q, embedding, limit)
+	refs, err := s.Store.SearchPassages(ctx, q, embedding, min(40, limit*4))
 	if err != nil {
 		return domain.AskResponse{}, fmt.Errorf("ask: retrieve evidence: %w", err)
 	}
+	refs = diverseSeeds(refs, limit)
 	anchors := selectedPassages(ctx)
 	if len(anchors) > limit {
 		limit = len(anchors)
@@ -153,6 +159,8 @@ func (s *Service) Ask(ctx context.Context, question string) (domain.AskResponse,
 		slog.Info("ask: retrieval", "reqID", id, "ms", time.Since(retrievalStart).Milliseconds(), "hits", 0)
 		return noEvidenceResponse(store.Language(ctx)), nil
 	}
+	seeds := refs
+	refs = contextReferences(seeds)
 	texts, err := s.Store.PassageText(ctx, translation, refs)
 	if err != nil {
 		return domain.AskResponse{}, fmt.Errorf("ask: load evidence text: %w", err)
@@ -162,13 +170,14 @@ func (s *Service) Ask(ctx context.Context, question string) (domain.AskResponse,
 			return noEvidenceResponse(store.Language(ctx)), nil
 		}
 	}
-	items := make([]evidence, 0, len(refs))
-	for _, ref := range refs {
-		if text, ok := texts[evidenceKey(ref)]; ok && text != "" {
-			items = append(items, evidence{ref: ref, text: text})
+	items := boundedEvidence(refs, texts)
+	for i, ref := range anchors {
+		if i >= len(items) || items[i].ref.Key() != ref.Key() {
+			return noEvidenceResponse(store.Language(ctx)), nil
 		}
 	}
-	slog.Info("ask: retrieval", "reqID", id, "ms", time.Since(retrievalStart).Milliseconds(), "hits", len(items))
+
+	slog.Info("ask: retrieval", "reqID", id, "ms", time.Since(retrievalStart).Milliseconds(), "seeds", len(seeds), "hits", len(items))
 	if len(items) == 0 {
 		// Retrieval named passages but the corpus has no text for them — never happens with a
 		// healthy scripture_verses table, but §3.5 says never fabricate around a gap either.
@@ -198,7 +207,15 @@ func (s *Service) Ask(ctx context.Context, question string) (domain.AskResponse,
 	if len(cited) == 0 || strings.TrimSpace(reply.Answer) == "" {
 		// §31: cite relevant passages is not optional. An answer that cites nothing verifiable
 		// is treated as no answer, not shown as if it were grounded.
-		return noEvidenceResponse(store.Language(ctx)), nil
+		slog.Info("ask: unsupported synthesis", "reqID", id, "evidenceSize", len(items), "validCitations", len(cited))
+		result := noEvidenceResponse(store.Language(ctx))
+		// These are explicitly shown as closest passages, never as citations of an answer.
+		for _, ref := range seeds {
+			if texts[ref.Key()] != "" {
+				result.PassageReferences = append(result.PassageReferences, ref)
+			}
+		}
+		return result, nil
 	}
 
 	confidence := reply.Confidence

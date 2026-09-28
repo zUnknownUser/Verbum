@@ -193,3 +193,42 @@ func TestPassageTextEmptyRefsIsEmptyMap(t *testing.T) {
 		t.Errorf("got %+v, want empty", got)
 	}
 }
+
+func TestConversationalRetrievalWithoutEmbeddings(t *testing.T) {
+	ctx := context.Background()
+	conn, url := testdb.Open(t, "../../../db/migrations")
+	// Missing vectors exercise the provider-outage / low-cost path.
+	_, err := conn.Exec(ctx, `INSERT INTO scripture_verses(translation,book_id,chapter,verse,text) VALUES
+ ('WEB','Job',38,1,'Then Yahweh answered Job out of the whirlwind,'),
+ ('WEB','Job',38,4,'Where were you when I laid the foundations of the earth?'),
+ ('WEB','Job',40,6,'Then Yahweh answered Job out of the whirlwind,'),
+ ('WEB','John',3,16,'For God so loved the world.'),
+ ('WEB','John',11,43,'When he had said this, he cried with a loud voice, Lazarus, come out!'),
+ ('WEB','Matt',6,34,'Therefore do not be anxious for tomorrow, for tomorrow will be anxious for itself.'),
+ ('WEB','Deut',34,4,'Yahweh said to him, This is the land which I swore to Abraham.'),
+ ('WEB','1Sam',17,49,'David struck the Philistine in his forehead with the stone.')`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	db, err := postgres.Open(ctx, url)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(db.Close)
+	for _, q := range []string{"Önde Deus conversa com Jó?", "Onde Deus fala com Jo?", "Where does God speak to Job?"} {
+		refs, err := db.SearchPassages(ctx, q, nil, 6)
+		if err != nil || len(refs) < 2 || refs[0].Key() != "Job.38.1" || refs[1].Key() != "Job.40.6" {
+			t.Fatalf("%q: %v %v", q, derefAll(refs), err)
+		}
+	}
+	for q, want := range map[string]string{"Jesus fala para não se preocupar com o amanhã": "Matt.6.34", "Who struck the Philistine with a stone?": "1Sam.17.49", "Jó 38:4": "Job.38.4", "João 3:16": "John.3.16"} {
+		refs, err := db.SearchPassages(ctx, q, nil, 6)
+		if err != nil || len(refs) == 0 || refs[0].Key() != want {
+			t.Fatalf("%q: %v %v", q, derefAll(refs), err)
+		}
+	}
+	refs, err := db.SearchPassages(ctx, "Jó 99:99", oneHot(0), 6)
+	if err != nil || len(refs) != 0 {
+		t.Fatal("fabricated exact reference", refs, err)
+	}
+}

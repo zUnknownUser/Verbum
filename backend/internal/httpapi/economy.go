@@ -70,7 +70,7 @@ type economicAsk struct {
 
 func (e economicAsk) Ask(ctx context.Context, q string) (domain.AskResponse, error) {
 	ref, _ := json.Marshal(ask.SelectedPassages(ctx))
-	key := usage.Hash(usage.Identity(ctx).UID, q, store.Language(ctx), string(ref), e.model)
+	key := usage.Hash(usage.Identity(ctx).UID, q, store.Language(ctx), string(ref), e.model, ask.Version)
 	if err := e.usage.Bind(ctx, idempotency(ctx), key); err != nil {
 		return domain.AskResponse{}, err
 	}

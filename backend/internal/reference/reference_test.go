@@ -46,3 +46,17 @@ func TestParseVerseRejectsNonReferences(t *testing.T) {
 		}
 	}
 }
+
+func TestPortugueseReferencesWithAndWithoutAccents(t *testing.T) {
+	cases := map[string]domain.PassageReference{
+		"Jó 38:4": verse("Job", 38, 4), "Jo 38:4": verse("Job", 38, 4), "João 3:16": verse("John", 3, 16), "joao 3:16": verse("John", 3, 16),
+		"1 João 4:8": verse("1John", 4, 8), "Êxodo 3:2": verse("Exod", 3, 2), "Salmos 23:1": verse("Ps", 23, 1),
+		"Cântico dos Cânticos 2:1": verse("Song", 2, 1), "2 Coríntios 5:17": verse("2Cor", 5, 17), "Apocalipse 22:21": verse("Rev", 22, 21),
+	}
+	for input, want := range cases {
+		got, ok := ParseVerse(input)
+		if !ok || !reflect.DeepEqual(got, want) {
+			t.Errorf("%s = %+v", input, got)
+		}
+	}
+}

@@ -1,9 +1,6 @@
 // Package reference recognizes a direct Bible verse reference typed into a search query, for
-// §28's "a direct reference match wins outright". This is deliberately narrower than the apps'
-// on-device PassageReferenceParser (Swift/Kotlin): it accepts an OSIS id or one common English
-// book name, plus chapter:verse, and nothing fancier — no abbreviation matrix, no verse ranges,
-// no other languages. The apps remain the primary place a reference gets parsed (§28 says the
-// server "may repeat" that, not that it must match it feature-for-feature).
+// direct verse lookups. English and PT-BR names share OSIS identifiers; existence is
+// always checked against the corpus before a reference becomes evidence.
 package reference
 
 import (
@@ -12,6 +9,7 @@ import (
 	"strings"
 
 	"verbum/backend/internal/domain"
+	"verbum/backend/internal/retrieval"
 )
 
 // bookNames maps a normalized (lowercased, spaces removed) book name or OSIS id to its OSIS
@@ -40,6 +38,25 @@ func buildBookNames() map[string]string {
 		{"1John", "1 John"}, {"2John", "2 John"}, {"3John", "3 John"}, {"Jude", "Jude"},
 		{"Rev", "Revelation"},
 	}
+	pairs = append(pairs, [][2]string{
+		{"Gen", "Gênesis"}, {"Exod", "Êxodo"}, {"Lev", "Levítico"}, {"Num", "Números"},
+		{"Deut", "Deuteronômio"}, {"Josh", "Josué"}, {"Judg", "Juízes"}, {"Ruth", "Rute"},
+		{"1Sam", "1 Samuel"}, {"2Sam", "2 Samuel"}, {"1Kgs", "1 Reis"}, {"2Kgs", "2 Reis"},
+		{"1Chr", "1 Crônicas"}, {"2Chr", "2 Crônicas"}, {"Ezra", "Esdras"}, {"Neh", "Neemias"},
+		{"Esth", "Ester"}, {"Job", "Jó"}, {"Ps", "Salmo"}, {"Ps", "Salmos"},
+		{"Prov", "Provérbios"}, {"Eccl", "Eclesiastes"}, {"Song", "Cantares"}, {"Song", "Cântico dos Cânticos"},
+		{"Isa", "Isaías"}, {"Jer", "Jeremias"}, {"Lam", "Lamentações"}, {"Ezek", "Ezequiel"},
+		{"Dan", "Daniel"}, {"Hos", "Oseias"}, {"Joel", "Joel"}, {"Amos", "Amós"},
+		{"Obad", "Obadias"}, {"Jonah", "Jonas"}, {"Mic", "Miqueias"}, {"Nah", "Naum"},
+		{"Hab", "Habacuque"}, {"Zeph", "Sofonias"}, {"Hag", "Ageu"}, {"Zech", "Zacarias"},
+		{"Mal", "Malaquias"}, {"Matt", "Mateus"}, {"Mark", "Marcos"}, {"Luke", "Lucas"},
+		{"John", "João"}, {"Acts", "Atos"}, {"Rom", "Romanos"}, {"1Cor", "1 Coríntios"},
+		{"2Cor", "2 Coríntios"}, {"Gal", "Gálatas"}, {"Eph", "Efésios"}, {"Phil", "Filipenses"},
+		{"Col", "Colossenses"}, {"1Thess", "1 Tessalonicenses"}, {"2Thess", "2 Tessalonicenses"},
+		{"1Tim", "1 Timóteo"}, {"2Tim", "2 Timóteo"}, {"Titus", "Tito"}, {"Phlm", "Filemom"},
+		{"Heb", "Hebreus"}, {"Jas", "Tiago"}, {"1Pet", "1 Pedro"}, {"2Pet", "2 Pedro"},
+		{"1John", "1 João"}, {"2John", "2 João"}, {"3John", "3 João"}, {"Jude", "Judas"}, {"Rev", "Apocalipse"},
+	}...)
 	m := make(map[string]string, len(pairs)*2)
 	for _, p := range pairs {
 		osisID, name := p[0], p[1]
@@ -50,7 +67,7 @@ func buildBookNames() map[string]string {
 }
 
 func normalize(s string) string {
-	return strings.ToLower(strings.ReplaceAll(s, " ", ""))
+	return strings.ReplaceAll(retrieval.Normalize(s), " ", "")
 }
 
 // bookAndLocation splits "1 Samuel 17:49" into ("1 Samuel", "17", "49"), and "Ps 23" into
