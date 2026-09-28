@@ -37,11 +37,20 @@ Referências do transporte: [Apple, EVENT playlists](https://developer.apple.com
 
 - Build iOS Simulator 27 com deployment target iOS 17; 73 testes Swift em 18 suítes passaram, incluindo falha/retry de anotações, fila durável, troca de conta, persistência antes do cursor e continuação do mesmo capítulo.
 - Android assembleDebug; 117 testes em 25 suítes passaram (core clients e suítes selecionadas de leitor, Jornada, navegação e áudio).
-- Go: `go test -race ./...` e `go vet ./...` passaram. PostgreSQL local executou migrações e testes em schemas isolados, incluindo repetição, paginação, isolamento de contas e bloqueio após exclusão. Testes de empacotamento que dependem de ffmpeg não são executados pelo Go local quando o binário não está no PATH.
+- Go: `go test -race ./...` e `go vet ./...` passaram. PostgreSQL local executou migrações e testes em schemas isolados, incluindo repetição, paginação, isolamento de contas e bloqueio após exclusão. Os dois testes dirigidos de HLS (empacotamento/decodificação e estabilidade dos snapshots) também passaram usando ffmpeg da imagem Docker local.
+- Player nativo AVPlayer no iOS Simulator: teste adicional com dois trechos de silêncio sintético, playlist VOD, descontinuidade, seek e notificação de término passou. Nenhuma voz foi gerada nem áudio bíblico ouvido.
 - OpenAPI 3.1 validado com 19 rotas, incluindo autenticação Firebase correta para os dados pessoais.
 - Avisos encontrados no código Swift/Kotlin corrigidos: isolamento/sendability, macro de reducer, ícones espelhados, APIs adaptativas e opt-in de coroutines nos testes. Android terminou sem avisos nessa compilação. Xcode ainda emite o aviso de ferramenta `Metadata extraction skipped, no AppIntents.framework dependency found`; não foram suprimidos avisos globalmente.
 - Sem teste subjetivo da voz ou geração TTS paga. Escuta de Jó 36 e aceitação da narração ficam com Lucas.
 - Não se afirma teste E2E de sincronização com duas contas reais em dois aparelhos físicos. O protocolo/storage foi validado por testes locais. Android não estava conectado para teste manual.
 - iPhone Duo não está disponível neste Xcode/runtime; não foi substituído por um teste de outro iPhone. Layout segue a largura disponível, mas a validação específica permanece pendente.
 
-Publicação e instalação são registradas abaixo após verificadas; build local não equivale a distribuição pelas lojas.
+## Publicação
+
+- Commit da implementação: `58808ca`.
+- Railway: `31a25268-4070-4230-ab75-221fc05daf08`, SUCCESS; upload de snapshot `git archive` do commit, sem arquivos locais extras.
+- `/healthz`, `/readyz`, `/docs/` e `/openapi.yaml`: HTTP 200. O contrato público é idêntico byte a byte ao validado no commit.
+- POST `/v1/me/sync` e DELETE `/v1/me/data` sem credenciais: 401 e `Cache-Control: no-store`. Nenhum dado de usuário foi criado ou removido nessa verificação.
+- Swagger: https://api.vendlydigital.com.br/docs/
+- Novo build instalado no simulador iPhone 17 Pro / iOS 27. XCTest UI passou em PT-BR e EN: abrir Jó/Job 36, deslizar para 37 e retornar a 36; títulos conferidos e capturas revisadas. Isso valida funcionamento, não uma medição de FPS ou benchmark de fluidez. O app voltou ao idioma original depois do teste. APK Android disponível em `android/app/build/outputs/apk/debug/app-debug.apk`. Não publicado nas lojas.
+- GitHub permanece pendente da autenticação de escrita já identificada na entrega anterior; os commits estão locais. A alteração preexistente em `Localizable.xcstrings` foi preservada fora deste commit.
