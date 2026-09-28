@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -180,18 +179,6 @@ internal fun EntityListScreen(state: EntityListFeature.State, send: (EntityListF
         item { Text(stringResource(title), style = VerbumTypography.editorialTitle, color = MaterialTheme.colorScheme.onSurface, modifier = Modifier.padding(bottom = Spacing.lg)) }
         if (state.isLoading) item { CircularProgressIndicator(color = MaterialTheme.colorScheme.outline) }
         items(state.entities, key = { it.id }) { entity -> EntityRow(entity.name, entity.summary) { send(EntityListFeature.Action.EntityTapped(entity)) } }
-    }
-}
-
-/** Journey (§15) and Library (§16) arrive with the personal layer; until then, say so plainly. */
-@Composable
-internal fun EmptyPage(title: String, message: String) {
-    Page {
-        Text(title, style = VerbumTypography.editorialTitle, color = MaterialTheme.colorScheme.onSurface)
-        Spacer(Modifier.height(Spacing.md))
-        Spacer(Modifier.width(28.dp).height(1.dp).background(MaterialTheme.colorScheme.primary))
-        Spacer(Modifier.height(Spacing.md))
-        Text(message, style = VerbumTypography.scripture, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 

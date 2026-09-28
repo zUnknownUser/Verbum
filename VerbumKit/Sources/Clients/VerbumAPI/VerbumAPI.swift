@@ -113,17 +113,6 @@ public struct VerbumAPI: Sendable {
         return try await send(request)
     }
 
-    func postTimedAudio<Body: Encodable & Sendable>(_ body: Body) async throws -> (Data, [AudioCue]) {
-        var request = URLRequest(url: url("/v1/tts"), timeoutInterval: Self.speechTimeout)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try JSONEncoder().encode(body)
-        try await authorize(&request)
-        let (data, response) = try await exchange(request)
-        let cues = response.value(forHTTPHeaderField: "X-Verbum-Audio-Cues").flatMap { try? JSONDecoder().decode([AudioCue].self, from: Data($0.utf8)) } ?? []
-        return (data, AudioCue.validated(cues))
-    }
-
     private func authorize(_ request: inout URLRequest) async throws {
         request.setValue(Self.installationID, forHTTPHeaderField: "X-Verbum-Installation")
         request.setValue(UUID().uuidString, forHTTPHeaderField: "Idempotency-Key")

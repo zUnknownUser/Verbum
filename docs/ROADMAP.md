@@ -1,5 +1,17 @@
 # Roadmap
 
+## Estado atual — 2026-09-28
+
+- Biblioteca/Jornada e recuperação de áudio implementadas em iOS/Android, PT-BR/EN;
+  builds e testes selecionados registrados em [LIBRARY_JOURNEY_AUDIO.md](LIBRARY_JOURNEY_AUDIO.md).
+- Busca/RAG revisados e Swagger publicado: [RELEASE_2026_09_28.md](RELEASE_2026_09_28.md).
+- Nova revisão de código sem uso e fricções: [CODIGO_MORTO_2026-09-28.md](CODIGO_MORTO_2026-09-28.md).
+- Sincronização pessoal, aceite amplo em dispositivos e validação específica do Duo
+  não estão demonstrados por esses builds. O registro de publicação distingue deploy e push.
+
+As entradas datadas abaixo preservam o histórico; seus próximos passos e limites
+devem ser lidos junto aos registros mais recentes acima.
+
 ## Áudio acompanhado, destaques e foco — 2026-09-16
 
 - PT-BR/EN: tempos medidos de trechos TTS ou marcações da gravação, indicação discreta,

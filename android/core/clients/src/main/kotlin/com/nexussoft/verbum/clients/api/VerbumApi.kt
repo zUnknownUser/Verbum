@@ -302,13 +302,6 @@ class VerbumApi(
         return sendBinary(HttpRequest("POST", url("/v1/tts", emptyList()), body))
     }
 
-    suspend fun synthesizeChapterSpeech(verses:List<com.nexussoft.verbum.models.BiblePassage>,language:String,revision:String?):Pair<ByteArray,List<com.nexussoft.verbum.models.AudioCue>> {
-        val body=json.encodeToString(WireTimedSpeech.serializer(),WireTimedSpeech(verses.first().bookId,verses.first().chapter,verses.first().translationId,verses.joinToString("\n") {it.text},language,revision,verses.map {WireSpeechVerse(it.verseStart,it.text)}))
-        val response=sendBinaryResponse(HttpRequest("POST",url("/v1/tts",emptyList()),body))
-        val header=response.headers.entries.firstOrNull {it.key.equals("X-Verbum-Audio-Cues",true)}?.value
-        return response.bytes to decodeAudioCues(header)
-    }
-
     suspend fun startSpeechPlayback(verses:List<com.nexussoft.verbum.models.BiblePassage>, revision:String?):String {
         val body=json.encodeToString(WireTimedSpeech.serializer(),WireTimedSpeech(verses.first().bookId,verses.first().chapter,verses.first().translationId,verses.joinToString("\n"){it.text},"pt-BR",revision,verses.map{WireSpeechVerse(it.verseStart,it.text)}))
         val path=post("/v1/tts/playback",body,SpeechPlaybackStart.serializer()).statusPath
