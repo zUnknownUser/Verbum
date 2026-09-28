@@ -1,45 +1,58 @@
 openapi: 3.1.0
 info:
   title: Verbum API
-  version: 0.1.0
+  version: 0.2.0
   description: |
-    The contract between the Verbum apps (iOS, Android) and the backend (docs/PRODUCT.md §45).
-    The apps' client interfaces — `GraphClient`, `SearchClient`, `ContextClient`, `TimelineClient`,
-    `DailyVerses` — were written first; this document is their wire shape, and `examples/` holds
-    the responses both apps decode in their contract tests. Change the JSON here, and the app tests
-    break before a user does.
+    Scripture, editorial knowledge, grounded answers and chapter narration for Verbum on iOS and Android.
 
-    Conventions
-    - Editorial GET routes are public and cacheable. Paid POST routes require a Firebase ID token.
-    - Public search is lexical; a verified identity enables paid semantic retrieval.
-    - Scripture text is NOT served here: the apps read it from bible.helloao.org (and the bundled WEB).
-      References are structured (`PassageReference`), never prose, so the apps render them in the
-      reader's translation and language.
-    - Every relationship, detail and dating claim carries `sourceReferenceIds` (§33). Content only
-      reaches this API through the editorial pipeline with human review (§32).
-    - Errors are one shape (`Problem`) with a small `code` vocabulary (§52); the apps map codes to
-      states and never show `message` to users.
-    - Ids are opaque strings. Fixture ids look like `fixture.person.david`; production ids may differ.
+    **PT-BR:** use `lang=pt-BR` ou `Accept-Language: pt-BR`. Conteúdo editorial é público;
+    IA, geração de áudio e uso da conta exigem um ID token do Firebase. O botão **Authorize**
+    recebe esse token, nunca uma chave da OpenAI ou do Google. **Try it out** faz chamadas reais,
+    sujeitas às mesmas cotas e ao mesmo orçamento dos apps.
+
+    **English:** public editorial GETs are cacheable. Protected operations require a Firebase
+    ID token, including tokens for anonymous Firebase users. App Check may also be required.
+    Search works without authentication using lexical retrieval; verified users can use semantic retrieval.
+    Narration already cached is shared globally. New generation remains subject to the global budget.
+
+    References use canonical OSIS identifiers; apps display Scripture in the reader's chosen translation.
+    Answers are grounded in the indexed WEB corpus and returned in the requested language.
+    Errors use the `Problem` schema; use `code` for application behavior. IDs are opaque.
+    The current server is selected below. Opening this documentation never calls a paid provider.
 security: []   # editorial content stays public; paid operations override this below
 
 servers:
-  - url: https://api.vendlydigital.com.br
-    description: production API (Railway deployment recorded in backend/DEPLOY.md)
-  - url: http://localhost:8080
-    description: local backend
+  - url: /
+    description: Current API host / Servidor atual
 
 tags:
-  - name: entities
-  - name: graph
-  - name: context
-  - name: timeline
   - name: search
+    description: Find passages, books and people / Busca bíblica
+  - name: ask
+    description: Answers grounded in Scripture / Perguntas com fontes
   - name: daily
+    description: Daily reading / Leitura diária
+  - name: entities
+    description: People, places and concepts / Pessoas, lugares e conceitos
+  - name: graph
+    description: Connections between entities / Relações entre entidades
+  - name: context
+    description: Chapter context / Contexto de leitura
+  - name: timeline
+    description: Historical periods and events / Linha do tempo
   - name: tts
+    description: Chapter narration and playback / Narração e reprodução
+  - name: realtime
+    description: Metered voice conversations / Conversas por voz
+  - name: account
+    description: Plan and remaining usage / Plano e uso disponível
+  - name: health
+    description: Service availability / Disponibilidade do serviço
 
 paths:
   /healthz:
     get:
+      tags: [health]
       operationId: liveness
       summary: Process liveness, independent of database availability.
       responses:
@@ -50,6 +63,7 @@ paths:
               schema: { type: string }
   /readyz:
     get:
+      tags: [health]
       operationId: readiness
       summary: Content store is reachable and the daily passage pool is populated.
       description: Bounded to two seconds, not cached, and does not call paid providers. Used by deployment health checks.
@@ -101,6 +115,10 @@ paths:
         without HTTP caching; quota/provider failures are returned by the status resource.
         Only this authenticated POST can initiate generation. GET media cannot generate audio.
         Active jobs are shared by canonical audio identity; 32 jobs per process, expiring after one hour.
+      parameters:
+        - $ref: '#/components/parameters/AppCheck'
+        - $ref: '#/components/parameters/Installation'
+        - $ref: '#/components/parameters/IdempotencyKey'
       requestBody:
         required: true
         content:
@@ -116,12 +134,12 @@ paths:
                 required: [statusPath]
                 properties:
                   statusPath: { type: string }
-        '400': { description: Invalid canonical chapter request. }
+        '400': { description: "Invalid canonical chapter request." }
         '401': { $ref: '#/components/responses/Unauthenticated' }
-        '403': { description: App attestation required. }
-        '409': { description: Idempotency conflict. }
-        '429': { description: Request rate or playback capacity exceeded. }
-        '503': { description: Speech unavailable. }
+        '403': { description: "App attestation required." }
+        '409': { description: "Idempotency conflict." }
+        '429': { description: "Request rate or playback capacity exceeded." }
+        '503': { description: "Speech unavailable." }
   /v1/tts/playback/{token}/{asset}:
     get:
       security: []
@@ -144,9 +162,9 @@ paths:
             index.m3u8 is an append-only EVENT playlist with EXT-X-ENDLIST only on success.
             Listed TS segments contain AAC audio. chapter.mp3 is available only after completion.
             Poll status/playlist without caching; never interpret partial media as a complete chapter.
-        '404': { description: Unknown or expired capability or unpublished asset. }
-        '429': { description: Budget, pending generation or read rate limit. }
-        '503': { description: Generation failed; incomplete chapter must not be cached. }
+        '404': { description: "Unknown or expired capability or unpublished asset." }
+        '429': { description: "Budget, pending generation or read rate limit." }
+        '503': { description: "Generation failed; incomplete chapter must not be cached." }
   /v1/tts:
     post:
       security:
@@ -169,6 +187,10 @@ paths:
         return 400. Server-side Google credentials are never returned to clients.
         Responses use Cache-Control: no-store; the server keeps its own persistent chapter cache
         keyed by exact text and normalized settings, invisible to HTTP intermediaries.
+      parameters:
+        - $ref: '#/components/parameters/AppCheck'
+        - $ref: '#/components/parameters/Installation'
+        - $ref: '#/components/parameters/IdempotencyKey'
       requestBody:
         required: true
         content:
@@ -399,16 +421,19 @@ paths:
         serve the entity groups. A direct reference match wins outright (§28): when `passages` is
         non-empty, `books` is empty.
 
-        `passages` (2026-09-12): hybrid lexical (Postgres full-text) + semantic (pgvector cosine
-        similarity against a server-side query embedding) retrieval over a Scripture text corpus
-        (currently WEB, English only). Ranking blends both channels' scores — a first heuristic,
-        not a calibrated relevance model. Verified direct references bypass embeddings on the server.
+        `passages`: hybrid full-text and pgvector retrieval over the complete indexed WEB corpus.
+        Accent-insensitive PT-BR/English vocabulary expansion supports lexical fallback. Independent
+        channels are fused by reciprocal rank, with bounded candidate pools. Direct Portuguese/English
+        references bypass embeddings and are returned only if the verse exists in the corpus.
         A missing identity uses lexical/entity/reference search without a paid embedding call.
         A valid Firebase token (including anonymous users) enables semantic retrieval.
         Rate limits return 429 with Retry-After; invalid supplied tokens return 401.
         Missing Firebase configuration with a supplied token returns 503.
         Search results vary by Authorization. Embedding failures degrade to lexical retrieval.
       parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/AppCheck'
+        - $ref: '#/components/parameters/Installation'
         - name: q
           in: query
           required: true
@@ -470,15 +495,23 @@ paths:
         - FirebaseIDToken: []
       tags: [ask]
       operationId: askScripture
-      summary: Task 12 — Ask Scripture. Retrieval-grounded synthesis with a hard citation gate (§29-31).
+      summary: Ask a question and receive an answer grounded in verified passages.
       description: |
-        The model never names a Bible reference itself; it only picks from passages this server
-        already retrieved via the same hybrid search as `/v1/search` and verified exist. An
-        answer that cites nothing verifiable is never shown as if it were grounded — the
-        response falls back to `confidence: "low"` with an empty `answer` instead (§73: no
-        generation before reliable retrieval). English only (WEB) until a licensed pt-BR
-        Scripture text exists (§34). Never streamed — full retrieval always precedes synthesis.
-        503 when no OpenAI key is configured; there is no offline/fixture fallback.
+        Accepts natural questions in Portuguese and English, including missing accents and short quotations.
+        Retrieves verified Scripture using hybrid lexical/semantic ranking, diversifies passages and
+        expands nearby verses to preserve the speaker and scene. Context is bounded to 48 verses and
+        20000 UTF-8 bytes; it never loads the whole Bible into the model. Exact references bypass embeddings.
+        Citations can only select real retrieved sources. An unsupported answer stays empty with low
+        confidence; passageReferences may still offer nearby search results, not evidence for the claim.
+        Answers follow lang or Accept-Language. Portuguese answers paraphrase WEB; they are not quotations
+        from a licensed Portuguese translation. Expensive operations enforce server-owned plans, quotas,
+        idempotency and budgets. A restricted operation can return indexed passages with a fallback code.
+      parameters:
+        - $ref: '#/components/parameters/Lang'
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/AppCheck'
+        - $ref: '#/components/parameters/Installation'
+        - $ref: '#/components/parameters/IdempotencyKey'
       requestBody:
         required: true
         content:
@@ -488,7 +521,7 @@ paths:
               required: [question]
               additionalProperties: false
               properties:
-                question: { type: string, minLength: 1, maxLength: 500 }
+                question: { type: string, minLength: 1, maxLength: 500, example: "Onde Deus começa a falar com Jó?" }
                 reference:
                   $ref: '#/components/schemas/PassageReference'
                   description: Optional reader anchor. Must select 1–6 verses; corpus text is verified before synthesis.
@@ -543,6 +576,9 @@ paths:
         output tokens, response count and spending are enforced there. Responses are no-store.
         Guest sessions cannot use voice. A verbum.limit event ends a restricted conversation.
       parameters:
+        - $ref: '#/components/parameters/AppCheck'
+        - $ref: '#/components/parameters/Installation'
+        - $ref: '#/components/parameters/IdempotencyKey'
         - name: model
           in: query
           required: false
@@ -587,6 +623,7 @@ paths:
   /v1/me/usage:
     get:
       security: [{ FirebaseIDToken: [] }]
+      tags: [account]
       operationId: getUsage
       summary: Current server-owned plan and remaining daily generations.
       responses:
@@ -602,14 +639,16 @@ paths:
   /v1/realtime/connect:
     get:
       security: [{ VerbumVoiceTicket: [] }]
+      tags: [realtime]
       operationId: connectVoice
       summary: WebSocket relay with server-enforced duration and spending limits.
+      description: Requires a WebSocket client and the one-use ticket from POST /v1/realtime/session. Swagger UI cannot perform the WebSocket upgrade with Try it out.
       responses:
         '101':
           description: JSON Realtime events; verbum.limit carries code and optional retryAt before close.
-        '401': { description: Missing, expired or already consumed one-use ticket. }
-        '429': { description: Concurrent conversation, quota or budget limit. }
-        '503': { description: Usage storage or provider unavailable. }
+        '401': { description: "Missing, expired or already consumed one-use ticket." }
+        '429': { description: "Concurrent conversation, quota or budget limit." }
+        '503': { description: "Usage storage or provider unavailable." }
 
 components:
   securitySchemes:
@@ -634,7 +673,28 @@ components:
       in: query
       required: false
       schema: { type: string, enum: [en, pt, pt-BR], default: en }
-      description: Presentation language; pt aliases pt-BR. Missing translations fall back to en. Original scripts and identifiers remain unchanged. Unsupported values use en.
+      description: Presentation language; pt aliases pt-BR. Takes precedence over Accept-Language. Portuguese editorial requests do not silently fall back to English. Original scripts and identifiers remain unchanged. Missing language or unsupported values use en.
+
+    AcceptLanguage:
+      name: Accept-Language
+      in: header
+      schema: { type: string, example: pt-BR }
+      description: Used when lang is absent; supported presentation languages are pt-BR and en.
+    AppCheck:
+      name: X-Firebase-AppCheck
+      in: header
+      schema: { type: string }
+      description: Firebase App Check token. Required for protected generation when enforcement is enabled. Never a provider key.
+    Installation:
+      name: X-Verbum-Installation
+      in: header
+      schema: { type: string, minLength: 16, maxLength: 80 }
+      description: Installation identifier used as an additional abuse signal; never substitutes for authentication.
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      schema: { type: string }
+      description: Reuse for a retry of the same request. Reusing a key with different content returns 409. Shared content caching also avoids duplicate provider work.
 
   responses:
     Unauthenticated:
@@ -709,8 +769,8 @@ components:
         voice:
           type: string
           maxLength: 128
-          description: Google voice matching language; omitted/empty selects pt-BR-Chirp3-HD-Aoede or en-US-Standard-A.
-          example: pt-BR-Chirp3-HD-Aoede
+          description: Omit to use the current server narrator. Portuguese defaults to Gemini 2.5 Pro TTS / Charon; English uses en-US-Standard-A. Only server-approved voices are accepted. Read /v1/tts/config for the current version.
+          example: Charon
         speed: { type: number, enum: [1], default: 1, description: Adjust playback speed locally without regenerating speech. }
         pitch: { type: number, enum: [0], default: 0 }
         format: { type: string, enum: [MP3], default: MP3 }
@@ -824,7 +884,7 @@ components:
         original: { type: string }
         transliteration: { type: string }
         morphology: { type: string, description: Original STEP morphology code; may be empty. }
-        gloss: { type: string, description: Brief lexical metadata, not a verse translation. }
+        gloss: { type: string, description: "Brief lexical metadata, not a verse translation." }
         glossLanguage: { type: string, enum: [en] }
         extendedStrong: { type: string }
         disambiguatedStrong: { type: string, description: Original field including relation annotations. }
@@ -937,12 +997,12 @@ components:
       properties:
         fallback:
           $ref: '#/components/schemas/UsageRestriction'
-        answer: { type: string, description: Empty when no reliable, citable answer was found. }
+        answer: { type: string, description: "Empty when no reliable, citable answer was found." }
         summary: { type: string }
         passageReferences:
           type: array
           items: { $ref: '#/components/schemas/PassageReference' }
-          description: Verified citations, or indexed search results when fallback is present and answer is empty.
+          description: Verified citations when answer is nonempty. When answer is empty, these are nearby indexed search results and do not substantiate the requested claim.
         entityReferences:
           type: array
           items: { type: string }

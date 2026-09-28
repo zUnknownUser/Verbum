@@ -19,6 +19,9 @@ COPY --from=build /out/api /app/api
 COPY --from=build /out/migrate /app/migrate
 COPY backend/db/migrations /app/db/migrations
 COPY backend/db/seed/fixtures.json /app/db/seed/fixtures.json
+COPY api/openapi.yaml /app/contracts/openapi.yaml
+COPY api/examples /app/contracts/examples
+ENV VERBUM_API_CONTRACT_DIR=/app/contracts
 ENV VERBUM_ADDR=:8080
 ENV VERBUM_TTS_CACHE_DIR=/var/cache/verbum/tts
 EXPOSE 8080

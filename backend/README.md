@@ -1,5 +1,19 @@
 # backend/ — the Verbum API (Go)
 
+## API reference and retrieval — 2026-09-28
+
+Interactive Swagger: **https://api.vendlydigital.com.br/docs/** (local: `/docs/`).
+Download the canonical contract at `/openapi.yaml`. The responsive interface has
+PT-BR/EN introductory copy, all 17 current operations, examples and Firebase Bearer
+authorization. Try it out makes real requests under the same limits as the apps.
+It never saves authorization between visits or loads a third-party CDN/validator.
+See [documentation assets](internal/apidocs/README.md).
+
+Natural-language search now uses bounded bilingual lexical expansion, reciprocal
+rank fusion and verified neighboring Scripture context for Ask. No schema migration
+or Scripture replacement is needed. Evaluation and limitations:
+[SEARCH_RELIABILITY.md](../docs/SEARCH_RELIABILITY.md).
+
 ## STEP Bible — 2026-09-15
 
 Apply migration `0005_structured_enrichment.sql` before running this backend. Official STEP data enters through the existing Python pipeline and becomes available to entity search, passage retrieval, context and Ask entity linking. See [STEP_BIBLE.md](../docs/STEP_BIBLE.md). No upstream STEP calls occur at runtime.

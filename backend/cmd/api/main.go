@@ -21,6 +21,7 @@ import (
 	"syscall"
 	"time"
 
+	"verbum/backend/internal/apidocs"
 	"verbum/backend/internal/ask"
 	"verbum/backend/internal/embeddings"
 	"verbum/backend/internal/httpapi"
@@ -200,6 +201,11 @@ func main() {
 	}
 	slog.Info("app attestation policy", "mode", appMode, "configured", verifyApp != nil)
 	handler = httpapi.Protect(handler, httpapi.AccessOptions{Identify: identify, TrustedProxies: proxies, VerifyApp: verifyApp, RequireAppCheck: appMode == "enforce"})
+	handler, err = apidocs.New(env("VERBUM_API_CONTRACT_DIR", "../api"), handler)
+	if err != nil {
+		slog.Error("load API documentation", "err", err)
+		os.Exit(1)
+	}
 	server := &http.Server{
 		Addr:              addr,
 		Handler:           handler,

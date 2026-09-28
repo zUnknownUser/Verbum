@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta
+      name="description"
+      content="Verbum API — referências bíblicas, conhecimento e narração. Documentação interativa oficial."
+    />
+    <title>Verbum · API</title>
+    <link rel="stylesheet" href="/docs/assets/swagger-ui.css" />
+    <link rel="stylesheet" href="/docs/assets/verbum.css" />
+    <script src="/docs/assets/swagger-ui-bundle.js" defer></script>
+    <script src="/docs/assets/verbum.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#swagger-ui" data-copy="skip">Ir para as rotas</a>
+    <header class="masthead">
+      <a class="wordmark" href="/docs/" aria-label="Verbum API"
+        >VERBUM<span>DEVELOPERS</span></a
+      >
+      <nav aria-label="Documentation">
+        <a href="/openapi.yaml" data-copy="contract">Contrato OpenAPI ↗</a>
+        <button id="language" type="button" aria-label="Switch to English">
+          EN
+        </button>
+      </nav>
+    </header>
+    <main>
+      <section class="hero" aria-labelledby="headline">
+        <p class="eyebrow" data-copy="eyebrow">DOCUMENTAÇÃO DA API</p>
+        <h1 id="headline" data-copy="headline">A Palavra, conectada.</h1>
+        <p class="intro" data-copy="intro">
+          Explore as rotas que conectam os apps Verbum à Bíblia, ao conhecimento
+          e à narração.
+        </p>
+        <div class="meta">
+          <span class="badge">OpenAPI 3.1</span
+          ><span class="badge" id="route-count">17 rotas</span
+          ><span class="host" id="host"></span>
+        </div>
+      </section>
+      <section class="guides" aria-label="Quick start">
+        <article>
+          <span class="number">01</span>
+          <h2 data-copy="authTitle">Autenticação</h2>
+          <p data-copy="auth">
+            Use Authorize com um ID token do Firebase para as operações
+            protegidas. O token fica apenas nesta página e não é salvo entre
+            visitas.
+          </p>
+        </article>
+        <article>
+          <span class="number">02</span>
+          <h2 data-copy="languageTitle">Português & English</h2>
+          <p data-copy="language">
+            Envie lang=pt-BR ou Accept-Language: pt-BR. As referências
+            retornadas abrem na tradução escolhida pelo leitor.
+          </p>
+        </article>
+        <article>
+          <span class="number">03</span>
+          <h2 data-copy="limitsTitle">Experimente com controle</h2>
+          <p data-copy="limits">
+            Try it out executa chamadas reais. IA e áudio respeitam
+            autenticação, limites e orçamento; execuções autorizadas podem
+            consumir sua cota.
+          </p>
+        </article>
+      </section>
+      <div class="catalog">
+        <div>
+          <p class="eyebrow" data-copy="reference">REFERÊNCIA</p>
+          <h2 data-copy="routes">Explore a API</h2>
+        </div>
+        <p data-copy="hint">
+          Filtre por tema e abra uma rota para ver parâmetros, respostas e
+          exemplos.
+        </p>
+      </div>
+      <div id="swagger-ui" tabindex="-1"></div>
+      <noscript
+        >Ative o JavaScript para explorar as rotas. O
+        <a href="/openapi.yaml">contrato OpenAPI</a> também está disponível para
+        download.</noscript
+      >
+    </main>
+    <footer>
+      <span>VERBUM</span>
+      <p data-copy="footer">
+        Uma referência compartilhada entre iOS, Android e backend.
+      </p>
+      <a href="/openapi.yaml">OpenAPI ↗</a>
+    </footer>
+  </body>
+</html>

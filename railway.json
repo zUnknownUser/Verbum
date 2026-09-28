@@ -5,7 +5,7 @@
     "dockerfilePath": "backend/Dockerfile",
     "watchPatterns": [
       "backend/**",
-      "api/examples/**",
+      "api/**",
       "railway.json"
     ]
   },
