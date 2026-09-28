@@ -7,6 +7,7 @@ sealed interface AudioPlayerEvent {
     data class Ready(val durationSeconds: Double) : AudioPlayerEvent
     data class Time(val seconds: Double) : AudioPlayerEvent
     data class Playing(val isPlaying: Boolean) : AudioPlayerEvent
+    data class Buffering(val active: Boolean) : AudioPlayerEvent
     data object Ended : AudioPlayerEvent
     data object Failed : AudioPlayerEvent
 }

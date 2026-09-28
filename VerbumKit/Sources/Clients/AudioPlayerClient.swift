@@ -8,6 +8,7 @@ public enum AudioPlayerEvent: Equatable, Sendable {
     case ready(duration: TimeInterval)
     case time(TimeInterval)
     case playing(Bool)
+    case buffering(Bool)
     case ended
     case failed
     case remote(RemoteCommand)

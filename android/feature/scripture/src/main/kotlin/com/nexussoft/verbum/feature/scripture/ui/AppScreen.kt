@@ -42,6 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nexussoft.verbum.common.arch.Store
 import com.nexussoft.verbum.feature.scripture.AppFeature
+import com.nexussoft.verbum.feature.scripture.AppFeature.path
 import com.nexussoft.verbum.feature.scripture.AppFeature.Action
 import com.nexussoft.verbum.feature.scripture.AppFeature.Destination
 import com.nexussoft.verbum.feature.scripture.AppFeature.DestinationAction
@@ -72,7 +73,7 @@ fun AppScreen(store: Store<AppFeature.State, Action>) {
             ) { store.send(Action.Voice(it)) }
         }
     }
-    val reading = (when(state.tab) { Tab.HOME -> state.homePath.lastOrNull(); Tab.EXPLORE -> state.explorePath.lastOrNull(); else -> null }) as? Destination.Reader
+    val reading = (if (state.tab == Tab.SEARCH) null else state.path(state.tab).lastOrNull()) as? Destination.Reader
     val quiet = reading?.state?.reader?.focusMode == true
     val readingFlow=remember(store) {store.state.map {it.audio.readingPosition}.distinctUntilChanged()}
     val audioReading by readingFlow.collectAsStateWithLifecycle(initialValue=store.state.value.audio.readingPosition)
@@ -102,8 +103,18 @@ fun AppScreen(store: Store<AppFeature.State, Action>) {
                     onPop = { store.send(Action.Pop(Tab.EXPLORE)) },
                     send = { index, action -> store.send(Action.ExplorePath(index, action)) },
                 )
-                Tab.JOURNEY -> EmptyPage(stringResource(R.string.tab_journey), stringResource(R.string.journey_empty))
-                Tab.LIBRARY -> EmptyPage(stringResource(R.string.tab_library), stringResource(R.string.library_empty))
+                Tab.JOURNEY -> TabStack(
+                    path = state.journeyPath,
+                    root = { ReadingCollectionScreen(state.collection, true) { store.send(Action.Collection(it)) } },
+                    onPop = { store.send(Action.Pop(Tab.JOURNEY)) },
+                    send = { index, action -> store.send(Action.JourneyPath(index, action)) },
+                )
+                Tab.LIBRARY -> TabStack(
+                    path = state.libraryPath,
+                    root = { ReadingCollectionScreen(state.collection, false) { store.send(Action.Collection(it)) } },
+                    onPop = { store.send(Action.Pop(Tab.LIBRARY)) },
+                    send = { index, action -> store.send(Action.LibraryPath(index, action)) },
+                )
                 Tab.SEARCH -> SearchPane(state.search) { store.send(Action.Search(it)) }
             }
           }

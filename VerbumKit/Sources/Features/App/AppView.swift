@@ -32,8 +32,13 @@ public struct AppView: View {
     }
 
     private var isReaderFocused: Bool {
-        guard store.tab == .home || store.tab == .explore else { return false }
-        let path = store.tab == .home ? store.homePath : store.explorePath
+        let path = switch store.tab {
+        case .home: store.homePath
+        case .explore: store.explorePath
+        case .journey: store.journeyPath
+        case .library: store.libraryPath
+        case .search: StackState<AppFeature.Path.State>()
+        }
         guard let destination = path.last, case .reader(let reader) = destination else { return false }
         return reader.reader.focusMode
     }
@@ -95,11 +100,19 @@ public struct AppView: View {
     }
 
     private var journey: some View {
-        withLegacyPlayer { NavigationStack { JourneyView() } }
+        withLegacyPlayer {
+            NavigationStack(path: $store.scope(state: \.journeyPath, action: \.journeyPath)) {
+                ReadingCollectionView(store: store.scope(state: \.collection, action: \.collection), journey: true)
+            } destination: { PathView(store: $0) }
+        }
     }
 
     private var library: some View {
-        withLegacyPlayer { NavigationStack { LibraryView() } }
+        withLegacyPlayer {
+            NavigationStack(path: $store.scope(state: \.libraryPath, action: \.libraryPath)) {
+                ReadingCollectionView(store: store.scope(state: \.collection, action: \.collection), journey: false)
+            } destination: { PathView(store: $0) }
+        }
     }
 
     private var search: some View {

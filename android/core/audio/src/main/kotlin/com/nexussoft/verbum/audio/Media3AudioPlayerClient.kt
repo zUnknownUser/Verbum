@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.guava.await
 import kotlinx.coroutines.isActive
@@ -51,11 +52,15 @@ class Media3AudioPlayerClient(private val context: Context) : AudioPlayerClient 
         val c = controller()
         val listener = object : Player.Listener {
             override fun onPlaybackStateChanged(state: Int) {
+                trySend(AudioPlayerEvent.Buffering(state == Player.STATE_BUFFERING && c.playWhenReady))
                 when (state) {
                     Player.STATE_READY -> trySend(AudioPlayerEvent.Ready(c.duration.coerceAtLeast(0) / 1000.0))
                     Player.STATE_ENDED -> trySend(AudioPlayerEvent.Ended)
                     else -> Unit
                 }
+            }
+            override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+                trySend(AudioPlayerEvent.Buffering(c.playbackState == Player.STATE_BUFFERING && playWhenReady))
             }
             override fun onIsPlayingChanged(isPlaying: Boolean) { trySend(AudioPlayerEvent.Playing(isPlaying)) }
             override fun onPlayerError(error: PlaybackException) { trySend(AudioPlayerEvent.Failed) }
@@ -67,12 +72,13 @@ class Media3AudioPlayerClient(private val context: Context) : AudioPlayerClient 
             trySend(AudioPlayerEvent.Ready(c.duration.coerceAtLeast(0) / 1000.0))
         }
         if (c.playerError != null) trySend(AudioPlayerEvent.Failed)
+        trySend(AudioPlayerEvent.Buffering(c.playbackState == Player.STATE_BUFFERING && c.playWhenReady))
         trySend(AudioPlayerEvent.Playing(c.isPlaying))
         trySend(AudioPlayerEvent.Time(c.currentPosition.coerceAtLeast(0) / 1000.0))
         var reportedDuration = -1L
         val ticker = launch {
             while (isActive) {
-                if (c.duration > 0 && c.duration != reportedDuration) {
+                if (c.playbackState == Player.STATE_READY && c.duration > 0 && c.duration != reportedDuration) {
                     reportedDuration = c.duration
                     trySend(AudioPlayerEvent.Ready(c.duration / 1000.0))
                 }
@@ -84,5 +90,5 @@ class Media3AudioPlayerClient(private val context: Context) : AudioPlayerClient 
             ticker.cancel()
             c.removeListener(listener)
         }
-    }
+    }.flowOn(Dispatchers.Main.immediate)
 }

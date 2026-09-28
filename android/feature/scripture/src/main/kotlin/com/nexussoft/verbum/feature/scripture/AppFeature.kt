@@ -65,13 +65,16 @@ object AppFeature {
     data class State(
         val profile: ProfileFeature.State = ProfileFeature.State(),
         val tab: Tab = Tab.HOME,
-        /** Home or Explore — whichever the user was on last. Search results land here. */
+        /** The content tab the user was on last. Search results land here. */
         val contentTab: Tab = Tab.HOME,
         val home: HomeFeature.State = HomeFeature.State(),
         val search: SearchFeature.State = SearchFeature.State(),
+        val collection: ReadingCollectionFeature.State = ReadingCollectionFeature.State(),
         val audio: AudioPlayerFeature.State = AudioPlayerFeature.State(),
         val homePath: List<Destination> = emptyList(),
         val explorePath: List<Destination> = emptyList(),
+        val journeyPath: List<Destination> = emptyList(),
+        val libraryPath: List<Destination> = emptyList(),
         /** The spoken conversation sheet, over whatever page started it. */
         val voice: VoiceFeature.State? = null,
     )
@@ -87,9 +90,12 @@ object AppFeature {
         data class Home(val action: HomeFeature.Action) : Action
         data class Explore(val action: ExploreFeature.Action) : Action
         data class Search(val action: SearchFeature.Action) : Action
+        data class Collection(val action: ReadingCollectionFeature.Action) : Action
         data class Audio(val action: AudioPlayerFeature.Action) : Action
         data class HomePath(val index: Int, val action: DestinationAction) : Action
         data class ExplorePath(val index: Int, val action: DestinationAction) : Action
+        data class JourneyPath(val index: Int, val action: DestinationAction) : Action
+        data class LibraryPath(val index: Int, val action: DestinationAction) : Action
         data class Pop(val tab: Tab) : Action
         data class Voice(val action: VoiceFeature.Action) : Action
         /** The sheet was swiped away. */
@@ -118,6 +124,19 @@ object AppFeature {
         val dailyVerseTitle: () -> String = { "Verse of the day" },
         val usageStatus: suspend () -> com.nexussoft.verbum.models.UsageStatus? = { null },
     )
+
+    fun State.path(tab: Tab): List<Destination> = when (tab) {
+        Tab.JOURNEY -> journeyPath
+        Tab.LIBRARY -> libraryPath
+        Tab.EXPLORE -> explorePath
+        Tab.HOME, Tab.SEARCH -> homePath
+    }
+    private fun State.withPath(tab: Tab, path: List<Destination>): State = when (tab) {
+        Tab.JOURNEY -> copy(journeyPath = path)
+        Tab.LIBRARY -> copy(libraryPath = path)
+        Tab.EXPLORE -> copy(explorePath = path)
+        Tab.HOME, Tab.SEARCH -> copy(homePath = path)
+    }
 
     fun reducer(deps: Dependencies): Reducer<State, Action> {
         val reader = ScriptureFeature.reducer(deps.bibleClient, deps.preferences, deps.contextClient, deps.graphClient, deps.askClient)
@@ -204,22 +223,29 @@ object AppFeature {
         }
 
         val pathReducer = Reducer<State, Action> { state, action ->
-            val (index, destAction, isHome) = when (action) {
-                is Action.HomePath -> Triple(action.index, action.action, true)
-                is Action.ExplorePath -> Triple(action.index, action.action, false)
+            val (index, destAction, ownerTab) = when (action) {
+                is Action.HomePath -> Triple(action.index, action.action, Tab.HOME)
+                is Action.ExplorePath -> Triple(action.index, action.action, Tab.EXPLORE)
+                is Action.JourneyPath -> Triple(action.index, action.action, Tab.JOURNEY)
+                is Action.LibraryPath -> Triple(action.index, action.action, Tab.LIBRARY)
                 else -> return@Reducer state.only()
             }
-            val path = if (isHome) state.homePath else state.explorePath
+            val path = state.path(ownerTab)
             if (index !in path.indices) return@Reducer state.only()
             val (newDestination, effect) = reduceDestination(path[index], destAction) ?: return@Reducer state.only()
             var newPath = path.toMutableList().also { it[index] = newDestination }
             follow(destAction)?.let { newPath += it }
-            val embedded = effect.map { if (isHome) Action.HomePath(index, it) else Action.ExplorePath(index, it) }
+            val embedded = effect.map { when (ownerTab) {
+                Tab.JOURNEY -> Action.JourneyPath(index, it)
+                Tab.LIBRARY -> Action.LibraryPath(index, it)
+                Tab.EXPLORE -> Action.ExplorePath(index, it)
+                else -> Action.HomePath(index, it)
+            } }
             val listen = ((destAction as? DestinationAction.Reader)?.action as? ScriptureFeature.Action.Delegate)?.delegate as? ScriptureFeature.DelegateAction.Listen
             val audioEffect: Effect<Action> = when {
                 listen == null -> Effect.None
                 // Already playing this chapter: the button pauses/resumes instead.
-                state.audio.reference == PassageReference(listen.reference.bookId, listen.reference.chapter) -> Effect.Send(Action.Audio(AudioPlayerFeature.Action.TogglePlayPause))
+                state.audio.reference == PassageReference(listen.reference.bookId, listen.reference.chapter) -> Effect.Send(Action.Audio(if (state.audio.failed) AudioPlayerFeature.Action.RetryTapped else AudioPlayerFeature.Action.TogglePlayPause))
                 else -> Effect.Send(Action.Audio(AudioPlayerFeature.Action.Play(listen.reference)))
             }
             // §21.3: Ask falls back to search results — the field still holds the question.
@@ -238,15 +264,18 @@ object AppFeature {
             }
             val voiceState = talk?.let { VoiceFeature.State(it) } ?: state.voice
             val pauseEffect: Effect<Action> = if (talk != null && state.audio.isPlaying) Effect.Send(Action.Audio(AudioPlayerFeature.Action.TogglePlayPause)) else Effect.None
-            (if (isHome) state.copy(tab = tab, homePath = newPath, voice = voiceState) else state.copy(tab = tab, explorePath = newPath, voice = voiceState))
+            state.withPath(ownerTab, newPath).copy(tab = tab, voice = voiceState)
                 .with(Effect.Merge(listOf(embedded, audioEffect, searchEffect, pauseEffect)))
         }
 
         fun push(state: State, destination: Destination): State =
-            if (state.contentTab == Tab.EXPLORE) state.copy(tab = Tab.EXPLORE, explorePath = state.explorePath + destination)
-            else state.copy(tab = Tab.HOME, homePath = state.homePath + destination)
+            state.withPath(state.contentTab, state.path(state.contentTab) + destination).copy(tab = state.contentTab)
 
         return combine(
+            ReadingCollectionFeature.reducer(deps.preferences).pullback(
+                get = { it.collection }, set = { s, c -> s.copy(collection = c) },
+                extractAction = { (it as? Action.Collection)?.action }, embedAction = { Action.Collection(it) },
+            ),
             ProfileFeature.reducer(deps.preferences, usageStatus = deps.usageStatus).pullback(
                 get = { it.profile }, set = { s, c -> s.copy(profile = c) },
                 extractAction = { (it as? Action.Profile)?.action }, embedAction = { Action.Profile(it) },
@@ -311,15 +340,24 @@ object AppFeature {
                         val reselected = action.tab == state.tab
                         state.copy(
                             tab = action.tab,
-                            contentTab = if (action.tab == Tab.HOME || action.tab == Tab.EXPLORE) action.tab else state.contentTab,
+                            contentTab = if (action.tab != Tab.SEARCH) action.tab else state.contentTab,
                             homePath = if (reselected && action.tab == Tab.HOME) emptyList() else state.homePath,
                             explorePath = if (reselected && action.tab == Tab.EXPLORE) emptyList() else state.explorePath,
+                            journeyPath = if (reselected && action.tab == Tab.JOURNEY) emptyList() else state.journeyPath,
+                            libraryPath = if (reselected && action.tab == Tab.LIBRARY) emptyList() else state.libraryPath,
                         ).only()
                     }
                     is Action.Pop -> when (action.tab) {
                         Tab.HOME -> state.copy(homePath = state.homePath.dropLast(1)).only()
                         Tab.EXPLORE -> state.copy(explorePath = state.explorePath.dropLast(1)).only()
+                        Tab.JOURNEY -> state.copy(journeyPath = state.journeyPath.dropLast(1)).only()
+                        Tab.LIBRARY -> state.copy(libraryPath = state.libraryPath.dropLast(1)).only()
                         else -> state.only()
+                    }
+                    is Action.Collection -> when (val d = (action.action as? ReadingCollectionFeature.Action.Delegate)?.value) {
+                        is ReadingCollectionFeature.DelegateAction.Open -> push(state, Destination.Reader(ScriptureFeature.State.initial(d.reference, deps.initialTextScale()))).only()
+                        ReadingCollectionFeature.DelegateAction.Browse -> push(state, Destination.Books(BookPickerFeature.State(current = state.collection.lastRead ?: PassageReference("Gen", 1)))).only()
+                        null -> state.only()
                     }
                     is Action.Home -> when (val d = (action.action as? HomeFeature.Action.Delegate)?.delegate) {
                         is HomeFeature.DelegateAction.OpenPassage ->

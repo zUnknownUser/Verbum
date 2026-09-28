@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.Forward10
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Replay10
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -53,10 +54,10 @@ internal fun MiniPlayer(state: AudioPlayerFeature.State, send: (Action) -> Unit)
                 }
                 IconButton(enabled = !state.isLoading && !state.failed, onClick = { send(Action.SkipBackward) }) { Icon(Icons.Filled.Replay10, contentDescription = stringResource(R.string.audio_back)) }
                 IconButton(enabled = !state.isLoading, onClick = {
-                    if (state.failed) state.reference?.let { send(Action.Play(it)) } else send(Action.TogglePlayPause)
+                    if (state.failed) send(Action.RetryTapped) else send(Action.TogglePlayPause)
                 }) {
                     if (state.isLoading) CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp, color = MaterialTheme.colorScheme.onSurface)
-                    else Icon(if (state.isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow, contentDescription = stringResource(if (state.isPlaying) R.string.audio_pause else R.string.audio_play))
+                    else Icon(if (state.failed) Icons.Filled.Refresh else if (state.isPlaying || state.isBuffering) Icons.Filled.Pause else Icons.Filled.PlayArrow, contentDescription = stringResource(if (state.failed) R.string.audio_retry else if (state.isPlaying || state.isBuffering) R.string.audio_pause else R.string.audio_play))
                 }
                 IconButton(enabled = !state.isLoading && !state.failed, onClick = { send(Action.SkipForward) }) { Icon(Icons.Filled.Forward10, contentDescription = stringResource(R.string.audio_forward)) }
                 IconButton(onClick = { send(Action.StopTapped) }) { Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.audio_stop)) }
@@ -67,8 +68,14 @@ internal fun MiniPlayer(state: AudioPlayerFeature.State, send: (Action) -> Unit)
 
 @Composable
 private fun subtitle(state: AudioPlayerFeature.State): String {
-    if (state.failed) return stringResource(R.string.audio_none)
-    if (state.isLoading) return stringResource(R.string.audio_preparing)
+    if (state.failed) return stringResource(when (state.failure) {
+        AudioPlayerFeature.Failure.UNAVAILABLE -> R.string.audio_none
+        AudioPlayerFeature.Failure.RESTRICTED -> R.string.audio_restricted
+        AudioPlayerFeature.Failure.PREPARATION -> R.string.audio_preparation_failed
+        AudioPlayerFeature.Failure.PLAYBACK, null -> R.string.audio_interrupted
+    })
+    if (state.isLoading) return stringResource(if (state.audio == null) R.string.audio_preparing_chapter else R.string.audio_loading)
+    if (state.isBuffering) return stringResource(R.string.audio_buffering)
     val time = "${format(state.currentTime)} / ${format(state.duration)}"
     val audio = state.audio
     val narrator = state.narrator

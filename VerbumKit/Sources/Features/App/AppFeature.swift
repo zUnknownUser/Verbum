@@ -12,17 +12,20 @@ public struct AppFeature {
     @ObservableState
     public struct State: Equatable {
         public var tab: Tab = .home
-        /// Home or Explore — whichever the user was on last. Search results land here.
+        /// The content tab the user was on last. Search results land here.
         public var contentTab: Tab = .home
         public var home = HomeFeature.State()
         public var explore = ExploreFeature.State()
         public var search = SearchFeature.State()
+        public var collection = ReadingCollectionFeature.State()
         public var audio = AudioPlayerFeature.State()
         /// Mirrors `audio.isActive` so the shell can show the mini player without
         /// observing the player's time ticks.
         public var isListening = false
         public var homePath = StackState<Path.State>()
         public var explorePath = StackState<Path.State>()
+        public var journeyPath = StackState<Path.State>()
+        public var libraryPath = StackState<Path.State>()
         /// The spoken conversation sheet, over whatever page started it.
         @Presents public var voice: VoiceFeature.State?
 
@@ -55,9 +58,12 @@ public struct AppFeature {
         case home(HomeFeature.Action)
         case explore(ExploreFeature.Action)
         case search(SearchFeature.Action)
+        case collection(ReadingCollectionFeature.Action)
         case audio(AudioPlayerFeature.Action)
         case homePath(StackActionOf<Path>)
         case explorePath(StackActionOf<Path>)
+        case journeyPath(StackActionOf<Path>)
+        case libraryPath(StackActionOf<Path>)
         case voice(PresentationAction<VoiceFeature.Action>)
     }
 
@@ -69,6 +75,7 @@ public struct AppFeature {
         Scope(state: \.home, action: \.home) { HomeFeature() }
         Scope(state: \.explore, action: \.explore) { ExploreFeature() }
         Scope(state: \.search, action: \.search) { SearchFeature() }
+        Scope(state: \.collection, action: \.collection) { ReadingCollectionFeature() }
         Scope(state: \.audio, action: \.audio) { AudioPlayerFeature() }
         Reduce { state, action in
             switch action {
@@ -81,7 +88,7 @@ public struct AppFeature {
 
             case .tabChanged(let tab):
                 state.tab = tab
-                if tab == .home || tab == .explore { state.contentTab = tab }
+                if tab != .search { state.contentTab = tab }
                 return .none
 
             // A notification lands on Home, on top of whatever was there.
@@ -89,6 +96,13 @@ public struct AppFeature {
                 state.tab = .home
                 state.contentTab = .home
                 state.homePath.append(.reader(ScriptureFeature.State(reference: reference)))
+                return .none
+
+            case .collection(.delegate(.open(let reference))):
+                push(.reader(ScriptureFeature.State(reference: reference)), in: &state)
+                return .none
+            case .collection(.delegate(.browse)):
+                push(.books(BookPickerFeature.State(current: state.collection.lastRead ?? PassageReference(bookId: "Gen", chapter: 1))), in: &state)
                 return .none
 
             // Home
@@ -132,12 +146,17 @@ public struct AppFeature {
                 push(.reader(ScriptureFeature.State(reference: reference)), in: &state)
                 return .none
 
-            // Destinations, on either stack
+            // Destinations, on each content stack
             case .homePath(.element(_, action: let action)):
                 return handle(action, path: \.homePath, state: &state)
 
             case .explorePath(.element(_, action: let action)):
                 return handle(action, path: \.explorePath, state: &state)
+
+            case .journeyPath(.element(_, action: let action)):
+                return handle(action, path: \.journeyPath, state: &state)
+            case .libraryPath(.element(_, action: let action)):
+                return handle(action, path: \.libraryPath, state: &state)
 
             case .audio:
                 state.isListening = state.audio.isActive
@@ -153,12 +172,14 @@ public struct AppFeature {
                 state.voice = nil
                 return .none
 
-            case .home, .explore, .search, .homePath, .explorePath, .voice:
+            case .home, .explore, .search, .collection, .homePath, .explorePath, .journeyPath, .libraryPath, .voice:
                 return .none
             }
         }
         .forEach(\.homePath, action: \.homePath)
         .forEach(\.explorePath, action: \.explorePath)
+        .forEach(\.journeyPath, action: \.journeyPath)
+        .forEach(\.libraryPath, action: \.libraryPath)
         .ifLet(\.$voice, action: \.voice) { VoiceFeature() }
     }
 
@@ -172,10 +193,11 @@ public struct AppFeature {
     /// tab, which becomes the visible one.
     private func push(_ destination: Path.State, in state: inout State) {
         state.tab = state.contentTab
-        if state.contentTab == .explore {
-            state.explorePath.append(destination)
-        } else {
-            state.homePath.append(destination)
+        switch state.contentTab {
+        case .explore: state.explorePath.append(destination)
+        case .journey: state.journeyPath.append(destination)
+        case .library: state.libraryPath.append(destination)
+        case .home, .search: state.homePath.append(destination)
         }
     }
 
@@ -220,7 +242,7 @@ public struct AppFeature {
         case .reader(.delegate(.listen(let reference))):
             // Already playing this chapter: the button pauses/resumes instead.
             if state.audio.reference == PassageReference(bookId: reference.bookId, chapter: reference.chapter) {
-                return .send(.audio(.togglePlayPause))
+                return .send(.audio(state.audio.failed ? .retryTapped : .togglePlayPause))
             }
             return .send(.audio(.play(reference)))
         default:

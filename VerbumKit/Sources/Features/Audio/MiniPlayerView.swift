@@ -36,18 +36,18 @@ struct MiniPlayerView: View {
             .disabled(store.isLoading || store.failed)
 
             Button {
-                if store.failed, let reference = store.reference { store.send(.play(reference)) }
+                if store.failed { store.send(.retryTapped) }
                 else { store.send(.togglePlayPause) }
             } label: {
                 if store.isLoading {
                     ProgressView().tint(Palette.ink).frame(width: 28, height: 28)
                 } else {
-                    Image(systemName: store.isPlaying ? "pause.fill" : "play.fill")
+                    Image(systemName: store.failed ? "arrow.clockwise" : (store.isPlaying || store.isBuffering ? "pause.fill" : "play.fill"))
                         .font(.system(size: 22, weight: .semibold))
                         .frame(width: 28, height: 28)
                 }
             }
-            .accessibilityLabel(store.isPlaying ? L10n.t("Pause") : L10n.t("Play"))
+            .accessibilityLabel(store.failed ? L10n.t("Retry audio") : (store.isPlaying || store.isBuffering ? L10n.t("Pause") : L10n.t("Play")))
             .accessibilityHint(store.failed ? L10n.t("Try Again") : "")
             .disabled(store.isLoading)
 
@@ -76,8 +76,16 @@ struct MiniPlayerView: View {
     }
 
     private var subtitle: String {
-        if store.failed { return L10n.t("No recording for this chapter") }
-        if store.isLoading { return L10n.t("Preparing audio…") }
+        if store.failed {
+            switch store.failure {
+            case .unavailable: return L10n.t("No recording for this chapter")
+            case .restricted: return L10n.t("Audio temporarily limited. Try again later.")
+            case .preparation: return L10n.t("Could not prepare audio. Tap to retry.")
+            case .playback, .none: return L10n.t("Playback interrupted. Tap to resume.")
+            }
+        }
+        if store.isLoading { return L10n.t(store.audio == nil ? "Preparing chapter…" : "Loading audio…") }
+        if store.isBuffering { return L10n.t("Waiting for audio…") }
         let time = "\(format(store.currentTime)) / \(format(store.duration))"
         if let audio = store.audio, let narrator = store.narrator {
             // Synthesised reading of the translation on screen, or a recording in English (labelled).

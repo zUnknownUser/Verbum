@@ -18,7 +18,8 @@ import Testing
     final class FakePlayer: Sendable {
         let calls = LockIsolated<[String]>([])
         let nowPlaying = LockIsolated<[NowPlayingInfo]>([])
-        let (stream, continuation) = AsyncStream<AudioPlayerEvent>.makeStream()
+        let continuations = LockIsolated<[AsyncStream<AudioPlayerEvent>.Continuation]>([])
+        var continuation: AsyncStream<AudioPlayerEvent>.Continuation { continuations.value.last! }
 
         var client: AudioPlayerClient {
             AudioPlayerClient(
@@ -28,7 +29,11 @@ import Testing
                 seek: { [calls] t in calls.withValue { $0.append("seek \(Int(t))") } },
                 setRate: { [calls] r in calls.withValue { $0.append("rate \(r)") } },
                 stop: { [calls] in calls.withValue { $0.append("stop") } },
-                events: { [stream] in stream },
+                events: { [continuations] in
+                    let (stream, continuation) = AsyncStream<AudioPlayerEvent>.makeStream()
+                    continuations.withValue { $0.append(continuation) }
+                    return stream
+                },
                 updateNowPlaying: { [nowPlaying] info in nowPlaying.withValue { $0.append(info) } }
             )
         }
@@ -39,6 +44,7 @@ import Testing
         let store = TestStore(initialState: AudioPlayerFeature.State()) {
             AudioPlayerFeature()
         } withDependencies: {
+            $0.continuousClock = TestClock()
             $0.scriptureAudio.chapterAudio = { bookId, chapter in Self.audio(PassageReference(bookId: bookId, chapter: chapter)) }
             $0.audioPlayer = player.client
         }
@@ -46,27 +52,32 @@ import Testing
         await store.send(.play(PassageReference(bookId: "John", chapter: 3, verses: 16...16))) {
             $0.reference = Self.john3
             $0.isLoading = true
+            $0.revision += 1
         }
-        await store.receive(\.audioResponse) {
+        await store.receive(\.loaded) {
             $0.audio = Self.audio(Self.john3)
             $0.narrator = Self.david
         }
         player.continuation.yield(.ready(duration: 1337))
-        await store.receive(\.event.ready) {
+        await store.receive(\.sessionEvent) {
             $0.duration = 1337
             $0.isLoading = false
         }
         player.continuation.yield(.playing(true))
-        await store.receive(\.event.playing) { $0.isPlaying = true }
+        await store.receive(\.sessionEvent) { $0.isPlaying = true }
         player.continuation.yield(.time(12))
-        await store.receive(\.event.time) { $0.currentTime = 12 }
+        await store.receive(\.sessionEvent) { $0.currentTime = 12 }
 
         #expect(player.calls.value == ["stop", "load david.mp3", "rate 1.0", "play"])
         #expect(player.nowPlaying.value.last?.title == Self.john3.formatted) // device language
         #expect(player.nowPlaying.value.last?.subtitle == "Berean Standard Bible · David")
         #expect(store.state.isPlaying(PassageReference(bookId: "John", chapter: 3, verses: 1...2)))
 
-        await store.send(.stopTapped) { $0 = AudioPlayerFeature.State() }
+        await store.send(.stopTapped) {
+            let revision = $0.revision + 1
+            $0 = AudioPlayerFeature.State()
+            $0.revision = revision
+        }
         #expect(player.calls.value.last == "stop")
     }
 
@@ -74,16 +85,19 @@ import Testing
         let store = TestStore(initialState: AudioPlayerFeature.State()) {
             AudioPlayerFeature()
         } withDependencies: {
+            $0.continuousClock = TestClock()
             $0.scriptureAudio.chapterAudio = { _, _ in nil }
             $0.audioPlayer.stop = {}
         }
         await store.send(.play(Self.john3)) {
             $0.reference = Self.john3
             $0.isLoading = true
+            $0.revision += 1
         }
-        await store.receive(\.audioResponse) {
+        await store.receive(\.loaded) {
             $0.isLoading = false
             $0.failed = true
+            $0.failure = .unavailable
         }
         await store.send(.togglePlayPause) // nothing to toggle
     }
@@ -100,6 +114,7 @@ import Testing
         let store = TestStore(initialState: state) {
             AudioPlayerFeature()
         } withDependencies: {
+            $0.continuousClock = TestClock()
             $0.audioPlayer = player.client
         }
 
@@ -131,6 +146,7 @@ import Testing
         let store = TestStore(initialState: state) {
             AudioPlayerFeature()
         } withDependencies: {
+            $0.continuousClock = TestClock()
             $0.audioPlayer = player.client
         }
         await store.send(.event(.remote(.play)))
@@ -151,6 +167,7 @@ import Testing
         let store = TestStore(initialState: initial) {
             AudioPlayerFeature()
         } withDependencies: {
+            $0.continuousClock = TestClock()
             $0.scriptureAudio.chapterAudio = { _, _ in nil }
             $0.audioPlayer.stop = {}
         }
@@ -160,11 +177,13 @@ import Testing
             $0.reference = PassageReference(bookId: "John", chapter: 4)
             $0.audio = nil
             $0.isLoading = true
+            $0.revision += 1
             $0.failed = false
         }
-        await store.receive(\.audioResponse) {
+        await store.receive(\.loaded) {
             $0.isLoading = false
             $0.failed = true
+            $0.failure = .unavailable
         }
     }
 
@@ -178,16 +197,86 @@ import Testing
         let store = TestStore(initialState: state) {
             AudioPlayerFeature()
         } withDependencies: {
+            $0.continuousClock = TestClock()
             $0.audioPlayer = player.client
         }
         await store.send(.narratorSelected(Self.hays)) {
             $0.narrator = Self.hays
             $0.currentTime = 0
             $0.isLoading = true
+            $0.revision += 1
         }
         await store.send(.narratorSelected(Self.hays)) // no-op
         #expect(player.calls.value == ["load hays.mp3", "rate 1.0", "play"])
-        await store.send(.stopTapped) { $0 = AudioPlayerFeature.State() }
+        await store.send(.stopTapped) {
+            let revision = $0.revision + 1
+            $0 = AudioPlayerFeature.State()
+            $0.revision = revision
+        }
+    }
+
+    @Test func retryWaitsForReadinessAndPreservesPosition() async {
+        let player = FakePlayer()
+        let store = TestStore(initialState: AudioPlayerFeature.State()) { AudioPlayerFeature() } withDependencies: {
+            $0.continuousClock = TestClock()
+            $0.scriptureAudio.chapterAudio = { _, _ in Self.audio(Self.john3) }
+            $0.audioPlayer = player.client
+        }
+        store.exhaustivity = .off
+        await store.send(.play(Self.john3))
+        await store.receive(\.loaded)
+        player.continuation.yield(.ready(duration: 100))
+        await store.receive(\.sessionEvent)
+        await store.send(.event(.time(37)))
+        await store.send(.event(.failed))
+        player.calls.withValue { $0.removeAll() }
+        await store.send(.retryTapped)
+        await store.receive(\.loaded)
+        #expect(store.state.currentTime == 37)
+        #expect(!player.calls.value.contains("play"))
+        player.continuation.yield(.ready(duration: 100))
+        await store.receive(\.sessionEvent)
+        #expect(player.calls.value.suffix(2) == ["seek 37", "play"])
+        await store.send(.stopTapped)
+    }
+
+    @Test func stalledPlaybackPreservesPositionWithoutGeneratingAnotherChapter() async {
+        let clock = TestClock()
+        let player = FakePlayer()
+        var state = AudioPlayerFeature.State()
+        state.reference = Self.john3
+        state.audio = Self.audio(Self.john3)
+        state.narrator = Self.david
+        state.currentTime = 25
+        let store = TestStore(initialState: state) { AudioPlayerFeature() } withDependencies: {
+            $0.continuousClock = clock
+            $0.audioPlayer = player.client
+        }
+        await store.send(.event(.buffering(true))) { $0.isBuffering = true }
+        await clock.advance(by: .seconds(45))
+        await store.receive(\.stalled)
+        await store.receive(\.sessionEvent) {
+            $0.isBuffering = false
+            $0.failed = true
+            $0.failure = .playback
+        }
+        #expect(store.state.currentTime == 25)
+        #expect(player.calls.value == ["pause"])
+    }
+
+    @Test func replacedAndStoppedSessionsIgnoreLateResponses() async {
+        var state = AudioPlayerFeature.State()
+        state.reference = Self.john3
+        state.revision = 2
+        let store = TestStore(initialState: state) { AudioPlayerFeature() } withDependencies: {
+            $0.audioPlayer.stop = {}
+        }
+        await store.send(.loaded(1, Self.audio(Self.john3)))
+        await store.send(.preparationFailed(1, .preparation))
+        await store.send(.sessionEvent(1, .ended))
+        await store.send(.stopTapped) { $0 = AudioPlayerFeature.State(); $0.revision = 3 }
+        await store.send(.loaded(2, Self.audio(Self.john3)))
+        await store.send(.sessionEvent(2, .playing(true)))
     }
 
     @Test func miniPlayerTapAsksTheShellToOpenTheChapter() async {
@@ -201,14 +290,14 @@ import Testing
 
 @MainActor
 @Suite struct ListenIntegrationTests {
-    @Test func readerListenStartsTheGlobalPlayerAndTogglesWhenAlreadyOn() async {
+    @Test func readerListenRetriesTheSameChapterAfterFailure() async {
         let store = TestStore(initialState: AppFeature.State()) {
             AppFeature()
         } withDependencies: {
+            $0.continuousClock = TestClock()
             $0.scriptureAudio.chapterAudio = { _, _ in nil }
             $0.audioPlayer.stop = {}
         }
-        let john3 = PassageReference(bookId: "John", chapter: 3)
         let verse = store.state.home.dailyVerse.reference
         await store.send(.home(.dailyVerse(.openTapped)))
         await store.receive(\.home.dailyVerse.delegate.openPassage)
@@ -221,17 +310,28 @@ import Testing
         await store.receive(\.audio.play) {
             $0.audio.reference = PassageReference(bookId: verse.bookId, chapter: verse.chapter)
             $0.audio.isLoading = true
+            $0.audio.revision += 1
             $0.isListening = true
         }
-        await store.receive(\.audio.audioResponse) {
+        await store.receive(\.audio.loaded) {
             $0.audio.isLoading = false
             $0.audio.failed = true
+            $0.audio.failure = .unavailable
         }
-        // Same chapter again: toggles instead of reloading.
+        // The same chapter must retry after failure instead of toggling a missing player.
         await store.send(.homePath(.element(id: 0, action: .reader(.reader(.listenTapped)))))
         await store.receive(\.homePath[id: 0].reader.reader.delegate.listen)
         await store.receive(\.homePath[id: 0].reader.delegate.listen)
-        await store.receive(\.audio.togglePlayPause)
-        _ = john3
+        await store.receive(\.audio.retryTapped) {
+            $0.audio.isLoading = true
+            $0.audio.failed = false
+            $0.audio.failure = nil
+            $0.audio.revision += 1
+        }
+        await store.receive(\.audio.loaded) {
+            $0.audio.isLoading = false
+            $0.audio.failed = true
+            $0.audio.failure = .unavailable
+        }
     }
 }

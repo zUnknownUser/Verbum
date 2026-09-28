@@ -29,6 +29,10 @@ final class AVPlayerEngine {
     private var statusObservation: NSKeyValueObservation?
     private var rateObservation: NSKeyValueObservation?
     private var endObserver: NSObjectProtocol?
+    private var failureObserver: NSObjectProtocol?
+    private var interruptionObserver: NSObjectProtocol?
+    private var routeObserver: NSObjectProtocol?
+    private var resumeAfterInterruption = false
     private var continuation: AsyncStream<AudioPlayerEvent>.Continuation?
     private var subscriptionID: UUID?
     private var preferredRate: Float = 1
@@ -56,6 +60,7 @@ final class AVPlayerEngine {
                         continuation.yield(.failed)
                     }
                 }
+                continuation.yield(.buffering(self.player.timeControlStatus == .waitingToPlayAtSpecifiedRate))
                 continuation.yield(.playing(self.player.timeControlStatus == .playing))
             }
             continuation.onTermination = { _ in
@@ -74,6 +79,8 @@ final class AVPlayerEngine {
         // audio); never on the main thread.
         await AudioSessionActivation.activate()
 
+        guard !Task.isCancelled else { return }
+        installSessionObservers()
         teardownItemObservers()
         reportedDuration = -1
         let item = AVPlayerItem(url: url)
@@ -95,10 +102,23 @@ final class AVPlayerEngine {
             }
         }
         rateObservation = player.observe(\.timeControlStatus, options: [.initial, .new]) { [weak self] player, _ in
-            Task { @MainActor [weak self] in self?.continuation?.yield(.playing(player.timeControlStatus == .playing)) }
+            Task { @MainActor [weak self] in
+                guard let self, self.player.currentItem === item else { return }
+                self.continuation?.yield(.buffering(player.timeControlStatus == .waitingToPlayAtSpecifiedRate))
+                self.continuation?.yield(.playing(player.timeControlStatus == .playing))
+            }
         }
         endObserver = NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: item, queue: .main) { [weak self] _ in
-            Task { @MainActor [weak self] in self?.continuation?.yield(.ended) }
+            Task { @MainActor [weak self] in
+                guard let self, self.player.currentItem === item else { return }
+                self.continuation?.yield(.ended)
+            }
+        }
+        failureObserver = NotificationCenter.default.addObserver(forName: .AVPlayerItemFailedToPlayToEndTime, object: item, queue: .main) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                guard let self, self.player.currentItem === item else { return }
+                self.continuation?.yield(.failed)
+            }
         }
         timeObserver = player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1, preferredTimescale: 600), queue: .main) { [weak self] time in
             Task { @MainActor [weak self] in
@@ -126,6 +146,7 @@ final class AVPlayerEngine {
     }
 
     func pause() {
+        resumeAfterInterruption = false
         player.pause()
     }
 
@@ -139,6 +160,7 @@ final class AVPlayerEngine {
     }
 
     func stop() {
+        resumeAfterInterruption = false
         player.pause()
         player.replaceCurrentItem(with: nil)
         teardownItemObservers()
@@ -208,6 +230,30 @@ final class AVPlayerEngine {
         }
     }
 
+    private func installSessionObservers() {
+        guard interruptionObserver == nil else { return }
+        interruptionObserver = NotificationCenter.default.addObserver(forName: AVAudioSession.interruptionNotification, object: nil, queue: .main) { [weak self] notification in
+            let type = (notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt).flatMap(AVAudioSession.InterruptionType.init(rawValue:))
+            let options = AVAudioSession.InterruptionOptions(rawValue: notification.userInfo?[AVAudioSessionInterruptionOptionKey] as? UInt ?? 0)
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                if type == .began {
+                    self.resumeAfterInterruption = self.player.rate > 0 || self.player.timeControlStatus == .waitingToPlayAtSpecifiedRate
+                    self.player.pause()
+                } else if type == .ended {
+                    let resume = self.resumeAfterInterruption && options.contains(.shouldResume)
+                    self.resumeAfterInterruption = false
+                    if resume, self.player.currentItem != nil { self.play() }
+                }
+            }
+        }
+        routeObserver = NotificationCenter.default.addObserver(forName: AVAudioSession.routeChangeNotification, object: nil, queue: .main) { [weak self] notification in
+            let reason = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt
+            guard reason == AVAudioSession.RouteChangeReason.oldDeviceUnavailable.rawValue else { return }
+            Task { @MainActor [weak self] in self?.pause() }
+        }
+    }
+
     private func teardownItemObservers() {
         if let timeObserver { player.removeTimeObserver(timeObserver) }
         timeObserver = nil
@@ -215,22 +261,30 @@ final class AVPlayerEngine {
         rateObservation = nil
         if let endObserver { NotificationCenter.default.removeObserver(endObserver) }
         endObserver = nil
+        if let failureObserver { NotificationCenter.default.removeObserver(failureObserver) }
+        failureObserver = nil
     }
 }
 
 /// The shared audio session, touched off the main thread: `setActive` is
 /// synchronous and can stall the UI (AVAudioSession warns about exactly this).
 enum AudioSessionActivation {
+    // Preserve stop → load ordering across chapter changes without blocking the UI.
+    private static let queue = DispatchQueue(label: "com.verbum.audio-session", qos: .userInitiated)
+
     static func activate() async {
-        await Task.detached(priority: .userInitiated) {
-            let session = AVAudioSession.sharedInstance()
-            try? session.setCategory(.playback, mode: .spokenAudio, policy: .longFormAudio)
-            try? session.setActive(true)
-        }.value
+        await withCheckedContinuation { continuation in
+            queue.async {
+                let session = AVAudioSession.sharedInstance()
+                try? session.setCategory(.playback, mode: .spokenAudio, policy: .longFormAudio)
+                try? session.setActive(true)
+                continuation.resume()
+            }
+        }
     }
 
     static func deactivate() {
-        Task.detached(priority: .utility) {
+        queue.async {
             try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
         }
     }

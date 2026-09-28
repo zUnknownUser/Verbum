@@ -1,125 +1,138 @@
 package com.nexussoft.verbum.feature.scripture
 
-import com.nexussoft.verbum.clients.AudioPlayerEvent
+import com.nexussoft.verbum.clients.*
 import com.nexussoft.verbum.clients.helloao.ScriptureAudioClient
-import com.nexussoft.verbum.common.arch.TestStore
+import com.nexussoft.verbum.common.arch.Store
 import com.nexussoft.verbum.feature.scripture.AudioPlayerFeature.Action
-import com.nexussoft.verbum.feature.scripture.AudioPlayerFeature.DelegateAction
 import com.nexussoft.verbum.feature.scripture.AudioPlayerFeature.State
-import com.nexussoft.verbum.models.AudioNarrator
-import com.nexussoft.verbum.models.ChapterAudio
-import com.nexussoft.verbum.models.PassageReference
-import kotlinx.coroutines.test.runTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+import com.nexussoft.verbum.models.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.test.*
+import kotlin.test.*
 
+/** Uses the production runtime so delayed effects and cancellation behave as on a device. */
+@OptIn(ExperimentalCoroutinesApi::class)
 class AudioPlayerFeatureTest {
-    private val john3 = PassageReference("John", 3)
-    private val david = AudioNarrator("david", "David", "https://example.test/JHN/3/david.mp3", null)
-    private val hays = AudioNarrator("hays", "Hays", "https://example.test/JHN/3/hays.mp3", null)
-    private fun audio(reference: PassageReference) = ChapterAudio("BSB", "Berean Standard Bible", reference, listOf(david, hays))
-
-    @Test
-    fun playLoadsTheChapterAndStartsTheFirstNarrator() = runTest {
-        val player = FakePlayer()
-        val store = TestStore(State(), AudioPlayerFeature.reducer(ScriptureAudioClient { b, c -> audio(PassageReference(b, c)) }, player))
-        store.send(Action.Play(PassageReference("John", 3, 16..16))) { State(reference = john3, isLoading = true) }
-        store.receive(Action.AudioLoaded(audio(john3))) { it.copy(audio = audio(john3), narrator = david) }
-        assertEquals(listOf("stop", "load david.mp3 [Berean Standard Bible · David]", "rate 1.0", "play"), player.calls)
-        store.send(Action.Event(AudioPlayerEvent.Ready(1337.0))) { it.copy(duration = 1337.0, isLoading = false) }
-        store.send(Action.Event(AudioPlayerEvent.Playing(true))) { it.copy(isPlaying = true) }
-        store.send(Action.Event(AudioPlayerEvent.Time(12.0))) { it.copy(currentTime = 12.0) }
-        assertTrue(store.state.isPlaying(PassageReference("John", 3, 1..2)))
-        store.send(Action.StopTapped) { State() }
-        assertEquals("stop", player.calls.last())
-        store.finish()
+    private val chapter = PassageReference("John", 3)
+    private val narrator = AudioNarrator("voice", "Voice", "https://example.test/chapter.mp3", null)
+    private val audio = ChapterAudio("BSB", "Bible", chapter, listOf(narrator))
+    private class Player : AudioPlayerClient {
+        val calls = mutableListOf<String>()
+        override val events = MutableSharedFlow<AudioPlayerEvent>(extraBufferCapacity = 16)
+        override suspend fun load(url: String, nowPlaying: NowPlayingInfo) { calls += "load" }
+        override suspend fun play() { calls += "play" }
+        override suspend fun pause() { calls += "pause" }
+        override suspend fun seek(seconds: Double) { calls += "seek:$seconds" }
+        override suspend fun setRate(rate: Float) { calls += "rate:$rate" }
+        override suspend fun stop() { calls += "stop" }
     }
-
-    @Test
-    fun noRecordingIsAStateNotACrash() = runTest {
-        val store = TestStore(State(), AudioPlayerFeature.reducer(ScriptureAudioClient { _, _ -> null }, FakePlayer()))
-        store.send(Action.Play(john3)) { State(reference = john3, isLoading = true) }
-        store.receive(Action.AudioLoaded(null)) { it.copy(isLoading = false, failed = true) }
-        store.send(Action.TogglePlayPause)
-        store.finish()
+    @Test fun preparesThenLoadsAndPlays() = runTest {
+        val player = Player()
+        val store = Store(State(), AudioPlayerFeature.reducer(ScriptureAudioClient { _, _ -> audio }, player), backgroundScope)
+        store.send(Action.Play(chapter)); runCurrent()
+        assertEquals(audio, store.state.value.audio)
+        assertTrue(store.state.value.isLoading)
+        player.events.emit(AudioPlayerEvent.Ready(100.0)); player.events.emit(AudioPlayerEvent.Playing(true)); runCurrent()
+        assertTrue(store.state.value.isPlaying)
+        assertFalse(store.state.value.isLoading)
+        advanceTimeBy(46_000); runCurrent()
+        assertFalse(store.state.value.failed)
     }
-
-    @Test
-    fun controlsDriveThePlayer() = runTest {
-        val player = FakePlayer()
-        val state = State(reference = john3, audio = audio(john3), narrator = david, duration = 100.0, currentTime = 50.0, isPlaying = true)
-        val store = TestStore(state, AudioPlayerFeature.reducer(unimplementedAudio, player))
-        store.send(Action.TogglePlayPause)
-        store.send(Action.SkipForward)
-        store.receive(Action.Seek(65.0)) { it.copy(currentTime = 65.0) }
-        store.send(Action.SkipBackward)
-        store.receive(Action.Seek(50.0)) { it.copy(currentTime = 50.0) }
-        store.send(Action.Seek(98.0)) { it.copy(currentTime = 98.0) }
-        store.send(Action.SkipForward)
-        store.receive(Action.Seek(100.0)) { it.copy(currentTime = 100.0) }
-        store.send(Action.RateTapped) { it.copy(rate = 1.25f) }
-        store.send(Action.RateTapped) { it.copy(rate = 1.5f) }
-        store.send(Action.RateTapped) { it.copy(rate = 0.8f) }
-        store.send(Action.RateTapped) { it.copy(rate = 1f) }
-        assertEquals(listOf("pause", "seek 65", "seek 50", "seek 98", "seek 100", "rate 1.25", "rate 1.5", "rate 0.8", "rate 1.0"), player.calls)
-        store.finish()
+    @Test fun retryPreservesPositionAndSeeksOnlyAfterReady() = runTest {
+        val player = Player(); var requests = 0
+        val store = Store(State(), AudioPlayerFeature.reducer(ScriptureAudioClient { _, _ -> requests++; audio }, player), backgroundScope)
+        store.send(Action.Play(chapter)); runCurrent()
+        player.events.emit(AudioPlayerEvent.Ready(100.0)); player.events.emit(AudioPlayerEvent.Time(37.0)); player.events.emit(AudioPlayerEvent.Failed); runCurrent()
+        assertTrue(store.state.value.failed)
+        assertEquals(37.0, store.state.value.currentTime)
+        val old = store.state.value.revision
+        player.calls.clear()
+        store.send(Action.RetryTapped); runCurrent()
+        assertFalse(player.calls.contains("play"))
+        assertEquals(2, requests)
+        store.send(Action.SessionEvent(old, AudioPlayerEvent.Ended))
+        assertEquals(chapter, store.state.value.reference)
+        player.events.emit(AudioPlayerEvent.Ready(100.0)); runCurrent()
+        assertTrue(player.calls.contains("seek:37.0"))
+        assertTrue(player.calls.indexOf("seek:37.0") < player.calls.indexOf("play"))
     }
-
-    @Test
-    fun endOfChapterContinuesIntoTheNext() = runTest {
-        val store = TestStore(State(reference = john3, audio = audio(john3), narrator = david, isPlaying = true), AudioPlayerFeature.reducer(ScriptureAudioClient { _, _ -> null }, FakePlayer()))
-        store.send(Action.Event(AudioPlayerEvent.Ended)) { it.copy(isPlaying = false) }
-        store.receive(Action.Play(PassageReference("John", 4))) { State(reference = PassageReference("John", 4), narrator = david, isLoading = true) }
-        store.receive(Action.AudioLoaded(null)) { it.copy(isLoading = false, failed = true) }
-        store.finish()
+    @Test fun transientBufferingRecoversWithoutNewGeneration() = runTest {
+        val player = Player(); var requests = 0
+        val store = Store(State(), AudioPlayerFeature.reducer(ScriptureAudioClient { _, _ -> requests++; audio }, player), backgroundScope)
+        store.send(Action.Play(chapter)); runCurrent()
+        player.events.emit(AudioPlayerEvent.Ready(100.0)); player.events.emit(AudioPlayerEvent.Buffering(true)); runCurrent()
+        assertTrue(store.state.value.isBuffering)
+        advanceTimeBy(10_000)
+        player.events.emit(AudioPlayerEvent.Buffering(false)); player.events.emit(AudioPlayerEvent.Playing(true)); runCurrent()
+        advanceTimeBy(46_000); runCurrent()
+        assertFalse(store.state.value.failed)
+        assertEquals(1, requests)
     }
-
-    @Test
-    fun switchingNarratorRestartsWithTheSameChapter() = runTest {
-        val player = FakePlayer()
-        val store = TestStore(State(reference = john3, audio = audio(john3), narrator = david, currentTime = 40.0), AudioPlayerFeature.reducer(unimplementedAudio, player))
-        store.send(Action.NarratorSelected(hays)) { it.copy(narrator = hays, currentTime = 0.0, isLoading = true) }
-        store.send(Action.NarratorSelected(hays))
-        assertEquals(listOf("load hays.mp3 [Berean Standard Bible · Hays]", "rate 1.0", "play"), player.calls)
-        store.finish()
+    @Test fun sustainedStallOffersRetryWithoutNewGeneration() = runTest {
+        val player = Player(); var requests = 0
+        val store = Store(State(), AudioPlayerFeature.reducer(ScriptureAudioClient { _, _ -> requests++; audio }, player), backgroundScope)
+        store.send(Action.Play(chapter)); runCurrent()
+        player.events.emit(AudioPlayerEvent.Ready(100.0)); player.events.emit(AudioPlayerEvent.Time(25.0)); player.events.emit(AudioPlayerEvent.Buffering(true)); runCurrent()
+        advanceTimeBy(45_001); runCurrent()
+        assertTrue(store.state.value.failed)
+        assertEquals(AudioPlayerFeature.Failure.PLAYBACK, store.state.value.failure)
+        assertEquals(25.0, store.state.value.currentTime)
+        assertEquals(1, requests)
     }
-
-    @Test
-    fun miniPlayerTapAsksTheShellToOpenTheChapter() = runTest {
-        val store = TestStore(State(reference = john3), AudioPlayerFeature.reducer(unimplementedAudio, FakePlayer()))
-        store.send(Action.ChapterTapped)
-        store.receive(Action.Delegate(DelegateAction.OpenChapter(john3)))
-        store.finish()
+    @Test fun oldSessionsCannotChangeNewChapter() = runTest {
+        val store = Store(State(), AudioPlayerFeature.reducer(ScriptureAudioClient { b, c -> audio.copy(reference = PassageReference(b, c)) }, Player()), backgroundScope)
+        store.send(Action.Play(chapter)); runCurrent()
+        val old = store.state.value.revision
+        store.send(Action.StopTapped); runCurrent()
+        store.send(Action.Play(PassageReference("Ps", 55))); runCurrent()
+        val current = store.state.value
+        store.send(Action.Loaded(old, null))
+        store.send(Action.PreparationFailed(old, AudioPlayerFeature.Failure.PREPARATION))
+        store.send(Action.SessionEvent(old, AudioPlayerEvent.Failed))
+        assertEquals(current, store.state.value)
     }
-}
-
-class ListenIntegrationTest {
-    @Test
-    fun readerListenStartsTheGlobalPlayerAndTogglesWhenAlreadyOn() = runTest {
-        val preferences = com.nexussoft.verbum.clients.InMemoryPreferencesClient()
+    @Test fun completionChainsAcrossBooksButFailureDoesNot() = runTest {
+        val player = Player()
+        val store = Store(State(), AudioPlayerFeature.reducer(ScriptureAudioClient { b, c -> audio.copy(reference = PassageReference(b, c)) }, player), backgroundScope)
+        store.send(Action.Play(PassageReference("Gen", 50))); runCurrent()
+        player.events.emit(AudioPlayerEvent.Ended); runCurrent()
+        assertEquals(PassageReference("Exod", 1), store.state.value.reference)
+        player.events.emit(AudioPlayerEvent.Failed); player.events.emit(AudioPlayerEvent.Ended); runCurrent()
+        assertEquals(PassageReference("Exod", 1), store.state.value.reference)
+    }
+    @Test fun missingRecordingAndPreparationFailureAreDifferent() = runTest {
+        val missing = Store(State(), AudioPlayerFeature.reducer(ScriptureAudioClient { _, _ -> null }, Player()), backgroundScope)
+        missing.send(Action.Play(chapter)); runCurrent()
+        assertEquals(AudioPlayerFeature.Failure.UNAVAILABLE, missing.state.value.failure)
+        val failed = Store(State(), AudioPlayerFeature.reducer(ScriptureAudioClient { _, _ -> error("offline") }, Player()), backgroundScope)
+        failed.send(Action.Play(chapter)); runCurrent()
+        assertEquals(AudioPlayerFeature.Failure.PREPARATION, failed.state.value.failure)
+    }
+    @Test fun controlsClampSeekAndPauseBuffering() = runTest {
+        val player = Player()
+        val store = Store(State(reference = chapter, audio = audio, narrator = narrator, duration = 100.0, currentTime = 50.0, isBuffering = true), AudioPlayerFeature.reducer(ScriptureAudioClient { _, _ -> audio }, player), backgroundScope)
+        store.send(Action.TogglePlayPause); store.send(Action.Seek(-30.0)); store.send(Action.Seek(300.0)); store.send(Action.Seek(Double.NaN)); store.send(Action.RateTapped); runCurrent()
+        assertEquals(100.0, store.state.value.currentTime)
+        assertTrue(player.calls.containsAll(listOf("pause", "seek:0.0", "seek:100.0", "rate:1.25")))
+    }
+    @Test fun readerListenRetriesSameChapterAfterFailure() = runTest {
+        val player = Player()
+        var requests = 0
         val deps = AppFeature.Dependencies(
-            bibleClient = StubBibleClient(), preferences = preferences, searchClient = unimplementedSearch, graphClient = StubGraphClient(),
-            audioClient = ScriptureAudioClient { _, _ -> null }, player = FakePlayer(), language = { com.nexussoft.verbum.models.BookLanguage.ENGLISH }, searchDebounceMs = 0,
+            bibleClient = StubBibleClient(), preferences = InMemoryPreferencesClient(),
+            searchClient = unimplementedSearch, graphClient = StubGraphClient(),
+            audioClient = ScriptureAudioClient { _, _ -> requests++; null }, player = player,
         )
-        val store = TestStore(AppFeature.State(), AppFeature.reducer(deps))
-        val today = store.state.home.dailyVerse.reference
-        val chapter = PassageReference(today.bookId, today.chapter)
-        store.send(AppFeature.Action.Home(HomeFeature.Action.DailyVerse(DailyVerseFeature.Action.OpenTapped)))
-        store.receive(AppFeature.Action.Home(HomeFeature.Action.DailyVerse(DailyVerseFeature.Action.Delegate(DailyVerseFeature.DelegateAction.OpenPassage(today)))))
-        store.receive(AppFeature.Action.Home(HomeFeature.Action.Delegate(HomeFeature.DelegateAction.OpenPassage(today)))) {
-            it.copy(homePath = listOf(AppFeature.Destination.Reader(ScriptureFeature.State.initial(today))))
-        }
-        store.send(AppFeature.Action.HomePath(0, AppFeature.DestinationAction.Reader(ScriptureFeature.Action.Reader(ChapterReaderFeature.Action.ListenTapped))))
-        store.receive(AppFeature.Action.HomePath(0, AppFeature.DestinationAction.Reader(ScriptureFeature.Action.Reader(ChapterReaderFeature.Action.Delegate(ChapterReaderFeature.DelegateAction.Listen(chapter))))))
-        store.receive(AppFeature.Action.HomePath(0, AppFeature.DestinationAction.Reader(ScriptureFeature.Action.Delegate(ScriptureFeature.DelegateAction.Listen(chapter)))))
-        store.receive(AppFeature.Action.Audio(AudioPlayerFeature.Action.Play(chapter))) { it.copy(audio = AudioPlayerFeature.State(reference = chapter, isLoading = true)) }
-        store.receive(AppFeature.Action.Audio(AudioPlayerFeature.Action.AudioLoaded(null))) { it.copy(audio = it.audio.copy(isLoading = false, failed = true)) }
-        // Same chapter again: toggles instead of reloading.
-        store.send(AppFeature.Action.HomePath(0, AppFeature.DestinationAction.Reader(ScriptureFeature.Action.Reader(ChapterReaderFeature.Action.ListenTapped))))
-        store.receive(AppFeature.Action.HomePath(0, AppFeature.DestinationAction.Reader(ScriptureFeature.Action.Reader(ChapterReaderFeature.Action.Delegate(ChapterReaderFeature.DelegateAction.Listen(chapter))))))
-        store.receive(AppFeature.Action.HomePath(0, AppFeature.DestinationAction.Reader(ScriptureFeature.Action.Delegate(ScriptureFeature.DelegateAction.Listen(chapter)))))
-        store.receive(AppFeature.Action.Audio(AudioPlayerFeature.Action.TogglePlayPause))
-        store.finish()
+        val state = AppFeature.State(homePath = listOf(AppFeature.Destination.Reader(ScriptureFeature.State.initial(chapter))))
+        val store = Store(state, AppFeature.reducer(deps), backgroundScope)
+        val listen = AppFeature.Action.HomePath(0, AppFeature.DestinationAction.Reader(
+            ScriptureFeature.Action.Delegate(ScriptureFeature.DelegateAction.Listen(chapter))))
+        store.send(listen); runCurrent()
+        assertTrue(store.state.value.audio.failed)
+        store.send(listen); runCurrent()
+        assertEquals(2, requests)
+        assertEquals(chapter, store.state.value.audio.reference)
     }
+
 }

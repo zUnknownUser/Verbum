@@ -392,9 +392,7 @@
         }
       }
     },
-    "Bíblia Portuguesa Mundial" : {
-
-    },
+    "Bíblia Portuguesa Mundial" : {},
     "Book" : {
       "localizations" : {
         "pt-BR" : {
@@ -2963,9 +2961,7 @@
         }
       }
     },
-    "World English Bible" : {
-
-    },
+    "World English Bible" : {},
     "Written from the passages above by a language model, then checked so every reference is real. It is a study aid, not a word from God." : {
       "localizations" : {
         "pt-BR" : {
@@ -3012,6 +3008,454 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Seu caminho pela Escritura vai tomar forma aqui: as passagens, pessoas, lugares e temas que você explora, e como se conectam. Começa com o seu primeiro capítulo."
+          }
+        }
+      }
+    },
+    "Your time in Scripture" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your time in Scripture"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seu tempo nas Escrituras"
+          }
+        }
+      }
+    },
+    "Keep what matters to you" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep what matters to you"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guarde o que importa para você"
+          }
+        }
+      }
+    },
+    "Revisit the chapters you have opened and continue at your own pace." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revisit the chapters you have opened and continue at your own pace."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revisite os capítulos que você abriu e continue no seu ritmo."
+          }
+        }
+      }
+    },
+    "Your saved passages, highlights and notes, together." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your saved passages, highlights and notes, together."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suas passagens salvas, destaques e notas, juntos."
+          }
+        }
+      }
+    },
+    "Search references or your notes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search references or your notes"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar referências ou suas notas"
+          }
+        }
+      }
+    },
+    "All" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tudo"
+          }
+        }
+      }
+    },
+    "Highlights" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Highlights"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Destaques"
+          }
+        }
+      }
+    },
+    "Notes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notes"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notas"
+          }
+        }
+      }
+    },
+    "Your collection could not be loaded. Your saved items have not been changed." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your collection could not be loaded. Your saved items have not been changed."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível carregar sua coleção. Seus itens salvos não foram alterados."
+          }
+        }
+      }
+    },
+    "Your library begins with a passage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your library begins with a passage"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sua biblioteca começa com uma passagem"
+          }
+        }
+      }
+    },
+    "Open a verse to save it, highlight it or write a note. It will appear here." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open a verse to save it, highlight it or write a note. It will appear here."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abra um versículo para salvar, destacar ou escrever uma nota. Ele aparecerá aqui."
+          }
+        }
+      }
+    },
+    "No matching passages" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No matching passages"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nenhuma passagem encontrada"
+          }
+        }
+      }
+    },
+    "Try another filter or search for a book, reference or note." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try another filter or search for a book, reference or note."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Experimente outro filtro ou busque um livro, referência ou nota."
+          }
+        }
+      }
+    },
+    "Chapters opened, not completed. Every visit is part of your journey." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapters opened, not completed. Every visit is part of your journey."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "São capítulos abertos, não concluídos. Cada visita faz parte da sua jornada."
+          }
+        }
+      }
+    },
+    "Your journey starts here" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your journey starts here"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sua jornada começa aqui"
+          }
+        }
+      }
+    },
+    "Open a chapter and return here whenever you want to revisit it." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open a chapter and return here whenever you want to revisit it."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abra um capítulo e volte aqui sempre que quiser revisitá-lo."
+          }
+        }
+      }
+    },
+    "Recently opened" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recently opened"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abertos recentemente"
+          }
+        }
+      }
+    },
+    "Days reading" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Days reading"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dias de leitura"
+          }
+        }
+      }
+    },
+    "Chapters opened" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapters opened"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capítulos abertos"
+          }
+        }
+      }
+    },
+    "Browse books" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Browse books"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Explorar livros"
+          }
+        }
+      }
+    },
+    "Stored on this device. Signing in does not sync these items yet." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stored on this device. Signing in does not sync these items yet."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salvos neste aparelho. Entrar na conta ainda não sincroniza estes itens."
+          }
+        }
+      }
+    },
+    "Retry audio" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retry audio"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tentar áudio novamente"
+          }
+        }
+      }
+    },
+    "Audio temporarily limited. Try again later." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio temporarily limited. Try again later."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Áudio temporariamente limitado. Tente mais tarde."
+          }
+        }
+      }
+    },
+    "Could not prepare audio. Tap to retry." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not prepare audio. Tap to retry."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível preparar o áudio. Toque para tentar novamente."
+          }
+        }
+      }
+    },
+    "Playback interrupted. Tap to resume." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playback interrupted. Tap to resume."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reprodução interrompida. Toque para retomar."
+          }
+        }
+      }
+    },
+    "Preparing chapter…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preparing chapter…"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preparando capítulo…"
+          }
+        }
+      }
+    },
+    "Loading audio…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading audio…"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carregando áudio…"
+          }
+        }
+      }
+    },
+    "Waiting for audio…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waiting for audio…"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aguardando áudio…"
           }
         }
       }
