@@ -45,7 +45,8 @@ owns "native Apple + connected exploration". That is the gap.
   at the top level.
 - **Motion communicates navigation.** Three animations (`quick`, `standard`, `spatial`), all
   bypassed via `Motion.resolved(_:reduceMotion:)`.
-- **No gradients, no glass-on-glass, no ambient animation, no religious stock imagery.**
+- **No gradients, no glass-on-glass, no ambient animation, no religious stock imagery.** One
+  exception, decided 2026-09-28: the arrival chooser's **drifting rows** (below).
 
 ## Android counterpart
 
@@ -90,6 +91,31 @@ Bibles, is the reference for every content screen that follows:
 Android renders the same page with Material primitives; `Palette` maps paper/ink onto the scheme
 roles so `MaterialTheme.colorScheme.surface` *is* paper.
 
+## Drifting rows (decided 2026-09-28)
+
+The arrival chooser ("How are you feeling today?") was a vertical list of nine words, which reads
+as a form to complete — the opposite of what that screen is for. It is now three rows of words on
+paper that bleed past the reading column and drift sideways at walking pace, alternating direction,
+each one also pushable with a finger. Nothing asks to be completed; you reach in and take one.
+
+This is the only ambient motion in the app, and it earns its place under conditions:
+
+- **Slow.** `Motion.Drift` is in points per second (7 / 9 / 12), so a word stays readable while it
+  moves and a finger always overtakes it.
+- **Free.** `DriftingRow` (DesignSystem) lays the content out several times and animates one
+  transform over the strip — no re-layout per frame, one implicit animation for the life of the row.
+  `RowWindow`, a small `Layout`, gives the row exactly the width it is offered and pins the strip to
+  its leading edge, so an oversized strip can never resize or move the row.
+- **Still when it should be.** Reduce Motion stops the drift; Reduce Motion, VoiceOver and
+  accessibility text sizes drop the rows entirely for `FlowLayout`, where every word is in reach at
+  once. Duplicate copies are hidden from VoiceOver, so the nine words are read once.
+- **A push is not a choice.** While a row is being pushed it publishes
+  `\.isPushingDriftingRow`, and the words ignore the tap that ends the push.
+
+Identity is unchanged: paper and ink, New York for the words, hairline capsules, bronze only while
+a finger is on a word. The only edge treatment is a mask that fades both ends of a row
+(`View.edgeFade`), so words arrive and leave instead of being cut off.
+
 ## Tokens (iOS)
 
 | Token | File | Notes |
@@ -99,7 +125,7 @@ roles so `MaterialTheme.colorScheme.surface` *is* paper.
 | `Typography` | Tokens/Typography.swift | Interface, editorial, Scripture roles |
 | `Palette` | Tokens/Palette.swift | Background, surfaces, foreground, accent |
 | `Elevation` | Tokens/Elevation.swift | `.elevation(.card)` modifier |
-| `Motion` | Tokens/Motion.swift | Durations, curves, Reduce Motion helper |
+| `Motion` | Tokens/Motion.swift | Durations, curves, Reduce Motion helper, `Drift` speeds |
 
 `TokenGallery.swift` is a `#Preview` that renders the set; open its canvas to review changes.
 
