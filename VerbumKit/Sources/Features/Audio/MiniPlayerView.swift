@@ -10,9 +10,9 @@ struct MiniPlayerView: View {
     let store: StoreOf<AudioPlayerFeature>
 
     var body: some View {
-        HStack(spacing: Spacing.md) {
+        HStack(spacing: Spacing.xs) {
             Button { store.send(.chapterTapped) } label: {
-                VStack(alignment: .leading, spacing: 1) {
+                VStack(alignment: .leading, spacing: Spacing.xxs) {
                     Text(store.reference?.formatted ?? "")
                         .font(Typography.navigationSerif)
                         .foregroundStyle(Palette.ink)
@@ -25,12 +25,14 @@ struct MiniPlayerView: View {
                 }
             }
             .buttonStyle(.plain)
+            .frame(minHeight: 44)
             .accessibilityHint(L10n.t("Opens the chapter"))
 
             Spacer(minLength: Spacing.sm)
 
             Button { store.send(.skipBackward) } label: {
-                Image(systemName: "gobackward.15").font(.system(size: 20, weight: .regular))
+                Image(systemName: "gobackward.15").font(.system(size: 19, weight: .medium))
+                    .frame(width: 44, height: 44)
             }
             .accessibilityLabel(L10n.t("Back 15 seconds"))
             .disabled(store.isLoading || store.failed)
@@ -40,30 +42,35 @@ struct MiniPlayerView: View {
                 else { store.send(.togglePlayPause) }
             } label: {
                 if store.isLoading {
-                    ProgressView().tint(Palette.ink).frame(width: 28, height: 28)
+                    ProgressView().tint(Palette.ink).frame(width: 44, height: 44)
                 } else {
                     Image(systemName: store.failed ? "arrow.clockwise" : (store.isPlaying || store.isBuffering ? "pause.fill" : "play.fill"))
                         .font(.system(size: 22, weight: .semibold))
-                        .frame(width: 28, height: 28)
+                        .frame(width: 44, height: 44)
                 }
             }
+            .foregroundStyle(Palette.accent)
+            .background(Palette.accentWash, in: Circle())
             .accessibilityLabel(store.failed ? L10n.t("Retry audio") : (store.isPlaying || store.isBuffering ? L10n.t("Pause") : L10n.t("Play")))
             .accessibilityHint(store.failed ? L10n.t("Try Again") : "")
             .disabled(store.isLoading)
 
             Button { store.send(.skipForward) } label: {
-                Image(systemName: "goforward.15").font(.system(size: 20, weight: .regular))
+                Image(systemName: "goforward.15").font(.system(size: 19, weight: .medium))
+                    .frame(width: 44, height: 44)
             }
             .accessibilityLabel(L10n.t("Forward 15 seconds"))
             .disabled(store.isLoading || store.failed)
 
             Button { store.send(.stopTapped) } label: {
-                Image(systemName: "xmark").font(.system(size: 14, weight: .semibold))
+                Image(systemName: "xmark").font(.system(size: 13, weight: .semibold))
+                    .frame(width: 44, height: 44)
             }
             .accessibilityLabel(L10n.t("Stop listening"))
         }
         .tint(Palette.ink)
-        .padding(.horizontal, Spacing.lg)
+        .padding(.horizontal, Spacing.md)
+        .padding(.vertical, Spacing.xs)
         .overlay(alignment: .top) {
             GeometryReader { proxy in
                 Rectangle()

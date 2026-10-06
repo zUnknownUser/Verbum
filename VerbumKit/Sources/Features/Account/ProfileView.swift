@@ -172,8 +172,7 @@ struct ProfileView: View {
             }
         }
         .padding(Spacing.xl)
-        .background(Palette.accent.opacity(0.055), in: RoundedRectangle(cornerRadius: Radius.lg))
-        .overlay(RoundedRectangle(cornerRadius: Radius.lg).strokeBorder(Palette.accent.opacity(0.15), lineWidth: 1))
+        .editorialSurface()
     }
 
     private func metric(_ value: Int?, _ key: String) -> some View {

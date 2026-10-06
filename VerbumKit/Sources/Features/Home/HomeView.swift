@@ -3,7 +3,6 @@ import DesignSystem
 import Models
 import SwiftUI
 
-/// Spec §5: a greeting, one question, a way back in, the verse of the day.
 struct HomeView: View {
     let store: StoreOf<HomeFeature>
     @Environment(\.openAccount) private var openAccount
@@ -11,51 +10,31 @@ struct HomeView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Spacing.xxl) {
-                VStack(alignment: .leading, spacing: Spacing.sm) {
-                    HStack {
-                        Text(greeting).overline(color: Palette.accent)
-                        Spacer()
-                        Button { openAccount() } label: {
-                            Image(systemName: "person.crop.circle").font(.title2)
-                                .padding(Spacing.sm)
-                        }
-                        .accessibilityLabel(AccountCopy.text("profile"))
-                    }
-                    Text(L10n.t("What do you want to understand?"))
-                        .font(Typography.editorialTitle)
-                        .foregroundStyle(Palette.ink)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                .padding(.top, Spacing.xl)
-
+                header
                 Button { store.send(.searchTapped) } label: {
                     HStack(spacing: Spacing.md) {
                         Image(systemName: "magnifyingglass")
-                            .foregroundStyle(Palette.inkTertiary)
+                            .font(.body.weight(.medium)).foregroundStyle(Palette.accent)
                         Text(L10n.t("Ask anything about Scripture"))
-                            .font(.system(.body, design: .serif))
-                            .foregroundStyle(Palette.inkSecondary)
-                        Spacer()
+                            .font(Typography.body).foregroundStyle(Palette.inkSecondary)
+                            .multilineTextAlignment(.leading)
+                        Spacer(minLength: 0)
+                        Image(systemName: "arrow.up.right").font(.footnote.weight(.semibold))
+                            .foregroundStyle(Palette.accent).accessibilityHidden(true)
                     }
-                    .padding(.horizontal, Spacing.lg)
-                    .frame(height: 52)
-                    .background(Palette.paperElevated, in: .rect(cornerRadius: Radius.lg))
-                    .overlay(RoundedRectangle(cornerRadius: Radius.lg).strokeBorder(Palette.rule, lineWidth: 1))
+                    .padding(Spacing.lg)
+                    .frame(minHeight: 56)
+                    .editorialSurface()
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(EditorialButtonStyle())
                 .accessibilityLabel(L10n.t("Search"))
 
                 if let lastRead = store.lastRead {
-                    section(L10n.t("Continue reading")) {
-                        PassageCard(
-                            title: lastRead.formatted,
-                            subtitle: BibleBook.book(id: lastRead.bookId)?.division.localizedTitle ?? "",
-                            symbol: "book"
-                        ) { store.send(.continueReadingTapped) }
-                    }
+                    continueReading(lastRead)
                 }
 
-                section(L10n.t("Today")) {
+                VStack(alignment: .leading, spacing: Spacing.md) {
+                    Text(L10n.t("Today")).overline()
                     DailyVerseView(store: store.scope(state: \.dailyVerse, action: \.dailyVerse))
                 }
                 PassageCard(
@@ -76,6 +55,64 @@ struct HomeView: View {
         .task { await store.send(.task).finish() }
     }
 
+    private var header: some View {
+        VStack(alignment: .leading, spacing: Spacing.xl) {
+            HStack {
+                Text(verbatim: "verbum").font(.system(.title2, design: .serif).weight(.semibold))
+                    .tracking(-0.5).foregroundStyle(Palette.ink)
+                Spacer()
+                Button { openAccount() } label: {
+                    Image(systemName: "person.crop.circle")
+                        .font(.system(size: 23, weight: .regular))
+                        .foregroundStyle(Palette.accent)
+                        .frame(width: 48, height: 48)
+                        .background(Palette.paperElevated, in: Circle())
+                        .overlay(Circle().strokeBorder(Palette.rule, lineWidth: 1))
+                }
+                .buttonStyle(EditorialButtonStyle())
+                .accessibilityLabel(AccountCopy.text("profile"))
+            }
+            VStack(alignment: .leading, spacing: Spacing.sm) {
+                Text(greeting).overline(color: Palette.accent)
+                Text(L10n.t("What do you want to understand?"))
+                    .font(Typography.editorialTitle)
+                    .tracking(-0.7)
+                    .foregroundStyle(Palette.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityAddTraits(.isHeader)
+            }
+        }
+        .padding(.top, Spacing.lg)
+    }
+
+    private func continueReading(_ reference: PassageReference) -> some View {
+        Button { store.send(.continueReadingTapped) } label: {
+            VStack(alignment: .leading, spacing: Spacing.xl) {
+                HStack(spacing: Spacing.sm) {
+                    Image(systemName: "book.pages").accessibilityHidden(true)
+                    Text(L10n.t("Continue reading"))
+                }.font(Typography.subheadline.weight(.medium))
+                HStack(alignment: .bottom, spacing: Spacing.md) {
+                    VStack(alignment: .leading, spacing: Spacing.xs) {
+                        Text(reference.formatted).font(Typography.editorialHeadline)
+                        Text(BibleBook.book(id: reference.bookId)?.division.localizedTitle ?? "")
+                            .font(Typography.footnote)
+                    }.frame(maxWidth: .infinity, alignment: .leading)
+                    Image(systemName: "arrow.right")
+                        .font(.body.weight(.semibold))
+                        .frame(width: 44, height: 44)
+                        .background(Palette.onForest.opacity(0.12), in: Circle())
+                        .accessibilityHidden(true)
+                }
+            }
+            .foregroundStyle(Palette.onForest)
+            .multilineTextAlignment(.leading)
+            .padding(Spacing.xl)
+            .background(Palette.forest, in: RoundedRectangle(cornerRadius: Radius.lg))
+        }
+        .buttonStyle(EditorialButtonStyle())
+    }
+
     private var greeting: String {
         switch store.greeting {
         case .morning: L10n.t("Good morning")
@@ -83,17 +120,8 @@ struct HomeView: View {
         case .evening: L10n.t("Good evening")
         }
     }
-
-
-    private func section<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: Spacing.md) {
-            Text(title).overline()
-            content()
-        }
-    }
 }
 
-/// A passage as a quiet card: reference in serif, a line of context, an arrow.
 struct PassageCard: View {
     let title: String
     let subtitle: String
@@ -102,31 +130,23 @@ struct PassageCard: View {
 
     var body: some View {
         Button(action: action) {
-            HStack(spacing: Spacing.lg) {
-                Image(systemName: symbol)
-                    .font(.system(size: 20, weight: .light))
-                    .foregroundStyle(Palette.accent)
-                    .frame(width: 28)
-                VStack(alignment: .leading, spacing: Spacing.xxs) {
-                    Text(title)
-                        .font(.system(.title3, design: .serif).weight(.semibold))
-                        .foregroundStyle(Palette.ink)
+            HStack(alignment: .top, spacing: Spacing.lg) {
+                EditorialIcon(symbol)
+                VStack(alignment: .leading, spacing: Spacing.xs) {
+                    Text(title).font(Typography.navigationSerif).foregroundStyle(Palette.ink)
                     if !subtitle.isEmpty {
-                        Text(subtitle)
-                            .font(Typography.footnote)
-                            .foregroundStyle(Palette.inkSecondary)
+                        Text(subtitle).font(Typography.footnote).foregroundStyle(Palette.inkSecondary)
                     }
-                }
-                Spacer()
-                Image(systemName: "arrow.right")
-                    .font(Typography.subheadline.weight(.semibold))
-                    .foregroundStyle(Palette.accent)
+                }.frame(maxWidth: .infinity, alignment: .leading)
+                Image(systemName: "arrow.up.right")
+                    .font(.footnote.weight(.semibold)).foregroundStyle(Palette.accent)
+                    .padding(.top, Spacing.xs).accessibilityHidden(true)
             }
+            .multilineTextAlignment(.leading)
             .padding(Spacing.lg)
-            .background(Palette.paperElevated, in: .rect(cornerRadius: Radius.lg))
-            .overlay(RoundedRectangle(cornerRadius: Radius.lg).strokeBorder(Palette.rule, lineWidth: 1))
+            .editorialSurface()
             .contentShape(Rectangle())
         }
-        .buttonStyle(.plain)
+        .buttonStyle(EditorialButtonStyle())
     }
 }

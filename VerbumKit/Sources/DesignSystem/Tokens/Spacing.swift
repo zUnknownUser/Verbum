@@ -13,10 +13,10 @@ public enum Spacing {
     public static let xxxl: CGFloat = 48
 
     /// Horizontal inset used by system apps for full-width content.
-    public static let screenMargin: CGFloat = 16
+    public static let screenMargin: CGFloat = 20
     /// Extra breathing room around Scripture, so reading columns never feel cramped.
     public static let readingMargin: CGFloat = 24
     /// Widest a Scripture column may grow. Past this, lines get too long to read
     /// comfortably (regular-width layouts: iPad, unfolded phones).
-    public static let readingMaxWidth: CGFloat = 680
+    public static let readingMaxWidth: CGFloat = 620
 }

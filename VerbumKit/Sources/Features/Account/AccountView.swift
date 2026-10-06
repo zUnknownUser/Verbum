@@ -73,6 +73,7 @@ struct AccountView: View {
                 .frame(maxWidth: .infinity)
                 .padding(Spacing.readingMargin)
             }
+            .scrollIndicators(.hidden)
             .scrollDismissesKeyboard(.interactively)
             .background(Palette.paper)
             .navigationTitle(t(store.page == .profile ? "profile" : store.page == .account ? "accountDetails" : "account"))
@@ -105,14 +106,14 @@ struct AccountView: View {
             }, onSignOut: { confirmSignOut = true })
         case .editName:
             TextField(t("displayName"), text: Binding(get: { store.displayName }, set: { store.send(.displayName($0)) }))
-                .textContentType(.name).textFieldStyle(.roundedBorder).disabled(store.busy)
+                .textContentType(.name).textFieldStyle(EditorialTextFieldStyle()).disabled(store.busy)
             primary("saveChanges") { store.send(.perform(.updateName)) }
         case .changeEmail:
             TextField(t("newEmail"), text: Binding(get: { store.email }, set: { store.send(.email($0)) }))
                 .textContentType(.emailAddress).keyboardType(.emailAddress).textInputAutocapitalization(.never)
-                .autocorrectionDisabled().textFieldStyle(.roundedBorder).disabled(store.busy)
+                .autocorrectionDisabled().textFieldStyle(EditorialTextFieldStyle()).disabled(store.busy)
             SecureField(t("password"), text: Binding(get: { store.password }, set: { store.send(.password($0)) }))
-                .textContentType(.password).textFieldStyle(.roundedBorder).disabled(store.busy)
+                .textContentType(.password).textFieldStyle(EditorialTextFieldStyle()).disabled(store.busy)
             primary("confirmEmailChange") { store.send(.perform(.changeEmail)) }
         case .welcome:
             primary("register") { store.send(.page(.register)) }
@@ -137,7 +138,7 @@ struct AccountView: View {
                     }
                     Toggle(t("show"), isOn: $showPassword).font(Typography.footnote)
                 }
-            }.textFieldStyle(.roundedBorder).disabled(store.busy)
+            }.textFieldStyle(EditorialTextFieldStyle()).disabled(store.busy)
             primary(store.page == .reset ? "sendReset" : store.page == .register ? "register" : "signIn", action: submit)
             if store.page == .signIn {
                 Button(t("forgot")) { store.send(.page(.reset)) }.disabled(store.busy)
@@ -181,7 +182,7 @@ struct AccountView: View {
         case .delete:
             if store.session?.isAnonymous == false {
                 SecureField(t("password"), text: Binding(get: { store.password }, set: { store.send(.password($0)) }))
-                    .textContentType(.password).textFieldStyle(.roundedBorder).disabled(store.busy)
+                    .textContentType(.password).textFieldStyle(EditorialTextFieldStyle()).disabled(store.busy)
             }
             Button(t("delete"), role: .destructive) { store.send(.perform(.delete)) }
                 .buttonStyle(.bordered).controlSize(.large).disabled(store.busy)
@@ -241,7 +242,7 @@ struct AccountView: View {
     }
     private func primary(_ key: String, action: @escaping () -> Void) -> some View {
         Button(action: action) { Text(t(key)).frame(maxWidth: .infinity) }
-            .buttonStyle(.borderedProminent).controlSize(.large).disabled(store.busy)
+            .buttonStyle(.borderedProminent).foregroundStyle(Palette.onAccent).controlSize(.large).disabled(store.busy)
     }
     @ViewBuilder private func passwordField(_ title: String, field: Field, value: Binding<String>) -> some View {
         Group {

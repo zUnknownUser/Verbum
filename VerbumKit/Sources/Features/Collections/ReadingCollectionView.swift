@@ -25,24 +25,33 @@ struct ReadingCollectionView: View {
             .frame(maxWidth: .infinity)
             .padding(Spacing.readingMargin)
         }
+        .scrollIndicators(.hidden)
         .background(Palette.paper)
+        .toolbarTitleDisplayMode(.inline)
         .navigationTitle(L10n.t(journey ? "Journey" : "Library"))
         .task(id: sync.revision) { if !journey { await store.send(.task).finish() } }
         .refreshable { if !journey { await store.send(.retry).finish() } }
     }
 
     @ViewBuilder private var libraryContent: some View {
-        TextField(L10n.t("Search references or your notes"), text: Binding(get: { store.query }, set: { store.send(.queryChanged($0)) }))
-            .textFieldStyle(.roundedBorder).submitLabel(.search)
-            .accessibilityIdentifier("library.search")
+        HStack(spacing: Spacing.md) {
+            Image(systemName: "magnifyingglass").foregroundStyle(Palette.accent).accessibilityHidden(true)
+            TextField(L10n.t("Search references or your notes"), text: Binding(get: { store.query }, set: { store.send(.queryChanged($0)) }),
+                      prompt: Text(L10n.t("Search references or your notes")).foregroundStyle(Palette.inkSecondary))
+                .font(Typography.body).foregroundStyle(Palette.ink)
+                .textFieldStyle(.plain).submitLabel(.search)
+                .accessibilityIdentifier("library.search")
+        }.padding(Spacing.lg).editorialSurface()
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: Spacing.sm) {
                 ForEach(ReadingCollectionFilter.allCases, id: \.self) { filter in
                     Button { store.send(.filterChanged(filter)) } label: {
                         Text(filterTitle(filter)).font(Typography.footnote)
-                            .padding(.horizontal, Spacing.md).padding(.vertical, Spacing.sm)
-                            .background(store.filter == filter ? Palette.accent.opacity(0.14) : Palette.ink.opacity(0.04), in: Capsule())
-                    }.buttonStyle(.plain).foregroundStyle(Palette.ink)
+                            .fixedSize(horizontal: true, vertical: false)
+                            .padding(.horizontal, Spacing.lg).frame(minHeight: 44)
+                            .foregroundStyle(store.filter == filter ? Palette.onForest : Palette.inkSecondary)
+                            .background(store.filter == filter ? Palette.forest : Palette.paperElevated, in: Capsule())
+                    }.buttonStyle(EditorialButtonStyle())
                         .accessibilityAddTraits(store.filter == filter ? .isSelected : [])
                 }
             }
@@ -70,8 +79,7 @@ struct ReadingCollectionView: View {
                         if !item.note.isEmpty { Label(L10n.t("Note"), systemImage: "note.text") }
                     }.font(Typography.caption).foregroundStyle(Palette.accent)
                     if !item.note.isEmpty { Text(item.note).font(Typography.subheadline).foregroundStyle(Palette.inkSecondary).lineLimit(3) }
-                    Divider().overlay(Palette.rule).padding(.top, Spacing.sm)
-                }.contentShape(Rectangle())
+                }.padding(Spacing.lg).editorialSurface().contentShape(Rectangle())
             }.buttonStyle(.plain).foregroundStyle(Palette.ink)
         }
     }
@@ -80,7 +88,8 @@ struct ReadingCollectionView: View {
         ViewThatFits(in: .horizontal) {
             HStack(spacing: Spacing.xxl) { metrics }
             VStack(alignment: .leading, spacing: Spacing.md) { metrics }
-        }.padding(.vertical, Spacing.md)
+        }.frame(maxWidth: .infinity, alignment: .leading)
+            .padding(Spacing.xl).editorialSurface()
         Text(L10n.t("Chapters opened, not completed. Every visit is part of your journey."))
             .font(Typography.caption).foregroundStyle(Palette.inkSecondary)
         if let reference = store.lastRead ?? store.activity.visits.first?.reference {
@@ -120,11 +129,13 @@ struct ReadingCollectionView: View {
         }
     }
     private func empty(title: String.LocalizationValue, body: String.LocalizationValue) -> some View {
-        VStack(alignment: .leading, spacing: Spacing.md) {
-            Text(L10n.t(title)).font(Typography.editorialHeadline)
+        VStack(alignment: .leading, spacing: Spacing.lg) {
+            EditorialIcon(journey ? "book.pages" : "bookmark")
+            Text(L10n.t(title)).font(Typography.editorialHeadline).foregroundStyle(Palette.ink)
             Text(L10n.t(body)).font(Typography.subheadline).foregroundStyle(Palette.inkSecondary)
-            Button(L10n.t("Browse books")) { store.send(.browse) }.tint(Palette.accent)
-        }.padding(.vertical, Spacing.lg)
+            Button(L10n.t("Browse books")) { store.send(.browse) }
+                .buttonStyle(.borderedProminent).foregroundStyle(Palette.onAccent).controlSize(.large).tint(Palette.accent)
+        }.frame(maxWidth: .infinity, alignment: .leading).padding(Spacing.xl).editorialSurface()
     }
     private func filterTitle(_ value: ReadingCollectionFilter) -> String {
         let key: String.LocalizationValue = switch value { case .all: "All"; case .saved: "Saved"; case .highlights: "Highlights"; case .notes: "Notes" }

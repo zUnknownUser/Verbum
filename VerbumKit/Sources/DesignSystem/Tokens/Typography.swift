@@ -20,18 +20,18 @@ public enum Typography {
     // MARK: Editorial (New York)
 
     /// Entity names and screen titles that should read like a book, not a form.
-    public static let editorialTitle: Font = .system(.largeTitle, design: .serif).weight(.semibold)
+    public static let editorialTitle: Font = .system(.largeTitle, design: .serif).weight(.medium)
     public static let editorialHeadline: Font = .system(.title2, design: .serif).weight(.semibold)
 
     // MARK: Scripture (New York)
 
     /// Body text of a passage at the default reader size.
-    public static let scripture: Font = .system(.body, design: .serif)
+    public static let scripture: Font = .system(.title3, design: .serif)
 
     /// Point size `scripture` renders at before Dynamic Type. Readers combine it
     /// with `@ScaledMetric` and the user's text-scale preference (spec §42:
     /// user-adjustable size *and* Dynamic Type).
-    public static let scriptureBasePointSize: CGFloat = 17
+    public static let scriptureBasePointSize: CGFloat = 20
 
     /// Body text of a passage at an explicit point size (already scaled).
     public static func scripture(pointSize: CGFloat) -> Font {
@@ -39,12 +39,12 @@ public enum Typography {
     }
 
     /// Chapter opener numeral, e.g. the "17" above 1 Samuel 17.
-    public static let chapterNumeral: Font = .system(size: 76, weight: .light, design: .serif)
+    public static let chapterNumeral: Font = .system(.largeTitle, design: .serif).weight(.light)
 
     /// Letter-spaced small caps used for section labels and the book name over
     /// a chapter numeral. Apply with `Text.overline()`.
     public static let overline: Font = .caption.weight(.semibold)
-    public static let overlineTracking: CGFloat = 2.2
+    public static let overlineTracking: CGFloat = 1.4
 
     /// Verse numeral in the margin, sized relative to the Scripture point size.
     public static func verseNumeral(for scripturePointSize: CGFloat) -> Font {
@@ -59,8 +59,8 @@ public enum Typography {
     public static let scriptureHeading: Font = .system(.title, design: .serif).weight(.semibold)
 
     /// Extra leading applied to Scripture, as a fraction of point size. New York
-    /// needs more air than SF; at 17pt this is ~6pt.
+    /// needs more air than SF; at 20pt this is 7pt.
     public static let scriptureLineSpacingRatio: CGFloat = 0.35
     /// Convenience at the default size.
-    public static let scriptureLineSpacing: CGFloat = 6
+    public static let scriptureLineSpacing: CGFloat = 7
 }

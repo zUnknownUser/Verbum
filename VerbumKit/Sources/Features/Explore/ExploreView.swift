@@ -20,7 +20,7 @@ struct ExploreView: View {
                 }
                 .padding(.top, Spacing.xl)
 
-                VStack(spacing: 0) {
+                VStack(spacing: Spacing.md) {
                     ForEach(ExploreFeature.Entry.allCases, id: \.self) { entry in
                         EntryRow(entry: entry) { store.send(.entryTapped(entry)) }
                     }
@@ -45,10 +45,7 @@ private struct EntryRow: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: Spacing.lg) {
-                Image(systemName: symbol)
-                    .font(.system(size: 20, weight: .light))
-                    .foregroundStyle(Palette.accent)
-                    .frame(width: 28)
+                EditorialIcon(symbol)
                 VStack(alignment: .leading, spacing: Spacing.xxs) {
                     Text(title)
                         .font(.system(.title3, design: .serif).weight(.semibold))
@@ -62,11 +59,12 @@ private struct EntryRow: View {
                     .font(Typography.caption.weight(.semibold))
                     .foregroundStyle(Palette.inkTertiary)
             }
-            .padding(.vertical, Spacing.lg)
+            .padding(Spacing.lg)
+            .editorialSurface()
+            .multilineTextAlignment(.leading)
             .contentShape(Rectangle())
         }
-        .buttonStyle(.plain)
-        .overlay(alignment: .bottom) { Rectangle().fill(Palette.rule).frame(height: 1) }
+        .buttonStyle(EditorialButtonStyle())
     }
 
     private var title: String {
@@ -93,11 +91,11 @@ private struct EntryRow: View {
 
     private var symbol: String {
         switch entry {
-        case .people: "person"
+        case .people: "person.2"
         case .places: "mappin.and.ellipse"
-        case .themes: "sparkle"
+        case .themes: "text.book.closed"
         case .events: "flag"
-        case .timeline: "clock"
+        case .timeline: "point.topleft.down.to.point.bottomright.curvepath"
         case .books: "books.vertical"
         }
     }

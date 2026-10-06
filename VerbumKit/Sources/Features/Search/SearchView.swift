@@ -117,9 +117,11 @@ public struct SearchView: View {
     private func resultLabel(title: String, subtitle: String, symbol: String, showsChevron: Bool) -> some View {
         HStack(spacing: Spacing.md) {
             Image(systemName: symbol)
-                .font(Typography.subheadline)
+                .font(.body.weight(.medium))
                 .foregroundStyle(Palette.accent)
-                .frame(width: 22)
+                .frame(width: 40, height: 40)
+                .background(Palette.accentWash, in: RoundedRectangle(cornerRadius: Radius.sm))
+                .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: Spacing.xxs) {
                 Text(title)
                     .font(.system(.body, design: .serif).weight(.semibold))
@@ -157,14 +159,34 @@ public struct SearchView: View {
         }
     }
 
+    private var examples: [String] {
+        BookLanguage.current == .portuguese
+            ? ["João 3:16", "1 Samuel 17", "Davi", "Jerusalém", "Perdão", "Por que Jó sofreu?"]
+            : ["John 3:16", "1 Samuel 17", "David", "Jerusalem", "Forgiveness", "Why did Job suffer?"]
+    }
+
     private var suggestions: some View {
         Section {
             VStack(alignment: .leading, spacing: Spacing.md) {
+                EditorialIcon("magnifyingglass")
+                Text(L10n.t("What do you want to understand?"))
+                    .font(Typography.editorialTitle).foregroundStyle(Palette.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.bottom, Spacing.md)
                 Text(L10n.t("Try")).overline()
-                ForEach(["John 3:16", "1 Samuel 17", "David", "Jerusalem", "Forgiveness", "why did Job suffer"], id: \.self) { example in
-                    Button(example) { store.query = example }
-                        .font(.system(.body, design: .serif))
+                ForEach(examples, id: \.self) { example in
+                    Button { store.query = example } label: {
+                        HStack(spacing: Spacing.md) {
+                            Text(example).font(Typography.navigationSerif)
+                            Spacer(minLength: Spacing.sm)
+                            Image(systemName: "arrow.up.left").font(.footnote.weight(.medium))
+                                .foregroundStyle(Palette.accent).accessibilityHidden(true)
+                        }
                         .foregroundStyle(Palette.ink)
+                        .multilineTextAlignment(.leading)
+                        .padding(Spacing.lg).frame(maxWidth: .infinity, alignment: .leading)
+                        .editorialSurface()
+                    }.buttonStyle(EditorialButtonStyle())
                 }
             }
             .padding(.vertical, Spacing.lg)

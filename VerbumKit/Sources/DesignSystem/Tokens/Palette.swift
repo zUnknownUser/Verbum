@@ -1,30 +1,12 @@
 import SwiftUI
 
-/// Semantic colours (spec §64: surfaces, foreground, background, accent).
-///
-/// All values resolve to Apple's system colours so the app inherits light and
-/// dark appearance, Increase Contrast, and Liquid Glass vibrancy without any
-/// custom handling. The only brand colour is `accent`, sourced from the app's
-/// `AccentColor` asset so it is defined once.
+/// Shared semantic roles keep reading, discovery and account surfaces consistent.
 public enum Palette {
-    // MARK: Background
-
-    /// Grouped screens (Explore, Library, settings-like lists).
-    public static let groupedBackground = Color(.systemGroupedBackground)
-
-    // MARK: Surfaces
-
-    /// A card or row resting on `groupedBackground`.
-    public static let surface = Color(.secondarySystemGroupedBackground)
-    public static let fillSecondary = Color(.secondarySystemFill)
-
-    // MARK: Foreground
-
-    public static let foregroundSecondary = Color(.secondaryLabel)
-    public static let foregroundTertiary = Color(.tertiaryLabel)
-
-    // MARK: Accent
-
-    /// The single brand colour. Interactive elements only — never decoration.
-    public static let accent = Color.accentColor
+    public static let groupedBackground = paper
+    public static let surface = paperElevated
+    public static let fillSecondary = accentWash
+    public static let foregroundSecondary = inkSecondary
+    public static let foregroundTertiary = inkTertiary
+    public static let onAccent = adaptive(light: 0xFFFDF8, dark: 0x242B26)
+    public static let accent = adaptive(light: 0x315A46, dark: 0xA4C9AD, contrastLight: 0x254632, contrastDark: 0xC7E8CF)
 }

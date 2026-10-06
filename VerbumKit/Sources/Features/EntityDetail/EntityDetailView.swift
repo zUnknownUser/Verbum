@@ -156,7 +156,7 @@ public struct EntityDetailView: View {
                 .font(Typography.editorialHeadline)
                 .foregroundStyle(Palette.ink)
             Button(L10n.t("Try Again")) { store.send(.retryTapped) }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.borderedProminent).foregroundStyle(Palette.onAccent)
         }
         .padding(Spacing.xxl)
     }

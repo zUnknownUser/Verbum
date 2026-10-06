@@ -11,13 +11,16 @@ struct DailyVerseView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.lg) {
+            HStack(spacing: Spacing.sm) {
+                Image(systemName: "sun.max").foregroundStyle(Palette.accent).accessibilityHidden(true)
+                Text(L10n.t("Verse of the day")).overline(color: Palette.accent)
+            }
             verse
             Divider().overlay(Palette.rule)
             mornings
         }
-        .padding(Spacing.lg)
-        .background(Palette.paperElevated, in: .rect(cornerRadius: Radius.lg))
-        .overlay(RoundedRectangle(cornerRadius: Radius.lg).strokeBorder(Palette.rule, lineWidth: 1))
+        .padding(Spacing.xl)
+        .editorialSurface()
         .task { await store.send(.task).finish() }
     }
 
@@ -32,6 +35,7 @@ struct DailyVerseView: View {
         case .loaded(let passage):
             Text(passage.text)
                 .font(Typography.scripture)
+                .lineSpacing(6)
                 .foregroundStyle(Palette.ink)
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityLabel(Text(L10n.t("Verse of the day")) + Text(". ") + Text(passage.text))
@@ -61,7 +65,7 @@ struct DailyVerseView: View {
             if let shareText = store.shareText {
                 ShareLink(item: shareText, subject: Text(store.reference.formatted)) {
                     Image(systemName: "square.and.arrow.up")
-                        .font(.system(size: 18, weight: .light))
+                        .font(.system(size: 18, weight: .regular))
                         .foregroundStyle(Palette.accent)
                         .frame(width: 44, height: 44)
                         .contentShape(Rectangle())
@@ -83,7 +87,7 @@ struct DailyVerseView: View {
                         .foregroundStyle(Palette.ink)
                 } icon: {
                     Image(systemName: "sunrise")
-                        .font(.system(size: 18, weight: .light))
+                        .font(.system(size: 18, weight: .regular))
                         .foregroundStyle(Palette.accent)
                 }
             }
