@@ -308,4 +308,11 @@
     <string name="audio_preparing_chapter">Preparando capítulo…</string>
     <string name="audio_loading">Carregando áudio…</string>
     <string name="audio_buffering">Aguardando áudio…</string>
+    <string name="history_view_all">Ver histórico completo</string>
+    <string name="history_title">Histórico de leitura</string>
+    <string name="history_search">Buscar por livro ou capítulo</string>
+    <string name="history_more">Mostrar mais</string>
+    <string name="history_empty">Nenhum capítulo encontrado</string>
+    <string name="history_empty_body">Tente outro livro ou referência de capítulo.</string>
+    <string name="history_yesterday">Ontem</string>
 </resources>

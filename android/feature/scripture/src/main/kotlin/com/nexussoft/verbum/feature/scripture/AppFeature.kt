@@ -38,6 +38,7 @@ object AppFeature {
 
     /** A destination on a tab's stack. */
     sealed interface Destination {
+        data class History(val state: ReadingCollectionFeature.State) : Destination
         data class Reader(val state: ScriptureFeature.State) : Destination
         data class Entity(val state: EntityDetailFeature.State) : Destination
         data class Entities(val state: EntityListFeature.State) : Destination
@@ -51,6 +52,7 @@ object AppFeature {
 
     /** An action for the destination at [index] of a stack. */
     sealed interface DestinationAction {
+        data class History(val action: ReadingCollectionFeature.Action) : DestinationAction
         data class Reader(val action: ScriptureFeature.Action) : DestinationAction
         data class Entity(val action: EntityDetailFeature.Action) : DestinationAction
         data class Entities(val action: EntityListFeature.Action) : DestinationAction
@@ -151,6 +153,8 @@ object AppFeature {
         val voice = VoiceFeature.reducer(VoiceFeature.Dependencies(deps.realtimeSessionClient, deps.voiceClient, deps.askClient, deps.searchClient, deps.bibleClient, deps.language))
 
         fun reduceDestination(destination: Destination, action: DestinationAction): Pair<Destination, Effect<DestinationAction>>? = when {
+            destination is Destination.History && action is DestinationAction.History ->
+                ReadingCollectionFeature.reducer(deps.preferences).reduce(destination.state, action.action).let { Destination.History(it.state) to it.effect.map { a -> DestinationAction.History(a) } }
             destination is Destination.Ask && action is DestinationAction.Ask ->
                 ask.reduce(destination.state, action.action).let { Destination.Ask(it.state) to it.effect.map { a -> DestinationAction.Ask(a) } }
             destination is Destination.Arrival && action is DestinationAction.Arrival ->
@@ -174,6 +178,9 @@ object AppFeature {
 
         /** What a destination's delegate pushes next, if anything. */
         fun follow(action: DestinationAction): Destination? = when (action) {
+            is DestinationAction.History -> ((action.action as? ReadingCollectionFeature.Action.Delegate)?.value as? ReadingCollectionFeature.DelegateAction.Open)?.let {
+                Destination.Reader(ScriptureFeature.State.initial(it.reference, deps.initialTextScale()))
+            }
             is DestinationAction.Arrival -> (action.action as? GuidedExplorationFeature.Action.Delegate)?.delegate?.let {
                 when (it) {
                     is GuidedExplorationFeature.DelegateAction.OpenPassage -> Destination.Reader(ScriptureFeature.State.initial(it.reference, deps.initialTextScale()))
@@ -356,6 +363,7 @@ object AppFeature {
                     }
                     is Action.Collection -> when (val d = (action.action as? ReadingCollectionFeature.Action.Delegate)?.value) {
                         is ReadingCollectionFeature.DelegateAction.Open -> push(state, Destination.Reader(ScriptureFeature.State.initial(d.reference, deps.initialTextScale()))).only()
+                        ReadingCollectionFeature.DelegateAction.History -> state.copy(journeyPath = state.journeyPath + Destination.History(ReadingCollectionFeature.State(activity = state.collection.activity, lastRead = state.collection.lastRead))).only()
                         ReadingCollectionFeature.DelegateAction.Browse -> push(state, Destination.Books(BookPickerFeature.State(current = state.collection.lastRead ?: PassageReference("Gen", 1)))).only()
                         null -> state.only()
                     }

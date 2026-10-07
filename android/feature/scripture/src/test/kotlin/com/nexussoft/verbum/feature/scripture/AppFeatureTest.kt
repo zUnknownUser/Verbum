@@ -43,8 +43,8 @@ class AppFeatureTest {
         val store = store()
         store.send(Action.TabChanged(Tab.EXPLORE)) { it.copy(tab = Tab.EXPLORE, contentTab = Tab.EXPLORE) }
         store.send(Action.TabChanged(Tab.SEARCH)) { it.copy(tab = Tab.SEARCH) }
-        store.send(Action.TabChanged(Tab.LIBRARY)) { it.copy(tab = Tab.LIBRARY) }
-        assertEquals(Tab.EXPLORE, store.state.contentTab)
+        store.send(Action.TabChanged(Tab.LIBRARY)) { it.copy(tab = Tab.LIBRARY, contentTab = Tab.LIBRARY) }
+        assertEquals(Tab.LIBRARY, store.state.contentTab)
         store.finish()
     }
 

@@ -159,6 +159,7 @@ private fun TabStack(path: List<Destination>, root: @Composable () -> Unit, onPo
 @Composable
 private fun DestinationScreen(destination: Destination, onBack: () -> Unit, send: (DestinationAction) -> Unit) {
     when (destination) {
+        is Destination.History -> ReadingHistoryScreen(destination.state, onBack) { send(DestinationAction.History(it)) }
         is Destination.Arrival -> GuidedExplorationPane(destination.state, onBack) { send(DestinationAction.Arrival(it)) }
         is Destination.Context -> ContextPane(destination.state, onBack) { send(DestinationAction.Context(it)) }
         is Destination.Graph -> GraphPane(destination.state, onBack) { send(DestinationAction.Graph(it)) }

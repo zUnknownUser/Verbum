@@ -63,7 +63,7 @@ internal fun DailyVerseCard(state: DailyVerseFeature.State, send: (DailyVerseFea
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surfaceContainerLowest, RoundedCornerShape(Radius.lg))
             .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(Radius.lg))
-            .padding(Spacing.lg),
+            .padding(Spacing.xl),
         verticalArrangement = Arrangement.spacedBy(Spacing.lg),
     ) {
         when (val text = state.text) {

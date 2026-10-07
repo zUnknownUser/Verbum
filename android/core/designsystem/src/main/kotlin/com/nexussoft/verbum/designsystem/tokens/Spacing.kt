@@ -14,7 +14,7 @@ object Spacing {
     val xxxl = 48.dp
 
     /** Horizontal inset for full-width content. */
-    val screenMargin = 16.dp
+    val screenMargin = 20.dp
     /** Extra breathing room around Scripture. */
     val readingMargin = 24.dp
 }

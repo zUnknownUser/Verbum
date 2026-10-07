@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -27,7 +28,11 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.outlined.MenuBook
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material3.Surface
 import androidx.compose.material3.IconButton
+import androidx.compose.material.icons.outlined.*
+import com.nexussoft.verbum.designsystem.EditorialIcon
+import com.nexussoft.verbum.designsystem.tokens.Palette
 import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -55,7 +60,7 @@ import com.nexussoft.verbum.models.BibleEntityType
 import com.nexussoft.verbum.models.division
 import com.nexussoft.verbum.models.localizedTitle
 
-private val READING_MAX_WIDTH = 680.dp
+private val READING_MAX_WIDTH = 620.dp
 
 /** Spec §5: a greeting, one question, a way back in, the verse of the day. */
 @Composable
@@ -70,18 +75,19 @@ internal fun HomeScreen(state: HomeFeature.State, send: (HomeFeature.Action) -> 
     Page {
         Column(verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                Text(stringResource(greeting).uppercase(), style = VerbumTypography.overline, color = MaterialTheme.colorScheme.primary, modifier = Modifier.weight(1f))
+                Text("VERBUM", style = VerbumTypography.overline, color = MaterialTheme.colorScheme.primary, modifier = Modifier.weight(1f))
                 IconButton(onClick = openAccount) {
                     Icon(Icons.Outlined.AccountCircle, contentDescription = accountText("profile"), tint = MaterialTheme.colorScheme.primary)
                 }
             }
+            Text(stringResource(greeting), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Text(stringResource(R.string.home_question), style = VerbumTypography.editorialTitle, color = MaterialTheme.colorScheme.onSurface)
         }
         Spacer(Modifier.height(Spacing.xxl))
         Row(
             Modifier
                 .fillMaxWidth()
-                .height(52.dp)
+                .heightIn(min = 56.dp)
                 .background(MaterialTheme.colorScheme.surfaceContainerLowest, RoundedCornerShape(Radius.lg))
                 .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(Radius.lg))
                 .clickable { send(HomeFeature.Action.SearchTapped) }
@@ -96,7 +102,7 @@ internal fun HomeScreen(state: HomeFeature.State, send: (HomeFeature.Action) -> 
             Spacer(Modifier.height(Spacing.xxl))
             Text(stringResource(R.string.continue_reading).uppercase(), style = VerbumTypography.overline, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Spacer(Modifier.height(Spacing.md))
-            PassageCard(lastRead.formatted, BibleBook.book(lastRead.bookId)?.division?.localizedTitle ?: "", Icons.AutoMirrored.Outlined.MenuBook) { send(HomeFeature.Action.ContinueReadingTapped) }
+            PassageCard(lastRead.formatted, BibleBook.book(lastRead.bookId)?.division?.localizedTitle ?: "", Icons.AutoMirrored.Outlined.MenuBook, prominent = true) { send(HomeFeature.Action.ContinueReadingTapped) }
         }
         Spacer(Modifier.height(Spacing.xxl))
         Text(stringResource(R.string.today).uppercase(), style = VerbumTypography.overline, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -110,23 +116,23 @@ internal fun HomeScreen(state: HomeFeature.State, send: (HomeFeature.Action) -> 
 
 /** A passage as a quiet card: reference in serif, a line of context, an arrow. */
 @Composable
-private fun PassageCard(title: String, subtitle: String, icon: ImageVector, onTap: () -> Unit) {
+private fun PassageCard(title: String, subtitle: String, icon: ImageVector, prominent: Boolean = false, onTap: () -> Unit) {
     Row(
         Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surfaceContainerLowest, RoundedCornerShape(Radius.lg))
+            .background(if (prominent) Palette.forest else MaterialTheme.colorScheme.surfaceContainerLowest, RoundedCornerShape(Radius.lg))
             .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(Radius.lg))
             .clickable(onClick = onTap)
-            .padding(Spacing.lg),
+            .padding(Spacing.xl),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Spacing.lg),
     ) {
-        Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+        Icon(icon, contentDescription = null, tint = if (prominent) Palette.onForest else MaterialTheme.colorScheme.primary)
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Spacing.xxs)) {
-            Text(title, style = MaterialTheme.typography.titleLarge.copy(fontFamily = FontFamily.Serif, fontWeight = FontWeight.SemiBold), color = MaterialTheme.colorScheme.onSurface)
-            if (subtitle.isNotEmpty()) Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(title, style = MaterialTheme.typography.titleLarge.copy(fontFamily = FontFamily.Serif, fontWeight = FontWeight.SemiBold), color = if (prominent) Palette.onForest else MaterialTheme.colorScheme.onSurface)
+            if (subtitle.isNotEmpty()) Text(subtitle, style = MaterialTheme.typography.bodySmall, color = if (prominent) Palette.onForest.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant)
         }
-        Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+        Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, tint = if (prominent) Palette.onForest else MaterialTheme.colorScheme.primary)
     }
 }
 
@@ -147,16 +153,27 @@ internal fun ExploreScreen(send: (ExploreFeature.Action) -> Unit) {
                 ExploreFeature.Entry.TIMELINE -> R.string.timeline to R.string.explore_timeline
                 ExploreFeature.Entry.BOOKS -> R.string.books to R.string.explore_books
             }
-            Column {
-                Row(Modifier.fillMaxWidth().clickable { send(ExploreFeature.Action.EntryTapped(entry)) }.padding(vertical = Spacing.lg), verticalAlignment = Alignment.CenterVertically) {
-                    Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Spacing.xxs)) {
-                        Text(stringResource(title), style = MaterialTheme.typography.titleLarge.copy(fontFamily = FontFamily.Serif, fontWeight = FontWeight.SemiBold), color = MaterialTheme.colorScheme.onSurface)
+            val icon = when (entry) {
+                ExploreFeature.Entry.PEOPLE -> Icons.Outlined.People
+                ExploreFeature.Entry.PLACES -> Icons.Outlined.Place
+                ExploreFeature.Entry.THEMES -> Icons.Outlined.AutoAwesome
+                ExploreFeature.Entry.EVENTS -> Icons.Outlined.Bolt
+                ExploreFeature.Entry.TIMELINE -> Icons.Outlined.Timeline
+                ExploreFeature.Entry.BOOKS -> Icons.AutoMirrored.Outlined.MenuBook
+            }
+            Surface(onClick = { send(ExploreFeature.Action.EntryTapped(entry)) },
+                color = MaterialTheme.colorScheme.surfaceContainerLowest, shape = MaterialTheme.shapes.large,
+                border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)) {
+                Row(Modifier.fillMaxWidth().padding(Spacing.lg), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.lg)) {
+                    EditorialIcon(icon)
+                    Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
+                        Text(stringResource(title), style = VerbumTypography.navigationSerif)
                         Text(stringResource(subtitle), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
-                    Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = MaterialTheme.colorScheme.outline)
+                    Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, null, tint = MaterialTheme.colorScheme.primary)
                 }
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             }
+            Spacer(Modifier.height(Spacing.md))
         }
     }
 }

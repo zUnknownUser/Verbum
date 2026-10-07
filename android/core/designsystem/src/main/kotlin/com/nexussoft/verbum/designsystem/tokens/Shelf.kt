@@ -14,8 +14,8 @@ import androidx.compose.ui.unit.sp
  * the current book is the accent.
  */
 object Shelf {
-    private val lightTints = listOf(Color(0xFFF3EDE3), Color(0xFFEDE4D6), Color(0xFFF0E9DD), Color(0xFFE9E0D1))
-    private val darkTints = listOf(Color(0xFF262220), Color(0xFF2A2521), Color(0xFF282420), Color(0xFF2C2722))
+    private val lightTints = listOf(Color(0xFFEBEEE4), Color(0xFFE3EADF), Color(0xFFE7EBDD), Color(0xFFDFE7DD))
+    private val darkTints = listOf(Color(0xFF26322A), Color(0xFF2D382F), Color(0xFF29362D), Color(0xFF303C32))
 
     @Composable
     fun spineTint(index: Int, dark: Boolean = MaterialTheme.colorScheme.background == Palette.paperDark): Color {

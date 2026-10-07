@@ -112,11 +112,11 @@ private fun AccountScreen(state: AccountFeature.State, send: (Action) -> Unit, a
                     when (state.page) {
                         Page.PROFILE -> Unit
                         Page.EDIT_NAME -> {
-                            OutlinedTextField(state.displayName, { send(Action.DisplayName(it)) }, label = { Text(accountText("displayName")) }, singleLine = true, enabled = !state.busy, modifier = Modifier.fillMaxWidth())
+                            OutlinedTextField(value = state.displayName, onValueChange = { send(Action.DisplayName(it)) }, shape = MaterialTheme.shapes.medium, label = { Text(accountText("displayName")) }, singleLine = true, enabled = !state.busy, modifier = Modifier.fillMaxWidth())
                             AccountPrimary("saveChanges", !state.busy) { send(Action.Perform(Operation.UPDATE_NAME)) }
                         }
                         Page.CHANGE_EMAIL -> {
-                            OutlinedTextField(state.email, { send(Action.Email(it)) }, label = { Text(accountText("newEmail")) }, singleLine = true, enabled = !state.busy, modifier = Modifier.fillMaxWidth(), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email))
+                            OutlinedTextField(value = state.email, onValueChange = { send(Action.Email(it)) }, shape = MaterialTheme.shapes.medium, label = { Text(accountText("newEmail")) }, singleLine = true, enabled = !state.busy, modifier = Modifier.fillMaxWidth(), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email))
                             AccountPassword("password", state.password, false, !state.busy, onChange = { send(Action.Password(it)) }, onSubmit = { send(Action.Perform(Operation.CHANGE_EMAIL)) })
                             AccountPrimary("confirmEmailChange", !state.busy) { send(Action.Perform(Operation.CHANGE_EMAIL)) }
                         }
@@ -127,7 +127,7 @@ private fun AccountScreen(state: AccountFeature.State, send: (Action) -> Unit, a
                             TextButton(onClick = { send(Action.Close) }, enabled = !state.busy, modifier = Modifier.fillMaxWidth()) { Text(accountText("later")) }
                         }
                         Page.SIGN_IN, Page.REGISTER, Page.RESET -> {
-                            OutlinedTextField(value = state.email, onValueChange = { send(Action.Email(it)) }, label = { Text(accountText("email")) },
+                            OutlinedTextField(shape = MaterialTheme.shapes.medium, value = state.email, onValueChange = { send(Action.Email(it)) }, label = { Text(accountText("email")) },
                                 enabled = !state.busy, singleLine = true, modifier = Modifier.fillMaxWidth().semantics { contentType = ContentType.EmailAddress },
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = if (state.page == Page.RESET) ImeAction.Send else ImeAction.Next),
                                 keyboardActions = KeyboardActions(onNext = { focus.moveFocus(FocusDirection.Down) }, onSend = { submit() }))
@@ -201,7 +201,7 @@ private fun AccountPrimary(key: String, enabled: Boolean, action: () -> Unit) {
 @Composable
 private fun AccountPassword(key: String, value: String, visible: Boolean, enabled: Boolean, next: Boolean = false, newPassword: Boolean = false, onChange: (String) -> Unit, onSubmit: () -> Unit) {
     val focus = LocalFocusManager.current
-    OutlinedTextField(value = value, onValueChange = onChange, label = { Text(accountText(key)) },
+    OutlinedTextField(shape = MaterialTheme.shapes.medium, value = value, onValueChange = onChange, label = { Text(accountText(key)) },
         modifier = Modifier.fillMaxWidth().semantics { contentType = if (newPassword) ContentType.NewPassword else ContentType.Password },
         enabled = enabled, singleLine = true,
         visualTransformation = if (visible) VisualTransformation.None else PasswordVisualTransformation(),

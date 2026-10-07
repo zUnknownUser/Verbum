@@ -99,7 +99,7 @@ internal fun ProfileScreen(account: AccountFeature.State, state: ProfileFeature.
                         modifier = Modifier.semantics { liveRegion = LiveRegionMode.Assertive }) }
                     if(account.busy) LinearProgressIndicator(Modifier.fillMaxWidth())
                     account.notice?.let { Text(accountText(it), style = MaterialTheme.typography.bodyMedium, color = primary) }
-                    Column(Modifier.fillMaxWidth().background(primary.copy(alpha = 0.055f), RoundedCornerShape(16.dp)).border(1.dp, primary.copy(alpha = 0.15f), RoundedCornerShape(16.dp)).padding(Spacing.xl), verticalArrangement = Arrangement.spacedBy(Spacing.lg)) {
+                    Column(Modifier.fillMaxWidth().background(primary.copy(alpha = 0.055f), MaterialTheme.shapes.large).border(1.dp, primary.copy(alpha = 0.15f), MaterialTheme.shapes.large).padding(Spacing.xl), verticalArrangement = Arrangement.spacedBy(Spacing.lg)) {
                         Text(accountText("yourJourney").uppercase(), style = VerbumTypography.overline, color = primary)
                         Text(accountText(if(state.activity.visits.isEmpty()) "journeyBeginning" else "journeyContinuing"), style = VerbumTypography.editorialHeadline)
                         val ready = !state.loading && !state.failed
@@ -250,7 +250,7 @@ private fun ProfileMetric(value: Int?, key: String, modifier: Modifier) {
 private fun ProfileSection(title: String, content: @Composable ColumnScope.() -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {
         Text(accountText(title).uppercase(), style = VerbumTypography.overline, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.semantics { heading() })
-        Column(Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceContainerLowest, RoundedCornerShape(16.dp)).border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp)).padding(horizontal = Spacing.lg), content = content)
+        Column(Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceContainerLowest, MaterialTheme.shapes.large).border(1.dp, MaterialTheme.colorScheme.outlineVariant, MaterialTheme.shapes.large).padding(horizontal = Spacing.lg), content = content)
     }
 }
 

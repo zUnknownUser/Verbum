@@ -1,6 +1,9 @@
 package com.nexussoft.verbum.designsystem
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Shapes
+import com.nexussoft.verbum.designsystem.tokens.Radius
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import com.nexussoft.verbum.designsystem.tokens.Palette
@@ -18,6 +21,10 @@ fun VerbumTheme(
     MaterialTheme(
         colorScheme = if (darkTheme) Palette.dark else Palette.light,
         typography = VerbumTypography.material,
+        shapes = Shapes(
+            extraSmall = RoundedCornerShape(Radius.sm), small = RoundedCornerShape(Radius.sm),
+            medium = RoundedCornerShape(Radius.md), large = RoundedCornerShape(Radius.lg), extraLarge = RoundedCornerShape(Radius.xl),
+        ),
         content = content,
     )
 }

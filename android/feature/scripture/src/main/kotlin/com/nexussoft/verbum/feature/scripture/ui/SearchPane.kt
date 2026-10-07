@@ -31,6 +31,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -190,13 +191,19 @@ private fun ResultRow(title: String, subtitle: String, icon: ImageVector?, tappa
 private fun Suggestions(onPick: (String) -> Unit) {
     Column(Modifier.padding(horizontal = Spacing.readingMargin, vertical = Spacing.xl), verticalArrangement = Arrangement.spacedBy(Spacing.md)) {
         Text(stringResource(R.string.try_label).uppercase(), style = VerbumTypography.overline, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        for (example in listOf("John 3:16", "1 Samuel 17", "David", "Jerusalem", "Forgiveness", "why did Job suffer")) {
+        val examples = if (com.nexussoft.verbum.models.BookLanguage.current == com.nexussoft.verbum.models.BookLanguage.PORTUGUESE)
+            listOf("João 3:16", "1 Samuel 17", "Davi", "Jerusalém", "Perdão", "por que Jó sofreu")
+        else listOf("John 3:16", "1 Samuel 17", "David", "Jerusalem", "Forgiveness", "why did Job suffer")
+        for (example in examples) {
+            Surface(onClick = { onPick(example) }, shape = MaterialTheme.shapes.medium, color = MaterialTheme.colorScheme.surfaceContainerLowest,
+                border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)) {
             Text(
                 example,
                 style = MaterialTheme.typography.bodyLarge.copy(fontFamily = FontFamily.Serif),
                 color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.clickable { onPick(example) },
+                modifier = Modifier.fillMaxWidth().padding(Spacing.lg),
             )
+            }
         }
     }
 }

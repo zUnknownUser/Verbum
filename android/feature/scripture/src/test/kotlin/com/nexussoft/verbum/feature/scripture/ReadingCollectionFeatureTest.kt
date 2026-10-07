@@ -7,6 +7,46 @@ import kotlinx.coroutines.test.runTest
 import kotlin.test.*
 
 class ReadingCollectionFeatureTest {
+    @Test fun historyPaginatesAndSearchResetsWithoutLosingVisits() {
+        val activity = ReadingActivity(visits = (45 downTo 1).map {
+            ReadingActivity.Visit(PassageReference("Gen", it), it.toLong())
+        } + ReadingActivity.Visit(PassageReference("John", 3), 0))
+        val reducer = ReadingCollectionFeature.reducer(InMemoryPreferencesClient())
+        var state = ReadingCollectionFeature.State(activity = activity)
+        assertEquals(20, state.visibleVisits.size)
+        state = reducer.reduce(state, ReadingCollectionFeature.Action.HistoryShowMore).state
+        assertEquals(40, state.visibleVisits.size)
+        state = reducer.reduce(state, ReadingCollectionFeature.Action.HistoryShowMore).state
+        assertEquals(46, state.visibleVisits.size)
+        assertFalse(state.hasMore)
+        state = reducer.reduce(state, ReadingCollectionFeature.Action.HistoryQueryChanged("  joao 3 ")).state
+        assertEquals(listOf(PassageReference("John", 3)), state.visibleVisits.map { it.reference })
+        assertEquals(20, state.historyVisibleCount)
+        state = reducer.reduce(state, ReadingCollectionFeature.Action.HistoryQueryChanged("Gênesis 3")).state
+        assertEquals(listOf(PassageReference("Gen", 3)), state.visibleVisits.map { it.reference })
+        state = reducer.reduce(state, ReadingCollectionFeature.Action.HistoryQueryChanged("xyz")).state
+        assertTrue(state.visibleVisits.isEmpty())
+        state = reducer.reduce(state, ReadingCollectionFeature.Action.HistoryQueryChanged("")).state
+        assertEquals(20, state.visibleVisits.size)
+        assertEquals(46, state.activity.visits.size)
+    }
+
+    @Test fun historyStaysBelowReaderAndPreservesSearchOnReturn() {
+        val deps = AppFeature.Dependencies(bibleClient = StubBibleClient(), preferences = InMemoryPreferencesClient(), searchClient = unimplementedSearch, graphClient = StubGraphClient(), audioClient = unimplementedAudio, player = FakePlayer())
+        val reducer = AppFeature.reducer(deps)
+        var state = AppFeature.State(tab = AppFeature.Tab.JOURNEY, contentTab = AppFeature.Tab.JOURNEY)
+        state = reducer.reduce(state, AppFeature.Action.Collection(ReadingCollectionFeature.Action.Delegate(ReadingCollectionFeature.DelegateAction.History))).state
+        assertIs<AppFeature.Destination.History>(state.journeyPath.single())
+        state = reducer.reduce(state, AppFeature.Action.JourneyPath(0, AppFeature.DestinationAction.History(ReadingCollectionFeature.Action.HistoryQueryChanged("João")))).state
+        val reference = PassageReference("John", 3)
+        state = reducer.reduce(state, AppFeature.Action.JourneyPath(0, AppFeature.DestinationAction.History(ReadingCollectionFeature.Action.Delegate(ReadingCollectionFeature.DelegateAction.Open(reference))))).state
+        assertEquals(2, state.journeyPath.size)
+        assertIs<AppFeature.Destination.Reader>(state.journeyPath.last())
+        state = reducer.reduce(state, AppFeature.Action.Pop(AppFeature.Tab.JOURNEY)).state
+        assertEquals("João", (state.journeyPath.single() as AppFeature.Destination.History).state.historyQuery)
+        assertTrue(state.libraryPath.isEmpty())
+    }
+
     @Test fun reloadsExistingAnnotationsAndKeepsSearchFilter() = runTest {
         val prefs = InMemoryPreferencesClient()
         val annotations = PreferenceReaderAnnotationsClient(prefs)

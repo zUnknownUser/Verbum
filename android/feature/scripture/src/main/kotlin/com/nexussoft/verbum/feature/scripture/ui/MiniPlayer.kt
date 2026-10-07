@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -48,7 +49,7 @@ internal fun MiniPlayer(state: AudioPlayerFeature.State, send: (Action) -> Unit)
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(Spacing.xs),
             ) {
-                Column(Modifier.weight(1f).clickable { send(Action.ChapterTapped) }) {
+                Column(Modifier.weight(1f).clickable { send(Action.ChapterTapped) }.heightIn(min = 48.dp), verticalArrangement = Arrangement.Center) {
                     Text(state.reference?.formatted ?: "", style = VerbumTypography.navigationSerif, color = MaterialTheme.colorScheme.onSurface, maxLines = 1)
                     Text(subtitle(state), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
                 }

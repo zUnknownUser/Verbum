@@ -42,8 +42,8 @@ object VerbumTypography {
     val scripture = TextStyle(
         fontFamily = FontFamily.Serif,
         fontWeight = FontWeight.Normal,
-        fontSize = 17.sp,
-        lineHeight = 28.sp,
+        fontSize = 20.sp,
+        lineHeight = 30.sp,
     )
     /** Verse numbers sit in the margin of the reading column; small and quiet. */
     val verseNumber = TextStyle(

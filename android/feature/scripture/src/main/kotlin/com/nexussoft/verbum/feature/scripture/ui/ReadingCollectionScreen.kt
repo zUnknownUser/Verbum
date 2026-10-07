@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.testTag
+import com.nexussoft.verbum.designsystem.EditorialCard
 import com.nexussoft.verbum.designsystem.tokens.Spacing
 import com.nexussoft.verbum.designsystem.tokens.VerbumTypography
 import com.nexussoft.verbum.feature.scripture.ReadingCollectionFeature
@@ -51,9 +52,11 @@ internal fun ReadingCollectionScreen(state: ReadingCollectionFeature.State, jour
         }
         if (journey) {
             item {
+                EditorialCard {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Spacing.xl)) {
                     Column(Modifier.weight(1f)) { Metric(state.activity.days.size, R.string.collection_days) }
                     Column(Modifier.weight(1f)) { Metric(state.activity.visits.size, R.string.collection_chapters) }
+                }
                 }
                 Spacer(Modifier.height(Spacing.md))
                 Text(stringResource(R.string.collection_visits_explained), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -72,11 +75,16 @@ internal fun ReadingCollectionScreen(state: ReadingCollectionFeature.State, jour
                 CollectionEmpty(R.string.collection_journey_empty, R.string.collection_journey_empty_body, send)
             }
             if (state.activity.visits.isNotEmpty()) item { Text(stringResource(R.string.collection_recent), style = VerbumTypography.overline, color = MaterialTheme.colorScheme.primary) }
-            items(state.activity.visits, key = { ReaderCanon.key(it.reference) }) { visit ->
+            items(state.activity.visits.take(10), key = { ReaderCanon.key(it.reference) }) { visit ->
                 Column(Modifier.fillMaxWidth().clickable { send(Action.Open(visit.reference)) }.padding(vertical = Spacing.sm), verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {
                     Text(visit.reference.formatted, style = VerbumTypography.navigationSerif)
                     Text(dateFormat.format(Instant.ofEpochMilli(visit.lastOpened)), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     HorizontalDivider()
+                }
+            }
+            if (state.activity.visits.isNotEmpty()) item {
+                OutlinedButton(onClick = { send(Action.HistoryTapped) }, modifier = Modifier.fillMaxWidth().testTag("journey.history")) {
+                    Text(stringResource(R.string.history_view_all))
                 }
             }
         } else {
@@ -93,7 +101,8 @@ internal fun ReadingCollectionScreen(state: ReadingCollectionFeature.State, jour
                 CollectionEmpty(if (empty) R.string.collection_library_empty else R.string.collection_no_matches, if (empty) R.string.collection_library_empty_body else R.string.collection_no_matches_body, send)
             }
             items(entries, key = { it.id }) { item ->
-                Column(Modifier.fillMaxWidth().clickable { send(Action.Open(item.reference)) }.padding(vertical = Spacing.sm), verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {
+                EditorialCard {
+                Column(Modifier.fillMaxWidth().clickable { send(Action.Open(item.reference)) }, verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {
                     Text(item.reference.formatted, style = VerbumTypography.navigationSerif)
                     Row(horizontalArrangement = Arrangement.spacedBy(Spacing.md)) {
                         if (item.bookmarked) Icon(Icons.Outlined.BookmarkBorder, stringResource(R.string.collection_saved), tint = MaterialTheme.colorScheme.primary)
@@ -101,7 +110,7 @@ internal fun ReadingCollectionScreen(state: ReadingCollectionFeature.State, jour
                         if (item.note.isNotEmpty()) Icon(Icons.Outlined.EditNote, stringResource(R.string.collection_notes), tint = MaterialTheme.colorScheme.primary)
                     }
                     if (item.note.isNotEmpty()) Text(item.note, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 3)
-                    HorizontalDivider()
+                }
                 }
             }
         }
@@ -114,7 +123,7 @@ internal fun ReadingCollectionScreen(state: ReadingCollectionFeature.State, jour
     Text(stringResource(label), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
 }
 @Composable private fun CollectionEmpty(title: Int, body: Int, send: (Action) -> Unit) {
-    Column(verticalArrangement = Arrangement.spacedBy(Spacing.md)) {
+    EditorialCard(modifier = Modifier.fillMaxWidth()) {
         Text(stringResource(title), style = VerbumTypography.editorialHeadline)
         Text(stringResource(body), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         TextButton(onClick = { send(Action.Browse) }) {
