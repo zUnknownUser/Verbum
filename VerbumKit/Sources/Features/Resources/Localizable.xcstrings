@@ -1382,6 +1382,7 @@
       }
     },
     "Highlights and notes stay on this device." : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt-BR" : {
           "stringUnit" : {
@@ -2522,6 +2523,9 @@
         }
       }
     },
+    "Salvo offline. Entre na conta para sincronizar notas e marcações." : {
+
+    },
     "Save note" : {
       "localizations" : {
         "pt-BR" : {
@@ -2541,6 +2545,9 @@
           }
         }
       }
+    },
+    "Saved offline. Sign in to sync notes and markings." : {
+
     },
     "Saved passages, people and themes, and your notes, will live here. Saving arrives together with accounts." : {
       "extractionState" : "stale",
@@ -2773,6 +2780,7 @@
       }
     },
     "Stored on this device. Signing in does not sync these items yet." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
