@@ -38,6 +38,7 @@ public struct AppFeature {
 
     @Reducer
     public enum Path {
+        case history(ReadingHistoryFeature)
         case reader(ScriptureFeature)
         case entity(EntityDetailFeature)
         case entities(EntityListFeature)
@@ -100,6 +101,9 @@ public struct AppFeature {
 
             case .collection(.delegate(.open(let reference))):
                 push(.reader(ScriptureFeature.State(reference: reference)), in: &state)
+                return .none
+            case .collection(.delegate(.history)):
+                state.journeyPath.append(.history(ReadingHistoryFeature.State()))
                 return .none
             case .collection(.delegate(.browse)):
                 push(.books(BookPickerFeature.State(current: state.collection.lastRead ?? PassageReference(bookId: "Gen", chapter: 1))), in: &state)
@@ -209,7 +213,8 @@ public struct AppFeature {
              .ask(.delegate(.openEntity(let entity))),
              .entities(.delegate(.openEntity(let entity))):
             state[keyPath: path].append(.entity(EntityDetailFeature.State(entityID: entity.id)))
-        case .entity(.delegate(.openPassage(let reference))),
+        case .history(.delegate(.open(let reference))),
+             .entity(.delegate(.openPassage(let reference))),
              .arrival(.delegate(.openPassage(let reference))),
              .graph(.delegate(.openPassage(let reference))),
              .ask(.delegate(.openPassage(let reference))),

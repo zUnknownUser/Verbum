@@ -145,6 +145,8 @@ struct PathView: View {
 
     var body: some View {
         switch store.case {
+        case .history(let store):
+            ReadingHistoryView(store: store)
         case .reader(let store):
             ScriptureView(store: store)
         case .entity(let store):

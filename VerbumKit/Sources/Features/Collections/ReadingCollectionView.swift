@@ -106,16 +106,17 @@ struct ReadingCollectionView: View {
             empty(title: "Your journey starts here", body: "Open a chapter and return here whenever you want to revisit it.")
         } else {
             Text(L10n.t("Recently opened")).overline(color: Palette.accent)
-            ForEach(store.activity.visits) { visit in
-                Button { store.send(.open(visit.reference)) } label: {
-                    VStack(alignment: .leading, spacing: Spacing.sm) {
-                        Text(visit.reference.formatted).font(Typography.navigationSerif).foregroundStyle(Palette.ink)
-                        Text(visit.lastOpened.formatted(Date.FormatStyle(date: .abbreviated, time: .shortened).locale(BookLanguage.current.locale)))
-                            .font(Typography.caption).foregroundStyle(Palette.inkSecondary)
-                        Divider().overlay(Palette.rule)
-                    }.contentShape(Rectangle())
-                }.buttonStyle(.plain)
+            ForEach(store.activity.visits.prefix(10)) { visit in
+                ReadingVisitRow(visit: visit) { store.send(.open(visit.reference)) }
             }
+            Button { store.send(.historyTapped) } label: {
+                HStack {
+                    Text(L10n.t("View full history"))
+                    Spacer()
+                    Image(systemName: "arrow.right").accessibilityHidden(true)
+                }.font(Typography.subheadline).padding(Spacing.lg).editorialSurface()
+            }.buttonStyle(EditorialButtonStyle()).foregroundStyle(Palette.accent)
+                .accessibilityIdentifier("journey.history")
         }
     }
     @ViewBuilder private var metrics: some View {

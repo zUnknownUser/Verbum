@@ -17,13 +17,13 @@ public struct ReadingCollectionFeature {
         var entries: [ReaderAnnotation] { ReadingCollection.entries(annotations, filter: filter, query: query) }
     }
     public enum Action: Equatable {
-        case task, retry
+        case task, retry, historyTapped
         case loaded([ReaderAnnotation]), failed
         case queryChanged(String), filterChanged(ReadingCollectionFilter)
         case open(PassageReference), browse
         case delegate(Delegate)
         @CasePathable public enum Delegate: Equatable {
-            case open(PassageReference), browse
+            case open(PassageReference), browse, history
         }
     }
     @Dependency(\.readerAnnotations) var annotations
@@ -44,6 +44,7 @@ public struct ReadingCollectionFeature {
             case .queryChanged(let query): state.query = query; return .none
             case .filterChanged(let filter): state.filter = filter; return .none
             case .open(let reference): return .send(.delegate(.open(reference)))
+            case .historyTapped: return .send(.delegate(.history))
             case .browse: return .send(.delegate(.browse))
             case .delegate: return .none
             }
