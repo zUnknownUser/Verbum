@@ -14,6 +14,7 @@ public struct TimelineFeature {
         /// The entity whose events are highlighted, when opened from its page.
         public let highlight: EntityID?
         public var content: Content = .idle
+        public var selectedEraID: String?
         public var selectedID: TimelineEvent.ID?
         /// Names for the entities the events mention, resolved after loading.
         public var entityNames: [EntityID: String] = [:]
@@ -41,6 +42,8 @@ public struct TimelineFeature {
         case retryTapped
         case eventsResponse(Result<[TimelineEvent], Failure>)
         case namesResponse([EntityID: String])
+        case eraTapped(String?)
+        case passageTapped(PassageReference)
         case eventTapped(TimelineEvent.ID)
         case entityTapped(EntityID)
         case delegate(Delegate)
@@ -48,6 +51,7 @@ public struct TimelineFeature {
         @CasePathable
         public enum Delegate: Equatable {
             case openEntity(EntityID)
+            case openPassage(PassageReference)
         }
     }
 
@@ -74,10 +78,17 @@ public struct TimelineFeature {
                 state.content = .loaded(events)
                 // Arriving from an entity page: its first event starts open.
                 if state.selectedID == nil { state.selectedID = state.highlightedEventID }
+                if let selected = events.first(where: { $0.id == state.selectedID }) {
+                    state.selectedEraID = selected.discovery?.eraId
+                }
                 // Names for the chips. Unknown ids are simply not shown.
-                let ids = Array(Set(events.flatMap(\.entityIds))).sorted()
+                let supplied = events.reduce(into: [EntityID: String]()) { names, event in
+                    names.merge(event.entityNames ?? [:], uniquingKeysWith: { first, _ in first })
+                }
+                let ids = Array(Set(events.filter { $0.entityNames == nil }.flatMap(\.entityIds))).sorted()
+                if ids.isEmpty { return .send(.namesResponse(supplied)) }
                 return .run { [graphClient] send in
-                    var names: [EntityID: String] = [:]
+                    var names: [EntityID: String] = supplied
                     for id in ids {
                         if let entity = try? await graphClient.entity(id: id) { names[id] = entity.name }
                     }
@@ -92,6 +103,14 @@ public struct TimelineFeature {
             case .eventsResponse(.failure):
                 state.content = .failed
                 return .none
+
+            case .eraTapped(let id):
+                state.selectedEraID = id
+                state.selectedID = nil
+                return .none
+
+            case .passageTapped(let reference):
+                return .send(.delegate(.openPassage(reference)))
 
             case .eventTapped(let id):
                 state.selectedID = state.selectedID == id ? nil : id
@@ -126,7 +145,7 @@ public struct TimelineFeature {
 /// `c. 516 BC – AD 70`, `date unknown`. The era words come from the catalogue.
 public enum TimelineDates {
     public static func text(for event: TimelineEvent) -> String {
-        guard let start = event.startYear else { return L10n.t("date unknown") }
+        guard let start = event.startYear else { return event.discovery == nil ? L10n.t("date unknown") : L10n.t("Narrative sequence") }
         let prefix = event.datePrecision == .approximate ? L10n.t("c.") + " " : ""
         let span: String
         if let end = event.endYear, end != start {

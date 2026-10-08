@@ -238,12 +238,12 @@ func (s *Store) DailyVersePool(ctx context.Context) ([]domain.PassageReference, 
 
 func (s *Store) Timeline(ctx context.Context, entityID string) (domain.Timeline, error) {
 	return readJSON[domain.Timeline](ctx, s, `WITH events AS (
- SELECT t.*,tl.fields FROM timeline_events t LEFT JOIN LATERAL (SELECT fields FROM timeline_localizations l WHERE l.event_id=t.id AND l.language=$2 ORDER BY l.source_id LIMIT 1) tl ON true WHERE ($2='en' OR NULLIF(tl.fields->>'title','') IS NOT NULL) AND ($1='' OR EXISTS (SELECT 1 FROM timeline_event_entities x WHERE x.event_id=t.id AND x.entity_id=$1))
+ SELECT t.*,tl.fields FROM timeline_events t LEFT JOIN LATERAL (SELECT fields FROM timeline_localizations l WHERE l.event_id=t.id AND l.language=$2 ORDER BY l.source_id LIMIT 1) tl ON true WHERE ($2='en' OR NULLIF(t.discovery->$2->>'title','') IS NOT NULL OR NULLIF(tl.fields->>'title','') IS NOT NULL) AND ($1='' OR EXISTS (SELECT 1 FROM timeline_event_entities x WHERE x.event_id=t.id AND x.entity_id=$1))
  ) SELECT jsonb_build_object('events',COALESCE((SELECT jsonb_agg(jsonb_build_object(
- 'id',t.id,'title',COALESCE(t.fields->>'title',t.title),'startYear',t.start_year,'endYear',t.end_year,'datePrecision',t.date_precision,'summary',COALESCE(t.fields->>'summary',CASE WHEN $2='en' THEN t.summary END),
- 'entityIds',COALESCE((SELECT jsonb_agg(x.entity_id ORDER BY x.position,x.entity_id) FROM timeline_event_entities x WHERE x.event_id=t.id),'[]'::jsonb),
+ 'id',t.id,'title',COALESCE(t.discovery->$2->>'title',t.fields->>'title',t.title),'startYear',t.start_year,'endYear',t.end_year,'datePrecision',t.date_precision,'summary',COALESCE(t.discovery->$2->>'summary',t.fields->>'summary',CASE WHEN $2='en' THEN t.summary END),
+ 'discovery',t.discovery->$2,'entityIds',COALESCE((SELECT jsonb_agg(x.entity_id ORDER BY x.position,x.entity_id) FROM timeline_event_entities x WHERE x.event_id=t.id),'[]'::jsonb),
  'sourceReferenceIds',COALESCE((SELECT jsonb_agg(x.source_id ORDER BY x.position,x.source_id) FROM timeline_event_sources x WHERE x.event_id=t.id),'[]'::jsonb)
- ) ORDER BY t.start_year NULLS LAST,(COALESCE(t.end_year,t.start_year)::bigint-t.start_year::bigint) DESC,t.position,t.id) FROM events t),'[]'::jsonb),
+ ) ORDER BY CASE WHEN t.discovery IS NOT NULL THEN t.position END NULLS LAST,t.start_year NULLS LAST,t.position,t.id) FROM events t),'[]'::jsonb),
  'entityNames',COALESCE((SELECT jsonb_object_agg(e.id,(`+localizedEntityJSON("$2")+`)->>'name') FROM entities e WHERE EXISTS
  (SELECT 1 FROM timeline_event_entities x JOIN events t ON t.id=x.event_id WHERE x.entity_id=e.id)),'{}'::jsonb))`, entityID, store.Language(ctx))
 }

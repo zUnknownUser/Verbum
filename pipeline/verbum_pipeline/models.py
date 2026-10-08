@@ -115,6 +115,15 @@ def unique(values: list[str], label: str) -> None:
 
 
 class Content(Model):
+    referencedEntityIds: list[Text] = []
+
+    @model_serializer(mode="wrap")
+    def serialize_content(self, handler):
+        value = handler(self)
+        if not self.referencedEntityIds:
+            value.pop("referencedEntityIds", None)
+        return value
+
     sources: list[Source]
     entities: list[Entity]
     relationships: list[Relationship]
@@ -136,9 +145,10 @@ class Content(Model):
         for r in self.relationships:
             if r.sourceId not in entities or r.targetId not in entities:
                 raise ValueError(f"unknown relationship endpoint in {r.id}")
+        unique(self.referencedEntityIds, "referenced entities")
         for event in self.timeline:
             unique(event.entityIds, "timeline entities")
-            if not set(event.entityIds) <= entities.keys():
+            if not set(event.entityIds) <= (entities.keys() | set(self.referencedEntityIds)):
                 raise ValueError(f"unknown entity in {event.id}")
         for detail in self.details:
             if entities.get(detail.entity.id) != detail.entity:
@@ -292,8 +302,24 @@ class ThemeDiscovery(Model):
     presentations: list[ThemePresentation]
 
 
+class TimelinePresentation(Model):
+    eraId: Text
+    eraTitle: Text
+    eraSummary: Text
+    kind: Literal["event", "period"]
+    context: Text
+    keyPassages: Annotated[list[Reference], Field(min_length=1)]
+    title: Text
+    summary: Text
+
+
+class TimelineDiscovery(Model):
+    presentations: dict[Text, dict[str, TimelinePresentation]]
+
+
 class Bundle(Model):
-    version: Literal[1, 2, 3, 4] = 1
+    version: Literal[1, 2, 3, 4, 5] = 1
+    timelineDiscovery: TimelineDiscovery | None = None
     themes: ThemeDiscovery | None = None
     translations: list[ContentTranslation] | None = None
     enrichment: Enrichment | None = None
@@ -307,6 +333,8 @@ class Bundle(Model):
     @model_serializer(mode="wrap")
     def serialize_bundle(self, handler):
         value = handler(self)
+        if self.version != 5:
+            value.pop("timelineDiscovery", None)
         if self.version != 4:
             value.pop("themes", None)
         if self.version != 3:
@@ -317,6 +345,32 @@ class Bundle(Model):
 
     @model_validator(mode="after")
     def evidence(self) -> Self:
+        if (self.version == 5) != (self.timelineDiscovery is not None):
+            raise ValueError("version 5 requires timeline discovery")
+        if self.content.referencedEntityIds and self.version != 5:
+            raise ValueError("external timeline links require version 5")
+        if self.timelineDiscovery is not None:
+            if self.kind != "editorial" or self.content.entities or self.content.relationships or self.content.details or self.content.dailyVersePool:
+                raise ValueError("timeline batch cannot change other modules")
+            presentations = self.timelineDiscovery.presentations
+            if set(presentations) != {e.id for e in self.content.timeline}:
+                raise ValueError("timeline presentations must cover every event")
+            eras = {}
+            for event in self.content.timeline:
+                languages = presentations[event.id]
+                if set(languages) != {"en", "pt-BR"}:
+                    raise ValueError("timeline requires both languages")
+                en, pt = languages["en"], languages["pt-BR"]
+                if (en.eraId, en.kind, en.keyPassages) != (pt.eraId, pt.kind, pt.keyPassages):
+                    raise ValueError("timeline translations disagree structurally")
+                if (event.title, event.summary) != (en.title, en.summary):
+                    raise ValueError("canonical timeline must match English")
+                for language, presentation in languages.items():
+                    key = (presentation.eraId, language)
+                    era = (presentation.eraTitle, presentation.eraSummary)
+                    if key in eras and eras[key] != era:
+                        raise ValueError("inconsistent era presentation")
+                    eras[key] = era
         if (self.version == 4) != (self.themes is not None):
             raise ValueError("version 4 requires theme discovery metadata")
         if self.themes is not None:

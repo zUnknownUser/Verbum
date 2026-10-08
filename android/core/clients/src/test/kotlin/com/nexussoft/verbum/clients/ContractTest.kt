@@ -93,7 +93,9 @@ class ContractTest {
     @Test
     fun timeline() = runTest {
         val live = LiveTimelineClient(api("timeline/all.json", "/v1/timeline?lang=${BookLanguage.current.tag}"))
-        assertEquals(FixtureTimelineClient.events(), live.events())
+        val events = live.events()
+        assertEquals(FixtureTimelineClient.events(), events.map { it.copy(entityNames = null) })
+        assertEquals("Abraham", events.first().entityNames?.get("fixture.person.abraham"))
     }
 
     @Test

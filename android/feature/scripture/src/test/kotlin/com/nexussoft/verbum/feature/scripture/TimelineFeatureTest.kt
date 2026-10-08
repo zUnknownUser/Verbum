@@ -52,7 +52,9 @@ class TimelineFeatureTest {
     }
 
     @Test fun openedFromAnEntityItsFirstEventStartsOpen() = runTest {
-        val graph = StubGraphClient()
+        val graph = object : com.nexussoft.verbum.clients.GraphClient by StubGraphClient() {
+            override suspend fun entity(id: EntityId): BibleEntity = error("unavailable")
+        }
         val store = TestStore(State(highlight = "fixture.person.david"), reducer(FakeTimeline(listOf(exodus, david)), graph))
         store.send(Action.Started) { it.copy(content = Content.Loading) }
         store.receive(Action.EventsLoaded(listOf(exodus, david))) { it.copy(content = Content.Loaded(listOf(exodus, david)), selectedId = david.id) }
@@ -78,4 +80,20 @@ class TimelineFeatureTest {
         assertEquals("c. 722 BC", TimelineDates.text(samaria))
         assertEquals("date unknown", TimelineDates.text(unknown))
     }
+    @Test fun studyDeepLinkUsesSuppliedNamesAndOpensScripture() = runTest {
+        val reference = com.nexussoft.verbum.models.PassageReference("Exod", 14)
+        val event = exodus.copy(discovery = com.nexussoft.verbum.models.TimelineDiscovery("exodus", "Exodus", "Journey", "event", "Deliverance", listOf(reference)), entityNames = mapOf("fixture.person.moses" to "Moses"))
+        val store = TestStore(State(highlight = "fixture.person.moses"), reducer(FakeTimeline(listOf(event)), StubGraphClient()))
+        store.send(Action.Started) { it.copy(content = Content.Loading) }
+        store.receive(Action.EventsLoaded(listOf(event))) { it.copy(content = Content.Loaded(listOf(event)), selectedId = event.id, selectedEraId = "exodus") }
+        store.receive(Action.NamesLoaded(mapOf("fixture.person.moses" to "Moses"))) { it.copy(entityNames = mapOf("fixture.person.moses" to "Moses")) }
+        store.send(Action.PassageTapped(reference))
+        store.receive(Action.Delegate(DelegateAction.OpenPassage(reference)))
+        store.send(Action.EraTapped(null)) { it.copy(selectedEraId = null, selectedId = null) }
+        assertEquals(false, event.isPeriod)
+        assertEquals(false, crucifixion.isPeriod)
+        assertEquals(true, david.isPeriod)
+        store.finish()
+    }
+
 }

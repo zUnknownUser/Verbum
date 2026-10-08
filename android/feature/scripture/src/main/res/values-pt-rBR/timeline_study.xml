@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="timeline_intro">Acompanhe a história. Explore suas conexões.</string>
+    <string name="timeline_choose">Escolha uma época para estudar seus acontecimentos e ler os relatos bíblicos.</string>
+    <string name="timeline_search">Buscar acontecimentos e épocas</string>
+    <string name="timeline_all_eras">Todas as épocas</string>
+    <string name="timeline_previous_era">Época anterior</string>
+    <string name="timeline_next_era">Próxima época</string>
+    <string name="timeline_no_results">Nenhum acontecimento encontrado</string>
+    <string name="timeline_connects">Como se conecta</string>
+    <string name="timeline_read">Estude nas Escrituras</string>
+    <string name="timeline_study_event">Estudar este acontecimento</string>
+    <string name="timeline_close_study">Fechar estudo</string>
+    <string name="timeline_attribution">Notas de estudo Verbum · Leia os relatos indicados em seu contexto.</string>
+    <string name="timeline_study_note">Um guia de estudo da narrativa bíblica, não um calendário exato. Algumas leituras são agrupadas por contexto; os Evangelhos nem sempre apresentam os episódios na mesma ordem.</string>
+    <string name="timeline_narrative">Sequência narrativa</string>
+    <string name="timeline_event_count">%1$d acontecimentos</string>
+</resources>

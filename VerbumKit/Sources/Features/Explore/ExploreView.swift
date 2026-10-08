@@ -84,7 +84,7 @@ private struct EntryRow: View {
         case .places: L10n.t("Where it happened, and what happened there.")
         case .themes: L10n.t("Ideas that run through the whole of Scripture.")
         case .events: L10n.t("What happened, before and after.")
-        case .timeline: L10n.t("Periods and events in order, with how sure the dates are.")
+        case .timeline: L10n.t("Explore biblical eras, connected events and readings for study.")
         case .books: L10n.t("The canon as a shelf, by kind.")
         }
     }

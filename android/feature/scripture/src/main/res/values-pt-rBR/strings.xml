@@ -160,7 +160,7 @@
     <string name="rel_fulfills">cumpre</string>
     <string name="rel_quotes">cita</string>
     <string name="timeline">Linha do tempo</string>
-    <string name="explore_timeline">Períodos e eventos em ordem, com o grau de certeza das datas.</string>
+    <string name="explore_timeline">Explore épocas bíblicas, acontecimentos conectados e leituras para estudo.</string>
     <string name="timeline_failed">Não foi possível carregar a linha do tempo</string>
     <string name="timeline_note">As datas são as comumente aceitas; “debatida” marca onde os estudiosos divergem, e o intervalo mostra as duas posições.</string>
     <string name="timeline_source">Fonte: notas editoriais do Verbum (fixture)</string>

@@ -98,14 +98,25 @@ type PassageContext struct {
 
 // TimelineEvent is a period or event with hedged dating (§22.5).
 type TimelineEvent struct {
-	ID                 string   `json:"id"`
-	Title              string   `json:"title"`
-	StartYear          *int     `json:"startYear"`
-	EndYear            *int     `json:"endYear"`
-	DatePrecision      string   `json:"datePrecision"`
-	Summary            *string  `json:"summary"`
-	EntityIDs          []string `json:"entityIds"`
-	SourceReferenceIDs []string `json:"sourceReferenceIds"`
+	Discovery          *TimelineDiscovery `json:"discovery,omitempty"`
+	ID                 string             `json:"id"`
+	Title              string             `json:"title"`
+	StartYear          *int               `json:"startYear"`
+	EndYear            *int               `json:"endYear"`
+	DatePrecision      string             `json:"datePrecision"`
+	Summary            *string            `json:"summary"`
+	EntityIDs          []string           `json:"entityIds"`
+	SourceReferenceIDs []string           `json:"sourceReferenceIds"`
+}
+
+// TimelineDiscovery separates narrative organization from uncertain calendar dates.
+type TimelineDiscovery struct {
+	EraID       string             `json:"eraId"`
+	EraTitle    string             `json:"eraTitle"`
+	EraSummary  string             `json:"eraSummary"`
+	Kind        string             `json:"kind"`
+	Context     string             `json:"context"`
+	KeyPassages []PassageReference `json:"keyPassages"`
 }
 
 // Timeline is the /v1/timeline response.

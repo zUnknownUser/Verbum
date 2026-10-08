@@ -215,6 +215,7 @@ public struct AppFeature {
             state[keyPath: path].append(.entity(EntityDetailFeature.State(entityID: entity.id)))
         case .history(.delegate(.open(let reference))),
              .entity(.delegate(.openPassage(let reference))),
+             .timeline(.delegate(.openPassage(let reference))),
              .arrival(.delegate(.openPassage(let reference))),
              .graph(.delegate(.openPassage(let reference))),
              .ask(.delegate(.openPassage(let reference))),

@@ -1,6 +1,166 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+"Follow the story. Explore its connections.": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Acompanhe a história. Explore suas conexões."
+        }
+      }
+    }
+  },
+  "Choose an era to study its events and read the biblical accounts.": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Escolha uma época para estudar seus acontecimentos e ler os relatos bíblicos."
+        }
+      }
+    }
+  },
+  "Search events and eras": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Buscar acontecimentos e épocas"
+        }
+      }
+    }
+  },
+  "All eras": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Todas as épocas"
+        }
+      }
+    }
+  },
+  "Previous era": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Época anterior"
+        }
+      }
+    }
+  },
+  "Next era": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Próxima época"
+        }
+      }
+    }
+  },
+  "No events found": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Nenhum acontecimento encontrado"
+        }
+      }
+    }
+  },
+  "How it connects": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Como se conecta"
+        }
+      }
+    }
+  },
+  "Study in Scripture": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Estude nas Escrituras"
+        }
+      }
+    }
+  },
+  "Study this event": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Estudar este acontecimento"
+        }
+      }
+    }
+  },
+  "Close study": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Fechar estudo"
+        }
+      }
+    }
+  },
+  "Verbum study notes · Read the linked accounts in context.": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Notas de estudo Verbum · Leia os relatos indicados em seu contexto."
+        }
+      }
+    }
+  },
+  "A study guide to the biblical narrative, not an exact calendar. Some readings are grouped by context; the Gospels do not always present episodes in the same order.": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Um guia de estudo da narrativa bíblica, não um calendário exato. Algumas leituras são agrupadas por contexto; os Evangelhos nem sempre apresentam os episódios na mesma ordem."
+        }
+      }
+    }
+  },
+  "Narrative sequence": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Sequência narrativa"
+        }
+      }
+    }
+  },
+  "%lld events": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "%lld acontecimentos"
+        }
+      }
+    }
+  },
+  "Explore biblical eras, connected events and readings for study.": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Explore épocas bíblicas, acontecimentos conectados e leituras para estudo."
+        }
+      }
+    }
+  },
   "All letters": {
     "localizations": {
       "pt-BR": {

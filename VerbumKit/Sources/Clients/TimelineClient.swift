@@ -5,9 +5,9 @@ import Models
 /// their dating and how sure it is. Static, hand-curated until Task 11.
 @DependencyClient
 public struct TimelineClient: Sendable {
-    /// Every event, in chronological order (unknown dates last).
+    /// Every event, in server-provided narrative order.
     public var events: @Sendable () async throws -> [TimelineEvent]
-    /// The events an entity takes part in, chronological.
+    /// The events an entity takes part in, in narrative order.
     public var eventsFor: @Sendable (_ entityID: EntityID) async throws -> [TimelineEvent]
 }
 

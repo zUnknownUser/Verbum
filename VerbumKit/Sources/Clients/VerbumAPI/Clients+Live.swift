@@ -76,10 +76,18 @@ extension ContextClient {
 }
 
 extension TimelineClient {
-    public static func live(api: VerbumAPI) -> TimelineClient {
+    public static func live(api: VerbumAPI, language: BookLanguage = .current) -> TimelineClient {
         TimelineClient(
-            events: { try await api.timeline().events },
-            eventsFor: { id in try await api.timeline(entity: id).events }
+            events: { try await namedTimeline(api.timeline(language: language)) },
+            eventsFor: { id in try await namedTimeline(api.timeline(entity: id, language: language)) }
         )
+    }
+}
+
+private func namedTimeline(_ response: VerbumAPI.Timeline) -> [TimelineEvent] {
+    response.events.map { event in
+        var value = event
+        value.entityNames = response.entityNames.filter { event.entityIds.contains($0.key) }
+        return value
     }
 }

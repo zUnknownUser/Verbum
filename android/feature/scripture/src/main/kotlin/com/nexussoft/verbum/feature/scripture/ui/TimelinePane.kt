@@ -1,6 +1,13 @@
 package com.nexussoft.verbum.feature.scripture.ui
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.mutableStateOf
+import com.nexussoft.verbum.models.PassageReference
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -62,6 +69,7 @@ import com.nexussoft.verbum.models.TimelineEvent
 internal fun TimelinePane(state: TimelineFeature.State, onBack: () -> Unit, send: (TimelineFeature.Action) -> Unit) {
     LaunchedEffect(Unit) { send(TimelineFeature.Action.Started) }
     val words = dateWords()
+    var query by rememberSaveable { mutableStateOf("") }
     Surface(color = MaterialTheme.colorScheme.background) {
         Column(Modifier.fillMaxSize().statusBarsPadding()) {
             Row(Modifier.fillMaxWidth().padding(horizontal = Spacing.sm), verticalAlignment = Alignment.CenterVertically) {
@@ -76,32 +84,78 @@ internal fun TimelinePane(state: TimelineFeature.State, onBack: () -> Unit, send
                     TextButton(onClick = { send(TimelineFeature.Action.RetryTapped) }) { Text(stringResource(R.string.try_again)) }
                 }
                 is TimelineFeature.Content.Loaded -> {
+                    val eras = content.events.mapNotNull { it.discovery }.distinctBy { it.eraId }
+                    val searching = query.isNotBlank()
+                    val visible = content.events.filter { event ->
+                        if (searching) com.nexussoft.verbum.models.EntityCatalog.normalized(query) in
+                            com.nexussoft.verbum.models.EntityCatalog.normalized(listOfNotNull(event.title, event.summary, event.discovery?.eraTitle, event.discovery?.context).joinToString(" "))
+                        else if (state.selectedEraId == null) eras.isEmpty() else event.discovery?.eraId == state.selectedEraId
+                    }
                     val listState = rememberLazyListState()
                     val target = state.highlightedEventId
-                    LaunchedEffect(target) {
-                        val index = content.events.indexOfFirst { it.id == target }
-                        if (index >= 0) listState.scrollToItem(index)
+                    LaunchedEffect(state.selectedEraId, target) {
+                        val index = visible.indexOfFirst { it.id == target }
+                        listState.scrollToItem(if (index >= 0) index + 1 else 0)
                     }
-                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+                    OutlinedTextField(value = query, onValueChange = { query = it },
+                        placeholder = { Text(stringResource(R.string.timeline_search)) }, singleLine = true,
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.readingMargin, vertical = Spacing.sm))
+                    Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
                         LazyColumn(
                             state = listState,
                             modifier = Modifier.widthIn(max = 680.dp).fillMaxWidth(),
                             contentPadding = PaddingValues(horizontal = Spacing.readingMargin, vertical = Spacing.lg),
+                            verticalArrangement = Arrangement.spacedBy(Spacing.md),
                         ) {
-                            itemsIndexed(content.events, key = { _, e -> e.id }) { _, event ->
-                                TimelineRow(
-                                    event = event,
-                                    dates = TimelineDates.text(event, words),
-                                    isSelected = state.selectedId == event.id,
-                                    isHighlighted = state.highlight?.let { it in event.entityIds } ?: false,
-                                    names = event.entityIds.mapNotNull { id -> state.entityNames[id]?.let { id to it } },
-                                    onTap = { send(TimelineFeature.Action.EventTapped(event.id)) },
-                                    onEntity = { send(TimelineFeature.Action.EntityTapped(it)) },
-                                )
+                            if (!searching && state.selectedEraId == null && eras.isNotEmpty()) {
+                                item {
+                                    Text(stringResource(R.string.timeline_intro), style = MaterialTheme.typography.headlineLarge.copy(fontFamily = FontFamily.Serif))
+                                    Text(stringResource(R.string.timeline_choose), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = Spacing.md))
+                                }
+                                itemsIndexed(eras, key = { _, era -> era.eraId }) { index, era ->
+                                    Surface(onClick = { send(TimelineFeature.Action.EraTapped(era.eraId)) },
+                                        shape = RoundedCornerShape(Radius.md), color = MaterialTheme.colorScheme.surfaceContainerLow) {
+                                        Row(Modifier.fillMaxWidth().padding(Spacing.lg), horizontalArrangement = Arrangement.spacedBy(Spacing.md)) {
+                                            Text("%02d".format(index + 1), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                                            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {
+                                                Text(era.eraTitle, style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.Serif))
+                                                Text(era.eraSummary, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                                Text(stringResource(R.string.timeline_event_count, content.events.count { it.discovery?.eraId == era.eraId }), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                item {
+                                    if (!searching) eras.firstOrNull { it.eraId == state.selectedEraId }?.let { era ->
+                                        TextButton(onClick = { send(TimelineFeature.Action.EraTapped(null)) }) { Text(stringResource(R.string.timeline_all_eras)) }
+                                        Text(era.eraTitle, style = MaterialTheme.typography.headlineLarge.copy(fontFamily = FontFamily.Serif))
+                                        Text(era.eraSummary, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = Spacing.md))
+                                    }
+                                    if (visible.isEmpty()) Text(stringResource(R.string.timeline_no_results))
+                                }
+                                items(visible, key = { it.id }) { event ->
+                                    TimelineRow(
+                                        event = event,
+                                        showEra = searching,
+                                        dates = TimelineDates.text(event, words),
+                                        isSelected = state.selectedId == event.id,
+                                        isHighlighted = state.highlight?.let { it in event.entityIds } ?: false,
+                                        names = event.entityIds.mapNotNull { id -> state.entityNames[id]?.let { id to it } },
+                                        onTap = { send(TimelineFeature.Action.EventTapped(event.id)) },
+                                        onEntity = { send(TimelineFeature.Action.EntityTapped(it)) },
+                                        onPassage = { send(TimelineFeature.Action.PassageTapped(it)) },
+                                    )
+                                }
+                                if (!searching) item {
+                                    val index = eras.indexOfFirst { it.eraId == state.selectedEraId }
+                                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                        if (index > 0) TextButton(onClick = { send(TimelineFeature.Action.EraTapped(eras[index - 1].eraId)) }) { Text(stringResource(R.string.timeline_previous_era)) }
+                                        if (index >= 0 && index + 1 < eras.size) TextButton(onClick = { send(TimelineFeature.Action.EraTapped(eras[index + 1].eraId)) }) { Text(stringResource(R.string.timeline_next_era)) }
+                                    }
+                                }
                             }
-                            item {
-                                Text(stringResource(R.string.timeline_note), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.outline, modifier = Modifier.padding(top = Spacing.xl))
-                            }
+                            item { Text(stringResource(R.string.timeline_study_note), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.outline, modifier = Modifier.padding(top = Spacing.lg)) }
                         }
                     }
                 }
@@ -126,12 +180,14 @@ private fun dateWords(): TimelineDates.Words {
 @Composable
 private fun TimelineRow(
     event: TimelineEvent,
+    showEra: Boolean,
     dates: String,
     isSelected: Boolean,
     isHighlighted: Boolean,
     names: List<Pair<String, String>>,
     onTap: () -> Unit,
     onEntity: (String) -> Unit,
+    onPassage: (PassageReference) -> Unit,
 ) {
     val accent = MaterialTheme.colorScheme.primary
     val hollow = event.datePrecision == TimelineDatePrecision.DEBATED || event.datePrecision == TimelineDatePrecision.UNKNOWN
@@ -160,16 +216,26 @@ private fun TimelineRow(
                     .clickable(onClick = onTap),
                 verticalArrangement = Arrangement.spacedBy(Spacing.xxs),
             ) {
-                Text(dates, style = MaterialTheme.typography.labelMedium, color = if (event.datePrecision == TimelineDatePrecision.DEBATED) accent else MaterialTheme.colorScheme.onSurfaceVariant)
+                if (showEra || event.discovery == null) Text(event.discovery?.eraTitle ?: dates, style = MaterialTheme.typography.labelMedium, color = if (event.datePrecision == TimelineDatePrecision.DEBATED) accent else MaterialTheme.colorScheme.onSurfaceVariant)
                 Text(
                     event.title,
                     style = MaterialTheme.typography.titleLarge.copy(fontFamily = FontFamily.Serif, fontWeight = if (isHighlighted) FontWeight.SemiBold else FontWeight.Normal),
                     color = MaterialTheme.colorScheme.onSurface,
                 )
             }
+            event.summary?.let { Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) }
+            event.discovery?.keyPassages?.firstOrNull()?.let { Text(it.formatted, style = MaterialTheme.typography.labelMedium, color = accent) }
+            TextButton(onClick = onTap) { Text(stringResource(if (isSelected) R.string.timeline_close_study else R.string.timeline_study_event)) }
             AnimatedVisibility(visible = isSelected) {
                 Column(verticalArrangement = Arrangement.spacedBy(Spacing.md), modifier = Modifier.padding(top = Spacing.xs)) {
-                    event.summary?.let { Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant) }
+                    event.discovery?.let { discovery ->
+                        Text(stringResource(R.string.timeline_connects), style = MaterialTheme.typography.titleSmall)
+                        Text(discovery.context, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(stringResource(R.string.timeline_read), style = MaterialTheme.typography.titleSmall)
+                        discovery.keyPassages.forEach { reference ->
+                            TextButton(onClick = { onPassage(reference) }) { Text(reference.formatted) }
+                        }
+                    }
                     if (names.isNotEmpty()) {
                         FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.xs), verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
                             names.forEach { (id, name) ->
@@ -186,7 +252,7 @@ private fun TimelineRow(
                             }
                         }
                     }
-                    Text(stringResource(R.string.timeline_source), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.outline)
+                    if (event.discovery != null) Text(stringResource(R.string.timeline_attribution), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.outline)
                 }
             }
         }

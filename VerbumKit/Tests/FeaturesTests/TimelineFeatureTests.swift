@@ -76,3 +76,28 @@ private let unknown = TimelineEvent(id: "t.unknown", title: "Job", startYear: ni
         #expect(TimelineDates.year(-1010) == L10n.t("\(String(1010)) BC"))
     }
 }
+
+@MainActor
+@Suite struct TimelineStudyTests {
+    @Test func opensTheRightEraUsesSuppliedNamesAndDelegatesReading() async {
+        let reference = PassageReference(bookId: "Exod", chapter: 14)
+        var event = TimelineEvent(id: "study.exodus", title: "Exodus", startYear: nil, endYear: nil, datePrecision: .unknown, summary: "Leaving Egypt", entityIds: ["moses"], discovery: TimelineDiscovery(eraId: "exodus", eraTitle: "Exodus", eraSummary: "Journey", kind: "event", context: "Deliverance", keyPassages: [reference]))
+        event.entityNames = ["moses": "Moses"]
+        let loaded = event
+        let store = TestStore(initialState: TimelineFeature.State(highlight: "moses")) { TimelineFeature() } withDependencies: {
+            $0.timelineClient.events = { [loaded] }
+            // graphClient intentionally unimplemented: the API already supplied the name.
+        }
+        await store.send(.task) { $0.content = .loading }
+        await store.receive(\.eventsResponse.success) {
+            $0.content = .loaded([loaded]); $0.selectedID = loaded.id; $0.selectedEraID = "exodus"
+        }
+        await store.receive(\.namesResponse) { $0.entityNames = ["moses": "Moses"] }
+        await store.send(.passageTapped(reference))
+        await store.receive(\.delegate.openPassage, reference)
+        await store.send(.eraTapped(nil)) { $0.selectedEraID = nil; $0.selectedID = nil }
+        #expect(!loaded.isPeriod)
+        #expect(!crucifixion.isPeriod)
+        #expect(david.isPeriod)
+    }
+}

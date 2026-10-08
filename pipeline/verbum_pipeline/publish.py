@@ -84,6 +84,10 @@ def write_content(cur, bundle: Bundle) -> None:
 
         validate_snapshot(cur, bundle.translations)
     content = bundle.content
+    if content.referencedEntityIds:
+        cur.execute("SELECT id FROM entities WHERE id=ANY(%s)", (content.referencedEntityIds,))
+        if {row[0] for row in cur.fetchall()} != set(content.referencedEntityIds):
+            raise ValueError("timeline references entities missing from this database")
     for position, source in enumerate(content.sources):
         upsert(cur, "sources", {**source.model_dump(), "position": position}, "id")
         if source.id in bundle.provenance:
@@ -191,9 +195,17 @@ def write_content(cur, bundle: Bundle) -> None:
                 "date_precision": event.datePrecision,
                 "summary": event.summary,
                 "position": position,
+                **({"discovery": Jsonb({lang: p.model_dump() for lang, p in bundle.timelineDiscovery.presentations[event.id].items()})} if bundle.timelineDiscovery else {}),
             },
             "id",
         )
+        if bundle.timelineDiscovery is not None:
+            # Existing translations remain stored; discovery is the authoritative bilingual edition.
+            for language, presentation in bundle.timelineDiscovery.presentations[event.id].items():
+                cur.execute("""INSERT INTO timeline_localizations(event_id,language,source_id,fields,input_hash)
+                    VALUES(%s,%s,%s,%s,%s) ON CONFLICT(event_id,language,source_id)
+                    DO UPDATE SET fields=EXCLUDED.fields,input_hash=EXCLUDED.input_hash""",
+                    (event.id, language, event.sourceReferenceIds[0], Jsonb({"title": presentation.title, "summary": presentation.summary}), digest(event.model_dump())))
         for table, column, ids in (
             ("timeline_event_entities", "entity_id", event.entityIds),
             ("timeline_event_sources", "source_id", event.sourceReferenceIds),

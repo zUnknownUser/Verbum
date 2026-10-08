@@ -61,7 +61,7 @@ extension VerbumAPI {
         public let entityNames: [EntityID: String]
     }
 
-    /// `GET /v1/timeline?entity=` (§4.2). Chronological, unknown dates last.
+    /// `GET /v1/timeline?entity=`. Editorial narrative order, with optional calendar dating.
     public func timeline(entity: EntityID? = nil, language: BookLanguage = .current) async throws -> Timeline {
         try await get("/v1/timeline", query: (entity.map { [.init(name: "entity", value: $0)] } ?? []) + [Self.lang(language)])
     }

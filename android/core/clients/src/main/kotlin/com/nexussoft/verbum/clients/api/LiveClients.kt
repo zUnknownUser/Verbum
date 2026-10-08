@@ -80,8 +80,8 @@ class LiveContextClient(private val api: VerbumApi) : ContextClient {
 }
 
 class LiveTimelineClient(private val api: VerbumApi) : TimelineClient {
-    override suspend fun events(): List<TimelineEvent> = api.timeline().events
-    override suspend fun eventsFor(entityId: EntityId): List<TimelineEvent> = api.timeline(entityId).events
+    override suspend fun events(): List<TimelineEvent> = api.timeline().let { response -> response.events.map { event -> event.copy(entityNames = response.entityNames.filterKeys { it in event.entityIds }) } }
+    override suspend fun eventsFor(entityId: EntityId): List<TimelineEvent> = api.timeline(entityId).let { response -> response.events.map { event -> event.copy(entityNames = response.entityNames.filterKeys { it in event.entityIds }) } }
 }
 
 /** `POST /v1/ask`. 503 and a route the server does not have are both [AskScriptureException.Unavailable]; the page says so instead of failing. */

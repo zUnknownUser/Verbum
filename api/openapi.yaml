@@ -1107,6 +1107,10 @@ components:
       type: object
       required: [id, title, datePrecision, entityIds, sourceReferenceIds]
       properties:
+        discovery:
+          anyOf:
+            - { $ref: '#/components/schemas/TimelineDiscovery' }
+            - { type: 'null' }
         id: { type: string }
         title: { type: string }
         startYear: { type: [integer, 'null'], description: Negative = BC (-1010 is 1010 BC). }
@@ -1115,6 +1119,18 @@ components:
         summary: { type: [string, 'null'] }
         entityIds: { type: array, items: { type: string } }
         sourceReferenceIds: { type: array, items: { type: string } }
+
+    TimelineDiscovery:
+      type: object
+      description: Localized study metadata. Event array order is editorial narrative order, independent of estimated years.
+      required: [eraId, eraTitle, eraSummary, kind, context, keyPassages]
+      properties:
+        eraId: { type: string }
+        eraTitle: { type: string }
+        eraSummary: { type: string }
+        kind: { type: string, enum: [event, period] }
+        context: { type: string }
+        keyPassages: { type: array, items: { $ref: '#/components/schemas/PassageReference' } }
 
     # ---- §27
     SearchResponse:

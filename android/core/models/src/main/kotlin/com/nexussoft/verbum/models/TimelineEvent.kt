@@ -28,7 +28,18 @@ data class TimelineEvent(
     /** Graph entities this event is about (people, places, events, themes). */
     val entityIds: List<String>,
     val sourceReferenceIds: List<String> = emptyList(),
+    val discovery: TimelineDiscovery? = null,
+    val entityNames: Map<String, String>? = null,
 ) {
     /** A span rather than a moment. */
-    val isPeriod: Boolean get() = startYear != null && endYear != null && startYear != endYear
+    val isPeriod: Boolean get() = discovery?.let { it.kind == "period" } ?: (datePrecision != TimelineDatePrecision.DEBATED && startYear != null && endYear != null && startYear != endYear)
 }
+
+data class TimelineDiscovery(
+    val eraId: String,
+    val eraTitle: String,
+    val eraSummary: String,
+    val kind: String,
+    val context: String,
+    val keyPassages: List<PassageReference>,
+)

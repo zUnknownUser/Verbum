@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="timeline_intro">Follow the story. Explore its connections.</string>
+    <string name="timeline_choose">Choose an era to study its events and read the biblical accounts.</string>
+    <string name="timeline_search">Search events and eras</string>
+    <string name="timeline_all_eras">All eras</string>
+    <string name="timeline_previous_era">Previous era</string>
+    <string name="timeline_next_era">Next era</string>
+    <string name="timeline_no_results">No events found</string>
+    <string name="timeline_connects">How it connects</string>
+    <string name="timeline_read">Study in Scripture</string>
+    <string name="timeline_study_event">Study this event</string>
+    <string name="timeline_close_study">Close study</string>
+    <string name="timeline_attribution">Verbum study notes · Read the linked accounts in context.</string>
+    <string name="timeline_study_note">A study guide to the biblical narrative, not an exact calendar. Some readings are grouped by context; the Gospels do not always present episodes in the same order.</string>
+    <string name="timeline_narrative">Narrative sequence</string>
+    <string name="timeline_event_count">%1$d events</string>
+</resources>

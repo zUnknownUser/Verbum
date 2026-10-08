@@ -104,7 +104,16 @@ internal data class WirePassageContext(
 }
 
 @Serializable
+internal data class WireTimelineDiscovery(
+    val eraId: String, val eraTitle: String, val eraSummary: String,
+    val kind: String, val context: String, val keyPassages: List<WirePassageReference>,
+) {
+    fun toModel() = com.nexussoft.verbum.models.TimelineDiscovery(eraId, eraTitle, eraSummary, kind, context, keyPassages.map { it.toModel() })
+}
+
+@Serializable
 internal data class WireTimelineEvent(
+    val discovery: WireTimelineDiscovery? = null,
     val id: String,
     val title: String,
     val startYear: Int? = null,
@@ -114,7 +123,7 @@ internal data class WireTimelineEvent(
     val entityIds: List<String>,
     val sourceReferenceIds: List<String> = emptyList(),
 ) {
-    fun toModel() = TimelineEvent(id, title, startYear, endYear, TimelineDatePrecision.fromWireValue(datePrecision) ?: malformed("date precision $datePrecision"), summary, entityIds, sourceReferenceIds)
+    fun toModel() = TimelineEvent(id, title, startYear, endYear, TimelineDatePrecision.fromWireValue(datePrecision) ?: malformed("date precision $datePrecision"), summary, entityIds, sourceReferenceIds, discovery?.toModel())
 }
 
 @Serializable

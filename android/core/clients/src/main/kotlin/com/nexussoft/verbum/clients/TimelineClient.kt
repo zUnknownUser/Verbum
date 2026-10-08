@@ -9,8 +9,8 @@ import com.nexussoft.verbum.models.TimelineEvent
  * dating and how sure it is. Twin of iOS `TimelineClient`. Static until Task 11.
  */
 interface TimelineClient {
-    /** Every event, in chronological order (unknown dates last). */
+    /** Every event, in server-provided narrative order. */
     suspend fun events(): List<TimelineEvent>
-    /** The events an entity takes part in, chronological. */
+    /** The events an entity takes part in, in narrative order. */
     suspend fun eventsFor(entityId: EntityId): List<TimelineEvent>
 }

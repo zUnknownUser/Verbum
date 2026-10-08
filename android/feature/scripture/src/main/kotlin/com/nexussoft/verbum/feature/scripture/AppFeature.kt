@@ -197,7 +197,10 @@ object AppFeature {
                 }
             }
             is DestinationAction.Timeline -> (action.action as? TimelineFeature.Action.Delegate)?.delegate?.let {
-                when (it) { is TimelineFeature.DelegateAction.OpenEntity -> Destination.Entity(EntityDetailFeature.State(it.id)) }
+                when (it) {
+                    is TimelineFeature.DelegateAction.OpenEntity -> Destination.Entity(EntityDetailFeature.State(it.id))
+                    is TimelineFeature.DelegateAction.OpenPassage -> Destination.Reader(ScriptureFeature.State.initial(it.reference, deps.initialTextScale()))
+                }
             }
             is DestinationAction.Graph -> (action.action as? GraphFeature.Action.Delegate)?.delegate?.let {
                 when (it) {

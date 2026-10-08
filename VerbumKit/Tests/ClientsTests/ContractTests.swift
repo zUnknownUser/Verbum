@@ -64,8 +64,11 @@ import Models
     }
 
     @Test func timeline() async throws {
-        let live = TimelineClient.live(api: Self.api("timeline/all.json", at: "/v1/timeline"))
-        #expect(try await live.events() == TimelineClient.fixtures.events())
+        let live = TimelineClient.live(api: Self.api("timeline/all.json", at: "/v1/timeline", query: "lang=en"), language: .english)
+        let events = try await live.events()
+        let content = events.map { event in var value = event; value.entityNames = nil; return value }
+        #expect(content == (try await TimelineClient.fixtures.events()))
+        #expect(events.first?.entityNames?["fixture.person.abraham"] == "Abraham")
     }
 
     @Test func search() async throws {

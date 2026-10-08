@@ -7,6 +7,7 @@ import com.nexussoft.verbum.common.arch.Reducer
 import com.nexussoft.verbum.common.arch.only
 import com.nexussoft.verbum.common.arch.runEffect
 import com.nexussoft.verbum.common.arch.with
+import com.nexussoft.verbum.models.PassageReference
 import com.nexussoft.verbum.models.EntityId
 import com.nexussoft.verbum.models.TimelineDatePrecision
 import com.nexussoft.verbum.models.TimelineEvent
@@ -23,6 +24,7 @@ object TimelineFeature {
         /** The entity whose events are highlighted, when opened from its page. */
         val highlight: EntityId? = null,
         val content: Content = Content.Idle,
+        val selectedEraId: String? = null,
         val selectedId: String? = null,
         /** Names for the entities the events mention, resolved after loading. */
         val entityNames: Map<EntityId, String> = emptyMap(),
@@ -45,12 +47,15 @@ object TimelineFeature {
         data class EventsLoaded(val events: List<TimelineEvent>) : Action
         data object EventsFailed : Action
         data class NamesLoaded(val names: Map<EntityId, String>) : Action
+        data class EraTapped(val id: String?) : Action
+        data class PassageTapped(val reference: PassageReference) : Action
         data class EventTapped(val id: String) : Action
         data class EntityTapped(val id: EntityId) : Action
         data class Delegate(val delegate: DelegateAction) : Action
     }
 
     sealed interface DelegateAction {
+        data class OpenPassage(val reference: PassageReference) : DelegateAction
         data class OpenEntity(val id: EntityId) : DelegateAction
     }
 
@@ -76,18 +81,25 @@ object TimelineFeature {
                 is Action.EventsLoaded -> {
                     val loaded = state.copy(content = Content.Loaded(action.events))
                     // Arriving from an entity page: its first event starts open.
-                    val opened = if (loaded.selectedId == null) loaded.copy(selectedId = loaded.highlightedEventId) else loaded
-                    val ids = action.events.flatMap { it.entityIds }.toSet().sorted()
+                    val opened = if (loaded.selectedId == null) loaded.copy(selectedId = loaded.highlightedEventId, selectedEraId = action.events.firstOrNull { it.id == loaded.highlightedEventId }?.discovery?.eraId) else loaded
+                    val supplied = action.events.flatMap { (it.entityNames ?: emptyMap()).entries }.associate { it.key to it.value }
+                    val ids = action.events.filter { it.entityNames == null }.flatMap { it.entityIds }.toSet().sorted()
                     opened.with(
                         runEffect(id = NamesId, cancelInFlight = true) { send ->
-                            val names = LinkedHashMap<EntityId, String>()
-                            for (id in ids) runCatching { graph.entity(id) }.getOrNull()?.let { names[id] = it.name }
+                            val names = LinkedHashMap<EntityId, String>(supplied)
+                            for (id in ids) {
+                                try { graph.entity(id)?.let { names[id] = it.name } }
+                                catch (e: CancellationException) { throw e }
+                                catch (_: Exception) { /* Missing optional link. */ }
+                            }
                             send(Action.NamesLoaded(names))
                         },
                     )
                 }
                 Action.EventsFailed -> state.copy(content = Content.Failed).only()
                 is Action.NamesLoaded -> state.copy(entityNames = action.names).only()
+                is Action.EraTapped -> state.copy(selectedEraId = action.id, selectedId = null).only()
+                is Action.PassageTapped -> state.with(Effect.Send(Action.Delegate(DelegateAction.OpenPassage(action.reference))))
                 is Action.EventTapped -> state.copy(selectedId = if (state.selectedId == action.id) null else action.id).only()
                 is Action.EntityTapped -> state.with(Effect.Send(Action.Delegate(DelegateAction.OpenEntity(action.id))))
                 is Action.Delegate -> state.only()

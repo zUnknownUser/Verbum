@@ -160,7 +160,7 @@
     <string name="rel_fulfills">fulfils</string>
     <string name="rel_quotes">quotes</string>
     <string name="timeline">Timeline</string>
-    <string name="explore_timeline">Periods and events in order, with how sure the dates are.</string>
+    <string name="explore_timeline">Explore biblical eras, connected events and readings for study.</string>
     <string name="timeline_failed">Couldn\'t load the timeline</string>
     <string name="timeline_note">Dates are the ones commonly given; “debated” marks where scholarship is split, and the span shows both positions.</string>
     <string name="timeline_source">Source: Verbum editorial notes (fixture)</string>
