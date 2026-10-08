@@ -8,6 +8,7 @@ RUN go mod download
 COPY backend/ ./
 RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/api ./cmd/api
 RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/migrate ./cmd/migrate
+RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/warm-audio ./cmd/warm-audio
 
 FROM debian:bookworm-slim
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates ffmpeg \
@@ -17,6 +18,7 @@ USER 65532:65532
 WORKDIR /app
 COPY --from=build /out/api /app/api
 COPY --from=build /out/migrate /app/migrate
+COPY --from=build /out/warm-audio /app/warm-audio
 COPY backend/db/migrations /app/db/migrations
 COPY backend/db/seed/fixtures.json /app/db/seed/fixtures.json
 COPY api/openapi.yaml /app/contracts/openapi.yaml

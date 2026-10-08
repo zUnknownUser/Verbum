@@ -110,11 +110,7 @@ func (e economicSpeech) run(ctx context.Context, input tts.Request, timed bool) 
 	if err != nil {
 		return empty, err
 	}
-	raw, _ := json.Marshal(input)
-	key := usage.Hash(string(raw), strconv.FormatBool(timed))
-	if input.IsGemini() {
-		key = usage.Hash(tts.EconomicIdentity(input), strconv.FormatBool(timed))
-	}
+	key := SpeechCacheKey(input, timed)
 	if err = e.usage.Bind(ctx, idempotency(ctx), usage.Hash("tts", key)); err != nil {
 		return empty, err
 	}
@@ -209,4 +205,14 @@ func retryDate(t time.Time) *time.Time {
 		return nil
 	}
 	return &t
+}
+
+// SpeechCacheKey is shared by HTTP playback and the offline library warmer.
+// input must have passed canonical verification and tts.Prepare.
+func SpeechCacheKey(input tts.Request, timed bool) string {
+	raw, _ := json.Marshal(input)
+	if input.IsGemini() {
+		return usage.Hash(tts.EconomicIdentity(input), strconv.FormatBool(timed))
+	}
+	return usage.Hash(string(raw), strconv.FormatBool(timed))
 }

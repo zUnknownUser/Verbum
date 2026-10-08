@@ -6,3 +6,21 @@ var chapters = map[string]int{"Gen": 50, "Exod": 40, "Lev": 27, "Num": 36, "Deut
 
 // ValidChapter checks the shared canonical identifiers without calling a provider.
 func ValidChapter(book string, chapter int) bool { return chapter > 0 && chapter <= chapters[book] }
+
+// Chapter identifies a chapter accepted by the narration service.
+type Chapter struct {
+	BookID string
+	Number int
+}
+
+// Chapters returns a stable canonical order for resumable library jobs.
+func Chapters() []Chapter {
+	order := []string{"Gen", "Exod", "Lev", "Num", "Deut", "Josh", "Judg", "Ruth", "1Sam", "2Sam", "1Kgs", "2Kgs", "1Chr", "2Chr", "Ezra", "Neh", "Esth", "Job", "Ps", "Prov", "Eccl", "Song", "Isa", "Jer", "Lam", "Ezek", "Dan", "Hos", "Joel", "Amos", "Obad", "Jonah", "Mic", "Nah", "Hab", "Zeph", "Hag", "Zech", "Mal", "Matt", "Mark", "Luke", "John", "Acts", "Rom", "1Cor", "2Cor", "Gal", "Eph", "Phil", "Col", "1Thess", "2Thess", "1Tim", "2Tim", "Titus", "Phlm", "Heb", "Jas", "1Pet", "2Pet", "1John", "2John", "3John", "Jude", "Rev"}
+	var out []Chapter
+	for _, book := range order {
+		for n := 1; n <= chapters[book]; n++ {
+			out = append(out, Chapter{book, n})
+		}
+	}
+	return out
+}
