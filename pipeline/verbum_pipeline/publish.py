@@ -67,7 +67,10 @@ def publish(source: Path, decisions: Path, database_url: str, *, allow_fixtures=
             cur.execute("SELECT 1 FROM content_publications WHERE bundle_hash=%s", (bundle_hash,))
             if cur.fetchone():
                 return {"status": "already_published", "bundleHash": bundle_hash}
-            write_content(cur, bundle)
+            # Queue the ordered writes together over remote database connections.
+            # Pipeline exit propagates any failure before the transaction can commit.
+            with conn.pipeline():
+                write_content(cur, bundle)
             cur.execute(
                 "INSERT INTO content_publications(bundle_hash,kind,review) VALUES(%s,%s,%s)",
                 (bundle_hash, bundle.kind, Jsonb(review.model_dump())),
