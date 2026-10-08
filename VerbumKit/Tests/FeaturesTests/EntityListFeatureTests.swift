@@ -34,6 +34,20 @@ import Testing
         await store.receive(.pageResponse(2, 0, page)) { $0.isLoading = false; $0.hasLoaded = true }
     }
 
+    @Test func eventsUseBoundedSearchInsteadOfTheLegacyList() async {
+        var state = EntityListFeature.State(type: .event)
+        state.query = "exodo"
+        let page = EntityCatalogPage(entities: [], letters: [])
+        let store = TestStore(initialState: state) { EntityListFeature() } withDependencies: {
+            $0.graphClient.entityPage = { request in
+                #expect(request.type == .event && request.query == "exodo" && request.limit == 30)
+                return page
+            }
+        }
+        await store.send(.task) { $0.isLoading = true; $0.generation = 1 }
+        await store.receive(.pageResponse(1, 0, page)) { $0.isLoading = false; $0.hasLoaded = true }
+    }
+
     @Test func placesUseServerPaginationAndOpenTheirOwnDetail() async {
         let jerusalem = BibleEntity(id: "place.jerusalem", type: .place, name: "Jerusalém", summary: "Cidade")
         var state = EntityListFeature.State(type: .place)

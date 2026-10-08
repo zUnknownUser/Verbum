@@ -1125,6 +1125,7 @@ components:
       description: Localized study metadata. Event array order is editorial narrative order, independent of estimated years.
       required: [eraId, eraTitle, eraSummary, kind, context, keyPassages]
       properties:
+        eventEntityId: { type: string, description: Canonical event entity for the full study; omitted when not bound. }
         eraId: { type: string }
         eraTitle: { type: string }
         eraSummary: { type: string }

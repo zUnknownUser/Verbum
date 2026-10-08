@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="events_all">All events</string>
+    <string name="events_load_failed">Events could not be loaded. Please try again.</string>
+    <string name="events_empty">No events found</string>
+    <string name="events_search">Search events</string>
+    <string name="event_open_study">Open event study</string>
+</resources>

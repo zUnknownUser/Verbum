@@ -141,7 +141,7 @@ internal fun TimelinePane(state: TimelineFeature.State, onBack: () -> Unit, send
                                         dates = TimelineDates.text(event, words),
                                         isSelected = state.selectedId == event.id,
                                         isHighlighted = state.highlight?.let { it in event.entityIds } ?: false,
-                                        names = event.entityIds.mapNotNull { id -> state.entityNames[id]?.let { id to it } },
+                                        names = event.entityIds.filter { it != event.discovery?.eventEntityId }.mapNotNull { id -> state.entityNames[id]?.let { id to it } },
                                         onTap = { send(TimelineFeature.Action.EventTapped(event.id)) },
                                         onEntity = { send(TimelineFeature.Action.EntityTapped(it)) },
                                         onPassage = { send(TimelineFeature.Action.PassageTapped(it)) },
@@ -235,6 +235,9 @@ private fun TimelineRow(
                         discovery.keyPassages.forEach { reference ->
                             TextButton(onClick = { onPassage(reference) }) { Text(reference.formatted) }
                         }
+                    }
+                    event.discovery?.eventEntityId?.let { id ->
+                        TextButton(onClick = { onEntity(id) }) { Text(stringResource(R.string.event_open_study)) }
                     }
                     if (names.isNotEmpty()) {
                         FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.xs), verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {

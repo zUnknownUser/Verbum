@@ -143,7 +143,7 @@ class Content(Model):
             if not set(item.sourceReferenceIds) <= sources.keys():
                 raise ValueError(f"unknown source in {item.id}")
         for r in self.relationships:
-            if r.sourceId not in entities or r.targetId not in entities:
+            if r.sourceId not in (entities.keys() | set(self.referencedEntityIds)) or r.targetId not in (entities.keys() | set(self.referencedEntityIds)):
                 raise ValueError(f"unknown relationship endpoint in {r.id}")
         unique(self.referencedEntityIds, "referenced entities")
         for event in self.timeline:
@@ -317,8 +317,16 @@ class TimelineDiscovery(Model):
     presentations: dict[Text, dict[str, TimelinePresentation]]
 
 
+class EventCatalog(Model):
+    eras: dict[Text, Text]
+    presentations: list[ThemePresentation]
+    # Stable timeline identity -> canonical event entity. No new timeline rows.
+    timelineBindings: dict[Text, Text]
+
+
 class Bundle(Model):
-    version: Literal[1, 2, 3, 4, 5] = 1
+    version: Literal[1, 2, 3, 4, 5, 6] = 1
+    eventCatalog: EventCatalog | None = None
     timelineDiscovery: TimelineDiscovery | None = None
     themes: ThemeDiscovery | None = None
     translations: list[ContentTranslation] | None = None
@@ -333,6 +341,8 @@ class Bundle(Model):
     @model_serializer(mode="wrap")
     def serialize_bundle(self, handler):
         value = handler(self)
+        if self.version != 6:
+            value.pop("eventCatalog", None)
         if self.version != 5:
             value.pop("timelineDiscovery", None)
         if self.version != 4:
@@ -345,10 +355,34 @@ class Bundle(Model):
 
     @model_validator(mode="after")
     def evidence(self) -> Self:
+        if (self.version == 6) != (self.eventCatalog is not None):
+            raise ValueError("version 6 requires event catalog metadata")
+        if self.eventCatalog is not None:
+            ids = {e.id for e in self.content.entities if e.type == "event"}
+            if self.kind != "editorial" or len(ids) != len(self.content.entities) or self.content.timeline or self.content.dailyVersePool:
+                raise ValueError("event catalog can only edit event entities")
+            if ids != {d.entity.id for d in self.content.details}:
+                raise ValueError("every event requires a study detail")
+            if any(not d.keyPassages for d in self.content.details):
+                raise ValueError("every event requires biblical readings")
+            if set(self.eventCatalog.eras) != ids:
+                raise ValueError("era classification must cover every event")
+            actual = [(p.entityId, p.language) for p in self.eventCatalog.presentations]
+            expected = {(id_, lang) for id_ in ids for lang in ("en", "pt-BR")}
+            if set(actual) != expected or len(actual) != len(expected):
+                raise ValueError("events require both languages exactly once")
+            canonical = {e.id: e for e in self.content.entities}
+            for p in self.eventCatalog.presentations:
+                if p.language == "en" and (p.name, p.summary) != (canonical[p.entityId].name, canonical[p.entityId].summary):
+                    raise ValueError("English presentation disagrees with canonical event")
+            targets = list(self.eventCatalog.timelineBindings.values())
+            unique(targets, "timeline event bindings")
+            if not set(targets) <= ids:
+                raise ValueError("timeline binding references an unknown event")
         if (self.version == 5) != (self.timelineDiscovery is not None):
             raise ValueError("version 5 requires timeline discovery")
-        if self.content.referencedEntityIds and self.version != 5:
-            raise ValueError("external timeline links require version 5")
+        if self.content.referencedEntityIds and self.version not in (5, 6):
+            raise ValueError("external graph links require version 5 or 6")
         if self.timelineDiscovery is not None:
             if self.kind != "editorial" or self.content.entities or self.content.relationships or self.content.details or self.content.dailyVersePool:
                 raise ValueError("timeline batch cannot change other modules")

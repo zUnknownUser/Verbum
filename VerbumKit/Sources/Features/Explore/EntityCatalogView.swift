@@ -7,8 +7,9 @@ struct EntityCatalogView: View {
     let store: StoreOf<EntityListFeature>
     private var themes: Bool { store.type == .theme }
     private var discovery: Bool { themes && !store.browsingThemes && store.query.isEmpty }
+    private var events: Bool { store.type == .event }
     private var places: Bool { store.type == .place }
-    private var identifier: String { themes ? "themes" : places ? "places" : "people" }
+    private var identifier: String { themes ? "themes" : events ? "events" : places ? "places" : "people" }
     private let alphabet = Array("ABCDEFGHIJKLMNOPQRSTUVWXYZ").map(String.init) + ["#"]
 
     var body: some View {
@@ -27,7 +28,7 @@ struct EntityCatalogView: View {
             }
             ScrollView(.horizontal) {
                 HStack(spacing: Spacing.sm) {
-                    letterButton("", title: L10n.t(themes ? (store.category.isEmpty ? "All themes" : "All letters") : places ? "All places" : "All people"))
+                    letterButton("", title: L10n.t(themes ? (store.category.isEmpty ? "All themes" : "All letters") : events ? "All events" : places ? "All places" : "All people"))
                     ForEach(alphabet, id: \.self) { letter in letterButton(letter, title: letter) }
                 }.padding(.horizontal, Spacing.readingMargin).padding(.vertical, Spacing.sm)
             }.scrollIndicators(.hidden)
@@ -57,16 +58,16 @@ struct EntityCatalogView: View {
                         }
                         if store.isLoading {
                             ProgressView().frame(maxWidth: .infinity).padding(Spacing.xl)
-                                .accessibilityLabel(L10n.t(themes ? "Loading themes" : places ? "Loading places" : "Loading people"))
+                                .accessibilityLabel(L10n.t(themes ? "Loading themes" : events ? "Loading events" : places ? "Loading places" : "Loading people"))
                         } else if store.failed {
                             VStack(alignment: .leading, spacing: Spacing.md) {
-                                Text(L10n.t(themes ? "Themes could not be loaded. Please try again." : places ? "Places could not be loaded. Please try again." : "People could not be loaded. Please try again."))
+                                Text(L10n.t(themes ? "Themes could not be loaded. Please try again." : events ? "Events could not be loaded. Please try again." : places ? "Places could not be loaded. Please try again." : "People could not be loaded. Please try again."))
                                 Button(L10n.t("Try Again")) { store.send(.retry) }.buttonStyle(.bordered)
                             }.font(Typography.subheadline).padding(.vertical, Spacing.xl)
                         } else if store.hasLoaded && store.entities.isEmpty {
                             VStack(alignment: .leading, spacing: Spacing.md) {
-                                EditorialIcon(themes ? "sparkles" : places ? "mappin.and.ellipse" : "person.crop.circle.badge.questionmark")
-                                Text(L10n.t(themes ? "No themes found" : places ? "No places found" : "No people found")).font(Typography.editorialHeadline)
+                                EditorialIcon(themes ? "sparkles" : events ? "flag" : places ? "mappin.and.ellipse" : "person.crop.circle.badge.questionmark")
+                                Text(L10n.t(themes ? "No themes found" : events ? "No events found" : places ? "No places found" : "No people found")).font(Typography.editorialHeadline)
                                 Text(L10n.t("Try another name or letter.")).font(Typography.subheadline).foregroundStyle(Palette.inkSecondary)
                             }.padding(.vertical, Spacing.xl)
                         } else if store.nextOffset != nil {
@@ -86,9 +87,9 @@ struct EntityCatalogView: View {
             }
         }
         .background(Palette.paper).foregroundStyle(Palette.ink).tint(Palette.accent)
-        .navigationTitle(L10n.t(themes ? "Themes" : places ? "Places" : "People")).navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(L10n.t(themes ? "Themes" : events ? "Events" : places ? "Places" : "People")).navigationBarTitleDisplayMode(.inline)
         .searchable(text: Binding(get: { store.query }, set: { store.send(.queryChanged($0)) }),
-                    placement: .navigationBarDrawer(displayMode: .always), prompt: L10n.t(themes ? "What would you like to explore?" : places ? "Search places" : "Search people"))
+                    placement: .navigationBarDrawer(displayMode: .always), prompt: L10n.t(themes ? "What would you like to explore?" : events ? "Search events" : places ? "Search places" : "Search people"))
     }
 
     private func letterButton(_ letter: String, title: String) -> some View {

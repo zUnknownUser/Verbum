@@ -40,7 +40,7 @@ public struct EntityDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: Spacing.xxl) {
                 header(page)
-                if page.entity.type == .theme { readings(page) }
+                if page.entity.type == .theme || page.entity.type == .event { readings(page) }
                 if !page.neighborhood.nodes.isEmpty {
                     Row(title: L10n.t("Explore the graph"), subtitle: L10n.t("Connections around \(page.entity.name), one step at a time."), symbol: "point.3.connected.trianglepath.dotted") {
                         store.send(.graphTapped)
@@ -54,7 +54,7 @@ public struct EntityDetailView: View {
                 Row(title: L10n.t("Talk about \(page.entity.name)"), subtitle: L10n.t("Ask out loud; the companion answers from Scripture."), symbol: "waveform.and.mic") {
                     store.send(.talkTapped)
                 }
-                if page.entity.type != .theme { readings(page) }
+                if page.entity.type != .theme && page.entity.type != .event { readings(page) }
                 relatedSection(L10n.t("People"), page.related(.person), symbol: "person")
                 relatedSection(L10n.t("Places"), page.related(.place), symbol: "mappin.and.ellipse")
                 relatedSection(L10n.t("Events"), page.related(.event), symbol: "clock")

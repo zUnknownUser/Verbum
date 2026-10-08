@@ -41,3 +41,27 @@ func TestTimelineStudyOrderAndLocalization(t *testing.T) {
 		t.Fatalf("entity filter: %+v %v", filtered, err)
 	}
 }
+
+func TestCanonicalEventBindingIsBidirectionalWithoutDuplicateParticipants(t *testing.T) {
+	ctx := context.Background()
+	conn, url := testdb.Open(t, "../../../db/migrations")
+	_, err := conn.Exec(ctx, `INSERT INTO entities(id,type,name,position) VALUES ('event.canonical','event','Study',0);
+ INSERT INTO timeline_events(id,title,date_precision,position,discovery) VALUES ('timeline.original','Episode','unknown',0,'{"en":{"eraId":"origins","eraTitle":"Origins","eraSummary":"Beginning","kind":"event","context":"Context","keyPassages":[{"bookId":"Gen","chapter":1}]}}');
+ INSERT INTO timeline_event_catalog(event_id,entity_id) VALUES ('timeline.original','event.canonical');
+ INSERT INTO timeline_event_entities(event_id,entity_id,position) VALUES ('timeline.original','event.canonical',0)`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	db, err := postgres.Open(ctx, url)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	result, err := db.Timeline(ctx, "event.canonical")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(result.Events) != 1 || len(result.Events[0].EntityIDs) != 1 || result.Events[0].Discovery.EventEntityID == nil || *result.Events[0].Discovery.EventEntityID != "event.canonical" || result.EntityNames["event.canonical"] != "Study" {
+		t.Fatalf("binding lost/duplicated: %+v", result)
+	}
+}

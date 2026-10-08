@@ -42,4 +42,5 @@ data class TimelineDiscovery(
     val kind: String,
     val context: String,
     val keyPassages: List<PassageReference>,
+    val eventEntityId: String? = null,
 )

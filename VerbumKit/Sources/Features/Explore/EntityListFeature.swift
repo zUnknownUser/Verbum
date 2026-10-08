@@ -101,7 +101,7 @@ public struct EntityListFeature {
         return .run { [graphClient, clock] send in
             do {
                 if debounce { try await clock.sleep(for: .milliseconds(300)) }
-                if request.type == .person || request.type == .place || request.type == .theme {
+                if request.type == .person || request.type == .place || request.type == .theme || request.type == .event {
                     let page = try await graphClient.entityPage(request)
                     try Task.checkCancellation()
                     await send(.pageResponse(generation, offset, page))

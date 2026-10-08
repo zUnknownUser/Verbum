@@ -111,12 +111,13 @@ type TimelineEvent struct {
 
 // TimelineDiscovery separates narrative organization from uncertain calendar dates.
 type TimelineDiscovery struct {
-	EraID       string             `json:"eraId"`
-	EraTitle    string             `json:"eraTitle"`
-	EraSummary  string             `json:"eraSummary"`
-	Kind        string             `json:"kind"`
-	Context     string             `json:"context"`
-	KeyPassages []PassageReference `json:"keyPassages"`
+	EventEntityID *string            `json:"eventEntityId,omitempty"`
+	EraID         string             `json:"eraId"`
+	EraTitle      string             `json:"eraTitle"`
+	EraSummary    string             `json:"eraSummary"`
+	Kind          string             `json:"kind"`
+	Context       string             `json:"context"`
+	KeyPassages   []PassageReference `json:"keyPassages"`
 }
 
 // Timeline is the /v1/timeline response.

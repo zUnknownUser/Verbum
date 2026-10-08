@@ -28,6 +28,14 @@ class EntityListFeatureTest {
         assertFalse(store.state.value.browsingThemes)
     }
 
+    @Test fun eventsUseBoundedSearchInsteadOfTheLegacyList() = runTest {
+        val requests = mutableListOf<EntityCatalogRequest>()
+        val client = client { request -> requests += request; EntityCatalogPage(emptyList(), emptyList()) }
+        val store = Store(EntityListFeature.State(BibleEntityType.EVENT, query = "exodo"), EntityListFeature.reducer(client), backgroundScope)
+        store.send(EntityListFeature.Action.Started); runCurrent()
+        assertEquals(EntityCatalogRequest(BibleEntityType.EVENT, query = "exodo", limit = 30), requests.single())
+    }
+
     @Test fun placesUseServerPaginationAndKeepTheirStateOnReturn() = runTest {
         val jerusalem = BibleEntity("place.jerusalem", BibleEntityType.PLACE, "Jerusalém", "Cidade")
         var calls = 0

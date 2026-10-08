@@ -181,7 +181,7 @@ internal fun ExploreScreen(send: (ExploreFeature.Action) -> Unit) {
 /** People / Places / Themes / Events. */
 @Composable
 internal fun EntityListScreen(state: EntityListFeature.State, onBack: () -> Unit, send: (EntityListFeature.Action) -> Unit) {
-    if (state.type == BibleEntityType.PERSON || state.type == BibleEntityType.PLACE || state.type == BibleEntityType.THEME) {
+    if (state.type == BibleEntityType.PERSON || state.type == BibleEntityType.PLACE || state.type == BibleEntityType.THEME || state.type == BibleEntityType.EVENT) {
         EntityCatalogScreen(state, onBack, send)
         return
     }

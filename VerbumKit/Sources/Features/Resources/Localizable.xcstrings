@@ -1,6 +1,56 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+"All events": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Todos os eventos"
+        }
+      }
+    }
+  },
+  "Loading events": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Carregando eventos"
+        }
+      }
+    }
+  },
+  "Events could not be loaded. Please try again.": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Não foi possível carregar os eventos. Tente novamente."
+        }
+      }
+    }
+  },
+  "Search events": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Buscar eventos"
+        }
+      }
+    }
+  },
+  "Open event study": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Abrir estudo do evento"
+        }
+      }
+    }
+  },
 "Follow the story. Explore its connections.": {
     "localizations": {
       "pt-BR": {

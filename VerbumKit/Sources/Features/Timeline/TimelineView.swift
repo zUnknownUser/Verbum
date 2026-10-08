@@ -213,7 +213,12 @@ private struct TimelineRow: View {
                     }.tint(Palette.accent)
                 }
             }
-            let named = event.entityIds.compactMap { id in entityName(id).map { (id, $0) } }
+            if let id = event.discovery?.eventEntityId {
+                Button { entityTap(id) } label: {
+                    Label(L10n.t("Open event study"), systemImage: "text.book.closed")
+                }.font(Typography.body).tint(Palette.accent)
+            }
+            let named = event.entityIds.filter { $0 != event.discovery?.eventEntityId }.compactMap { id in entityName(id).map { (id, $0) } }
             if !named.isEmpty {
                 FlowLayout(horizontalSpacing: Spacing.xs, verticalSpacing: Spacing.xs) {
                     ForEach(named, id: \.0) { id, name in

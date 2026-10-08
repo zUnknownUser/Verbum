@@ -52,6 +52,7 @@ public struct TimelineEvent: Identifiable, Codable, Equatable, Hashable, Sendabl
 
 /// Localized editorial study metadata, independent from calendar date estimates.
 public struct TimelineDiscovery: Codable, Equatable, Hashable, Sendable {
+    public let eventEntityId: String?
     public let eraId: String
     public let eraTitle: String
     public let eraSummary: String
@@ -59,7 +60,8 @@ public struct TimelineDiscovery: Codable, Equatable, Hashable, Sendable {
     public let context: String
     public let keyPassages: [PassageReference]
 
-    public init(eraId: String, eraTitle: String, eraSummary: String, kind: String, context: String, keyPassages: [PassageReference]) {
+    public init(eraId: String, eraTitle: String, eraSummary: String, kind: String, context: String, keyPassages: [PassageReference], eventEntityId: String? = nil) {
+        self.eventEntityId = eventEntityId
         self.eraId = eraId; self.eraTitle = eraTitle; self.eraSummary = eraSummary
         self.kind = kind; self.context = context; self.keyPassages = keyPassages
     }

@@ -88,6 +88,24 @@ def write_content(cur, bundle: Bundle) -> None:
         cur.execute("SELECT id FROM entities WHERE id=ANY(%s)", (content.referencedEntityIds,))
         if {row[0] for row in cur.fetchall()} != set(content.referencedEntityIds):
             raise ValueError("timeline references entities missing from this database")
+    if bundle.eventCatalog is not None:
+        cur.execute("SELECT id,type FROM entities WHERE id=ANY(%s)", ([e.id for e in content.entities],))
+        if any(kind != "event" for _, kind in cur.fetchall()):
+            raise ValueError("event identity conflicts with another entity type")
+        ids = list(bundle.eventCatalog.timelineBindings)
+        cur.execute("SELECT id,discovery->'en'->>'eraId' FROM timeline_events")
+        timeline_eras = dict(cur.fetchall())
+        if not set(ids) <= timeline_eras.keys():
+            raise ValueError("event binding references missing timeline entries")
+        if not set(bundle.eventCatalog.eras.values()) <= set(timeline_eras.values()):
+            raise ValueError("event classification references an unknown era")
+        if any(bundle.eventCatalog.eras[entity_id] != timeline_eras[timeline_id]
+               for timeline_id, entity_id in bundle.eventCatalog.timelineBindings.items()):
+            raise ValueError("canonical event and timeline disagree on era")
+        cur.execute("SELECT event_id,entity_id FROM timeline_event_catalog WHERE event_id=ANY(%s)", (ids,))
+        for timeline_id, entity_id in cur.fetchall():
+            if bundle.eventCatalog.timelineBindings[timeline_id] != entity_id:
+                raise ValueError("canonical event rebinding requires an explicit migration")
     for position, source in enumerate(content.sources):
         upsert(cur, "sources", {**source.model_dump(), "position": position}, "id")
         if source.id in bundle.provenance:
@@ -183,6 +201,19 @@ def write_content(cur, bundle: Bundle) -> None:
             ON CONFLICT(entity_id,language,source_id) DO UPDATE SET
             name=EXCLUDED.name,aliases=EXCLUDED.aliases,description=EXCLUDED.description""",
             [(p.entityId,p.language,source_id,p.name,p.aliases,p.summary) for p in bundle.themes.presentations])
+    if bundle.eventCatalog is not None:
+        cur.executemany("""INSERT INTO event_eras(entity_id,era_id) VALUES(%s,%s)
+            ON CONFLICT(entity_id) DO UPDATE SET era_id=EXCLUDED.era_id""", list(bundle.eventCatalog.eras.items()))
+        source_id = "editorial.events.2026-10"
+        if source_id not in {s.id for s in content.sources}:
+            raise ValueError("event editorial attribution missing")
+        cur.executemany("""INSERT INTO entity_localizations(entity_id,language,source_id,name,aliases,description,fields)
+            VALUES(%s,%s,%s,%s,%s,%s,'{}'::jsonb)
+            ON CONFLICT(entity_id,language,source_id) DO UPDATE SET
+            name=EXCLUDED.name,aliases=EXCLUDED.aliases,description=EXCLUDED.description,fields=EXCLUDED.fields""",
+            [(p.entityId,p.language,source_id,p.name,p.aliases,p.summary) for p in bundle.eventCatalog.presentations])
+        cur.executemany("""INSERT INTO timeline_event_catalog(event_id,entity_id) VALUES(%s,%s)
+            ON CONFLICT(event_id) DO NOTHING""", list(bundle.eventCatalog.timelineBindings.items()))
     for position, event in enumerate(content.timeline):
         upsert(
             cur,

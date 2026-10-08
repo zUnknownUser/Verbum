@@ -65,7 +65,7 @@ private fun PageBody(page: EntityDetailFeature.Page, send: (EntityDetailFeature.
             contentPadding = PaddingValues(start = Spacing.readingMargin, end = Spacing.readingMargin, top = Spacing.sm, bottom = Spacing.xxxl * 2),
         ) {
             item { Header(page) }
-            if (page.entity.type == BibleEntityType.THEME) readings(page, send)
+            if (page.entity.type == BibleEntityType.THEME || page.entity.type == BibleEntityType.EVENT) readings(page, send)
             if (page.neighborhood.nodes.isNotEmpty()) {
                 item { EntityRow(stringResource(R.string.explore_graph), stringResource(R.string.explore_graph_subtitle, page.entity.name)) { send(EntityDetailFeature.Action.GraphTapped) } }
             }
@@ -73,7 +73,7 @@ private fun PageBody(page: EntityDetailFeature.Page, send: (EntityDetailFeature.
                 item { EntityRow(stringResource(R.string.view_in_timeline), stringResource(R.string.view_in_timeline_subtitle, page.entity.name)) { send(EntityDetailFeature.Action.TimelineTapped) } }
             }
             item { EntityRow(stringResource(R.string.voice_talk_entity, page.entity.name), stringResource(R.string.voice_talk_entity_subtitle)) { send(EntityDetailFeature.Action.TalkTapped) } }
-            if (page.entity.type != BibleEntityType.THEME) readings(page, send)
+            if (page.entity.type != BibleEntityType.THEME && page.entity.type != BibleEntityType.EVENT) readings(page, send)
             related(R.string.people, page.related(BibleEntityType.PERSON), send)
             related(R.string.places, page.related(BibleEntityType.PLACE), send)
             related(R.string.events, page.related(BibleEntityType.EVENT), send)

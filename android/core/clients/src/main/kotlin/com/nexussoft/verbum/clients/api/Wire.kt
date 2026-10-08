@@ -107,8 +107,9 @@ internal data class WirePassageContext(
 internal data class WireTimelineDiscovery(
     val eraId: String, val eraTitle: String, val eraSummary: String,
     val kind: String, val context: String, val keyPassages: List<WirePassageReference>,
+    val eventEntityId: String? = null,
 ) {
-    fun toModel() = com.nexussoft.verbum.models.TimelineDiscovery(eraId, eraTitle, eraSummary, kind, context, keyPassages.map { it.toModel() })
+    fun toModel() = com.nexussoft.verbum.models.TimelineDiscovery(eraId, eraTitle, eraSummary, kind, context, keyPassages.map { it.toModel() }, eventEntityId)
 }
 
 @Serializable

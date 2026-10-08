@@ -238,12 +238,12 @@ func (s *Store) DailyVersePool(ctx context.Context) ([]domain.PassageReference, 
 
 func (s *Store) Timeline(ctx context.Context, entityID string) (domain.Timeline, error) {
 	return readJSON[domain.Timeline](ctx, s, `WITH events AS (
- SELECT t.*,tl.fields FROM timeline_events t LEFT JOIN LATERAL (SELECT fields FROM timeline_localizations l WHERE l.event_id=t.id AND l.language=$2 ORDER BY l.source_id LIMIT 1) tl ON true WHERE ($2='en' OR NULLIF(t.discovery->$2->>'title','') IS NOT NULL OR NULLIF(tl.fields->>'title','') IS NOT NULL) AND ($1='' OR EXISTS (SELECT 1 FROM timeline_event_entities x WHERE x.event_id=t.id AND x.entity_id=$1))
+ SELECT t.*,tl.fields FROM timeline_events t LEFT JOIN LATERAL (SELECT fields FROM timeline_localizations l WHERE l.event_id=t.id AND l.language=$2 ORDER BY l.source_id LIMIT 1) tl ON true WHERE ($2='en' OR NULLIF(t.discovery->$2->>'title','') IS NOT NULL OR NULLIF(tl.fields->>'title','') IS NOT NULL) AND ($1='' OR EXISTS (SELECT 1 FROM timeline_event_entities x WHERE x.event_id=t.id AND x.entity_id=$1) OR EXISTS (SELECT 1 FROM timeline_event_catalog c WHERE c.event_id=t.id AND c.entity_id=$1))
  ) SELECT jsonb_build_object('events',COALESCE((SELECT jsonb_agg(jsonb_build_object(
  'id',t.id,'title',COALESCE(t.discovery->$2->>'title',t.fields->>'title',t.title),'startYear',t.start_year,'endYear',t.end_year,'datePrecision',t.date_precision,'summary',COALESCE(t.discovery->$2->>'summary',t.fields->>'summary',CASE WHEN $2='en' THEN t.summary END),
- 'discovery',t.discovery->$2,'entityIds',COALESCE((SELECT jsonb_agg(x.entity_id ORDER BY x.position,x.entity_id) FROM timeline_event_entities x WHERE x.event_id=t.id),'[]'::jsonb),
+ 'discovery',CASE WHEN t.discovery->$2 IS NOT NULL THEN (t.discovery->$2) || jsonb_strip_nulls(jsonb_build_object('eventEntityId',(SELECT c.entity_id FROM timeline_event_catalog c WHERE c.event_id=t.id))) END,'entityIds',COALESCE((SELECT jsonb_agg(x.entity_id ORDER BY x.position,x.entity_id) FROM (SELECT entity_id,position FROM timeline_event_entities WHERE event_id=t.id UNION ALL SELECT c.entity_id,-1 FROM timeline_event_catalog c WHERE c.event_id=t.id AND NOT EXISTS (SELECT 1 FROM timeline_event_entities p WHERE p.event_id=t.id AND p.entity_id=c.entity_id)) x),'[]'::jsonb),
  'sourceReferenceIds',COALESCE((SELECT jsonb_agg(x.source_id ORDER BY x.position,x.source_id) FROM timeline_event_sources x WHERE x.event_id=t.id),'[]'::jsonb)
  ) ORDER BY CASE WHEN t.discovery IS NOT NULL THEN t.position END NULLS LAST,t.start_year NULLS LAST,t.position,t.id) FROM events t),'[]'::jsonb),
  'entityNames',COALESCE((SELECT jsonb_object_agg(e.id,(`+localizedEntityJSON("$2")+`)->>'name') FROM entities e WHERE EXISTS
- (SELECT 1 FROM timeline_event_entities x JOIN events t ON t.id=x.event_id WHERE x.entity_id=e.id)),'{}'::jsonb))`, entityID, store.Language(ctx))
+ (SELECT 1 FROM timeline_event_entities x JOIN events t ON t.id=x.event_id WHERE x.entity_id=e.id) OR EXISTS (SELECT 1 FROM timeline_event_catalog c JOIN events t ON t.id=c.event_id WHERE c.entity_id=e.id)),'{}'::jsonb))`, entityID, store.Language(ctx))
 }
