@@ -3,15 +3,17 @@ import DesignSystem
 import Models
 import SwiftUI
 
-struct PeopleCatalogView: View {
+struct EntityCatalogView: View {
     let store: StoreOf<EntityListFeature>
+    private var places: Bool { store.type == .place }
+    private var identifier: String { places ? "places" : "people" }
     private let alphabet = Array("ABCDEFGHIJKLMNOPQRSTUVWXYZ").map(String.init) + ["#"]
 
     var body: some View {
         VStack(spacing: 0) {
             ScrollView(.horizontal) {
                 HStack(spacing: Spacing.sm) {
-                    letterButton("", title: L10n.t("All people"))
+                    letterButton("", title: L10n.t(places ? "All places" : "All people"))
                     ForEach(alphabet, id: \.self) { letter in letterButton(letter, title: letter) }
                 }.padding(.horizontal, Spacing.readingMargin).padding(.vertical, Spacing.sm)
             }.scrollIndicators(.hidden)
@@ -41,22 +43,22 @@ struct PeopleCatalogView: View {
                         }
                         if store.isLoading {
                             ProgressView().frame(maxWidth: .infinity).padding(Spacing.xl)
-                                .accessibilityLabel(L10n.t("Loading people"))
+                                .accessibilityLabel(L10n.t(places ? "Loading places" : "Loading people"))
                         } else if store.failed {
                             VStack(alignment: .leading, spacing: Spacing.md) {
-                                Text(L10n.t("People could not be loaded. Please try again."))
+                                Text(L10n.t(places ? "Places could not be loaded. Please try again." : "People could not be loaded. Please try again."))
                                 Button(L10n.t("Try Again")) { store.send(.retry) }.buttonStyle(.bordered)
                             }.font(Typography.subheadline).padding(.vertical, Spacing.xl)
                         } else if store.hasLoaded && store.entities.isEmpty {
                             VStack(alignment: .leading, spacing: Spacing.md) {
-                                EditorialIcon("person.crop.circle.badge.questionmark")
-                                Text(L10n.t("No people found")).font(Typography.editorialHeadline)
+                                EditorialIcon(places ? "mappin.and.ellipse" : "person.crop.circle.badge.questionmark")
+                                Text(L10n.t(places ? "No places found" : "No people found")).font(Typography.editorialHeadline)
                                 Text(L10n.t("Try another name or letter.")).font(Typography.subheadline).foregroundStyle(Palette.inkSecondary)
                             }.padding(.vertical, Spacing.xl)
                         } else if store.nextOffset != nil {
                             Button(L10n.t("Show more")) { store.send(.loadMore) }
                                 .buttonStyle(.bordered).controlSize(.large).frame(maxWidth: .infinity).padding(.vertical, Spacing.xl)
-                                .accessibilityIdentifier("people.showMore")
+                                .accessibilityIdentifier("\(identifier).showMore")
                         }
                     }
                     .frame(maxWidth: Spacing.readingMaxWidth, alignment: .leading).frame(maxWidth: .infinity)
@@ -68,9 +70,9 @@ struct PeopleCatalogView: View {
             }
         }
         .background(Palette.paper).foregroundStyle(Palette.ink).tint(Palette.accent)
-        .navigationTitle(L10n.t("People")).navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(L10n.t(places ? "Places" : "People")).navigationBarTitleDisplayMode(.inline)
         .searchable(text: Binding(get: { store.query }, set: { store.send(.queryChanged($0)) }),
-                    placement: .navigationBarDrawer(displayMode: .always), prompt: L10n.t("Search people"))
+                    placement: .navigationBarDrawer(displayMode: .always), prompt: L10n.t(places ? "Search places" : "Search people"))
     }
 
     private func letterButton(_ letter: String, title: String) -> some View {
@@ -80,6 +82,6 @@ struct PeopleCatalogView: View {
                 .background(store.letter == letter ? Palette.forest : Palette.paperElevated, in: Capsule())
         }.buttonStyle(EditorialButtonStyle())
             .accessibilityAddTraits(store.letter == letter ? .isSelected : [])
-            .accessibilityIdentifier("people.letter.\(letter.isEmpty ? "all" : letter)")
+            .accessibilityIdentifier("\(identifier).letter.\(letter.isEmpty ? "all" : letter)")
     }
 }

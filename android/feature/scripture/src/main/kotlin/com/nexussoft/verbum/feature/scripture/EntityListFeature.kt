@@ -39,7 +39,7 @@ object EntityListFeature {
             return next.with(runEffect(id = LOAD, cancelInFlight = true) { send ->
                 try {
                     if (debounce) delay(300)
-                    val response = if (state.type == BibleEntityType.PERSON) Action.PageLoaded(next.generation, offset, graphClient.entityPage(request))
+                    val response = if (state.type == BibleEntityType.PERSON || state.type == BibleEntityType.PLACE) Action.PageLoaded(next.generation, offset, graphClient.entityPage(request))
                         else Action.EntitiesLoaded(graphClient.entities(state.type))
                     currentCoroutineContext().ensureActive()
                     send(response)

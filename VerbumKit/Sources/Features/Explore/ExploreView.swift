@@ -111,7 +111,7 @@ public struct EntityListView: View {
 
     public var body: some View {
         Group {
-            if store.type == .person { PeopleCatalogView(store: store) }
+            if store.type == .person || store.type == .place { EntityCatalogView(store: store) }
             else { legacyList }
         }
         .task { await store.send(.task).finish() }

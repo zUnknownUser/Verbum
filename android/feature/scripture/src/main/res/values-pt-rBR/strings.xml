@@ -320,4 +320,8 @@
     <string name="people_empty">Nenhuma pessoa encontrada</string>
     <string name="people_empty_body">Tente outro nome ou letra.</string>
     <string name="people_all">Todas</string>
+    <string name="places_search">Buscar lugares</string>
+    <string name="places_all">Todos</string>
+    <string name="places_load_failed">Não foi possível carregar os lugares. Tente novamente.</string>
+    <string name="places_empty">Nenhum lugar encontrado</string>
 </resources>

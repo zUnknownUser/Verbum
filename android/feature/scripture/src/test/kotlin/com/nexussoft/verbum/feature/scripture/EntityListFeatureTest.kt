@@ -15,6 +15,25 @@ class EntityListFeatureTest {
         override suspend fun entityPage(request: EntityCatalogRequest) = body(request)
     }
 
+    @Test fun placesUseServerPaginationAndKeepTheirStateOnReturn() = runTest {
+        val jerusalem = BibleEntity("place.jerusalem", BibleEntityType.PLACE, "Jerusalém", "Cidade")
+        var calls = 0
+        val client = client { request ->
+            calls++
+            assertEquals(EntityCatalogRequest(BibleEntityType.PLACE, "jerusalem", "J"), request)
+            EntityCatalogPage(listOf(jerusalem), listOf("J"), 30)
+        }
+        val store = Store(EntityListFeature.State(BibleEntityType.PLACE, query = "jerusalem", letter = "J"), EntityListFeature.reducer(client), backgroundScope)
+        store.send(EntityListFeature.Action.Started); runCurrent()
+        assertEquals(listOf(jerusalem), store.state.value.entities)
+        assertEquals(30, store.state.value.nextOffset)
+        store.send(EntityListFeature.Action.Stopped); runCurrent()
+        store.send(EntityListFeature.Action.Started); runCurrent()
+        assertEquals(1, calls)
+        assertEquals("jerusalem", store.state.value.query)
+        assertEquals("J", store.state.value.letter)
+    }
+
     @Test fun pagesDeduplicateAndReturnKeepsFilterAndPosition() = runTest {
         val requests = mutableListOf<EntityCatalogRequest>()
         val client = client { request ->

@@ -8,6 +8,28 @@ import Testing
     private let abel = BibleEntity(id: "a", type: .person, name: "Abel", summary: "Son of Adam")
     private let anna = BibleEntity(id: "b", type: .person, name: "Anna", summary: nil)
 
+    @Test func placesUseServerPaginationAndOpenTheirOwnDetail() async {
+        let jerusalem = BibleEntity(id: "place.jerusalem", type: .place, name: "Jerusalém", summary: "Cidade")
+        var state = EntityListFeature.State(type: .place)
+        state.query = "jerusalem"; state.letter = "J"
+        let page = EntityCatalogPage(entities: [jerusalem], letters: ["J"], nextOffset: 30)
+        let store = TestStore(initialState: state) { EntityListFeature() } withDependencies: {
+            $0.graphClient.entityPage = { request in
+                #expect(request == EntityCatalogRequest(type: .place, query: "jerusalem", letter: "J"))
+                return page
+            }
+        }
+        await store.send(.task) { $0.isLoading = true; $0.generation = 1 }
+        await store.receive(.pageResponse(1, 0, page)) {
+            $0.isLoading = false; $0.hasLoaded = true; $0.entities = [jerusalem]; $0.letters = ["J"]; $0.nextOffset = 30
+        }
+        await store.send(.entityTapped(jerusalem))
+        await store.receive(.delegate(.openEntity(jerusalem)))
+        await store.send(.cancel) { $0.generation = 2 }
+        await store.send(.task)
+        #expect(store.state.query == "jerusalem" && store.state.letter == "J")
+    }
+
     @Test func pagesAppendWithoutDuplicatingAndReturnDoesNotReload() async {
         let first = EntityCatalogPage(entities: [abel], letters: ["A"], nextOffset: 30)
         let second = EntityCatalogPage(entities: [abel, anna], letters: ["A"])

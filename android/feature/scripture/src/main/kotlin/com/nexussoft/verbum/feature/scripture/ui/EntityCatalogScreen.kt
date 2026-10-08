@@ -30,7 +30,9 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun PeopleCatalogScreen(state: EntityListFeature.State, onBack: () -> Unit, send: (Action) -> Unit) {
+internal fun EntityCatalogScreen(state: EntityListFeature.State, onBack: () -> Unit, send: (Action) -> Unit) {
+    val places = state.type == com.nexussoft.verbum.models.BibleEntityType.PLACE
+    val identifier = if (places) "places" else "people"
     val focus = LocalFocusManager.current
     LaunchedEffect(Unit) { send(Action.Started) }
     DisposableEffect(Unit) { onDispose { send(Action.Stopped) } }
@@ -47,21 +49,21 @@ internal fun PeopleCatalogScreen(state: EntityListFeature.State, onBack: () -> U
         }
     }
     Scaffold(topBar = {
-        TopAppBar(title = { Text(stringResource(R.string.people)) }, navigationIcon = {
+        TopAppBar(title = { Text(stringResource(if (places) R.string.places else R.string.people)) }, navigationIcon = {
             IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back)) }
         })
     }) { padding ->
         Column(Modifier.fillMaxSize().padding(padding)) {
             OutlinedTextField(value = state.query, onValueChange = { send(Action.QueryChanged(it)) },
-                label = { Text(stringResource(R.string.people_search)) }, leadingIcon = { Icon(Icons.Filled.Search, null) },
+                label = { Text(stringResource(if (places) R.string.places_search else R.string.people_search)) }, leadingIcon = { Icon(Icons.Filled.Search, null) },
                 trailingIcon = { if (state.query.isNotEmpty()) IconButton(onClick = { send(Action.QueryChanged("")) }) { Icon(Icons.Filled.Close, stringResource(R.string.clear)) } },
                 singleLine = true, shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.readingMargin).testTag("people.search"))
+                modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.readingMargin).testTag("$identifier.search"))
             Row(Modifier.horizontalScroll(rememberScrollState()).padding(horizontal = Spacing.readingMargin, vertical = Spacing.sm), horizontalArrangement = Arrangement.spacedBy(Spacing.sm)) {
                 (listOf("") + ('A'..'Z').map { it.toString() } + "#").forEach { letter ->
                     FilterChip(selected = state.letter == letter, onClick = { focus.clearFocus(); send(Action.LetterChanged(letter)) },
-                        label = { Text(if (letter.isEmpty()) stringResource(R.string.people_all) else letter) },
-                        modifier = Modifier.heightIn(min = 48.dp).testTag("people.letter.${letter.ifEmpty { "all" }}"))
+                        label = { Text(if (letter.isEmpty()) stringResource(if (places) R.string.places_all else R.string.people_all) else letter) },
+                        modifier = Modifier.heightIn(min = 48.dp).testTag("$identifier.letter.${letter.ifEmpty { "all" }}"))
                 }
             }
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
@@ -90,15 +92,15 @@ internal fun PeopleCatalogScreen(state: EntityListFeature.State, onBack: () -> U
                     when {
                         state.isLoading -> item { Box(Modifier.fillMaxWidth().padding(Spacing.xl), contentAlignment = Alignment.Center) { CircularProgressIndicator() } }
                         state.failed -> item {
-                            Text(stringResource(R.string.people_load_failed), modifier = Modifier.padding(top = Spacing.xl))
+                            Text(stringResource(if (places) R.string.places_load_failed else R.string.people_load_failed), modifier = Modifier.padding(top = Spacing.xl))
                             OutlinedButton(onClick = { send(Action.Retry) }) { Text(stringResource(R.string.try_again)) }
                         }
                         state.hasLoaded && state.entities.isEmpty() -> item {
-                            Text(stringResource(R.string.people_empty), style = VerbumTypography.editorialHeadline, modifier = Modifier.padding(top = Spacing.xl))
+                            Text(stringResource(if (places) R.string.places_empty else R.string.people_empty), style = VerbumTypography.editorialHeadline, modifier = Modifier.padding(top = Spacing.xl))
                             Text(stringResource(R.string.people_empty_body), color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = Spacing.sm))
                         }
                         state.nextOffset != null -> item {
-                            OutlinedButton(onClick = { send(Action.LoadMore) }, modifier = Modifier.fillMaxWidth().padding(vertical = Spacing.xl).testTag("people.showMore")) { Text(stringResource(R.string.history_more)) }
+                            OutlinedButton(onClick = { send(Action.LoadMore) }, modifier = Modifier.fillMaxWidth().padding(vertical = Spacing.xl).testTag("$identifier.showMore")) { Text(stringResource(R.string.history_more)) }
                         }
                     }
                 }
