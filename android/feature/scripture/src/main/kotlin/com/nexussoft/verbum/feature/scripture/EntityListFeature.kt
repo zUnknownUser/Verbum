@@ -11,11 +11,14 @@ import kotlinx.coroutines.ensureActive
 object EntityListFeature {
     data class State(
         val type: BibleEntityType, val entities: List<BibleEntity> = emptyList(), val isLoading: Boolean = false,
+        val category: String = "", val browsingThemes: Boolean = false,
         val query: String = "", val letter: String = "", val letters: List<String> = emptyList(),
         val nextOffset: Int? = null, val hasLoaded: Boolean = false, val failed: Boolean = false,
         val generation: Int = 0, val loadingOffset: Int = 0, val scrollIndex: Int = 0, val scrollOffset: Int = 0,
     )
     sealed interface Action {
+        data object DiscoverThemes : Action
+        data class CategoryChanged(val category: String) : Action
         data object Started : Action
         data object Stopped : Action
         data object Retry : Action
@@ -35,11 +38,11 @@ object EntityListFeature {
     fun reducer(graphClient: GraphClient): Reducer<State, Action> {
         fun load(state: State, offset: Int = 0, debounce: Boolean = false): Reduced<State, Action> {
             val next = state.copy(isLoading = true, failed = false, loadingOffset = offset, generation = state.generation + 1)
-            val request = EntityCatalogRequest(state.type, state.query, state.letter, offset)
+            val request = EntityCatalogRequest(state.type, state.query, state.letter, offset, category = state.category)
             return next.with(runEffect(id = LOAD, cancelInFlight = true) { send ->
                 try {
                     if (debounce) delay(300)
-                    val response = if (state.type == BibleEntityType.PERSON || state.type == BibleEntityType.PLACE) Action.PageLoaded(next.generation, offset, graphClient.entityPage(request))
+                    val response = if (state.type == BibleEntityType.PERSON || state.type == BibleEntityType.PLACE || state.type == BibleEntityType.THEME) Action.PageLoaded(next.generation, offset, graphClient.entityPage(request))
                         else Action.EntitiesLoaded(graphClient.entities(state.type))
                     currentCoroutineContext().ensureActive()
                     send(response)
@@ -50,6 +53,8 @@ object EntityListFeature {
         fun reset(state: State, debounce: Boolean = false) = load(state.copy(entities = emptyList(), nextOffset = null, hasLoaded = false, scrollIndex = 0, scrollOffset = 0), debounce = debounce)
         return Reducer { state, action ->
             when (action) {
+                Action.DiscoverThemes -> reset(state.copy(browsingThemes = false, category = "", query = "", letter = ""))
+                is Action.CategoryChanged -> reset(state.copy(browsingThemes = true, category = action.category, query = "", letter = ""))
                 Action.Started -> if (state.hasLoaded || state.isLoading) state.only() else load(state)
                 Action.Stopped -> state.copy(isLoading = false, generation = state.generation + 1).with(runEffect(id = LOAD, cancelInFlight = true) {})
                 Action.Retry -> if (state.isLoading) state.only() else load(state, state.loadingOffset)

@@ -65,6 +65,7 @@ private fun PageBody(page: EntityDetailFeature.Page, send: (EntityDetailFeature.
             contentPadding = PaddingValues(start = Spacing.readingMargin, end = Spacing.readingMargin, top = Spacing.sm, bottom = Spacing.xxxl * 2),
         ) {
             item { Header(page) }
+            if (page.entity.type == BibleEntityType.THEME) readings(page, send)
             if (page.neighborhood.nodes.isNotEmpty()) {
                 item { EntityRow(stringResource(R.string.explore_graph), stringResource(R.string.explore_graph_subtitle, page.entity.name)) { send(EntityDetailFeature.Action.GraphTapped) } }
             }
@@ -72,17 +73,22 @@ private fun PageBody(page: EntityDetailFeature.Page, send: (EntityDetailFeature.
                 item { EntityRow(stringResource(R.string.view_in_timeline), stringResource(R.string.view_in_timeline_subtitle, page.entity.name)) { send(EntityDetailFeature.Action.TimelineTapped) } }
             }
             item { EntityRow(stringResource(R.string.voice_talk_entity, page.entity.name), stringResource(R.string.voice_talk_entity_subtitle)) { send(EntityDetailFeature.Action.TalkTapped) } }
-            if (page.passages.isNotEmpty()) {
-                sectionHeader(R.string.key_passages)
-                items(page.passages) { reference -> EntityRow(reference.formatted, null) { send(EntityDetailFeature.Action.PassageTapped(reference)) } }
-            }
+            if (page.entity.type != BibleEntityType.THEME) readings(page, send)
             related(R.string.people, page.related(BibleEntityType.PERSON), send)
             related(R.string.places, page.related(BibleEntityType.PLACE), send)
             related(R.string.events, page.related(BibleEntityType.EVENT), send)
-            related(R.string.themes, page.related(BibleEntityType.THEME), send)
+            related(if (page.entity.type == BibleEntityType.THEME) R.string.themes_further else R.string.themes, page.related(BibleEntityType.THEME), send)
             item { Sources(page.sources) }
         }
     }
+}
+
+private fun LazyListScope.readings(page: EntityDetailFeature.Page, send: (EntityDetailFeature.Action) -> Unit) {
+            if (page.passages.isNotEmpty()) {
+                sectionHeader(if (page.entity.type == BibleEntityType.THEME) R.string.themes_start_reading else R.string.key_passages)
+                if (page.entity.type == BibleEntityType.THEME) item { Text(stringResource(R.string.themes_read_context), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(vertical = Spacing.sm)) }
+                items(page.passages) { reference -> EntityRow(reference.formatted, null) { send(EntityDetailFeature.Action.PassageTapped(reference)) } }
+            }
 }
 
 @Composable

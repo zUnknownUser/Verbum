@@ -10,6 +10,37 @@ import (
 	"verbum/backend/internal/testdb"
 )
 
+func TestThemeCategoryAndLocalizedAliases(t *testing.T) {
+	ctx := context.Background()
+	conn, url := testdb.Open(t, "../../../db/migrations")
+	_, err := conn.Exec(ctx, `INSERT INTO sources(id,citation) VALUES('themes.test','Test');
+ INSERT INTO entities(id,type,name) VALUES('anxiety','theme','Anxiety'),('faith','theme','Faith');
+ INSERT INTO theme_categories(entity_id,category_id) VALUES('anxiety','emotions'),('faith','with-god');
+ INSERT INTO entity_localizations(entity_id,language,source_id,name,aliases) VALUES
+ ('anxiety','pt-BR','themes.test','Ansiedade',ARRAY['preocupação']),('anxiety','en','themes.test','Anxiety',ARRAY['worry']);`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	db, err := postgres.Open(ctx, url)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	for _, tc := range []struct {
+		lang, query, category string
+		count                 int
+	}{
+		{"pt-BR", "PREOCUPACAO", "emotions", 1}, {"en", "worry", "emotions", 1},
+		{"pt-BR", "worry", "emotions", 0}, {"en", "preocupacao", "emotions", 0},
+		{"pt-BR", "preocupacao", "with-god", 0}, {"en", "", "with-god", 1},
+	} {
+		page, e := db.EntityPage(store.WithLanguage(ctx, tc.lang), domain.Theme, store.EntityPageRequest{Query: tc.query, Category: tc.category, Limit: 30})
+		if e != nil || len(page.Entities) != tc.count {
+			t.Fatalf("%+v: %+v %v", tc, page, e)
+		}
+	}
+}
+
 func TestCatalogPagesFilterBeforeLimitingAndKeepDuplicateNames(t *testing.T) {
 	ctx := context.Background()
 	conn, url := testdb.Open(t, "../../../db/migrations")

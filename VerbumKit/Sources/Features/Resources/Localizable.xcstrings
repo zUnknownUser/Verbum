@@ -1,6 +1,296 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+  "All letters": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Todas as letras"
+        }
+      }
+    }
+  },
+  "What would you like to explore?": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Qual assunto você quer explorar?"
+        }
+      }
+    }
+  },
+  "Browse categories": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Explorar categorias"
+        }
+      }
+    }
+  },
+  "All themes": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Todos os temas"
+        }
+      }
+    }
+  },
+  "Themes could not be loaded. Please try again.": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Não foi possível carregar os temas. Tente novamente."
+        }
+      }
+    }
+  },
+  "No themes found": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Nenhum tema encontrado"
+        }
+      }
+    }
+  },
+  "Loading themes": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Carregando temas"
+        }
+      }
+    }
+  },
+  "Explore by subject": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Explore por assunto"
+        }
+      }
+    }
+  },
+  "Find a starting point for what you are living or want to understand.": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Encontre um ponto de partida para o que você está vivendo ou quer entender."
+        }
+      }
+    }
+  },
+  "Where to begin": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Por onde começar"
+        }
+      }
+    }
+  },
+  "Hope": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Esperança"
+        }
+      }
+    }
+  },
+  "Start reading": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Comece por aqui"
+        }
+      }
+    }
+  },
+  "Read these passages in their chapter context, then explore related themes below.": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Leia os trechos no contexto do capítulo e depois explore os temas relacionados abaixo."
+        }
+      }
+    }
+  },
+  "Life with God": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Vida com Deus"
+        }
+      }
+    }
+  },
+  "Faith, prayer and worship": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Fé, oração e adoração"
+        }
+      }
+    }
+  },
+  "Emotions and difficulties": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Emoções e dificuldades"
+        }
+      }
+    }
+  },
+  "Anxiety, grief and hope": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Ansiedade, luto e esperança"
+        }
+      }
+    }
+  },
+  "Relationships": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Relacionamentos"
+        }
+      }
+    }
+  },
+  "Love, family and forgiveness": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Amor, família e perdão"
+        }
+      }
+    }
+  },
+  "Character and choices": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Caráter e escolhas"
+        }
+      }
+    }
+  },
+  "Wisdom, humility and courage": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Sabedoria, humildade e coragem"
+        }
+      }
+    }
+  },
+  "Everyday life": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Vida cotidiana"
+        }
+      }
+    }
+  },
+  "Work, money and rest": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Trabalho, dinheiro e descanso"
+        }
+      }
+    }
+  },
+  "Foundations of faith": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Fundamentos da fé"
+        }
+      }
+    }
+  },
+  "Grace, salvation and covenant": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Graça, salvação e aliança"
+        }
+      }
+    }
+  },
+  "Life in community": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Vida em comunidade"
+        }
+      }
+    }
+  },
+  "Service, unity and mission": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Serviço, unidade e missão"
+        }
+      }
+    }
+  },
+  "Life and eternity": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Vida e eternidade"
+        }
+      }
+    }
+  },
+  "Resurrection and new creation": {
+    "localizations": {
+      "pt-BR": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Ressurreição e nova criação"
+        }
+      }
+    }
+  },
     "Search places" : {
       "localizations" : {
         "pt-BR" : {

@@ -40,6 +40,7 @@ public struct EntityDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: Spacing.xxl) {
                 header(page)
+                if page.entity.type == .theme { readings(page) }
                 if !page.neighborhood.nodes.isEmpty {
                     Row(title: L10n.t("Explore the graph"), subtitle: L10n.t("Connections around \(page.entity.name), one step at a time."), symbol: "point.3.connected.trianglepath.dotted") {
                         store.send(.graphTapped)
@@ -53,17 +54,11 @@ public struct EntityDetailView: View {
                 Row(title: L10n.t("Talk about \(page.entity.name)"), subtitle: L10n.t("Ask out loud; the companion answers from Scripture."), symbol: "waveform.and.mic") {
                     store.send(.talkTapped)
                 }
-                if !page.passages.isEmpty {
-                    section(L10n.t("Key passages")) {
-                        ForEach(page.passages, id: \.self) { reference in
-                            Row(title: reference.formatted, symbol: "book") { store.send(.passageTapped(reference)) }
-                        }
-                    }
-                }
+                if page.entity.type != .theme { readings(page) }
                 relatedSection(L10n.t("People"), page.related(.person), symbol: "person")
                 relatedSection(L10n.t("Places"), page.related(.place), symbol: "mappin.and.ellipse")
                 relatedSection(L10n.t("Events"), page.related(.event), symbol: "clock")
-                relatedSection(L10n.t("Themes"), page.related(.theme), symbol: "sparkle")
+                relatedSection(L10n.t(page.entity.type == .theme ? "Explore further" : "Themes"), page.related(.theme), symbol: "sparkle")
                 sources(page.sources)
             }
             .frame(maxWidth: Spacing.readingMaxWidth, alignment: .leading)
@@ -73,6 +68,21 @@ public struct EntityDetailView: View {
             .padding(.bottom, Spacing.xxxl * 2)
         }
         .scrollIndicators(.hidden)
+    }
+
+    @ViewBuilder
+    private func readings(_ page: EntityDetailFeature.Page) -> some View {
+                if !page.passages.isEmpty {
+                    section(L10n.t(page.entity.type == .theme ? "Start reading" : "Key passages")) {
+                        if page.entity.type == .theme {
+                            Text(L10n.t("Read these passages in their chapter context, then explore related themes below."))
+                                .font(Typography.footnote).foregroundStyle(Palette.inkSecondary).padding(.vertical, Spacing.sm)
+                        }
+                        ForEach(page.passages, id: \.self) { reference in
+                            Row(title: reference.formatted, symbol: "book") { store.send(.passageTapped(reference)) }
+                        }
+                    }
+                }
     }
 
     private func header(_ page: EntityDetailFeature.Page) -> some View {

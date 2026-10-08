@@ -22,7 +22,7 @@ extension VerbumAPI {
     public func entityPage(_ request: EntityCatalogRequest, language: BookLanguage = .current) async throws -> EntityCatalogPage {
         try await get("/v1/entities", query: [
             .init(name: "type", value: request.type.rawValue), Self.lang(language),
-            .init(name: "q", value: request.query), .init(name: "letter", value: request.letter),
+            .init(name: "category", value: request.category), .init(name: "q", value: request.query), .init(name: "letter", value: request.letter),
             .init(name: "offset", value: String(request.offset)), .init(name: "limit", value: String(request.limit))
         ], as: EntityCatalogPage.self)
     }

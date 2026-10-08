@@ -279,8 +279,22 @@ class ContentTranslation(Model):
         return self
 
 
+class ThemePresentation(Model):
+    entityId: Text
+    language: Literal["en", "pt-BR"]
+    name: Text
+    summary: Text
+    aliases: list[Text]
+
+
+class ThemeDiscovery(Model):
+    categories: dict[str, list[Text]]
+    presentations: list[ThemePresentation]
+
+
 class Bundle(Model):
-    version: Literal[1, 2, 3] = 1
+    version: Literal[1, 2, 3, 4] = 1
+    themes: ThemeDiscovery | None = None
     translations: list[ContentTranslation] | None = None
     enrichment: Enrichment | None = None
     kind: Literal["fixture", "editorial"]
@@ -293,6 +307,8 @@ class Bundle(Model):
     @model_serializer(mode="wrap")
     def serialize_bundle(self, handler):
         value = handler(self)
+        if self.version != 4:
+            value.pop("themes", None)
         if self.version != 3:
             value.pop("translations", None)
         if self.version == 1:
@@ -301,6 +317,20 @@ class Bundle(Model):
 
     @model_validator(mode="after")
     def evidence(self) -> Self:
+        if (self.version == 4) != (self.themes is not None):
+            raise ValueError("version 4 requires theme discovery metadata")
+        if self.themes is not None:
+            entities = {e.id for e in self.content.entities if e.type == "theme"}
+            allowed = {"with-god", "emotions", "relationships", "character", "daily-life", "foundations", "community", "eternity"}
+            if entities != set(self.themes.categories) or len(entities) != len(self.content.entities):
+                raise ValueError("theme classification must cover exactly every theme")
+            for values in self.themes.categories.values():
+                if not values or not set(values) <= allowed or len(values) != len(set(values)):
+                    raise ValueError("invalid theme categories")
+            expected = {(id_, lang) for id_ in entities for lang in ("en", "pt-BR")}
+            actual = [(p.entityId, p.language) for p in self.themes.presentations]
+            if set(actual) != expected or len(actual) != len(expected):
+                raise ValueError("theme presentations must cover both languages exactly")
         if (self.version == 2) != (self.enrichment is not None):
             raise ValueError("version 2 requires enrichment; version 1 cannot contain it")
         if (self.version == 3) != (self.translations is not None):

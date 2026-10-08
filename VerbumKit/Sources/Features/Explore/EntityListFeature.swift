@@ -10,6 +10,8 @@ public struct EntityListFeature {
         public var entities: [BibleEntity] = []
         public var isLoading = false
         public var query = ""
+        public var category = ""
+        public var browsingThemes = false
         public var letter = ""
         public var letters: [String] = []
         public var nextOffset: Int?
@@ -21,7 +23,8 @@ public struct EntityListFeature {
     }
 
     public enum Action: Equatable {
-        case task, cancel, retry, loadMore
+        case task, cancel, retry, loadMore, discoverThemes
+        case categoryChanged(String)
         case queryChanged(String), letterChanged(String)
         case pageResponse(Int, Int, EntityCatalogPage)
         case failed(Int)
@@ -47,6 +50,12 @@ public struct EntityListFeature {
             case .loadMore:
                 guard !state.isLoading, let offset = state.nextOffset else { return .none }
                 return load(&state, offset: offset)
+            case .discoverThemes:
+                state.browsingThemes = false; state.category = ""; state.query = ""; state.letter = ""
+                return reset(&state)
+            case .categoryChanged(let category):
+                state.category = category; state.browsingThemes = true; state.query = ""; state.letter = ""
+                return reset(&state)
             case .queryChanged(let query):
                 guard query != state.query else { return .none }
                 state.query = String(query.prefix(100)); state.letter = ""
@@ -88,11 +97,11 @@ public struct EntityListFeature {
     private func load(_ state: inout State, offset: Int = 0, debounce: Bool = false) -> Effect<Action> {
         state.isLoading = true; state.failed = false; state.loadingOffset = offset; state.generation += 1
         let generation = state.generation
-        let request = EntityCatalogRequest(type: state.type, query: state.query, letter: state.letter, offset: offset)
+        let request = EntityCatalogRequest(type: state.type, query: state.query, letter: state.letter, offset: offset, category: state.category)
         return .run { [graphClient, clock] send in
             do {
                 if debounce { try await clock.sleep(for: .milliseconds(300)) }
-                if request.type == .person || request.type == .place {
+                if request.type == .person || request.type == .place || request.type == .theme {
                     let page = try await graphClient.entityPage(request)
                     try Task.checkCancellation()
                     await send(.pageResponse(generation, offset, page))

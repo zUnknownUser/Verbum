@@ -74,6 +74,8 @@ def items(bundle: Bundle) -> list[dict]:
             "sourceReferenceIds": [],
         }
     )
+    if bundle.themes is not None:
+        result.append({"key": "themeDiscovery", "proposal": bundle.themes.model_dump(), "sourceReferenceIds": [s.id for s in bundle.content.sources]})
     return result
 
 

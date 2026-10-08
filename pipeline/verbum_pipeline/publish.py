@@ -164,6 +164,18 @@ def write_content(cur, bundle: Bundle) -> None:
             ],
         )
     write_relationships(cur, content.relationships)
+    if bundle.themes is not None:
+        for entity_id, categories in bundle.themes.categories.items():
+            replace_links(cur, "theme_categories", "entity_id", entity_id,
+                          [{"entity_id": entity_id, "category_id": c} for c in categories])
+        source_id = "editorial.themes.2026-10"
+        if source_id not in {s.id for s in content.sources}:
+            raise ValueError("theme editorial attribution missing")
+        cur.executemany("""INSERT INTO entity_localizations(entity_id,language,source_id,name,aliases,description,fields)
+            VALUES(%s,%s,%s,%s,%s,%s,'{}'::jsonb)
+            ON CONFLICT(entity_id,language,source_id) DO UPDATE SET
+            name=EXCLUDED.name,aliases=EXCLUDED.aliases,description=EXCLUDED.description""",
+            [(p.entityId,p.language,source_id,p.name,p.aliases,p.summary) for p in bundle.themes.presentations])
     for position, event in enumerate(content.timeline):
         upsert(
             cur,

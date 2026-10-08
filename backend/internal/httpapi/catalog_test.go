@@ -16,7 +16,7 @@ func TestCatalogPaginationContractAndValidation(t *testing.T) {
 		t.Fatal(err)
 	}
 	h := New(s, time.Now, nil, nil, nil, nil)
-	for _, query := range []string{"limit=0", "limit=101", "offset=-1", "offset=1000001", "letter=AA", "letter=%27", "limit=no", "offset=no"} {
+	for _, query := range []string{"limit=0", "limit=101", "offset=-1", "offset=1000001", "letter=AA", "letter=%27", "limit=no", "offset=no", "category=unknown", "category=emotions"} {
 		w := httptest.NewRecorder()
 		h.ServeHTTP(w, httptest.NewRequest(http.MethodGet, "/v1/entities?type=person&"+query, nil))
 		if w.Code != 400 {

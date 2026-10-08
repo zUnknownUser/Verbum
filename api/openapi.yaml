@@ -357,7 +357,8 @@ paths:
       description: >-
         Without catalog parameters, returns the legacy complete list. Sending limit, offset,
         q or letter enables server-side pagination (default 30). Names are localized before
-        filtering and grouped by initial, sorted without case/diacritics, then by ID. q searches names literally.
+        filtering and grouped by initial, sorted without case/diacritics, then by ID. q searches localized names and aliases literally.
+        category filters themes by editorial discovery category before pagination and letter selection.
         letter selects A–Z or #. letters lists the initials matching q, before letter filtering.
         nextOffset is null at the end. Deploy the API before releasing catalog-enabled apps.
       parameters:
@@ -378,6 +379,10 @@ paths:
         - name: letter
           in: query
           schema: { type: string, pattern: '^[A-Za-z#]?$' }
+        - name: category
+          in: query
+          description: Theme discovery category; nonempty values require type=theme.
+          schema: { type: string, enum: ['', with-god, emotions, relationships, character, daily-life, foundations, community, eternity] }
       responses:
         '200':
           description: OK

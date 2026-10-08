@@ -16,8 +16,8 @@ type EntityPage struct {
 	NextOffset *int            `json:"nextOffset"`
 }
 type EntityPageRequest struct {
-	Query, Letter string
-	Offset, Limit int
+	Query, Letter, Category string
+	Offset, Limit           int
 }
 
 func CatalogName(value string) string {
@@ -75,4 +75,13 @@ func PaginateEntities(entities []domain.Entity, request EntityPageRequest) Entit
 		page.NextOffset = &end
 	}
 	return page
+}
+
+// ValidThemeCategory is the editorial discovery vocabulary shared by both apps.
+func ValidThemeCategory(value string) bool {
+	switch value {
+	case "", "with-god", "emotions", "relationships", "character", "daily-life", "foundations", "community", "eternity":
+		return true
+	}
+	return false
 }

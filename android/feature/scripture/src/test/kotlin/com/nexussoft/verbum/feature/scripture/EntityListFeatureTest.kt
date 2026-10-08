@@ -15,6 +15,19 @@ class EntityListFeatureTest {
         override suspend fun entityPage(request: EntityCatalogRequest) = body(request)
     }
 
+    @Test fun themeCategoriesResetSearchAndUseServerPagination() = runTest {
+        val requests = mutableListOf<EntityCatalogRequest>()
+        val client = client { request -> requests += request; EntityCatalogPage(emptyList(), emptyList()) }
+        val store = Store(EntityListFeature.State(BibleEntityType.THEME, query = "old", letter = "A", hasLoaded = true, nextOffset = 30), EntityListFeature.reducer(client), backgroundScope)
+        store.send(EntityListFeature.Action.CategoryChanged("emotions")); runCurrent()
+        assertEquals(EntityCatalogRequest(BibleEntityType.THEME, category = "emotions"), requests.single())
+        assertTrue(store.state.value.browsingThemes)
+        assertNull(store.state.value.nextOffset)
+        store.send(EntityListFeature.Action.DiscoverThemes); runCurrent()
+        assertEquals("", requests.last().category)
+        assertFalse(store.state.value.browsingThemes)
+    }
+
     @Test fun placesUseServerPaginationAndKeepTheirStateOnReturn() = runTest {
         val jerusalem = BibleEntity("place.jerusalem", BibleEntityType.PLACE, "Jerusalém", "Cidade")
         var calls = 0

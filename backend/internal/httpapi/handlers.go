@@ -79,9 +79,13 @@ func (h *handlers) listEntities(w http.ResponseWriter, r *http.Request) {
 		writeProblem(w, http.StatusBadRequest, CodeMalformedRequest, "type must be a BibleEntityType")
 		return
 	}
-	if r.URL.Query().Has("limit") || r.URL.Query().Has("offset") || r.URL.Query().Has("q") || r.URL.Query().Has("letter") {
+	if r.URL.Query().Has("limit") || r.URL.Query().Has("offset") || r.URL.Query().Has("q") || r.URL.Query().Has("letter") || r.URL.Query().Has("category") {
 		query := r.URL.Query()
-		request := store.EntityPageRequest{Limit: 30, Query: strings.TrimSpace(query.Get("q")), Letter: strings.ToUpper(strings.TrimSpace(query.Get("letter")))}
+		request := store.EntityPageRequest{Category: query.Get("category"), Limit: 30, Query: strings.TrimSpace(query.Get("q")), Letter: strings.ToUpper(strings.TrimSpace(query.Get("letter")))}
+		if !store.ValidThemeCategory(request.Category) || (request.Category != "" && kind != domain.Theme) {
+			writeProblem(w, http.StatusBadRequest, CodeMalformedRequest, "category must be a supported theme category")
+			return
+		}
 		if query.Has("limit") {
 			n, err := strconv.Atoi(query.Get("limit"))
 			if err != nil || n < 1 || n > 100 {

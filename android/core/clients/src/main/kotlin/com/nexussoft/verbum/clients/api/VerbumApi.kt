@@ -221,7 +221,7 @@ class VerbumApi(
 
     suspend fun entityPage(request: com.nexussoft.verbum.models.EntityCatalogRequest, language: BookLanguage = BookLanguage.current) =
         get("/v1/entities", WireEntityCatalogPage.serializer(), "type" to request.type.wireValue, "lang" to language.tag,
-            "q" to request.query, "letter" to request.letter, "offset" to request.offset.toString(), "limit" to request.limit.toString()).toModel()
+            "category" to request.category, "q" to request.query, "letter" to request.letter, "offset" to request.offset.toString(), "limit" to request.limit.toString()).toModel()
 
     // ---- graph
 

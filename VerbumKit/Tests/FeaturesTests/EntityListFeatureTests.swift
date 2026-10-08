@@ -8,6 +8,32 @@ import Testing
     private let abel = BibleEntity(id: "a", type: .person, name: "Abel", summary: "Son of Adam")
     private let anna = BibleEntity(id: "b", type: .person, name: "Anna", summary: nil)
 
+    @Test func themeCategoryResetsFiltersAndUsesBoundedServerRequest() async {
+        var state = EntityListFeature.State(type: .theme)
+        state.query = "old"; state.letter = "A"; state.hasLoaded = true; state.nextOffset = 30
+        let page = EntityCatalogPage(entities: [], letters: [])
+        let store = TestStore(initialState: state) { EntityListFeature() } withDependencies: {
+            $0.graphClient.entityPage = { request in
+                #expect(request.type == .theme && request.category == "emotions")
+                #expect(request.query.isEmpty && request.letter.isEmpty && request.offset == 0 && request.limit == 30)
+                return page
+            }
+        }
+        await store.send(.categoryChanged("emotions")) {
+            $0.category = "emotions"; $0.browsingThemes = true; $0.query = ""; $0.letter = ""
+            $0.hasLoaded = false; $0.nextOffset = nil; $0.isLoading = true; $0.generation = 1
+        }
+        await store.receive(.pageResponse(1, 0, page)) { $0.isLoading = false; $0.hasLoaded = true }
+        store.dependencies.graphClient.entityPage = { request in
+            #expect(request.category.isEmpty)
+            return page
+        }
+        await store.send(.discoverThemes) {
+            $0.browsingThemes = false; $0.category = ""; $0.hasLoaded = false; $0.isLoading = true; $0.generation = 2
+        }
+        await store.receive(.pageResponse(2, 0, page)) { $0.isLoading = false; $0.hasLoaded = true }
+    }
+
     @Test func placesUseServerPaginationAndOpenTheirOwnDetail() async {
         let jerusalem = BibleEntity(id: "place.jerusalem", type: .place, name: "Jerusalém", summary: "Cidade")
         var state = EntityListFeature.State(type: .place)
