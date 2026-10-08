@@ -315,4 +315,9 @@
     <string name="history_empty">Nenhum capítulo encontrado</string>
     <string name="history_empty_body">Tente outro livro ou referência de capítulo.</string>
     <string name="history_yesterday">Ontem</string>
+    <string name="people_search">Buscar pessoas</string>
+    <string name="people_load_failed">Não foi possível carregar as pessoas. Tente novamente.</string>
+    <string name="people_empty">Nenhuma pessoa encontrada</string>
+    <string name="people_empty_body">Tente outro nome ou letra.</string>
+    <string name="people_all">Todas</string>
 </resources>

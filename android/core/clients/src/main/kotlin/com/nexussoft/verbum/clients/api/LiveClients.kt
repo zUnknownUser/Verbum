@@ -29,6 +29,7 @@ import com.nexussoft.verbum.models.TimelineEvent
 // `.live` values in `Clients+Live.swift`.
 
 class LiveGraphClient(private val api: VerbumApi, private val language: () -> BookLanguage = { BookLanguage.current }) : GraphClient {
+    override suspend fun entityPage(request: com.nexussoft.verbum.models.EntityCatalogRequest) = api.entityPage(request, language())
     override suspend fun entity(id: EntityId): BibleEntity = mapUnknown(id) { api.entityDetail(id, language()).entity }
     override suspend fun neighbors(id: EntityId, limit: Int): GraphSnapshot = mapUnknown(id) { api.graph(id, limit, language()) }
     override suspend fun detail(id: EntityId): EntityDetail = mapUnknown(id) { api.entityDetail(id, language()) }

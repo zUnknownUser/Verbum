@@ -315,4 +315,9 @@
     <string name="history_empty">No chapters found</string>
     <string name="history_empty_body">Try another book or chapter reference.</string>
     <string name="history_yesterday">Yesterday</string>
+    <string name="people_search">Search people</string>
+    <string name="people_load_failed">People could not be loaded. Please try again.</string>
+    <string name="people_empty">No people found</string>
+    <string name="people_empty_body">Try another name or letter.</string>
+    <string name="people_all">All</string>
 </resources>

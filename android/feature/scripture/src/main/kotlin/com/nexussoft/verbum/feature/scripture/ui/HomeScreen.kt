@@ -180,7 +180,11 @@ internal fun ExploreScreen(send: (ExploreFeature.Action) -> Unit) {
 
 /** People / Places / Themes / Events. */
 @Composable
-internal fun EntityListScreen(state: EntityListFeature.State, send: (EntityListFeature.Action) -> Unit) {
+internal fun EntityListScreen(state: EntityListFeature.State, onBack: () -> Unit, send: (EntityListFeature.Action) -> Unit) {
+    if (state.type == BibleEntityType.PERSON) {
+        PeopleCatalogScreen(state, onBack, send)
+        return
+    }
     LaunchedEffect(state.type) { if (state.entities.isEmpty() && !state.isLoading) send(EntityListFeature.Action.Started) }
     val title = when (state.type) {
         BibleEntityType.PERSON -> R.string.people

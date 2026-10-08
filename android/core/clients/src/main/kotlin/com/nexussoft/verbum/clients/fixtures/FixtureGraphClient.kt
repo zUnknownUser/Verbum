@@ -10,6 +10,8 @@ import com.nexussoft.verbum.models.GraphSnapshot
 
 /** In-memory [GraphClient] over [EntityFixtureData]. Replaced by the backend in Task 11. */
 object FixtureGraphClient : GraphClient {
+    override suspend fun entityPage(request: com.nexussoft.verbum.models.EntityCatalogRequest) =
+        com.nexussoft.verbum.models.EntityCatalog.page(EntityFixtureData.entities, request)
     override suspend fun entity(id: EntityId): BibleEntity =
         EntityFixtureData.entity(id) ?: throw GraphClientException.UnknownEntity(id)
 

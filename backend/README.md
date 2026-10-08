@@ -1,5 +1,18 @@
 # backend/ — the Verbum API (Go)
 
+## People catalog — 2026-10-08
+
+`GET /v1/entities?type=person&lang=pt&limit=30&offset=0&q=&letter=` serves
+bounded pages for the iOS and Android People screens. Search and A–Z selection run
+on localized names in PostgreSQL before pagination. The response includes `entities`,
+`letters` (the initials matching the search) and nullable `nextOffset`. Names are
+accent/case insensitive and ordered by initial, normalized name, then stable entity ID;
+people sharing a name retain separate entries. Rows use existing summaries only.
+The API applies no schema migration for this feature. Requests without catalog
+parameters keep the legacy list response for older clients and other Explore lists.
+Deploy this backend before distributing the catalog-enabled mobile builds.
+
+
 ## API reference and retrieval — 2026-09-28
 
 Interactive Swagger: **https://api.vendlydigital.com.br/docs/** (local: `/docs/`).

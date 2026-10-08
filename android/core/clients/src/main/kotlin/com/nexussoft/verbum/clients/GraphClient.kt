@@ -8,6 +8,8 @@ import com.nexussoft.verbum.models.GraphSnapshot
 
 /** Entities and their neighbourhoods (docs/PRODUCT.md §38, §44). `detail` adds the page-level facts of §9. */
 interface GraphClient {
+    suspend fun entityPage(request: com.nexussoft.verbum.models.EntityCatalogRequest): com.nexussoft.verbum.models.EntityCatalogPage =
+        throw UnsupportedOperationException("This graph client does not implement catalog pagination")
     suspend fun entity(id: EntityId): BibleEntity
     suspend fun neighbors(id: EntityId, limit: Int): GraphSnapshot
     suspend fun detail(id: EntityId): EntityDetail

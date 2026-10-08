@@ -1,6 +1,62 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "All people" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "All" } },
+        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Todas" } }
+      }
+    },
+    "Try another name or letter." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tente outro nome ou letra."
+          }
+        }
+      }
+    },
+    "No people found" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nenhuma pessoa encontrada"
+          }
+        }
+      }
+    },
+    "People could not be loaded. Please try again." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível carregar as pessoas. Tente novamente."
+          }
+        }
+      }
+    },
+    "Loading people" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carregando pessoas"
+          }
+        }
+      }
+    },
+    "Search people" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar pessoas"
+          }
+        }
+      }
+    },
     "Yesterday" : {
       "localizations" : {
         "pt-BR" : {

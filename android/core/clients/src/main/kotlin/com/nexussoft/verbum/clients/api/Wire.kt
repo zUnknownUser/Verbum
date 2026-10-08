@@ -81,6 +81,11 @@ internal data class WireOriginalTerm(val language: String, val transliteration: 
 }
 
 @Serializable
+internal data class WireEntityCatalogPage(val entities: List<WireEntity>, val letters: List<String>, val nextOffset: Int?) {
+    fun toModel() = com.nexussoft.verbum.models.EntityCatalogPage(entities.map { it.toModel() }, letters, nextOffset)
+}
+
+@Serializable
 internal data class WireEntities(val entities: List<WireEntity>)
 
 @Serializable

@@ -79,6 +79,37 @@ func (h *handlers) listEntities(w http.ResponseWriter, r *http.Request) {
 		writeProblem(w, http.StatusBadRequest, CodeMalformedRequest, "type must be a BibleEntityType")
 		return
 	}
+	if r.URL.Query().Has("limit") || r.URL.Query().Has("offset") || r.URL.Query().Has("q") || r.URL.Query().Has("letter") {
+		query := r.URL.Query()
+		request := store.EntityPageRequest{Limit: 30, Query: strings.TrimSpace(query.Get("q")), Letter: strings.ToUpper(strings.TrimSpace(query.Get("letter")))}
+		if query.Has("limit") {
+			n, err := strconv.Atoi(query.Get("limit"))
+			if err != nil || n < 1 || n > 100 {
+				writeProblem(w, http.StatusBadRequest, CodeMalformedRequest, "limit must be 1–100")
+				return
+			}
+			request.Limit = n
+		}
+		if query.Has("offset") {
+			n, err := strconv.Atoi(query.Get("offset"))
+			if err != nil || n < 0 || n > 1000000 {
+				writeProblem(w, http.StatusBadRequest, CodeMalformedRequest, "offset must be 0–1000000")
+				return
+			}
+			request.Offset = n
+		}
+		if utf8.RuneCountInString(request.Query) > 100 || (request.Letter != "" && request.Letter != "#" && (len(request.Letter) != 1 || request.Letter[0] < 'A' || request.Letter[0] > 'Z')) {
+			writeProblem(w, http.StatusBadRequest, CodeMalformedRequest, "q must be at most 100 characters; letter must be A–Z or #")
+			return
+		}
+		page, err := h.store.EntityPage(r.Context(), kind, request)
+		if err != nil {
+			writeError(w, err, CodeUnknownEntity)
+			return
+		}
+		writeJSON(w, page)
+		return
+	}
 	entities, err := h.store.Entities(r.Context(), kind)
 	if err != nil {
 		writeError(w, err, CodeUnknownEntity)

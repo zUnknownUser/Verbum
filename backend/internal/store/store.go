@@ -16,6 +16,7 @@ import (
 var ErrNotFound = errors.New("not found")
 
 type Store interface {
+	EntityPage(ctx context.Context, kind domain.EntityType, request EntityPageRequest) (EntityPage, error)
 	// Entity returns one node, or ErrNotFound.
 	Entity(ctx context.Context, id string) (domain.Entity, error)
 	// Detail returns the page for an entity. Entities with no curated detail

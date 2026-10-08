@@ -110,6 +110,15 @@ public struct EntityListView: View {
     }
 
     public var body: some View {
+        Group {
+            if store.type == .person { PeopleCatalogView(store: store) }
+            else { legacyList }
+        }
+        .task { await store.send(.task).finish() }
+        .onDisappear { store.send(.cancel) }
+    }
+
+    private var legacyList: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
                 Text(title)
@@ -156,7 +165,6 @@ public struct EntityListView: View {
         .navigationTitle(title)
         .toolbarTitleDisplayMode(.inline)
         .toolbarBackground(.hidden, for: .navigationBar)
-        .task { await store.send(.task).finish() }
     }
 
     private var title: String {

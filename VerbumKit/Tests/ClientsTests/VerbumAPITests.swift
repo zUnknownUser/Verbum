@@ -24,6 +24,21 @@ import Models
 
     let base = URL(string: "http://test.local:8080")!
 
+    @Test func catalogRequestUsesServerFiltersAndDecodesPagination() async throws {
+        let script = Script()
+        script.responses = [(200, #"{"entities":[],"letters":["J"],"nextOffset":30}"#)]
+        let api = VerbumAPI(baseURL: base, transport: script.transport, cache: .inMemory)
+        let page = try await api.entityPage(.init(type: .person, query: "João", letter: "J"), language: .portuguese)
+        #expect(page.letters == ["J"])
+        #expect(page.nextOffset == 30)
+        let query = URLComponents(url: script.requests[0].url!, resolvingAgainstBaseURL: false)!.queryItems!
+        #expect(query.contains(.init(name: "q", value: "João")))
+        #expect(query.contains(.init(name: "letter", value: "J")))
+        #expect(query.contains(.init(name: "limit", value: "30")))
+        #expect(query.contains(.init(name: "offset", value: "0")))
+        #expect(query.contains(.init(name: "lang", value: "pt")))
+    }
+
     @Test func speechManifestIsCachedAndRefreshesAfterOneHour() async throws {
         let script = Script()
         let first = String(repeating: "a", count: 64), second = String(repeating: "b", count: 64)
@@ -51,14 +66,14 @@ import Models
         ]
         let api = VerbumAPI(baseURL: base, transport: script.transport, cache: .inMemory)
         _ = try await api.entities(of: .person, language: .english)
-        _ = try await api.graph("a", limit: 24)
-        _ = try await api.timeline(entity: "fixture.person.david")
+        _ = try await api.graph("a", limit: 24, language: .english)
+        _ = try await api.timeline(entity: "fixture.person.david", language: .english)
         _ = try await api.search("x", language: .portuguese)
         _ = try await api.dailyVerses(from: "2026-09-13", days: 7)
         #expect(script.requests.map { $0.url!.absoluteString } == [
             "http://test.local:8080/v1/entities?type=person&lang=en",
-            "http://test.local:8080/v1/entities/a/graph?limit=24",
-            "http://test.local:8080/v1/timeline?entity=fixture.person.david",
+            "http://test.local:8080/v1/entities/a/graph?limit=24&lang=en",
+            "http://test.local:8080/v1/timeline?entity=fixture.person.david&lang=en",
             "http://test.local:8080/v1/search?q=x&lang=pt",
             "http://test.local:8080/v1/daily-verse?from=2026-09-13&days=7",
         ])

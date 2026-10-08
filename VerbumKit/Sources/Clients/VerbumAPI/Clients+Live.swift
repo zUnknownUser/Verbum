@@ -9,6 +9,7 @@ import Models
 extension GraphClient {
     public static func live(api: VerbumAPI, language: BookLanguage = .current) -> GraphClient {
         GraphClient(
+            entityPage: { request in try await api.entityPage(request, language: language) },
             entity: { id in try await mapUnknown(id) { try await api.entityDetail(id, language: language).entity } },
             neighbors: { id, limit in try await mapUnknown(id) { try await api.graph(id, limit: limit, language: language) } },
             detail: { id in try await mapUnknown(id) { try await api.entityDetail(id, language: language) } },

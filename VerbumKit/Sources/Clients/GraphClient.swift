@@ -5,6 +5,7 @@ import Models
 /// are the spec's endpoints; `detail` adds the page-level facts of spec §9.
 @DependencyClient
 public struct GraphClient: Sendable {
+    public var entityPage: @Sendable (_ request: EntityCatalogRequest) async throws -> EntityCatalogPage
     public var entity: @Sendable (_ id: EntityID) async throws -> BibleEntity
     public var neighbors: @Sendable (_ id: EntityID, _ limit: Int) async throws -> GraphSnapshot
     public var detail: @Sendable (_ id: EntityID) async throws -> EntityDetail
@@ -31,6 +32,7 @@ extension DependencyValues {
 
 extension GraphClient {
     public static let fixtures = GraphClient(
+        entityPage: { request in EntityCatalog.page(EntityFixtureData.entities, request: request) },
         entity: { id in
             guard let entity = EntityFixtureData.entity(id) else { throw GraphClientError.unknownEntity(id) }
             return entity

@@ -167,7 +167,7 @@ private fun DestinationScreen(destination: Destination, onBack: () -> Unit, send
         is Destination.Ask -> AskPane(destination.state, onBack) { send(DestinationAction.Ask(it)) }
         is Destination.Reader -> ScriptureScreen(destination.state) { send(DestinationAction.Reader(it)) }
         is Destination.Entity -> Box(Modifier.statusBarsPadding()) { EntityDetailPane(destination.state) { send(DestinationAction.Entity(it)) } }
-        is Destination.Entities -> EntityListScreen(destination.state) { send(DestinationAction.Entities(it)) }
+        is Destination.Entities -> EntityListScreen(destination.state, onBack) { send(DestinationAction.Entities(it)) }
         is Destination.Books -> BookPickerPane(destination.state) { send(DestinationAction.Books(it)) }
     }
 }

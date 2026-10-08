@@ -354,13 +354,30 @@ paths:
       tags: [entities]
       operationId: listEntities
       summary: Every entity of one kind, for the Explore lists (§7). Passage nodes are never listed.
-      description: Backs `GraphClient.entities(type)`. Sorted by name in the requested language.
+      description: >-
+        Without catalog parameters, returns the legacy complete list. Sending limit, offset,
+        q or letter enables server-side pagination (default 30). Names are localized before
+        filtering and grouped by initial, sorted without case/diacritics, then by ID. q searches names literally.
+        letter selects A–Z or #. letters lists the initials matching q, before letter filtering.
+        nextOffset is null at the end. Deploy the API before releasing catalog-enabled apps.
       parameters:
         - name: type
           in: query
           required: true
           schema: { $ref: '#/components/schemas/BibleEntityType' }
         - $ref: '#/components/parameters/Lang'
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 100, default: 30 }
+        - name: offset
+          in: query
+          schema: { type: integer, minimum: 0, maximum: 1000000, default: 0 }
+        - name: q
+          in: query
+          schema: { type: string, maxLength: 100 }
+        - name: letter
+          in: query
+          schema: { type: string, pattern: '^[A-Za-z#]?$' }
       responses:
         '200':
           description: OK
@@ -373,6 +390,13 @@ paths:
                   entities:
                     type: array
                     items: { $ref: '#/components/schemas/BibleEntity' }
+                  letters:
+                    description: Present in paginated responses.
+                    type: array
+                    items: { type: string }
+                  nextOffset:
+                    description: Present in paginated responses; null at the end.
+                    type: [integer, 'null']
               examples:
                 people: { externalValue: examples/entities/people.json }
 

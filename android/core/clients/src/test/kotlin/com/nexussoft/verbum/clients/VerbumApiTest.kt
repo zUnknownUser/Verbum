@@ -42,6 +42,21 @@ class VerbumApiTest {
 
     private val base = "http://test.local:8080"
 
+    @Test fun catalogSendsBoundedServerFiltersAndDecodesNextPage() = runTest {
+        val script = Script()
+        script.responses += HttpResponse(200, """{"entities":[],"letters":["J"],"nextOffset":30}""")
+        val api = VerbumApi(base, script)
+        val page = api.entityPage(com.nexussoft.verbum.models.EntityCatalogRequest(BibleEntityType.PERSON, "João", "J"), BookLanguage.PORTUGUESE)
+        assertEquals(listOf("J"), page.letters)
+        assertEquals(30, page.nextOffset)
+        val url = script.requests.single().url
+        assertTrue(url.contains("limit=30"))
+        assertTrue(url.contains("offset=0"))
+        assertTrue(url.contains("letter=J"))
+        assertTrue(url.contains("lang=pt"))
+        assertTrue(java.net.URLDecoder.decode(url, "UTF-8").contains("q=João"))
+    }
+
     @Test fun editorialRequestsLeaveTheCallerThreadAndKeepCacheHits() = runTest {
         Executors.newSingleThreadExecutor().asCoroutineDispatcher().use { ui ->
             withContext(ui) {
