@@ -31,4 +31,13 @@ Validation:
   return, reset and stale responses.
 - Existing user changes in the iOS string catalogue are preserved outside the commit.
 
-Production verification is recorded after deployment.
+Production release:
+- Implementation pushed to main: `a9dea42`.
+- Railway deployment `07f2b6d6-27a7-48c3-8056-38ef5ef61de8`: SUCCESS.
+- API checks matched every period's complete ID set and localized names against the
+  published catalogue in PT-BR and EN: origins 10, patriarchs 21, exodus 16, judges 14,
+  monarchy 13, kingdoms 13, exile 7, return 8, Jesus 23, church 12 (137 total).
+  Combined period/search/letter filtering and empty cross-period results passed.
+- Android's Portuguese Exodus catalogue was checked against the production API.
+- The normal iOS root was restored, rebuilt and installed after visual preview.
+
