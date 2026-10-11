@@ -1,6 +1,390 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Explore by period": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Explore by period"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Explorar por período"
+          }
+        }
+      }
+    },
+    "Choose a period to explore its events.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a period to explore its events."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Escolha um período para explorar seus acontecimentos."
+          }
+        }
+      }
+    },
+    "Browse periods": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Browse periods"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Explorar períodos"
+          }
+        }
+      }
+    },
+    "Events are listed alphabetically within each period.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Events are listed alphabetically within each period."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Os eventos estão em ordem alfabética dentro de cada período."
+          }
+        }
+      }
+    },
+    "Origins": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Origins"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "As origens"
+          }
+        }
+      }
+    },
+    "Creation, rupture, preservation and scattering in the opening chapters of Genesis.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Creation, rupture, preservation and scattering in the opening chapters of Genesis."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Criação, ruptura, preservação e dispersão nos primeiros capítulos de Gênesis."
+          }
+        }
+      }
+    },
+    "The patriarchs": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The patriarchs"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Os patriarcas"
+          }
+        }
+      }
+    },
+    "The promise follows a family, from Abraham to the arrival in Egypt.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The promise follows a family, from Abraham to the arrival in Egypt."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A promessa acompanha uma família, de Abraão à chegada ao Egito."
+          }
+        }
+      }
+    },
+    "Exodus and wilderness": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exodus and wilderness"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Êxodo e deserto"
+          }
+        }
+      }
+    },
+    "Deliverance, covenant and the formation of a people during the journey.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deliverance, covenant and the formation of a people during the journey."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Libertação, aliança e a formação de um povo durante a jornada."
+          }
+        }
+      }
+    },
+    "The land and the judges": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The land and the judges"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A terra e os juízes"
+          }
+        }
+      }
+    },
+    "Entry into the land, crises of faithfulness and different forms of leadership.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Entry into the land, crises of faithfulness and different forms of leadership."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Entrada na terra, crises de fidelidade e diferentes formas de liderança."
+          }
+        }
+      }
+    },
+    "The rise of the monarchy": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The rise of the monarchy"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A formação da monarquia"
+          }
+        }
+      }
+    },
+    "Saul, David and Solomon: leadership, promises and the limits of power.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saul, David and Solomon: leadership, promises and the limits of power."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saul, Davi e Salomão: liderança, promessas e os limites do poder."
+          }
+        }
+      }
+    },
+    "Kingdoms and prophets": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kingdoms and prophets"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reinos e profetas"
+          }
+        }
+      }
+    },
+    "Divided kingdoms, prophetic messages and the path through Samaria’s fall.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Divided kingdoms, prophetic messages and the path through Samaria’s fall."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reinos divididos, mensagens proféticas e o caminho até a queda de Samaria."
+          }
+        }
+      }
+    },
+    "Crisis and exile": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Crisis and exile"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A crise e o exílio"
+          }
+        }
+      }
+    },
+    "Jerusalem’s fall, life in exile, lament and hope. Readings grouped by context, without an exact order between books.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jerusalem’s fall, life in exile, lament and hope. Readings grouped by context, without an exact order between books."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Queda de Jerusalém, vida no exílio, lamento e esperança. Leituras agrupadas por contexto, sem ordem exata entre os livros."
+          }
+        }
+      }
+    },
+    "Return and rebuilding": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Return and rebuilding"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retorno e reconstrução"
+          }
+        }
+      }
+    },
+    "Life under Persian rule, return and the renewal of the community.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Life under Persian rule, return and the renewal of the community."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A vida sob o domínio persa, o retorno e a renovação da comunidade."
+          }
+        }
+      }
+    },
+    "The life of Jesus": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The life of Jesus"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A vida de Jesus"
+          }
+        }
+      }
+    },
+    "A reading of the Gospels, from the announcement of the birth to the resurrection. Episode order varies between accounts.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A reading of the Gospels, from the announcement of the birth to the resurrection. Episode order varies between accounts."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uma leitura dos Evangelhos, do anúncio do nascimento à ressurreição. A sequência dos episódios varia entre os relatos."
+          }
+        }
+      }
+    },
+    "The church in Acts": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The church in Acts"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A igreja em Atos"
+          }
+        }
+      }
+    },
+    "From witness in Jerusalem to missionary journeys and the arrival in Rome.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "From witness in Jerusalem to missionary journeys and the arrival in Rome."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Do testemunho em Jerusalém às viagens missionárias e à chegada a Roma."
+          }
+        }
+      }
+    },
 "All events": {
     "localizations": {
       "pt-BR": {

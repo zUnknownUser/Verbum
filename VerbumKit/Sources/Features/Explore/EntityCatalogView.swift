@@ -6,7 +6,7 @@ import SwiftUI
 struct EntityCatalogView: View {
     let store: StoreOf<EntityListFeature>
     private var themes: Bool { store.type == .theme }
-    private var discovery: Bool { themes && !store.browsingThemes && store.query.isEmpty }
+    private var discovery: Bool { (themes || events) && !store.browsingCatalog && store.query.isEmpty }
     private var events: Bool { store.type == .event }
     private var places: Bool { store.type == .place }
     private var identifier: String { themes ? "themes" : events ? "events" : places ? "places" : "people" }
@@ -15,20 +15,20 @@ struct EntityCatalogView: View {
     var body: some View {
         VStack(spacing: 0) {
             if discovery {
-                ThemeDiscoveryView(store: store)
+                if events { EventDiscoveryView(store: store) } else { ThemeDiscoveryView(store: store) }
             } else {
-            if themes {
-                Button(L10n.t("Browse categories")) { store.send(.discoverThemes) }
+            if themes || events {
+                Button(L10n.t(events ? "Browse periods" : "Browse categories")) { store.send(.discoverCategories) }
                     .font(Typography.footnote).frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, Spacing.readingMargin).padding(.top, Spacing.sm)
-                if let category = ThemeCategory.all.first(where: { $0.id == store.category }) {
-                    Text(L10n.t(category.title)).font(Typography.editorialHeadline).frame(maxWidth: .infinity, alignment: .leading)
+                if let title = events ? EventPeriod.all.first(where: { $0.id == store.category })?.title : ThemeCategory.all.first(where: { $0.id == store.category })?.title {
+                    Text(L10n.t(title)).font(Typography.editorialHeadline).frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal, Spacing.readingMargin).padding(.top, Spacing.sm)
                 }
             }
             ScrollView(.horizontal) {
                 HStack(spacing: Spacing.sm) {
-                    letterButton("", title: L10n.t(themes ? (store.category.isEmpty ? "All themes" : "All letters") : events ? "All events" : places ? "All places" : "All people"))
+                    letterButton("", title: L10n.t(themes ? (store.category.isEmpty ? "All themes" : "All letters") : events ? (store.category.isEmpty ? "All events" : "All letters") : places ? "All places" : "All people"))
                     ForEach(alphabet, id: \.self) { letter in letterButton(letter, title: letter) }
                 }.padding(.horizontal, Spacing.readingMargin).padding(.vertical, Spacing.sm)
             }.scrollIndicators(.hidden)

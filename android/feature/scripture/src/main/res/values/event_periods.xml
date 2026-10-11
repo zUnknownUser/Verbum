@@ -1,0 +1,26 @@
+<resources>
+    <string name="events_periods_title">Explore by period</string>
+    <string name="events_periods_intro">Choose a period to explore its events.</string>
+    <string name="events_periods_browse">Browse periods</string>
+    <string name="events_periods_order">Events are listed alphabetically within each period.</string>
+    <string name="events_period_origins">Origins</string>
+    <string name="events_period_origins_sub">Creation, rupture, preservation and scattering in the opening chapters of Genesis.</string>
+    <string name="events_period_patriarchs">The patriarchs</string>
+    <string name="events_period_patriarchs_sub">The promise follows a family, from Abraham to the arrival in Egypt.</string>
+    <string name="events_period_exodus">Exodus and wilderness</string>
+    <string name="events_period_exodus_sub">Deliverance, covenant and the formation of a people during the journey.</string>
+    <string name="events_period_judges">The land and the judges</string>
+    <string name="events_period_judges_sub">Entry into the land, crises of faithfulness and different forms of leadership.</string>
+    <string name="events_period_monarchy">The rise of the monarchy</string>
+    <string name="events_period_monarchy_sub">Saul, David and Solomon: leadership, promises and the limits of power.</string>
+    <string name="events_period_kingdoms">Kingdoms and prophets</string>
+    <string name="events_period_kingdoms_sub">Divided kingdoms, prophetic messages and the path through Samaria’s fall.</string>
+    <string name="events_period_exile">Crisis and exile</string>
+    <string name="events_period_exile_sub">Jerusalem’s fall, life in exile, lament and hope. Readings grouped by context, without an exact order between books.</string>
+    <string name="events_period_return">Return and rebuilding</string>
+    <string name="events_period_return_sub">Life under Persian rule, return and the renewal of the community.</string>
+    <string name="events_period_jesus">The life of Jesus</string>
+    <string name="events_period_jesus_sub">A reading of the Gospels, from the announcement of the birth to the resurrection. Episode order varies between accounts.</string>
+    <string name="events_period_church">The church in Acts</string>
+    <string name="events_period_church_sub">From witness in Jerusalem to missionary journeys and the arrival in Rome.</string>
+</resources>

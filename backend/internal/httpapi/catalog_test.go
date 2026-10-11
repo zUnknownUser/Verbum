@@ -35,3 +35,30 @@ func TestCatalogPaginationContractAndValidation(t *testing.T) {
 		t.Fatalf("empty page: %s", w.Body.String())
 	}
 }
+
+func TestEventPeriodValidation(t *testing.T) {
+	s, err := memory.Load("../../db/seed/fixtures.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	h := New(s, time.Now, nil, nil, nil, nil)
+	for _, tc := range []struct {
+		kind, category string
+		status         int
+	}{
+		{"event", "exodus", 200}, {"event", "monarchy", 200}, {"event", "", 200},
+		{"event", "emotions", 400}, {"theme", "exodus", 400}, {"person", "exodus", 400}, {"event", "unknown", 400},
+	} {
+		w := httptest.NewRecorder()
+		h.ServeHTTP(w, httptest.NewRequest(http.MethodGet, "/v1/entities?type="+tc.kind+"&category="+tc.category, nil))
+		if w.Code != tc.status {
+			t.Fatalf("%+v: %d", tc, w.Code)
+		}
+		if tc.kind == "event" && tc.category == "exodus" {
+			var page store.EntityPage
+			if json.Unmarshal(w.Body.Bytes(), &page) != nil || len(page.Entities) != 1 || page.Entities[0].ID != "fixture.event.exodus" {
+				t.Fatalf("wrong fixture period: %s", w.Body.String())
+			}
+		}
+	}
+}

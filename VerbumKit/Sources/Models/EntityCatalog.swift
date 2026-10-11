@@ -23,6 +23,10 @@ public struct EntityCatalogPage: Codable, Equatable, Sendable {
 
 public enum EntityCatalog {
     private static let fixtureCategories: [String: [String]] = [
+        "fixture.event.exodus": ["exodus"],
+        "fixture.event.david-goliath": ["monarchy"],
+        "fixture.event.david-anointed": ["monarchy"],
+        "fixture.event.david-takes-jerusalem": ["monarchy"],
         "fixture.theme.faith": ["with-god", "foundations"],
         "fixture.theme.prayer": ["with-god", "emotions"],
         "fixture.theme.love": ["relationships", "with-god"],

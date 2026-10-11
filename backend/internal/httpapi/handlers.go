@@ -82,8 +82,8 @@ func (h *handlers) listEntities(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Query().Has("limit") || r.URL.Query().Has("offset") || r.URL.Query().Has("q") || r.URL.Query().Has("letter") || r.URL.Query().Has("category") {
 		query := r.URL.Query()
 		request := store.EntityPageRequest{Category: query.Get("category"), Limit: 30, Query: strings.TrimSpace(query.Get("q")), Letter: strings.ToUpper(strings.TrimSpace(query.Get("letter")))}
-		if !store.ValidThemeCategory(request.Category) || (request.Category != "" && kind != domain.Theme) {
-			writeProblem(w, http.StatusBadRequest, CodeMalformedRequest, "category must be a supported theme category")
+		if !store.ValidCatalogCategory(kind, request.Category) {
+			writeProblem(w, http.StatusBadRequest, CodeMalformedRequest, "category must be supported for this entity type")
 			return
 		}
 		if query.Has("limit") {

@@ -21,11 +21,36 @@ class EntityListFeatureTest {
         val store = Store(EntityListFeature.State(BibleEntityType.THEME, query = "old", letter = "A", hasLoaded = true, nextOffset = 30), EntityListFeature.reducer(client), backgroundScope)
         store.send(EntityListFeature.Action.CategoryChanged("emotions")); runCurrent()
         assertEquals(EntityCatalogRequest(BibleEntityType.THEME, category = "emotions"), requests.single())
-        assertTrue(store.state.value.browsingThemes)
+        assertTrue(store.state.value.browsingCatalog)
         assertNull(store.state.value.nextOffset)
-        store.send(EntityListFeature.Action.DiscoverThemes); runCurrent()
+        store.send(EntityListFeature.Action.DiscoverCategories); runCurrent()
         assertEquals("", requests.last().category)
-        assertFalse(store.state.value.browsingThemes)
+        assertFalse(store.state.value.browsingCatalog)
+    }
+
+    @Test fun eventPeriodSurvivesPagingSearchAndReturnAndRejectsStaleResults() = runTest {
+        val requests = mutableListOf<EntityCatalogRequest>()
+        val client = client { request -> requests += request; EntityCatalogPage(emptyList(), emptyList(), if (request.offset == 0) 30 else null) }
+        val store = Store(EntityListFeature.State(BibleEntityType.EVENT, query = "old", letter = "A"), EntityListFeature.reducer(client), backgroundScope)
+        store.send(EntityListFeature.Action.CategoryChanged("exodus")); runCurrent()
+        assertEquals(EntityCatalogRequest(BibleEntityType.EVENT, category = "exodus"), requests.last())
+        store.send(EntityListFeature.Action.LoadMore); runCurrent()
+        assertEquals(EntityCatalogRequest(BibleEntityType.EVENT, offset = 30, category = "exodus"), requests.last())
+        store.send(EntityListFeature.Action.QueryChanged("moises")); advanceUntilIdle(); runCurrent()
+        advanceTimeBy(301); runCurrent()
+        assertEquals("exodus", requests.last().category)
+        store.send(EntityListFeature.Action.Stopped); runCurrent()
+        store.send(EntityListFeature.Action.Started); runCurrent()
+        assertEquals("exodus", store.state.value.category)
+        store.send(EntityListFeature.Action.CategoryChanged("monarchy")); runCurrent()
+        store.send(EntityListFeature.Action.PageLoaded(1, 0, EntityCatalogPage(listOf(abel), listOf("A"))))
+        assertTrue(store.state.value.entities.isEmpty())
+        assertEquals("monarchy", requests.last().category)
+        store.send(EntityListFeature.Action.DiscoverCategories); runCurrent()
+        assertFalse(store.state.value.browsingCatalog)
+        store.send(EntityListFeature.Action.CategoryChanged("")); runCurrent()
+        assertTrue(store.state.value.browsingCatalog)
+        assertEquals("", requests.last().category)
     }
 
     @Test fun eventsUseBoundedSearchInsteadOfTheLegacyList() = runTest {

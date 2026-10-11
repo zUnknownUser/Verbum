@@ -11,7 +11,7 @@ public struct EntityListFeature {
         public var isLoading = false
         public var query = ""
         public var category = ""
-        public var browsingThemes = false
+        public var browsingCatalog = false
         public var letter = ""
         public var letters: [String] = []
         public var nextOffset: Int?
@@ -23,7 +23,7 @@ public struct EntityListFeature {
     }
 
     public enum Action: Equatable {
-        case task, cancel, retry, loadMore, discoverThemes
+        case task, cancel, retry, loadMore, discoverCategories
         case categoryChanged(String)
         case queryChanged(String), letterChanged(String)
         case pageResponse(Int, Int, EntityCatalogPage)
@@ -50,11 +50,11 @@ public struct EntityListFeature {
             case .loadMore:
                 guard !state.isLoading, let offset = state.nextOffset else { return .none }
                 return load(&state, offset: offset)
-            case .discoverThemes:
-                state.browsingThemes = false; state.category = ""; state.query = ""; state.letter = ""
+            case .discoverCategories:
+                state.browsingCatalog = false; state.category = ""; state.query = ""; state.letter = ""
                 return reset(&state)
             case .categoryChanged(let category):
-                state.category = category; state.browsingThemes = true; state.query = ""; state.letter = ""
+                state.category = category; state.browsingCatalog = true; state.query = ""; state.letter = ""
                 return reset(&state)
             case .queryChanged(let query):
                 guard query != state.query else { return .none }

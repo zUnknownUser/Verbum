@@ -85,3 +85,20 @@ func ValidThemeCategory(value string) bool {
 	}
 	return false
 }
+
+// ValidCatalogCategory keeps theme subjects and event periods in separate namespaces.
+func ValidCatalogCategory(kind domain.EntityType, value string) bool {
+	if value == "" {
+		return true
+	}
+	if kind == domain.Theme {
+		return ValidThemeCategory(value)
+	}
+	if kind == domain.Event {
+		switch value {
+		case "origins", "patriarchs", "exodus", "judges", "monarchy", "kingdoms", "exile", "return", "jesus", "church":
+			return true
+		}
+	}
+	return false
+}

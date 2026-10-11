@@ -8,6 +8,10 @@ data class EntityCatalogPage(val entities: List<BibleEntity>, val letters: List<
 
 object EntityCatalog {
     private val fixtureCategories = mapOf(
+        "fixture.event.exodus" to listOf("exodus"),
+        "fixture.event.david-goliath" to listOf("monarchy"),
+        "fixture.event.david-anointed" to listOf("monarchy"),
+        "fixture.event.david-takes-jerusalem" to listOf("monarchy"),
         "fixture.theme.faith" to listOf("with-god", "foundations"),
         "fixture.theme.prayer" to listOf("with-god", "emotions"),
         "fixture.theme.love" to listOf("relationships", "with-god"),

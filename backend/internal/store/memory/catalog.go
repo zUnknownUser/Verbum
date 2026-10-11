@@ -13,6 +13,7 @@ func (s *Store) EntityPage(ctx context.Context, kind domain.EntityType, request 
 	}
 	if request.Category != "" {
 		categories := map[string][]string{
+			"fixture.event.exodus": {"exodus"}, "fixture.event.david-goliath": {"monarchy"}, "fixture.event.david-anointed": {"monarchy"}, "fixture.event.david-takes-jerusalem": {"monarchy"},
 			"fixture.theme.faith": {"with-god", "foundations"}, "fixture.theme.prayer": {"with-god", "emotions"},
 			"fixture.theme.love": {"relationships", "with-god"}, "fixture.theme.forgiveness": {"relationships", "foundations"},
 			"fixture.theme.anxiety": {"emotions"}, "fixture.theme.suffering": {"emotions"},

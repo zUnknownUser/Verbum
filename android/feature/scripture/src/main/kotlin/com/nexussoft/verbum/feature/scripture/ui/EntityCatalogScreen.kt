@@ -32,7 +32,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 @Composable
 internal fun EntityCatalogScreen(state: EntityListFeature.State, onBack: () -> Unit, send: (Action) -> Unit) {
     val themes = state.type == com.nexussoft.verbum.models.BibleEntityType.THEME
-    val discovery = themes && !state.browsingThemes && state.query.isEmpty()
+    val discovery = (themes || state.type == com.nexussoft.verbum.models.BibleEntityType.EVENT) && !state.browsingCatalog && state.query.isEmpty()
     val events = state.type == com.nexussoft.verbum.models.BibleEntityType.EVENT
     val places = state.type == com.nexussoft.verbum.models.BibleEntityType.PLACE
     val identifier = if (themes) "themes" else if (events) "events" else if (places) "places" else "people"
@@ -63,18 +63,18 @@ internal fun EntityCatalogScreen(state: EntityListFeature.State, onBack: () -> U
                 singleLine = true, shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.readingMargin).testTag("$identifier.search"))
             if (discovery) {
-                ThemeDiscoveryScreen(send)
+                if (events) EventDiscoveryScreen(send) else ThemeDiscoveryScreen(send)
             } else {
-            if (themes) {
-                TextButton(onClick = { focus.clearFocus(); send(Action.DiscoverThemes) }, modifier = Modifier.padding(horizontal = Spacing.readingMargin)) { Text(stringResource(R.string.themes_categories)) }
-                themeCategories.firstOrNull { it.id == state.category }?.let { category ->
-                    Text(stringResource(category.title), style = VerbumTypography.editorialHeadline, modifier = Modifier.padding(horizontal = Spacing.readingMargin))
+            if (themes || events) {
+                TextButton(onClick = { focus.clearFocus(); send(Action.DiscoverCategories) }, modifier = Modifier.padding(horizontal = Spacing.readingMargin)) { Text(stringResource(if (events) R.string.events_periods_browse else R.string.themes_categories)) }
+                (if (events) eventPeriods.firstOrNull { it.id == state.category }?.title else themeCategories.firstOrNull { it.id == state.category }?.title)?.let { title ->
+                    Text(stringResource(title), style = VerbumTypography.editorialHeadline, modifier = Modifier.padding(horizontal = Spacing.readingMargin))
                 }
             }
             Row(Modifier.horizontalScroll(rememberScrollState()).padding(horizontal = Spacing.readingMargin, vertical = Spacing.sm), horizontalArrangement = Arrangement.spacedBy(Spacing.sm)) {
                 (listOf("") + ('A'..'Z').map { it.toString() } + "#").forEach { letter ->
                     FilterChip(selected = state.letter == letter, onClick = { focus.clearFocus(); send(Action.LetterChanged(letter)) },
-                        label = { Text(if (letter.isEmpty()) stringResource(if (themes) (if (state.category.isEmpty()) R.string.themes_all else R.string.themes_all_letters) else if (events) R.string.events_all else if (places) R.string.places_all else R.string.people_all) else letter) },
+                        label = { Text(if (letter.isEmpty()) stringResource(if (themes) (if (state.category.isEmpty()) R.string.themes_all else R.string.themes_all_letters) else if (events) (if (state.category.isEmpty()) R.string.events_all else R.string.themes_all_letters) else if (places) R.string.places_all else R.string.people_all) else letter) },
                         modifier = Modifier.heightIn(min = 48.dp).testTag("$identifier.letter.${letter.ifEmpty { "all" }}"))
                 }
             }

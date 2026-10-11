@@ -1,0 +1,26 @@
+<resources>
+    <string name="events_periods_title">Explorar por período</string>
+    <string name="events_periods_intro">Escolha um período para explorar seus acontecimentos.</string>
+    <string name="events_periods_browse">Explorar períodos</string>
+    <string name="events_periods_order">Os eventos estão em ordem alfabética dentro de cada período.</string>
+    <string name="events_period_origins">As origens</string>
+    <string name="events_period_origins_sub">Criação, ruptura, preservação e dispersão nos primeiros capítulos de Gênesis.</string>
+    <string name="events_period_patriarchs">Os patriarcas</string>
+    <string name="events_period_patriarchs_sub">A promessa acompanha uma família, de Abraão à chegada ao Egito.</string>
+    <string name="events_period_exodus">Êxodo e deserto</string>
+    <string name="events_period_exodus_sub">Libertação, aliança e a formação de um povo durante a jornada.</string>
+    <string name="events_period_judges">A terra e os juízes</string>
+    <string name="events_period_judges_sub">Entrada na terra, crises de fidelidade e diferentes formas de liderança.</string>
+    <string name="events_period_monarchy">A formação da monarquia</string>
+    <string name="events_period_monarchy_sub">Saul, Davi e Salomão: liderança, promessas e os limites do poder.</string>
+    <string name="events_period_kingdoms">Reinos e profetas</string>
+    <string name="events_period_kingdoms_sub">Reinos divididos, mensagens proféticas e o caminho até a queda de Samaria.</string>
+    <string name="events_period_exile">A crise e o exílio</string>
+    <string name="events_period_exile_sub">Queda de Jerusalém, vida no exílio, lamento e esperança. Leituras agrupadas por contexto, sem ordem exata entre os livros.</string>
+    <string name="events_period_return">Retorno e reconstrução</string>
+    <string name="events_period_return_sub">A vida sob o domínio persa, o retorno e a renovação da comunidade.</string>
+    <string name="events_period_jesus">A vida de Jesus</string>
+    <string name="events_period_jesus_sub">Uma leitura dos Evangelhos, do anúncio do nascimento à ressurreição. A sequência dos episódios varia entre os relatos.</string>
+    <string name="events_period_church">A igreja em Atos</string>
+    <string name="events_period_church_sub">Do testemunho em Jerusalém às viagens missionárias e à chegada a Roma.</string>
+</resources>

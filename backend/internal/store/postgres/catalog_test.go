@@ -115,3 +115,50 @@ func TestCatalogPagesFilterBeforeLimitingAndKeepDuplicateNames(t *testing.T) {
 		t.Fatalf("past end: %+v %v", page, err)
 	}
 }
+
+func TestEventPeriodsFilterBeforePagingAndSearch(t *testing.T) {
+	ctx := context.Background()
+	conn, url := testdb.Open(t, "../../../db/migrations")
+	for i := 0; i < 35; i++ {
+		id := fmt.Sprintf("event.%02d", i)
+		if _, err := conn.Exec(ctx, "INSERT INTO entities(id,type,name) VALUES($1,'event',$2)", id, fmt.Sprintf("Event %02d", i)); err != nil {
+			t.Fatal(err)
+		}
+		if _, err := conn.Exec(ctx, "INSERT INTO event_eras(entity_id,era_id) VALUES($1,'exodus')", id); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if _, err := conn.Exec(ctx, `INSERT INTO entities(id,type,name) VALUES('king','event','A king'),('unclassified','event','Unknown');
+ INSERT INTO event_eras(entity_id,era_id) VALUES('king','monarchy');
+ INSERT INTO sources(id,citation) VALUES('periods.test','Test');
+ INSERT INTO entity_localizations(entity_id,language,source_id,name,aliases) VALUES('event.00','pt-BR','periods.test','Êxodo',ARRAY['libertação']);`); err != nil {
+		t.Fatal(err)
+	}
+	db, err := postgres.Open(ctx, url)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	first, err := db.EntityPage(ctx, domain.Event, store.EntityPageRequest{Category: "exodus", Limit: 30})
+	if err != nil || len(first.Entities) != 30 || first.NextOffset == nil || *first.NextOffset != 30 || len(first.Letters) != 1 || first.Letters[0] != "E" {
+		t.Fatalf("first: %+v %v", first, err)
+	}
+	second, err := db.EntityPage(ctx, domain.Event, store.EntityPageRequest{Category: "exodus", Offset: 30, Limit: 30})
+	if err != nil || len(second.Entities) != 5 || second.NextOffset != nil || first.Entities[29].ID == second.Entities[0].ID {
+		t.Fatalf("second: %+v %v", second, err)
+	}
+	for _, category := range []string{"exodus", "monarchy"} {
+		page, err := db.EntityPage(store.WithLanguage(ctx, "pt-BR"), domain.Event, store.EntityPageRequest{Category: category, Query: "libertacao", Letter: "E", Limit: 30})
+		want := 0
+		if category == "exodus" {
+			want = 1
+		}
+		if err != nil || len(page.Entities) != want {
+			t.Fatalf("localized: %+v %v", page, err)
+		}
+	}
+	all, err := db.EntityPage(ctx, domain.Event, store.EntityPageRequest{Limit: 100})
+	if err != nil || len(all.Entities) != 37 {
+		t.Fatalf("all: %+v %v", all, err)
+	}
+}
