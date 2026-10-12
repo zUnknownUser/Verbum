@@ -19,6 +19,9 @@ data class EntityDetail(
     val keyPassages: List<PassageReference> = emptyList(),
     val sources: List<SourceReference> = emptyList(),
     val originalTerm: OriginalTermPresentation? = null,
+    val eventSequence: EventStudySequence? = null,
 )
 
 data class OriginalTermPresentation(val language: String, val transliteration: String, val strong: String)
+
+data class EventStudySequence(val eraId: String, val title: String, val context: String, val position: Int, val total: Int, val previous: BibleEntity? = null, val next: BibleEntity? = null)

@@ -10,6 +10,7 @@ public struct EntityListFeature {
         public var entities: [BibleEntity] = []
         public var isLoading = false
         public var query = ""
+        public var order = ""
         public var category = ""
         public var browsingCatalog = false
         public var letter = ""
@@ -24,6 +25,7 @@ public struct EntityListFeature {
 
     public enum Action: Equatable {
         case task, cancel, retry, loadMore, discoverCategories
+        case orderChanged(String)
         case categoryChanged(String)
         case queryChanged(String), letterChanged(String)
         case pageResponse(Int, Int, EntityCatalogPage)
@@ -51,10 +53,15 @@ public struct EntityListFeature {
                 guard !state.isLoading, let offset = state.nextOffset else { return .none }
                 return load(&state, offset: offset)
             case .discoverCategories:
-                state.browsingCatalog = false; state.category = ""; state.query = ""; state.letter = ""
+                state.order = ""; state.browsingCatalog = false; state.category = ""; state.query = ""; state.letter = ""
                 return reset(&state)
             case .categoryChanged(let category):
+                state.order = state.type == .event && category == "exodus" ? "narrative" : ""
                 state.category = category; state.browsingCatalog = true; state.query = ""; state.letter = ""
+                return reset(&state)
+            case .orderChanged(let order):
+                guard state.type == .event, state.category == "exodus", ["narrative", "alphabetical"].contains(order), order != state.order else { return .none }
+                state.order = order; state.letter = ""
                 return reset(&state)
             case .queryChanged(let query):
                 guard query != state.query else { return .none }
@@ -97,7 +104,7 @@ public struct EntityListFeature {
     private func load(_ state: inout State, offset: Int = 0, debounce: Bool = false) -> Effect<Action> {
         state.isLoading = true; state.failed = false; state.loadingOffset = offset; state.generation += 1
         let generation = state.generation
-        let request = EntityCatalogRequest(type: state.type, query: state.query, letter: state.letter, offset: offset, category: state.category)
+        let request = EntityCatalogRequest(type: state.type, query: state.query, letter: state.letter, offset: offset, category: state.category, order: state.order)
         return .run { [graphClient, clock] send in
             do {
                 if debounce { try await clock.sleep(for: .milliseconds(300)) }

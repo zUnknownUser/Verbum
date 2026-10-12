@@ -88,6 +88,24 @@ def write_content(cur, bundle: Bundle) -> None:
         cur.execute("SELECT id FROM entities WHERE id=ANY(%s)", (content.referencedEntityIds,))
         if {row[0] for row in cur.fetchall()} != set(content.referencedEntityIds):
             raise ValueError("timeline references entities missing from this database")
+    if bundle.eventSequences is not None:
+        # This bounded release may add timeline entries and change their order,
+        # but must not overwrite another editor's existing episode text or dating.
+        proposed = {e.id:e for e in content.timeline}
+        cur.execute("SELECT id,title,start_year,end_year,date_precision,summary,discovery FROM timeline_events")
+        for id_, title, start, end, precision, summary, discovery in cur.fetchall():
+            event = proposed.get(id_)
+            if event is None or (event.title,event.startYear,event.endYear,event.datePrecision,event.summary) != (title,start,end,precision,summary) or {k:p.model_dump() for k,p in bundle.timelineDiscovery.presentations[id_].items()} != discovery:
+                raise ValueError("timeline changed since sequence review; refresh the source snapshot")
+        for sequence in bundle.eventSequences:
+            ids = [i.entityId for i in sequence.items]
+            cur.execute("SELECT ee.entity_id FROM event_eras ee JOIN entities e ON e.id=ee.entity_id WHERE ee.era_id=%s AND e.type='event'", (sequence.eraId,))
+            if {r[0] for r in cur.fetchall()} != set(ids):
+                raise ValueError("sequence must cover exactly the canonical events in its era")
+            cur.execute("SELECT event_id,entity_id FROM timeline_event_catalog WHERE entity_id=ANY(%s) OR event_id=ANY(%s)", (ids,[i.timelineId for i in sequence.items]))
+            expected = {i.timelineId:i.entityId for i in sequence.items}
+            if any(expected.get(t) != e for t,e in cur.fetchall()):
+                raise ValueError("sequence cannot rebind canonical timeline identities")
     if bundle.eventCatalog is not None:
         cur.execute("SELECT id,type FROM entities WHERE id=ANY(%s)", ([e.id for e in content.entities],))
         if any(kind != "event" for _, kind in cur.fetchall()):
@@ -201,6 +219,16 @@ def write_content(cur, bundle: Bundle) -> None:
             ON CONFLICT(entity_id,language,source_id) DO UPDATE SET
             name=EXCLUDED.name,aliases=EXCLUDED.aliases,description=EXCLUDED.description""",
             [(p.entityId,p.language,source_id,p.name,p.aliases,p.summary) for p in bundle.themes.presentations])
+    if bundle.eventSequences is not None:
+        for sequence in bundle.eventSequences:
+            ids = [i.entityId for i in sequence.items]
+            cur.execute("SELECT ee.entity_id FROM event_eras ee JOIN entities e ON e.id=ee.entity_id WHERE ee.era_id=%s AND e.type='event'", (sequence.eraId,))
+            if {r[0] for r in cur.fetchall()} != set(ids):
+                raise ValueError("sequence must cover exactly the canonical events in its era")
+            cur.execute("SELECT event_id,entity_id FROM timeline_event_catalog WHERE entity_id=ANY(%s) OR event_id=ANY(%s)", (ids,[i.timelineId for i in sequence.items]))
+            expected = {i.timelineId:i.entityId for i in sequence.items}
+            if any(expected.get(t) != e for t,e in cur.fetchall()):
+                raise ValueError("sequence cannot rebind canonical timeline identities")
     if bundle.eventCatalog is not None:
         cur.executemany("""INSERT INTO event_eras(entity_id,era_id) VALUES(%s,%s)
             ON CONFLICT(entity_id) DO UPDATE SET era_id=EXCLUDED.era_id""", list(bundle.eventCatalog.eras.items()))
@@ -251,6 +279,12 @@ def write_content(cur, bundle: Bundle) -> None:
                     for i, item_id in enumerate(ids)
                 ],
             )
+    if bundle.eventSequences is not None:
+        for sequence in bundle.eventSequences:
+            upsert(cur, "event_sequences", {"era_id": sequence.eraId, "presentations": Jsonb({k:v.model_dump() for k,v in sequence.presentations.items()})}, "era_id")
+            replace_links(cur, "event_sequence_items", "era_id", sequence.eraId,
+                [{"entity_id":item.entityId,"era_id":sequence.eraId,"position":position,"timeline_id":item.timelineId} for position,item in enumerate(sequence.items,1)])
+            cur.executemany("INSERT INTO timeline_event_catalog(event_id,entity_id) VALUES(%s,%s) ON CONFLICT(event_id) DO NOTHING", [(i.timelineId,i.entityId) for i in sequence.items])
     # A non-empty daily pool is an explicitly reviewed replacement of this ordered list.
     # An empty pool means this batch does not modify the existing daily selection.
     if content.dailyVersePool:

@@ -58,7 +58,7 @@ internal fun EventDiscoveryScreen(send: (Action) -> Unit) {
                     }
                 }
             }
-            item { Text(stringResource(R.string.events_periods_order), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
+            item { Text(stringResource(R.string.events_sequence_discovery), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
         }
     }
 }

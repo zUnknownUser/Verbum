@@ -42,6 +42,16 @@ class VerbumApiTest {
 
     private val base = "http://test.local:8080"
 
+    @Test fun optionalSequenceDecodesAdjacentCanonicalEvents() = runTest {
+        val script = Script()
+        script.responses += HttpResponse(200, """{"entity":{"id":"first","type":"event","name":"First","summary":null},"aliases":[],"keyPassages":[],"sources":[],"eventSequence":{"eraId":"exodus","title":"Êxodo","context":"Ordem de leitura","position":1,"total":16,"previous":null,"next":{"id":"next","type":"event","name":"Próximo","summary":null}}}""")
+        val detail = VerbumApi(base, script).entityDetail("first", BookLanguage.PORTUGUESE)
+        assertEquals(1, detail.eventSequence?.position)
+        assertNull(detail.eventSequence?.previous)
+        assertEquals("next", detail.eventSequence?.next?.id)
+        assertEquals("Próximo", detail.eventSequence?.next?.name)
+    }
+
     @Test fun catalogSendsBoundedServerFiltersAndDecodesNextPage() = runTest {
         val script = Script()
         script.responses += HttpResponse(200, """{"entities":[],"letters":["J"],"nextOffset":30}""")

@@ -44,11 +44,11 @@ internal fun EntityCatalogScreen(state: EntityListFeature.State, onBack: () -> U
         snapshotFlow { scroll.firstVisibleItemIndex to scroll.firstVisibleItemScrollOffset }
             .distinctUntilChanged().collect { (index, offset) -> send(Action.ScrollChanged(index, offset)) }
     }
-    var previousFilter by remember { mutableStateOf(Triple(state.query, state.letter, state.category)) }
-    LaunchedEffect(state.query, state.letter, state.category) {
-        if (previousFilter != Triple(state.query, state.letter, state.category)) {
+    var previousFilter by remember { mutableStateOf(listOf(state.query, state.letter, state.category, state.order)) }
+    LaunchedEffect(state.query, state.letter, state.category, state.order) {
+        if (previousFilter != listOf(state.query, state.letter, state.category, state.order)) {
             scroll.scrollToItem(0)
-            previousFilter = Triple(state.query, state.letter, state.category)
+            previousFilter = listOf(state.query, state.letter, state.category, state.order)
         }
     }
     Scaffold(topBar = {
@@ -71,6 +71,16 @@ internal fun EntityCatalogScreen(state: EntityListFeature.State, onBack: () -> U
                     Text(stringResource(title), style = VerbumTypography.editorialHeadline, modifier = Modifier.padding(horizontal = Spacing.readingMargin))
                 }
             }
+            if (events && state.category == "exodus") {
+                Row(Modifier.padding(horizontal = Spacing.readingMargin), horizontalArrangement = Arrangement.spacedBy(Spacing.sm)) {
+                    listOf("narrative" to R.string.events_sequence, "alphabetical" to R.string.events_alphabetical).forEach { (order, title) ->
+                        FilterChip(selected = state.order == order, onClick = { focus.clearFocus(); send(Action.OrderChanged(order)) }, label = { Text(stringResource(title)) })
+                    }
+                }
+                if (state.order == "narrative") Text(stringResource(R.string.events_sequence_intro), style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(horizontal = Spacing.readingMargin))
+            }
+            if (state.order != "narrative") {
             Row(Modifier.horizontalScroll(rememberScrollState()).padding(horizontal = Spacing.readingMargin, vertical = Spacing.sm), horizontalArrangement = Arrangement.spacedBy(Spacing.sm)) {
                 (listOf("") + ('A'..'Z').map { it.toString() } + "#").forEach { letter ->
                     FilterChip(selected = state.letter == letter, onClick = { focus.clearFocus(); send(Action.LetterChanged(letter)) },
@@ -78,11 +88,12 @@ internal fun EntityCatalogScreen(state: EntityListFeature.State, onBack: () -> U
                         modifier = Modifier.heightIn(min = 48.dp).testTag("$identifier.letter.${letter.ifEmpty { "all" }}"))
                 }
             }
+            }
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
                 LazyColumn(state = scroll, modifier = Modifier.widthIn(max = 620.dp).fillMaxWidth(), contentPadding = PaddingValues(horizontal = Spacing.readingMargin, vertical = Spacing.md)) {
                     state.entities.forEachIndexed { index, entity ->
                         val letter = EntityCatalog.letter(entity.name)
-                        if (index == 0 || EntityCatalog.letter(state.entities[index - 1].name) != letter) item(key = "letter:$letter") {
+                        if (state.order != "narrative" && (index == 0 || EntityCatalog.letter(state.entities[index - 1].name) != letter)) item(key = "letter:$letter") {
                             Text(letter, style = VerbumTypography.editorialHeadline, color = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.padding(top = Spacing.lg, bottom = Spacing.sm).semantics { heading() })
                         }

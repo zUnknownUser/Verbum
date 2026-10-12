@@ -1,0 +1,10 @@
+<resources>
+    <string name="events_sequence">Study sequence</string>
+    <string name="events_alphabetical">Alphabetical</string>
+    <string name="events_sequence_intro">A selected reading path, following the order of the biblical accounts.</string>
+    <string name="events_previous">Previous event</string>
+    <string name="events_next">Next event</string>
+    <string name="events_sequence_end">You have reached the last event in this sequence.</string>
+    <string name="events_order">Event order</string>
+    <string name="events_sequence_discovery">Follow a study sequence in Exodus and wilderness, or browse events alphabetically.</string>
+</resources>

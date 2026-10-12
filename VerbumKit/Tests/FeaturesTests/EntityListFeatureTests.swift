@@ -16,12 +16,13 @@ import Testing
         let store = TestStore(initialState: state) { EntityListFeature() } withDependencies: {
             $0.graphClient.entityPage = { request in
                 #expect(request.type == type && request.category == category)
+                #expect(request.order == (type == .event ? "narrative" : ""))
                 #expect(request.query.isEmpty && request.letter.isEmpty && request.offset == 0 && request.limit == 30)
                 return page
             }
         }
         await store.send(.categoryChanged(category)) {
-            $0.category = category; $0.browsingCatalog = true; $0.query = ""; $0.letter = ""
+            $0.order = type == .event ? "narrative" : ""; $0.category = category; $0.browsingCatalog = true; $0.query = ""; $0.letter = ""
             $0.hasLoaded = false; $0.nextOffset = nil; $0.isLoading = true; $0.generation = 1
         }
         await store.receive(.pageResponse(1, 0, page)) { $0.isLoading = false; $0.hasLoaded = true }
@@ -30,9 +31,30 @@ import Testing
             return page
         }
         await store.send(.discoverCategories) {
-            $0.browsingCatalog = false; $0.category = ""; $0.hasLoaded = false; $0.isLoading = true; $0.generation = 2
+            $0.order = ""; $0.browsingCatalog = false; $0.category = ""; $0.hasLoaded = false; $0.isLoading = true; $0.generation = 2
         }
         await store.receive(.pageResponse(2, 0, page)) { $0.isLoading = false; $0.hasLoaded = true }
+    }
+
+    @Test func sequenceOrderSwitchResetsPageAndKeepsSearch() async {
+        var state = EntityListFeature.State(type: .event)
+        state.category = "exodus"; state.order = "alphabetical"; state.query = "moises"; state.letter = "M"
+        state.nextOffset = 30; state.hasLoaded = true
+        let page = EntityCatalogPage(entities: [], letters: [])
+        let store = TestStore(initialState: state) { EntityListFeature() } withDependencies: {
+            $0.graphClient.entityPage = { request in
+                #expect(request.category == "exodus" && request.order == "narrative" && request.query == "moises")
+                #expect(request.letter.isEmpty && request.offset == 0)
+                return page
+            }
+        }
+        await store.send(.orderChanged("narrative")) {
+            $0.order = "narrative"; $0.letter = ""; $0.nextOffset = nil; $0.hasLoaded = false
+            $0.isLoading = true; $0.generation = 1
+        }
+        await store.receive(.pageResponse(1, 0, page)) { $0.isLoading = false; $0.hasLoaded = true }
+        await store.send(.pageResponse(0, 0, .init(entities: [abel], letters: ["A"])))
+        await store.send(.orderChanged("invalid"))
     }
 
     @Test func eventsUseBoundedSearchInsteadOfTheLegacyList() async {

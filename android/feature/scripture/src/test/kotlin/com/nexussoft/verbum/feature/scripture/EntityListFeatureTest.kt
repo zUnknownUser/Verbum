@@ -33,9 +33,9 @@ class EntityListFeatureTest {
         val client = client { request -> requests += request; EntityCatalogPage(emptyList(), emptyList(), if (request.offset == 0) 30 else null) }
         val store = Store(EntityListFeature.State(BibleEntityType.EVENT, query = "old", letter = "A"), EntityListFeature.reducer(client), backgroundScope)
         store.send(EntityListFeature.Action.CategoryChanged("exodus")); runCurrent()
-        assertEquals(EntityCatalogRequest(BibleEntityType.EVENT, category = "exodus"), requests.last())
+        assertEquals(EntityCatalogRequest(BibleEntityType.EVENT, category = "exodus", order = "narrative"), requests.last())
         store.send(EntityListFeature.Action.LoadMore); runCurrent()
-        assertEquals(EntityCatalogRequest(BibleEntityType.EVENT, offset = 30, category = "exodus"), requests.last())
+        assertEquals(EntityCatalogRequest(BibleEntityType.EVENT, offset = 30, category = "exodus", order = "narrative"), requests.last())
         store.send(EntityListFeature.Action.QueryChanged("moises")); advanceUntilIdle(); runCurrent()
         advanceTimeBy(301); runCurrent()
         assertEquals("exodus", requests.last().category)
@@ -51,6 +51,18 @@ class EntityListFeatureTest {
         store.send(EntityListFeature.Action.CategoryChanged("")); runCurrent()
         assertTrue(store.state.value.browsingCatalog)
         assertEquals("", requests.last().category)
+    }
+
+    @Test fun sequenceOrderSwitchClearsLetterAndKeepsSearch() = runTest {
+        val requests = mutableListOf<EntityCatalogRequest>()
+        val client = client { request -> requests += request; EntityCatalogPage(emptyList(), emptyList()) }
+        val store = Store(EntityListFeature.State(BibleEntityType.EVENT, category = "exodus", order = "alphabetical", query = "moises", letter = "M", nextOffset = 30), EntityListFeature.reducer(client), backgroundScope)
+        store.send(EntityListFeature.Action.OrderChanged("narrative")); runCurrent()
+        assertEquals(EntityCatalogRequest(BibleEntityType.EVENT, query = "moises", category = "exodus", order = "narrative"), requests.single())
+        assertEquals("", store.state.value.letter)
+        assertNull(store.state.value.nextOffset)
+        store.send(EntityListFeature.Action.PageLoaded(0, 0, EntityCatalogPage(listOf(abel), listOf("A"))))
+        assertTrue(store.state.value.entities.isEmpty())
     }
 
     @Test fun eventsUseBoundedSearchInsteadOfTheLegacyList() = runTest {

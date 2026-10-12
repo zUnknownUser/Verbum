@@ -79,11 +79,19 @@ func (h *handlers) listEntities(w http.ResponseWriter, r *http.Request) {
 		writeProblem(w, http.StatusBadRequest, CodeMalformedRequest, "type must be a BibleEntityType")
 		return
 	}
-	if r.URL.Query().Has("limit") || r.URL.Query().Has("offset") || r.URL.Query().Has("q") || r.URL.Query().Has("letter") || r.URL.Query().Has("category") {
+	if r.URL.Query().Has("limit") || r.URL.Query().Has("offset") || r.URL.Query().Has("q") || r.URL.Query().Has("letter") || r.URL.Query().Has("category") || r.URL.Query().Has("order") {
 		query := r.URL.Query()
-		request := store.EntityPageRequest{Category: query.Get("category"), Limit: 30, Query: strings.TrimSpace(query.Get("q")), Letter: strings.ToUpper(strings.TrimSpace(query.Get("letter")))}
+		request := store.EntityPageRequest{Order: query.Get("order"), Category: query.Get("category"), Limit: 30, Query: strings.TrimSpace(query.Get("q")), Letter: strings.ToUpper(strings.TrimSpace(query.Get("letter")))}
 		if !store.ValidCatalogCategory(kind, request.Category) {
 			writeProblem(w, http.StatusBadRequest, CodeMalformedRequest, "category must be supported for this entity type")
+			return
+		}
+		if request.Order != "" && request.Order != "alphabetical" && request.Order != "narrative" {
+			writeProblem(w, http.StatusBadRequest, CodeMalformedRequest, "unsupported catalogue order")
+			return
+		}
+		if request.Order == "narrative" && (kind != domain.Event || request.Category == "" || request.Letter != "") {
+			writeProblem(w, http.StatusBadRequest, CodeMalformedRequest, "narrative order requires an event period and no letter filter")
 			return
 		}
 		if query.Has("limit") {

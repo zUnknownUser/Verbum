@@ -66,6 +66,17 @@ private fun PageBody(page: EntityDetailFeature.Page, send: (EntityDetailFeature.
         ) {
             item { Header(page) }
             if (page.entity.type == BibleEntityType.THEME || page.entity.type == BibleEntityType.EVENT) readings(page, send)
+            page.detail.eventSequence?.let { sequence ->
+                sectionHeader(R.string.events_sequence)
+                item {
+                    Text(sequence.title, style = VerbumTypography.editorialHeadline)
+                    Text("${sequence.position} / ${sequence.total}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                    Text(sequence.context, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(vertical = Spacing.sm))
+                }
+                sequence.previous?.let { previous -> item { EntityRow(stringResource(R.string.events_previous), previous.name) { send(EntityDetailFeature.Action.EntityTapped(previous)) } } }
+                sequence.next?.let { next -> item { EntityRow(stringResource(R.string.events_next), next.name) { send(EntityDetailFeature.Action.EntityTapped(next)) } } }
+                    ?: item { Text(stringResource(R.string.events_sequence_end), style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(vertical = Spacing.sm)) }
+            }
             if (page.neighborhood.nodes.isNotEmpty()) {
                 item { EntityRow(stringResource(R.string.explore_graph), stringResource(R.string.explore_graph_subtitle, page.entity.name)) { send(EntityDetailFeature.Action.GraphTapped) } }
             }

@@ -26,19 +26,31 @@ struct EntityCatalogView: View {
                         .padding(.horizontal, Spacing.readingMargin).padding(.top, Spacing.sm)
                 }
             }
+            if events && store.category == "exodus" {
+                Picker(L10n.t("Event order"), selection: Binding(get: { store.order }, set: { store.send(.orderChanged($0)) })) {
+                    Text(L10n.t("Study sequence")).tag("narrative")
+                    Text(L10n.t("Alphabetical")).tag("alphabetical")
+                }.pickerStyle(.segmented).padding(.horizontal, Spacing.readingMargin).padding(.vertical, Spacing.sm)
+                if store.order == "narrative" {
+                    Text(L10n.t("A selected reading path, following the order of the biblical accounts."))
+                        .font(Typography.footnote).foregroundStyle(Palette.inkSecondary).padding(.horizontal, Spacing.readingMargin)
+                }
+            }
+            if store.order != "narrative" {
             ScrollView(.horizontal) {
                 HStack(spacing: Spacing.sm) {
                     letterButton("", title: L10n.t(themes ? (store.category.isEmpty ? "All themes" : "All letters") : events ? (store.category.isEmpty ? "All events" : "All letters") : places ? "All places" : "All people"))
                     ForEach(alphabet, id: \.self) { letter in letterButton(letter, title: letter) }
                 }.padding(.horizontal, Spacing.readingMargin).padding(.vertical, Spacing.sm)
             }.scrollIndicators(.hidden)
+            }
             ScrollViewReader { proxy in
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 0) {
                         Color.clear.frame(height: 1).id("catalogTop")
                         ForEach(Array(store.entities.enumerated()), id: \.element.id) { index, entity in
                             let letter = EntityCatalog.letter(entity.name)
-                            if index == 0 || EntityCatalog.letter(store.entities[index - 1].name) != letter {
+                            if store.order != "narrative" && (index == 0 || EntityCatalog.letter(store.entities[index - 1].name) != letter) {
                                 Text(letter).font(Typography.editorialHeadline).foregroundStyle(Palette.accent)
                                     .padding(.top, Spacing.xl).padding(.bottom, Spacing.sm)
                                     .accessibilityAddTraits(.isHeader)
@@ -81,6 +93,7 @@ struct EntityCatalogView: View {
                 }
                 .scrollDismissesKeyboard(.interactively)
                 .onChange(of: store.query) { _, _ in proxy.scrollTo("catalogTop", anchor: .top) }
+                .onChange(of: store.order) { _, _ in proxy.scrollTo("catalogTop", anchor: .top) }
                 .onChange(of: store.category) { _, _ in proxy.scrollTo("catalogTop", anchor: .top) }
                 .onChange(of: store.letter) { _, _ in proxy.scrollTo("catalogTop", anchor: .top) }
             }

@@ -62,3 +62,26 @@ func TestEventPeriodValidation(t *testing.T) {
 		}
 	}
 }
+
+func TestNarrativeOrderValidation(t *testing.T) {
+	s, err := memory.Load("../../db/seed/fixtures.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	h := New(s, time.Now, nil, nil, nil, nil)
+	for _, tc := range []struct {
+		query  string
+		status int
+	}{
+		{"type=event&category=exodus&order=narrative", 200},
+		{"type=event&category=exodus&order=alphabetical&letter=A", 200},
+		{"type=event&category=exodus&order=narrative&letter=A", 400},
+		{"type=event&order=narrative", 400}, {"type=person&order=narrative", 400}, {"type=event&order=unknown", 400},
+	} {
+		w := httptest.NewRecorder()
+		h.ServeHTTP(w, httptest.NewRequest(http.MethodGet, "/v1/entities?"+tc.query, nil))
+		if w.Code != tc.status {
+			t.Fatalf("%s: %d", tc.query, w.Code)
+		}
+	}
+}

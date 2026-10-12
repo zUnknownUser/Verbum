@@ -47,7 +47,7 @@ struct EventDiscoveryView: View {
                         }.padding(Spacing.lg).background(Palette.paperElevated, in: RoundedRectangle(cornerRadius: 18))
                     }.buttonStyle(EditorialButtonStyle()).accessibilityIdentifier("events.period.\(period.id)")
                 }
-                Text(L10n.t("Events are listed alphabetically within each period."))
+                Text(L10n.t("Follow a study sequence in Exodus and wilderness, or browse events alphabetically."))
                     .font(Typography.footnote).foregroundStyle(Palette.inkSecondary)
             }.frame(maxWidth: Spacing.readingMaxWidth).frame(maxWidth: .infinity)
                 .padding(.horizontal, Spacing.readingMargin).padding(.vertical, Spacing.xl)

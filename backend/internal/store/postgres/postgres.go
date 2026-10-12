@@ -183,6 +183,12 @@ func (s *Store) EntitiesForPassages(ctx context.Context, refs []domain.PassageRe
 func (s *Store) Detail(ctx context.Context, id string) (domain.EntityDetail, error) {
 	return readJSON[domain.EntityDetail](ctx, s, `SELECT jsonb_build_object(
  'entity',`+localizedEntityJSON("$2")+`,
+ 'eventSequence',(SELECT jsonb_build_object(
+ 'eraId',seq.era_id,'title',seq.presentations->$2->>'title','context',seq.presentations->$2->>'context',
+ 'position',si.position,'total',(SELECT count(*) FROM event_sequence_items x WHERE x.era_id=si.era_id),
+ 'previous',(SELECT `+localizedEntityJSON("$2")+` FROM event_sequence_items x JOIN entities e ON e.id=x.entity_id WHERE x.era_id=si.era_id AND x.position=si.position-1),
+ 'next',(SELECT `+localizedEntityJSON("$2")+` FROM event_sequence_items x JOIN entities e ON e.id=x.entity_id WHERE x.era_id=si.era_id AND x.position=si.position+1))
+ FROM event_sequence_items si JOIN event_sequences seq ON seq.era_id=si.era_id WHERE si.entity_id=e.id),
  'originalTerm',(SELECT jsonb_build_object('language',r.lexical->>'language','transliteration',r.lexical->>'transliteration','strong',r.lexical->>'extendedStrong') FROM entity_source_records r WHERE r.entity_id=e.id AND r.lexical IS NOT NULL ORDER BY r.id LIMIT 1),
  'aliases',COALESCE((SELECT to_jsonb(l.aliases) FROM entity_localizations l WHERE l.entity_id=e.id AND l.language=$2 ORDER BY (l.source_id LIKE 'step.%'),l.source_id LIMIT 1),
  (SELECT jsonb_agg(a.alias ORDER BY a.position,a.alias) FROM entity_aliases a WHERE a.entity_id=e.id AND $2='en'),'[]'::jsonb),

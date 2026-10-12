@@ -5,10 +5,11 @@ public struct EntityCatalogRequest: Equatable, Sendable {
     public var query: String
     public var letter: String
     public var offset: Int
+    public var order: String
     public var category: String
     public var limit: Int
-    public init(type: BibleEntityType, query: String = "", letter: String = "", offset: Int = 0, limit: Int = 30, category: String = "") {
-        self.type = type; self.query = query; self.letter = letter; self.offset = offset; self.limit = limit; self.category = category
+    public init(type: BibleEntityType, query: String = "", letter: String = "", offset: Int = 0, limit: Int = 30, category: String = "", order: String = "") {
+        self.type = type; self.query = query; self.letter = letter; self.offset = offset; self.limit = limit; self.category = category; self.order = order
     }
 }
 

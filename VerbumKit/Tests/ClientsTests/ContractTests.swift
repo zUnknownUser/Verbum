@@ -24,7 +24,7 @@ import Models
     }
 
     @Test func entityDetail() async throws {
-        let live = GraphClient.live(api: Self.api("entities/david.json", at: "/v1/entities/fixture.person.david"))
+        let live = GraphClient.live(api: Self.api("entities/david.json", at: "/v1/entities/fixture.person.david", query: "lang=en"), language: .english)
         #expect(try await live.detail(id: "fixture.person.david") == GraphClient.fixtures.detail(id: "fixture.person.david"))
         #expect(try await live.entity(id: "fixture.person.david") == GraphClient.fixtures.entity(id: "fixture.person.david"))
     }

@@ -1,0 +1,10 @@
+<resources>
+    <string name="events_sequence">Sequência de estudo</string>
+    <string name="events_alphabetical">Ordem alfabética</string>
+    <string name="events_sequence_intro">Um percurso de leitura selecionado, seguindo a ordem dos relatos bíblicos.</string>
+    <string name="events_previous">Acontecimento anterior</string>
+    <string name="events_next">Próximo acontecimento</string>
+    <string name="events_sequence_end">Você chegou ao último acontecimento desta sequência.</string>
+    <string name="events_order">Ordem dos eventos</string>
+    <string name="events_sequence_discovery">Siga uma sequência de estudo em Êxodo e deserto ou consulte os eventos em ordem alfabética.</string>
+</resources>

@@ -16,8 +16,8 @@ type EntityPage struct {
 	NextOffset *int            `json:"nextOffset"`
 }
 type EntityPageRequest struct {
-	Query, Letter, Category string
-	Offset, Limit           int
+	Query, Letter, Category, Order string
+	Offset, Limit                  int
 }
 
 func CatalogName(value string) string {

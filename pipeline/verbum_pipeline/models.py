@@ -324,8 +324,22 @@ class EventCatalog(Model):
     timelineBindings: dict[Text, Text]
 
 
+class SequencePresentation(Model):
+    title: Text
+    context: Text
+
+class SequenceItem(Model):
+    entityId: Text
+    timelineId: Text
+
+class EventSequence(Model):
+    eraId: Text
+    presentations: dict[str, SequencePresentation]
+    items: Annotated[list[SequenceItem], Field(min_length=2)]
+
 class Bundle(Model):
-    version: Literal[1, 2, 3, 4, 5, 6] = 1
+    version: Literal[1, 2, 3, 4, 5, 6, 7] = 1
+    eventSequences: list[EventSequence] | None = None
     eventCatalog: EventCatalog | None = None
     timelineDiscovery: TimelineDiscovery | None = None
     themes: ThemeDiscovery | None = None
@@ -343,7 +357,9 @@ class Bundle(Model):
         value = handler(self)
         if self.version != 6:
             value.pop("eventCatalog", None)
-        if self.version != 5:
+        if self.version != 7:
+            value.pop("eventSequences", None)
+        if self.version not in (5, 7):
             value.pop("timelineDiscovery", None)
         if self.version != 4:
             value.pop("themes", None)
@@ -355,6 +371,26 @@ class Bundle(Model):
 
     @model_validator(mode="after")
     def evidence(self) -> Self:
+        if (self.version == 7) != (self.eventSequences is not None):
+            raise ValueError("version 7 requires event sequences")
+        if self.eventSequences is not None:
+            if not self.eventSequences or self.timelineDiscovery is None:
+                raise ValueError("sequences require a bilingual timeline")
+            unique([s.eraId for s in self.eventSequences], "sequence eras")
+            unique([i.entityId for s in self.eventSequences for i in s.items], "sequence entities")
+            unique([i.timelineId for s in self.eventSequences for i in s.items], "sequence timeline identities")
+            for sequence in self.eventSequences:
+                ordered = [e.id for e in self.content.timeline if self.timelineDiscovery.presentations.get(e.id, {}).get("en") and self.timelineDiscovery.presentations[e.id]["en"].eraId == sequence.eraId]
+                if ordered != [i.timelineId for i in sequence.items]:
+                    raise ValueError("sequence must match its complete timeline period order")
+                if set(sequence.presentations) != {"en", "pt-BR"}:
+                    raise ValueError("sequence requires both languages")
+                for item in sequence.items:
+                    if item.entityId not in self.content.referencedEntityIds:
+                        raise ValueError("sequence must reference canonical entities")
+                    presentation = self.timelineDiscovery.presentations.get(item.timelineId)
+                    if not presentation or any(p.eraId != sequence.eraId for p in presentation.values()):
+                        raise ValueError("sequence and timeline era mismatch")
         if (self.version == 6) != (self.eventCatalog is not None):
             raise ValueError("version 6 requires event catalog metadata")
         if self.eventCatalog is not None:
@@ -379,9 +415,9 @@ class Bundle(Model):
             unique(targets, "timeline event bindings")
             if not set(targets) <= ids:
                 raise ValueError("timeline binding references an unknown event")
-        if (self.version == 5) != (self.timelineDiscovery is not None):
+        if (self.version in (5, 7)) != (self.timelineDiscovery is not None):
             raise ValueError("version 5 requires timeline discovery")
-        if self.content.referencedEntityIds and self.version not in (5, 6):
+        if self.content.referencedEntityIds and self.version not in (5, 6, 7):
             raise ValueError("external graph links require version 5 or 6")
         if self.timelineDiscovery is not None:
             if self.kind != "editorial" or self.content.entities or self.content.relationships or self.content.details or self.content.dailyVersePool:

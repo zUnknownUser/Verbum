@@ -1,6 +1,134 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Study sequence": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Study sequence"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sequência de estudo"
+          }
+        }
+      }
+    },
+    "Alphabetical": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alphabetical"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ordem alfabética"
+          }
+        }
+      }
+    },
+    "A selected reading path, following the order of the biblical accounts.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A selected reading path, following the order of the biblical accounts."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Um percurso de leitura selecionado, seguindo a ordem dos relatos bíblicos."
+          }
+        }
+      }
+    },
+    "Previous event": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Previous event"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acontecimento anterior"
+          }
+        }
+      }
+    },
+    "Next event": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Next event"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Próximo acontecimento"
+          }
+        }
+      }
+    },
+    "You have reached the last event in this sequence.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You have reached the last event in this sequence."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Você chegou ao último acontecimento desta sequência."
+          }
+        }
+      }
+    },
+    "Event order": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Event order"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ordem dos eventos"
+          }
+        }
+      }
+    },
+    "Follow a study sequence in Exodus and wilderness, or browse events alphabetically.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Follow a study sequence in Exodus and wilderness, or browse events alphabetically."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siga uma sequência de estudo em Êxodo e deserto ou consulte os eventos em ordem alfabética."
+          }
+        }
+      }
+    },
     "Explore by period": {
       "localizations": {
         "en": {

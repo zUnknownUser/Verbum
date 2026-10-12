@@ -68,7 +68,18 @@ type SourceReference struct {
 }
 
 // EntityDetail is an entity's page (§9).
+type EventStudySequence struct {
+	EraID    string  `json:"eraId"`
+	Title    string  `json:"title"`
+	Context  string  `json:"context"`
+	Position int     `json:"position"`
+	Total    int     `json:"total"`
+	Previous *Entity `json:"previous"`
+	Next     *Entity `json:"next"`
+}
+
 type EntityDetail struct {
+	EventSequence    *EventStudySequence       `json:"eventSequence,omitempty"`
 	OriginalTerm     *OriginalTermPresentation `json:"originalTerm,omitempty"`
 	SourceRecords    []EntitySourceRecord      `json:"sourceRecords,omitempty"`
 	Localizations    []EntityLocalization      `json:"localizations,omitempty"`

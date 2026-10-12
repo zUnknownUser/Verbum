@@ -41,6 +41,21 @@ public struct EntityDetailView: View {
             VStack(alignment: .leading, spacing: Spacing.xxl) {
                 header(page)
                 if page.entity.type == .theme || page.entity.type == .event { readings(page) }
+                if let sequence = page.detail.eventSequence {
+                    section(L10n.t("Study sequence")) {
+                        Text(sequence.title).font(Typography.editorialHeadline).padding(.vertical, Spacing.sm)
+                        Text("\(sequence.position) / \(sequence.total)").font(Typography.footnote).foregroundStyle(Palette.accent)
+                        Text(sequence.context).font(Typography.footnote).foregroundStyle(Palette.inkSecondary).padding(.vertical, Spacing.sm)
+                        if let previous = sequence.previous {
+                            Row(title: L10n.t("Previous event"), subtitle: previous.name, symbol: "arrow.left") { store.send(.entityTapped(previous)) }
+                        }
+                        if let next = sequence.next {
+                            Row(title: L10n.t("Next event"), subtitle: next.name, symbol: "arrow.right") { store.send(.entityTapped(next)) }
+                        } else {
+                            Text(L10n.t("You have reached the last event in this sequence.")).font(Typography.subheadline).padding(.vertical, Spacing.sm)
+                        }
+                    }
+                }
                 if !page.neighborhood.nodes.isEmpty {
                     Row(title: L10n.t("Explore the graph"), subtitle: L10n.t("Connections around \(page.entity.name), one step at a time."), symbol: "point.3.connected.trianglepath.dotted") {
                         store.send(.graphTapped)

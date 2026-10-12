@@ -71,8 +71,9 @@ internal data class WireEntityDetail(
     val keyPassages: List<WirePassageReference> = emptyList(),
     val sources: List<WireSourceReference> = emptyList(),
     val originalTerm: WireOriginalTerm? = null,
+    val eventSequence: WireEventStudySequence? = null,
 ) {
-    fun toModel() = EntityDetail(entity.toModel(), aliases, approximateDates, role, modernGeography, keyPassages.map { it.toModel() }, sources.map { it.toModel() }, originalTerm?.toModel())
+    fun toModel() = EntityDetail(entity.toModel(), aliases, approximateDates, role, modernGeography, keyPassages.map { it.toModel() }, sources.map { it.toModel() }, originalTerm?.toModel(), eventSequence?.toModel())
 }
 
 @Serializable
@@ -175,3 +176,8 @@ internal data class WireSpeechConfiguration(val version: String)
 @Serializable internal data class WireUsageStatus(val plan:String, val resetsAt:String, val remaining:Map<String,Int>, val voiceSeconds:Int, val restricted:Boolean)
 
 @Serializable internal data class WireAvailability(val code: String, val retryAt: String? = null)
+
+@Serializable
+internal data class WireEventStudySequence(val eraId: String, val title: String, val context: String, val position: Int, val total: Int, val previous: WireEntity? = null, val next: WireEntity? = null) {
+    fun toModel() = com.nexussoft.verbum.models.EventStudySequence(eraId, title, context, position, total, previous?.toModel(), next?.toModel())
+}

@@ -162,3 +162,55 @@ func TestEventPeriodsFilterBeforePagingAndSearch(t *testing.T) {
 		t.Fatalf("all: %+v %v", all, err)
 	}
 }
+
+func TestEventSequenceOrderAndLocalizedNeighbours(t *testing.T) {
+	ctx := context.Background()
+	conn, url := testdb.Open(t, "../../../db/migrations")
+	_, err := conn.Exec(ctx, `INSERT INTO sources(id,citation) VALUES('sequence.test','Test');
+ INSERT INTO entities(id,type,name) VALUES('first','event','Z first'),('last','event','A last');
+ INSERT INTO entity_localizations(entity_id,language,source_id,name) VALUES('first','pt-BR','sequence.test','Z primeiro'),('last','pt-BR','sequence.test','A último');
+ INSERT INTO event_eras VALUES('first','exodus'),('last','exodus');
+ INSERT INTO timeline_events(id,title,date_precision,position) VALUES('t.first','First','unknown',1),('t.last','Last','unknown',2);
+ INSERT INTO event_sequences VALUES('exodus','{"en":{"title":"Exodus","context":"Reading order"},"pt-BR":{"title":"Êxodo","context":"Ordem de leitura"}}');
+ INSERT INTO event_sequence_items VALUES('first','exodus',1,'t.first'),('last','exodus',2,'t.last');`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	db, err := postgres.Open(ctx, url)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	page, err := db.EntityPage(ctx, domain.Event, store.EntityPageRequest{Category: "exodus", Order: "narrative", Limit: 1})
+	if err != nil || len(page.Entities) != 1 || page.Entities[0].ID != "first" || page.NextOffset == nil {
+		t.Fatalf("narrative: %+v %v", page, err)
+	}
+	page, err = db.EntityPage(ctx, domain.Event, store.EntityPageRequest{Category: "exodus", Order: "narrative", Offset: 1, Limit: 1})
+	if err != nil || page.Entities[0].ID != "last" || page.NextOffset != nil {
+		t.Fatalf("next: %+v %v", page, err)
+	}
+	page, err = db.EntityPage(ctx, domain.Event, store.EntityPageRequest{Category: "exodus", Limit: 30})
+	if err != nil || page.Entities[0].ID != "last" {
+		t.Fatalf("legacy alphabetical: %+v %v", page, err)
+	}
+	for _, lang := range []string{"en", "pt-BR"} {
+		first, err := db.Detail(store.WithLanguage(ctx, lang), "first")
+		if err != nil {
+			t.Fatal(err)
+		}
+		seq := first.EventSequence
+		if seq == nil || seq.Position != 1 || seq.Total != 2 || seq.Previous != nil || seq.Next == nil || seq.Next.ID != "last" {
+			t.Fatalf("first: %+v", seq)
+		}
+		if lang == "pt-BR" && (seq.Title != "Êxodo" || seq.Next.Name != "A último") {
+			t.Fatalf("localization: %+v", seq)
+		}
+		last, err := db.Detail(store.WithLanguage(ctx, lang), "last")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if last.EventSequence.Next != nil || last.EventSequence.Previous.ID != "first" {
+			t.Fatal("sequence boundary")
+		}
+	}
+}

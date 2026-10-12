@@ -33,6 +33,7 @@ public struct GraphSnapshot: Codable, Equatable, Sendable {
 /// What an entity page shows beyond the graph (spec §9). Fields are optional
 /// because not every kind has every fact, and absent is better than invented.
 public struct EntityDetail: Codable, Equatable, Sendable {
+    public let eventSequence: EventStudySequence?
     public let originalTerm: OriginalTermPresentation?
     public let entity: BibleEntity
     /// Other names: `Simon, Cephas`; `Jebus, Salem`.
@@ -56,8 +57,10 @@ public struct EntityDetail: Codable, Equatable, Sendable {
         modernGeography: String? = nil,
         keyPassages: [PassageReference] = [],
         sources: [SourceReference] = [],
-        originalTerm: OriginalTermPresentation? = nil
+        originalTerm: OriginalTermPresentation? = nil,
+        eventSequence: EventStudySequence? = nil
     ) {
+        self.eventSequence = eventSequence
         self.originalTerm = originalTerm
         self.entity = entity
         self.aliases = aliases
@@ -73,4 +76,18 @@ public struct OriginalTermPresentation: Codable, Equatable, Sendable {
     public let language: String
     public let transliteration: String
     public let strong: String
+}
+
+public struct EventStudySequence: Codable, Equatable, Sendable {
+    public let eraId: String
+    public let title: String
+    public let context: String
+    public let position: Int
+    public let total: Int
+    public let previous: BibleEntity?
+    public let next: BibleEntity?
+    public init(eraId: String, title: String, context: String, position: Int, total: Int, previous: BibleEntity? = nil, next: BibleEntity? = nil) {
+        self.eraId = eraId; self.title = title; self.context = context
+        self.position = position; self.total = total; self.previous = previous; self.next = next
+    }
 }

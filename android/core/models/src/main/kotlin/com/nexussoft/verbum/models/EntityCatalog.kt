@@ -3,7 +3,7 @@ package com.nexussoft.verbum.models
 import java.text.Normalizer
 import java.util.Locale
 
-data class EntityCatalogRequest(val type: BibleEntityType, val query: String = "", val letter: String = "", val offset: Int = 0, val limit: Int = 30, val category: String = "")
+data class EntityCatalogRequest(val type: BibleEntityType, val query: String = "", val letter: String = "", val offset: Int = 0, val limit: Int = 30, val category: String = "", val order: String = "")
 data class EntityCatalogPage(val entities: List<BibleEntity>, val letters: List<String>, val nextOffset: Int? = null)
 
 object EntityCatalog {
