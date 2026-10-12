@@ -62,6 +62,44 @@ class ChapterReaderFeatureTest {
         assertEquals(state.reference,store.state.value.reference)
         assertNull(store.state.value.study?.ask)
     }
+    @Test fun chapterGuideAndPreviewDoNotChangeReaderHistoryPositionOrActivity()=runTest {
+        val reference=PassageReference("John",3)
+        val target=PassageReference("Rom",8,1..1)
+        val state=State(reference,chapters=mapOf("John.3" to verses("John",3,3)),positions=mapOf("John.3" to Position(2,75)))
+        val store=reader(state,StubBibleClient(passageStub={verses("Rom",8,1).first()}))
+        store.send(Action.StudyChapter(reference))
+        assertTrue(store.state.value.study!!.chapterGuide)
+        store.send(Action.Study(VerseStudyFeature.Action.PreviewPassage(target)));runCurrent()
+        assertNotNull(store.state.value.study?.preview)
+        assertEquals(state,store.state.value.copy(study=null))
+        assertNull(preferences.string(ChapterReaderFeature.LAST_READ_KEY))
+        assertNull(preferences.string("readerAnnotations"))
+        store.send(Action.StudyDismissed);runCurrent()
+        assertEquals(state,store.state.value)
+    }
+    @Test fun onlyExplicitPreviewNavigationCreatesReturnHistoryAndRestoresPosition()=runTest {
+        val reference=PassageReference("John",3)
+        val target=PassageReference("Rom",8,1..1)
+        val state=State(reference,chapters=mapOf("John.3" to verses("John",3,3),"Rom.8" to verses("Rom",8,3)),positions=mapOf("John.3" to Position(2,75)))
+        val bible=StubBibleClient(chapterStub={b,c->verses(b,c,3)},passageStub={verses("Rom",8,1).first()})
+        val store=reader(state,bible)
+        store.send(Action.StudyChapter(reference))
+        store.send(Action.Study(VerseStudyFeature.Action.PreviewPassage(target)));runCurrent()
+        assertTrue(store.state.value.history.isEmpty())
+        store.send(Action.Study(VerseStudyFeature.Action.OpenPreviewInReader));advanceUntilIdle()
+        assertEquals(PassageReference("Rom",8),store.state.value.reference)
+        assertNull(store.state.value.study)
+        assertEquals(Visit(reference,listOf(reference),2,75),store.state.value.history.single())
+        store.send(Action.BackToReading);advanceUntilIdle()
+        assertEquals(reference,store.state.value.reference)
+        assertEquals(Position(2,75),store.state.value.restorePosition)
+    }
+    @Test fun chapterGuideRequiresLoadedVerses()=runTest {
+        val state=State(PassageReference("John",3))
+        val store=reader(state)
+        store.send(Action.StudyChapter(state.reference))
+        assertEquals(state,store.state.value)
+    }
     @Test fun returningRestoresPositionAndContinuousFlow()=runTest {
         val previous=PassageReference("Rom",8)
         val flow=listOf(previous,PassageReference("Rom",9))

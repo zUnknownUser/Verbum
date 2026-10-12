@@ -56,6 +56,7 @@ object ChapterReaderFeature {
         data class PreferencesLoaded(val mode:ReadingMode,val focus:Boolean):Action
         data class Study(val action:VerseStudyFeature.Action):Action
         data object StudyDismissed:Action
+        data class StudyChapter(val reference:PassageReference):Action
         data class StudyVerse(val reference:PassageReference,val verse:Int,val ids:List<String> = emptyList()):Action
         data object NextChapterTapped:Action;data object PreviousChapterTapped:Action
         data class Go(val reference:PassageReference):Action
@@ -85,7 +86,7 @@ object ChapterReaderFeature {
         annotations:ReaderAnnotationsClient = PreferenceReaderAnnotationsClient(preferences),
         comparison:BibleComparisonClient = LiveBibleComparisonClient(),
     ):Reducer<State,Action> = combine(
-        VerseStudyFeature.reducer(contextClient,graphClient,askClient,annotations,comparison).pullbackOptional(
+        VerseStudyFeature.reducer(contextClient,graphClient,askClient,annotations,comparison,bibleClient).pullbackOptional(
             get={it.study},set={s,c->s.copy(study=c)},extractAction={(it as? Action.Study)?.action},embedAction={Action.Study(it)},
         ),
         Reducer {state,action ->
@@ -147,6 +148,11 @@ object ChapterReaderFeature {
                         state.copy(contexts=state.contexts+(key to value),mentions=state.mentions+mentions).only()
                     }
                 }
+                is Action.StudyChapter -> {
+                    val key=ReaderCanon.key(action.reference)
+                    val verse=state.chapters[key]?.firstOrNull()
+                    if(verse==null) state.only() else state.copy(study=VerseStudyFeature.State.initial(verse,null,state.contexts[key],emptyList(),chapterGuide=true)).only()
+                }
                 is Action.StudyVerse -> {
                     val verse=state.chapters[ReaderCanon.key(action.reference)]?.firstOrNull {it.verseStart==action.verse}
                     if(verse==null) state.only() else {
@@ -156,11 +162,11 @@ object ChapterReaderFeature {
                 }
                 is Action.Study -> when(val delegate=(action.action as? VerseStudyFeature.Action.Delegate)?.value) {
                     is VerseStudyFeature.DelegateAction.AnnotationSaved -> state.copy(annotations=state.annotations+(delegate.value.id to delegate.value)).only()
-                    is VerseStudyFeature.DelegateAction.OpenPassage -> state.copy(study=null).with(Effect.Send(Action.VisitPassage(delegate.value)))
-                    VerseStudyFeature.DelegateAction.Close -> state.copy(study=null).only()
+                    is VerseStudyFeature.DelegateAction.OpenPassage -> state.copy(study=null).with(merge(VerseStudyFeature.cancelRequests().map {Action.Study(it)},Effect.Send(Action.VisitPassage(delegate.value))))
+                    VerseStudyFeature.DelegateAction.Close -> state.copy(study=null).with(VerseStudyFeature.cancelRequests().map {Action.Study(it)})
                     null -> state.only()
                 }
-                Action.StudyDismissed -> if(state.study?.let {it.saving || it.savedNote!=it.annotation.note}==true) state.only() else state.copy(study=null).only()
+                Action.StudyDismissed -> if(state.study?.let {it.saving || it.savedNote!=it.annotation.note}==true) state.only() else state.copy(study=null).with(VerseStudyFeature.cancelRequests().map {Action.Study(it)})
                 is Action.VisitPassage -> {
                     val pos=state.positions[if(state.readingMode==ReadingMode.CONTINUOUS) "flow" else ReaderCanon.key(state.reference)] ?: Position()
                     jump(state.copy(history=(state.history+Visit(state.reference,state.flow,pos.index,pos.offset)).takeLast(32)),action.reference,bibleClient,::context)

@@ -1,5 +1,6 @@
 package com.nexussoft.verbum.feature.scripture.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
@@ -31,9 +32,11 @@ import com.nexussoft.verbum.models.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun VerseStudySheet(state: VerseStudyFeature.State, send: (Action)->Unit,onDismiss:()->Unit) {
+    val studyScroll=rememberScrollState()
+    BackHandler(enabled=state.previewReference!=null) {send(Action.ClosePreview)}
     val canDismiss=!state.saving && state.annotation.note==state.savedNote
     val currentDismiss by rememberUpdatedState(canDismiss)
-    val sheet=rememberModalBottomSheetState(confirmValueChange={it!=SheetValue.Hidden || currentDismiss})
+    val sheet=rememberModalBottomSheetState(skipPartiallyExpanded=state.chapterGuide,confirmValueChange={it!=SheetValue.Hidden || currentDismiss})
     LaunchedEffect(state.reference) {send(Action.Started)}
     ModalBottomSheet(onDismissRequest={if(canDismiss) onDismiss()},sheetState=sheet,
         containerColor=MaterialTheme.colorScheme.surface.copy(alpha=0.97f), tonalElevation=0.dp) {
@@ -41,17 +44,30 @@ internal fun VerseStudySheet(state: VerseStudyFeature.State, send: (Action)->Uni
             Row(Modifier.fillMaxWidth().padding(horizontal=Spacing.lg),verticalAlignment=Alignment.CenterVertically) {
                 if(state.ask!=null) TextButton(onClick={send(Action.CloseAnswer)}) {Text(stringResource(R.string.reader_study))}
                 Text(state.reference.formatted,style=VerbumTypography.navigationSerif,modifier=Modifier.weight(1f))
-                IconButton(onClick={send(Action.BookmarkToggled)},enabled=!state.saving) {
+                if(!state.chapterGuide && state.previewReference==null) IconButton(onClick={send(Action.BookmarkToggled)},enabled=!state.saving) {
                     Icon(if(state.annotation.bookmarked) Icons.Outlined.Bookmark else Icons.Outlined.BookmarkBorder,contentDescription=accountText(if(state.annotation.bookmarked) "removeBookmark" else "savePassage"))
                 }
                 TextButton(onClick={send(Action.Done)},enabled=!state.saving) {Text(stringResource(R.string.reader_done))}
             }
-            if(state.ask!=null) {
+            if(state.previewReference!=null) {
+                Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal=Spacing.lg).padding(bottom=Spacing.xxl),verticalArrangement=Arrangement.spacedBy(Spacing.lg)) {
+                    TextButton(onClick={send(Action.ClosePreview)}) {Text(stringResource(R.string.reader_back_to_study))}
+                    Text(state.previewReference.formatted,style=VerbumTypography.editorialTitle)
+                    if(state.previewLoading) CircularProgressIndicator()
+                    else if(state.previewFailed) LayerRetry {send(Action.RetryPreview)}
+                    else state.preview?.let {passage->
+                        Text(HelloAOTranslation.name(passage.translationId),style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(passage.text,style=VerbumTypography.scripture)
+                    }
+                    TextButton(onClick={send(Action.OpenPreviewInReader)},enabled=!state.saving) {Text(stringResource(R.string.reader_open_in_reader))}
+                    if(state.saveFailed) SaveStatus(state)
+                }
+            } else if(state.ask!=null) {
                 AskPane(state.ask,onBack={send(Action.CloseAnswer)},embedded=true) {send(Action.Ask(it))}
-            } else Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal=Spacing.lg).padding(bottom=Spacing.xxl),verticalArrangement=Arrangement.spacedBy(Spacing.lg)) {
-                Text(state.text,style=VerbumTypography.scripture,maxLines=4)
+            } else Column(Modifier.weight(1f).verticalScroll(studyScroll).padding(horizontal=Spacing.lg).padding(bottom=Spacing.xxl),verticalArrangement=Arrangement.spacedBy(Spacing.lg)) {
+                if(state.text.isNotEmpty()) Text(state.text,style=VerbumTypography.scripture,maxLines=4)
                 Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(Spacing.sm)) {
-                    Tab.entries.forEach {tab->
+                    state.availableTabs.forEach {tab->
                         TextButton(onClick={send(Action.TabChanged(tab))},modifier=Modifier.semantics {selected=tab==state.tab}) {
                             Column(horizontalAlignment=Alignment.CenterHorizontally) {
                                 Icon(when(tab) {Tab.HIGHLIGHT->Icons.Outlined.BorderColor;Tab.NOTE->Icons.Outlined.EditNote;Tab.COMPARE->Icons.AutoMirrored.Outlined.CompareArrows;Tab.CONTEXT->Icons.AutoMirrored.Outlined.MenuBook;Tab.REFERENCES->Icons.Outlined.AccountTree;Tab.ASK->Icons.Outlined.QuestionAnswer},contentDescription=null)
@@ -105,37 +121,44 @@ internal fun VerseStudySheet(state: VerseStudyFeature.State, send: (Action)->Uni
                         } else LayerRetry {send(Action.TabChanged(Tab.COMPARE))}
                     }
                     Tab.CONTEXT -> {
-                        if(state.entityLoading) CircularProgressIndicator()
-                        else if(state.entity!=null) {
-                            val detail=state.entity
+                        if(state.selectedEntity!=null) {
                             TextButton(onClick={send(Action.CloseEntity)}) {Text(stringResource(R.string.context_title))}
-                            Text(detail.entity.name,style=VerbumTypography.editorialTitle)
-                            detail.entity.summary?.let {Text(it,style=VerbumTypography.scripture)}
-                            detail.role?.let {Text(it)}
-                            detail.approximateDates?.let {Text(it,style=MaterialTheme.typography.bodySmall)}
-                            detail.keyPassages.forEach { PassageLink(it,send) }
-                            StudySources(detail.sources)
-                        } else if(state.candidates.isNotEmpty()) {
-                            Text(stringResource(R.string.reader_people_places),style=VerbumTypography.editorialHeadline)
-                            state.candidates.forEach {StudyEntity(it,send)}
+                            if(state.entityLoading) CircularProgressIndicator()
+                            else if(state.entityFailed) LayerRetry {send(Action.RetryEntity)}
+                            else state.entity?.let {detail->
+                                Text(detail.entity.name,style=VerbumTypography.editorialTitle)
+                                detail.entity.summary?.let {Text(it,style=VerbumTypography.scripture)}
+                                detail.role?.let {Text(it)}
+                                detail.approximateDates?.let {Text(it,style=MaterialTheme.typography.bodySmall)}
+                                state.keyPassages.take(state.entityPassageLimit).forEach {PassageLink(it,send)}
+                                if(state.keyPassages.size>state.entityPassageLimit) TextButton(onClick={send(Action.MoreEntityPassages)}) {Text(stringResource(R.string.history_more))}
+                                StudySources(detail.sources)
+                            }
                         } else {
                             Text(stringResource(R.string.context_title),style=VerbumTypography.editorialHeadline)
-                            Text(stringResource(R.string.reader_chapter_scope),style=MaterialTheme.typography.bodySmall)
+                            Text(stringResource(if(state.chapterGuide) R.string.reader_guide_scope else R.string.reader_chapter_scope),style=MaterialTheme.typography.bodySmall)
                             if(state.contextLoading) CircularProgressIndicator()
-                            else if(state.context!=null) {
-                                state.context.entities.take(24).forEach {StudyEntity(it,send)}
-                                StudySources(state.context.sources)
-                            } else if(state.contextFailed || state.entityFailed) LayerRetry {send(Action.TabChanged(Tab.CONTEXT))}
+                            else if(state.contextEntities.isNotEmpty()) {
+                                Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(Spacing.sm)) {
+                                    state.entityTypes.forEach {type->
+                                        FilterChip(selected=state.activeType==type,onClick={send(Action.EntityTypeChanged(type))},label={Text("${stringResource(studyTypeTitle(type))} (${state.contextEntities.count {it.type==type}})")})
+                                    }
+                                }
+                                state.visibleEntities.forEach {StudyEntity(it,send)}
+                                if(state.matchingEntities.size>state.entityLimit) TextButton(onClick={send(Action.MoreEntities)}) {Text(stringResource(R.string.history_more))}
+                                state.context?.let {StudySources(it.sources)}
+                            } else if(state.contextFailed) LayerRetry {send(Action.TabChanged(Tab.CONTEXT))}
                             else Text(stringResource(R.string.reader_no_context))
                         }
                     }
                     Tab.REFERENCES -> {
                         Text(stringResource(R.string.reader_follow_refs),style=VerbumTypography.editorialHeadline)
                         if(state.contextLoading) CircularProgressIndicator()
-                        else if(state.context?.relatedPassages?.isNotEmpty()==true) {
+                        else if(state.relatedPassages.isNotEmpty()) {
                             Text(stringResource(R.string.reader_reference_scope),style=MaterialTheme.typography.bodySmall)
-                            state.context.relatedPassages.forEach {PassageLink(it,send)}
-                            StudySources(state.context.sources)
+                            state.relatedPassages.take(state.referenceLimit).forEach {PassageLink(it,send)}
+                            if(state.relatedPassages.size>state.referenceLimit) TextButton(onClick={send(Action.MoreReferences)}) {Text(stringResource(R.string.history_more))}
+                            state.context?.let {StudySources(it.sources)}
                         } else if(state.contextFailed) LayerRetry {send(Action.TabChanged(Tab.REFERENCES))}
                         else Text(stringResource(R.string.reader_no_references))
                     }
@@ -165,7 +188,7 @@ internal fun VerseStudySheet(state: VerseStudyFeature.State, send: (Action)->Uni
     }
 }
 @Composable private fun PassageLink(reference:PassageReference,send:(Action)->Unit) {
-    TextButton(onClick={send(Action.PassageTapped(reference))}) {Text(reference.formatted,style=VerbumTypography.navigationSerif)}
+    TextButton(onClick={send(Action.PreviewPassage(reference))}) {Text(reference.formatted,style=VerbumTypography.navigationSerif)}
 }
 @Composable private fun StudySources(sources:List<SourceReference>) {
     var expanded by remember {mutableStateOf(false)}
@@ -185,3 +208,15 @@ private fun tabTitle(tab:Tab):Int=when(tab) {
     Tab.HIGHLIGHT->R.string.reader_highlight;Tab.NOTE->R.string.reader_note;Tab.COMPARE->R.string.reader_compare;Tab.CONTEXT->R.string.reader_context;Tab.REFERENCES->R.string.reader_references;Tab.ASK->R.string.reader_ask
 }
 internal fun highlightColor(color:HighlightColor):Color=when(color) {HighlightColor.GOLD->Color(0xFFA88247);HighlightColor.SAGE->Color(0xFF668770);HighlightColor.ROSE->Color(0xFFA66E75)}
+
+private fun studyTypeTitle(type:BibleEntityType):Int=when(type) {
+    BibleEntityType.PERSON->R.string.people
+    BibleEntityType.PLACE->R.string.places
+    BibleEntityType.EVENT->R.string.events
+    BibleEntityType.THEME->R.string.themes
+    BibleEntityType.PASSAGE->R.string.passages
+    BibleEntityType.BOOK->R.string.books
+    BibleEntityType.PROPHECY->R.string.study_prophecies
+    BibleEntityType.ORIGINAL_TERM->R.string.original_terms
+    BibleEntityType.HISTORICAL_PERIOD->R.string.study_periods
+}

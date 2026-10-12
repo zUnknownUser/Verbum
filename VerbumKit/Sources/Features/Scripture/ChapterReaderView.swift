@@ -106,7 +106,7 @@ struct ChapterReaderView: View {
         }
         .sheet(item: $store.scope(state: \.study, action: \.study)) { study in
             VerseStudyView(store: study)
-                .presentationDetents([.height(360), .large])
+                .presentationDetents(study.chapterGuide ? [.large] : [.height(360), .large])
                 .presentationDragIndicator(.visible)
                 .presentationBackground(.regularMaterial)
         }
@@ -233,8 +233,16 @@ private struct ReaderChapterBody: View {
                 Text(BibleBook.book(id: reference.bookId)?.localizedName ?? reference.bookId).overline(color: Palette.accent)
                 Text(verbatim: String(reference.chapter)).font(Typography.chapterNumeral).foregroundStyle(Palette.ink)
                 Rectangle().fill(Palette.accent).frame(width: 28, height: 1).padding(.top, Spacing.xs)
+                if !store.focusMode {
+                    Button { store.send(.studyChapter(reference)) } label: {
+                        Label(StudyGuideCopy.openGuide, systemImage: "text.book.closed")
+                            .font(Typography.footnote).frame(minHeight: 44)
+                    }.buttonStyle(.plain).foregroundStyle(Palette.accent)
+                        .disabled(store.chapters[key]?.isEmpty != false)
+                        .padding(.top, Spacing.sm)
+                }
             }.frame(maxWidth: .infinity).padding(.top, Spacing.xxxl).padding(.bottom, Spacing.xxl).opacity(store.focusMode ? 0 : 1).accessibilityHidden(store.focusMode).frame(height: store.focusMode ? 12 : nil).clipped()
-                .accessibilityElement(children: .combine).accessibilityAddTraits(.isHeader)
+                .accessibilityElement(children: .contain)
                 .modifier(ReaderChapterVisibility(reference: reference) { visible in
                     if visible && continuous { store.send(.chapterVisible(reference)) }
                 })

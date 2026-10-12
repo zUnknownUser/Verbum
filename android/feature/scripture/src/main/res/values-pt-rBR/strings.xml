@@ -356,4 +356,10 @@
     <string name="themes_cat_eternity">Vida e eternidade</string>
     <string name="themes_cat_eternity_sub">Ressurreição e nova criação</string>
     <string name="themes_all_letters">Todas as letras</string>
+    <string name="reader_study_chapter">Estudar este capítulo</string>
+    <string name="reader_back_to_study">Voltar ao estudo</string>
+    <string name="reader_open_in_reader">Abrir no leitor</string>
+    <string name="study_prophecies">Profecias</string>
+    <string name="study_periods">Períodos históricos</string>
+    <string name="reader_guide_scope">Explore as pessoas, os lugares e os assuntos documentados para este capítulo.</string>
 </resources>

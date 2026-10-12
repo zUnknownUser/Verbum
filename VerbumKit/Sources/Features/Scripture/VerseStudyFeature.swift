@@ -15,6 +15,34 @@ public struct VerseStudyFeature {
         public let translationID: String
         public var annotation: ReaderAnnotation
         public var tab: Tab = .highlight
+        public var chapterGuide = false
+        public var selectedType: BibleEntityType?
+        public var entityLimit = 6
+        public var referenceLimit = 6
+        public var selectedEntity: BibleEntity?
+        public var previewReference: PassageReference?
+        public var preview: BiblePassage?
+        public var previewLoading = false
+        public var previewError: ReaderError?
+
+        public var tabs: [Tab] { chapterGuide ? [.context, .references] : Tab.allCases }
+        public var resourceEntities: [BibleEntity] {
+            var seen = Set<String>()
+            return (candidates.isEmpty ? context?.entities ?? [] : candidates).filter { seen.insert($0.id).inserted }
+        }
+        public var resourceTypes: [BibleEntityType] {
+            BibleEntityType.allCases.filter { type in resourceEntities.contains { $0.type == type } }
+        }
+        public var activeType: BibleEntityType? {
+            if let selectedType, resourceTypes.contains(selectedType) { return selectedType }
+            return resourceTypes.first
+        }
+        public var filteredEntities: [BibleEntity] { resourceEntities.filter { $0.type == activeType } }
+        public var visibleEntities: [BibleEntity] { Array(filteredEntities.prefix(entityLimit)) }
+        public var studyReferences: [PassageReference] {
+            var seen = Set<PassageReference>()
+            return (entity?.keyPassages ?? context?.relatedPassages ?? []).filter { seen.insert($0).inserted }
+        }
         public var context: PassageContext?
         public var contextLoading = false
         public var referencesLoaded = false
@@ -34,21 +62,25 @@ public struct VerseStudyFeature {
         public var saved = false
         public var question = ""
         public var ask: AskFeature.State?
-        public init(passage: BiblePassage, annotation: ReaderAnnotation?, context: PassageContext?, candidates: [BibleEntity] = []) {
-            reference = PassageReference(bookId: passage.bookId, chapter: passage.chapter, verses: passage.verseStart...passage.verseEnd)
-            text = passage.text; translationID = passage.translationId
+        public init(passage: BiblePassage, annotation: ReaderAnnotation?, context: PassageContext?, candidates: [BibleEntity] = [], chapterGuide: Bool = false) {
+            reference = PassageReference(bookId: passage.bookId, chapter: passage.chapter, verses: chapterGuide ? nil : passage.verseStart...passage.verseEnd)
+            text = chapterGuide ? "" : passage.text; translationID = passage.translationId
+            self.chapterGuide = chapterGuide
             self.annotation = annotation ?? ReaderAnnotation(reference: reference)
             self.savedNote = annotation?.note ?? ""
             self.context = context; self.candidates = candidates
-            if !candidates.isEmpty { tab = .context }
+            if chapterGuide || !candidates.isEmpty { tab = .context }
         }
     }
     public enum Action: Equatable {
         case task, save, closeEntity, done, bookmarkToggled
+        case categoryChanged(BibleEntityType), moreEntities, moreReferences, retryEntity
+        case previewPassage(PassageReference), closePreview
+        case previewResponse(PassageReference, Result<BiblePassage, ReaderError>)
         case highlightStyleChanged(HighlightStyle)
         case tabChanged(Tab), highlightChanged(HighlightColor?), noteChanged(String), questionChanged(String)
         case contextResponse(PassageContext?), contextFailed
-        case entityTapped(BibleEntity), entityResponse(EntityDetail), entityFailed
+        case entityTapped(BibleEntity), entityResponse(EntityDetail), entityFailed(String)
         case comparisonResponse(BiblePassage), comparisonFailed
         case saved(ReaderAnnotation), saveFailed
         case submitQuestion
@@ -59,6 +91,7 @@ public struct VerseStudyFeature {
             case annotationSaved(ReaderAnnotation), openPassage(PassageReference), close
         }
     }
+    @Dependency(\.bibleClient) var bibleClient
     @Dependency(\.contextClient) var contextClient
     @Dependency(\.graphClient) var graphClient
     @Dependency(\.bibleComparison) var bibleComparison
@@ -67,18 +100,53 @@ public struct VerseStudyFeature {
     public var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
+            case .categoryChanged(let type):
+                guard state.resourceTypes.contains(type) else { return .none }
+                state.selectedType = type; state.entityLimit = 6
+                return .none
+            case .moreEntities:
+                state.entityLimit = min(state.entityLimit + 6, state.filteredEntities.count)
+                return .none
+            case .moreReferences:
+                state.referenceLimit = min(state.referenceLimit + 6, state.studyReferences.count)
+                return .none
+            case .previewPassage(let reference):
+                state.previewReference = reference; state.preview = nil
+                state.previewLoading = true; state.previewError = nil
+                return .run { [bibleClient] send in
+                    do { await send(.previewResponse(reference, .success(try await bibleClient.passage(reference: reference)))) }
+                    catch is CancellationError {} catch { await send(.previewResponse(reference, .failure(ReaderError(error)))) }
+                }.cancellable(id: CancelID.preview, cancelInFlight: true)
+            case .previewResponse(let reference, let result):
+                guard state.previewReference == reference else { return .none }
+                state.previewLoading = false
+                switch result {
+                case .success(let passage): state.preview = passage; state.previewError = nil
+                case .failure(let error): state.previewError = error
+                }
+                return .none
+            case .closePreview:
+                state.previewReference = nil; state.preview = nil; state.previewLoading = false; state.previewError = nil
+                return .cancel(id: CancelID.preview)
+            case .retryEntity:
+                guard let entity = state.selectedEntity else { return .none }
+                return .send(.entityTapped(entity))
             case .bookmarkToggled:
-                guard !state.saving else { return .none }
+                guard !state.chapterGuide, !state.saving else { return .none }
                 state.annotation.bookmarked = !(state.annotation.bookmarked ?? false); state.saved = false
                 return .send(.save)
             case .done:
                 if state.annotation.note != state.savedNote { state.closeAfterSave = true; return .send(.save) }
                 return .send(.delegate(.close))
             case .task:
+                if state.chapterGuide { return .send(.tabChanged(.context)) }
                 if state.candidates.count == 1 { return .send(.entityTapped(state.candidates[0])) }
                 return .none
             case .tabChanged(let tab):
+                guard state.tabs.contains(tab) else { return .none }
                 state.tab = tab; state.entity = nil; state.candidates = []
+                state.selectedEntity = nil; state.entityLoading = false; state.entityFailed = false
+                state.referenceLimit = 6
                 if ((tab == .context && state.context == nil) || (tab == .references && !state.referencesLoaded)), !state.contextLoading {
                     state.contextLoading = true; state.contextFailed = false
                     return .run { [contextClient, reference = state.reference] send in
@@ -124,14 +192,22 @@ public struct VerseStudyFeature {
             case .contextResponse(let context): state.contextLoading = false; state.referencesLoaded = true; state.context = context; return .none
             case .contextFailed: state.contextLoading = false; state.contextFailed = true; return .none
             case .entityTapped(let entity):
+                state.selectedEntity = entity; state.referenceLimit = 6
                 state.entity = nil; state.entityLoading = true; state.entityFailed = false
                 return .run { [graphClient] send in
                     do { await send(.entityResponse(try await graphClient.detail(id: entity.id))) }
-                    catch is CancellationError {} catch { await send(.entityFailed) }
+                    catch is CancellationError {} catch { await send(.entityFailed(entity.id)) }
                 }.cancellable(id: CancelID.entity, cancelInFlight: true)
-            case .entityResponse(let entity): state.entityLoading = false; state.entity = entity; return .none
-            case .entityFailed: state.entityLoading = false; state.entityFailed = true; return .none
-            case .closeEntity: state.entity = nil; state.candidates = []; return .none
+            case .entityResponse(let entity):
+                guard state.selectedEntity?.id == entity.entity.id else { return .none }
+                state.entityLoading = false; state.entity = entity; return .none
+            case .entityFailed(let id):
+                guard state.selectedEntity?.id == id else { return .none }
+                state.entityLoading = false; state.entityFailed = true; return .none
+            case .closeEntity:
+                state.entity = nil; state.candidates = []; state.selectedEntity = nil
+                state.entityLoading = false; state.entityFailed = false; state.referenceLimit = 6
+                return .merge(.cancel(id: CancelID.entity), .send(.tabChanged(.context)))
             case .comparisonResponse(let passage): state.comparisonLoading = false; state.comparison = passage; return .none
             case .comparisonFailed: state.comparisonLoading = false; state.comparisonFailed = true; return .none
             case .questionChanged(let text): state.question = String(text.prefix(400)); return .none
@@ -153,5 +229,5 @@ public struct VerseStudyFeature {
             }
         }.ifLet(\.ask, action: \.ask) { AskFeature() }
     }
-    private enum CancelID { case context, comparison, entity, save }
+    private enum CancelID { case context, comparison, entity, save, preview }
 }

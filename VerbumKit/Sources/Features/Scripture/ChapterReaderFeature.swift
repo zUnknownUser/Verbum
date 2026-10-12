@@ -66,6 +66,7 @@ public struct ChapterReaderFeature {
         case annotationsResponse([ReaderAnnotation]), annotationsFailed, retryAnnotations
         case study(PresentationAction<VerseStudyFeature.Action>)
         case studyVerse(PassageReference, Int, [String])
+        case studyChapter(PassageReference)
         case appendChapter
         case chapterVisible(PassageReference)
         case visit(PassageReference), backToReading, focusToggled, readingModeChanged
@@ -142,6 +143,11 @@ public struct ChapterReaderFeature {
                         state.mentions["\(verse.bookId).\(verse.chapter).\(verse.verseStart)"] = ReaderEntityLinker.segments(verse.text, entities: context.entities)
                     }
                 }
+                return .none
+            case .studyChapter(let reference):
+                guard let verse = state.chapters[ReaderCanon.key(reference)]?.first else { return .none }
+                state.study = VerseStudyFeature.State(passage: verse, annotation: nil,
+                    context: state.contexts[ReaderCanon.key(reference)], chapterGuide: true)
                 return .none
             case .studyVerse(let reference, let number, let ids):
                 guard let verse = state.chapters[ReaderCanon.key(reference)]?.first(where: { $0.verseStart == number }) else { return .none }

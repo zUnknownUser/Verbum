@@ -176,6 +176,9 @@ private data class ReaderItem(val key:String,val reference:PassageReference,val 
                     Text(BibleBook.book(item.reference.bookId)?.localizedName ?: item.reference.bookId,style=VerbumTypography.overline,color=MaterialTheme.colorScheme.primary)
                     Text(item.reference.chapter.toString(),style=VerbumTypography.chapterNumeral)
                     Spacer(Modifier.height(Spacing.md));HorizontalDivider(Modifier.width(28.dp),color=MaterialTheme.colorScheme.primary)
+                    TextButton(onClick={send(Action.StudyChapter(item.reference))},enabled=!state.chapters[ReaderCanon.key(item.reference)].isNullOrEmpty()) {
+                        Text(stringResource(R.string.reader_study_chapter),style=MaterialTheme.typography.labelMedium)
+                    }
                 }
                 item.verse!=null -> ReaderVerse(item.verse,state,send)
                 item.footer -> {

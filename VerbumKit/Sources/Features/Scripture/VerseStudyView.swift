@@ -15,11 +15,11 @@ struct VerseStudyView: View {
                 }
                 Text(store.reference.formatted).font(Typography.navigationSerif)
                 Spacer()
-                Button { store.send(.bookmarkToggled) } label: {
+                if !store.chapterGuide && store.previewReference == nil { Button { store.send(.bookmarkToggled) } label: {
                     Image(systemName: store.annotation.bookmarked == true ? "bookmark.fill" : "bookmark")
                 }
                 .accessibilityLabel(AccountCopy.text(store.annotation.bookmarked == true ? "removeBookmark" : "savePassage"))
-                .disabled(store.saving)
+                .disabled(store.saving) }
                 Button(L10n.t("Done")) { store.send(.done) }.disabled(store.saving)
             }.padding(.horizontal, Spacing.lg).padding(.top, Spacing.xl).padding(.bottom, Spacing.md)
             if let ask = store.scope(state: \.ask, action: \.ask) {
@@ -27,11 +27,16 @@ struct VerseStudyView: View {
             } else {
                 ScrollView {
                     VStack(alignment: .leading, spacing: Spacing.lg) {
-                        Text(store.text).font(Typography.scripture).lineLimit(4)
-                            .foregroundStyle(Palette.ink).textSelection(.enabled)
+                        if store.previewReference != nil {
+                            passagePreview
+                        } else {
+                        if store.chapterGuide {
+                            Text(StudyGuideCopy.introduction).font(Typography.subheadline).foregroundStyle(Palette.inkSecondary)
+                        } else { Text(store.text).font(Typography.scripture).lineLimit(4)
+                            .foregroundStyle(Palette.ink).textSelection(.enabled) }
                         ScrollView(.horizontal) {
                             HStack(spacing: Spacing.md) {
-                                ForEach(VerseStudyFeature.Tab.allCases, id: \.self) { tab in
+                                ForEach(store.tabs, id: \.self) { tab in
                                     Button { store.send(.tabChanged(tab)) } label: {
                                         VStack(spacing: Spacing.xs) {
                                             Image(systemName: symbol(tab)).font(.system(size: 17, weight: .regular))
@@ -44,11 +49,12 @@ struct VerseStudyView: View {
                         }.scrollIndicators(.hidden)
                         Divider().overlay(Palette.rule)
                         content
+                        }
                     }
                     .frame(maxWidth: Spacing.readingMaxWidth, alignment: .leading)
                     .frame(maxWidth: .infinity)
                     .padding(.horizontal, Spacing.lg).padding(.bottom, Spacing.xxl)
-                }
+                }.id(store.previewReference)
             }
         }
         .foregroundStyle(Palette.ink).tint(Palette.accent)
@@ -107,17 +113,25 @@ struct VerseStudyView: View {
                 if let summary = detail.entity.summary { Text(summary).font(Typography.scripture) }
                 if let role = detail.role { Text(role).font(Typography.subheadline) }
                 if let dates = detail.approximateDates { Text(dates).font(Typography.footnote) }
-                ForEach(detail.keyPassages, id: \.self) { passage($0) }
+                referenceList
                 sources(detail.sources)
+            } else if store.entityFailed {
+                Button { store.send(.closeEntity) } label: { Label(StudyGuideCopy.back, systemImage: "chevron.left") }
+                Text(L10n.t("Could not load this study layer.")).font(Typography.subheadline)
+                Button(L10n.t("Try Again")) { store.send(.retryEntity) }
             } else if !store.candidates.isEmpty {
                 Text(L10n.t("People and places in this chapter")).font(Typography.editorialHeadline)
-                ForEach(store.candidates) { entity in entityButton(entity) }
+                resourceBrowser
             } else {
                 Text(L10n.t("Chapter context")).font(Typography.editorialHeadline)
-                Text(L10n.t("Connections documented for this chapter; not every link is a direct parallel to this verse.")).font(Typography.footnote).foregroundStyle(Palette.inkSecondary)
+                Text(store.chapterGuide ? StudyGuideCopy.chapterScope : L10n.t("Connections documented for this chapter; not every link is a direct parallel to this verse.")).font(Typography.footnote).foregroundStyle(Palette.inkSecondary)
                 if store.contextLoading { ProgressView() }
                 else if let context = store.context {
-                    ForEach(context.entities.prefix(24)) { entity in entityButton(entity) }
+                    if store.resourceTypes.isEmpty {
+                        Text(L10n.t("No sourced context is available for this passage yet.")).font(Typography.subheadline)
+                    } else {
+                        resourceBrowser
+                    }
                     sources(context.sources)
                 } else if store.contextFailed || store.entityFailed { retry(.context) }
                 else { Text(L10n.t("No sourced context is available for this passage yet.")).font(Typography.subheadline) }
@@ -127,7 +141,7 @@ struct VerseStudyView: View {
             if store.contextLoading { ProgressView() }
             else if let context = store.context, !context.relatedPassages.isEmpty {
                 Text(L10n.t("Related passages from the chapter’s documented connections.")).font(Typography.footnote)
-                ForEach(context.relatedPassages, id: \.self) { passage($0) }
+                referenceList
                 sources(context.sources)
             } else if store.contextFailed { retry(.references) }
             else { Text(L10n.t("No sourced references are available here yet.")).font(Typography.subheadline) }
@@ -139,6 +153,59 @@ struct VerseStudyView: View {
             Text(L10n.t("The answer will use this passage and show its biblical references. Your note is never included.")).font(Typography.footnote).foregroundStyle(Palette.inkSecondary)
             Button(L10n.t("Ask about this passage")) { store.send(.submitQuestion) }
                 .disabled(store.question.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+        }
+    }
+    private var resourceBrowser: some View {
+        VStack(alignment: .leading, spacing: Spacing.md) {
+            ScrollView(.horizontal) {
+                HStack(spacing: Spacing.sm) {
+                    ForEach(store.resourceTypes, id: \.self) { type in
+                        let count = store.resourceEntities.filter { $0.type == type }.count
+                        Button { store.send(.categoryChanged(type)) } label: {
+                            Text(verbatim: "\(StudyGuideCopy.category(type)) · \(count)")
+                                .font(Typography.footnote).padding(.horizontal, Spacing.md).padding(.vertical, Spacing.sm)
+                                .frame(minHeight: 44)
+                                .foregroundStyle(store.activeType == type ? Palette.accent : Palette.inkSecondary)
+                                .background(store.activeType == type ? Palette.accent.opacity(0.10) : Palette.paper.opacity(0.5), in: Capsule())
+                        }.buttonStyle(.plain).accessibilityAddTraits(store.activeType == type ? .isSelected : [])
+                    }
+                }
+            }.scrollIndicators(.hidden)
+            ForEach(store.visibleEntities) { entity in entityButton(entity) }
+            HStack {
+                Text(StudyGuideCopy.count(store.visibleEntities.count, of: store.filteredEntities.count))
+                    .font(Typography.caption).foregroundStyle(Palette.inkSecondary)
+                Spacer()
+                if store.visibleEntities.count < store.filteredEntities.count {
+                    Button(StudyGuideCopy.showMore) { store.send(.moreEntities) }.font(Typography.footnote)
+                }
+            }
+        }
+    }
+    private var referenceList: some View {
+        VStack(alignment: .leading, spacing: Spacing.sm) {
+            ForEach(Array(store.studyReferences.prefix(store.referenceLimit)), id: \.self) { passage($0) }
+            if store.studyReferences.count > store.referenceLimit {
+                Button(StudyGuideCopy.showMore) { store.send(.moreReferences) }.font(Typography.footnote)
+            }
+        }
+    }
+    @ViewBuilder private var passagePreview: some View {
+        Button { store.send(.closePreview) } label: { Label(StudyGuideCopy.back, systemImage: "chevron.left") }
+            .font(Typography.footnote)
+        if let reference = store.previewReference {
+            Text(reference.formatted).font(Typography.editorialTitle)
+            if store.previewLoading { ProgressView() }
+            else if let passage = store.preview {
+                Text(HelloAOTranslation.name(for: passage.translationId)).font(Typography.caption).foregroundStyle(Palette.inkSecondary)
+                Text(passage.text).font(Typography.scripture).textSelection(.enabled)
+                Button(StudyGuideCopy.openReader) { store.send(.passageTapped(reference)) }.disabled(store.saving)
+                saveStatus
+            } else if let error = store.previewError {
+                Text(error.title).font(Typography.editorialHeadline)
+                Text(error.message).font(Typography.subheadline).foregroundStyle(Palette.inkSecondary)
+                Button(L10n.t("Try Again")) { store.send(.previewPassage(reference)) }
+            }
         }
     }
     @ViewBuilder private var saveStatus: some View {
@@ -161,7 +228,7 @@ struct VerseStudyView: View {
         }.buttonStyle(.plain)
     }
     private func passage(_ reference: PassageReference) -> some View {
-        Button { store.send(.passageTapped(reference)) } label: {
+        Button { store.send(.previewPassage(reference)) } label: {
             Label(reference.formatted, systemImage: "arrow.turn.down.right").font(Typography.navigationSerif)
         }
     }
