@@ -60,4 +60,25 @@ Both app builds passed. Android: 216 tests passed (122 feature, 94 client).
 iOS: 13 feature/model tests and 1 entity-detail contract test passed. The legacy
 contract test now explicitly requests English, matching its English fixture and the
 API language parameter independently of simulator language. Existing iOS localization
-edits are preserved outside this commit. Production verification follows deployment.
+edits are preserved outside this commit.
+
+Local end-to-end checks confirmed all 16 ordered IDs, previous/next boundaries and
+readings in EN/PT-BR, with 98 timeline entries and 137 canonical events. iOS's Portuguese
+study page was visually checked. Android checks exercised narrative list → first study
+→ next → previous, switching to alphabetical order, and the final event's endpoint
+message without a Next link. Normal production builds were restored after preview.
+
+Production release:
+- Code pushed to main: `09caf47`.
+- Railway deployment `cb8500e4-0e7e-4d37-929b-37e01deccb7e`: SUCCESS.
+- Published bundle hash: `26fc1ae359c0e607be0a204d20f186bbbdafd07ed8569ab075e53313a42fdf52`.
+- Remote verification passed in EN and PT-BR: exact 16-event narrative order across
+  7-item test pages, all localized titles, previous/next boundaries, chapter readings,
+  consistent Exodus timeline order, 98 timeline rows and 137 unique event entities.
+- Owner-only prepublication backup:
+  `pipeline/work/backups/exodus-sequence-2026-10-12-before.json` (gitignored).
+- Git authentication was restored by Lucas before push; production was updated only
+  after the tested commit reached main. Temporary local QA resources were stopped.
+
+This feature is complete. No further catalogue growth or period sequences are started
+as part of this release.
