@@ -29,6 +29,29 @@ import Models
         #expect(try await live.entity(id: "fixture.person.david") == GraphClient.fixtures.entity(id: "fixture.person.david"))
     }
 
+    @Test(arguments: [BookLanguage.english, .portuguese])
+    func exodusProfilesUseExistingDetailContract(language: BookLanguage) async throws {
+        let suffix = language == .portuguese ? "pt" : "en"
+        for (slug, id, en, pt) in [
+            ("aaron", "step.person.H0175", "Aaron", "Arão"),
+            ("nebo", "step.place.H5015H", "Mount Nebo", "Monte Nebo")
+        ] {
+            let api = Self.api("entities/\(slug).\(suffix).json", at: "/v1/entities/\(id)", query: "lang=\(suffix)")
+            let detail = try await api.entityDetail(id, language: language)
+            #expect(detail.entity.id == id)
+            #expect(detail.entity.name == (language == .portuguese ? pt : en))
+            #expect(detail.entity.summary?.contains("\n\n") == true)
+            #expect(detail.role != nil)
+            #expect(detail.approximateDates == nil && detail.modernGeography == nil)
+            #expect(detail.keyPassages.first == (slug == "aaron"
+                ? .init(bookId: "Exod", chapter: 7, verses: 1...13)
+                : .init(bookId: "Deut", chapter: 34, verses: 1...4)))
+            #expect(detail.sources.contains { $0.id == "editorial.profiles.exodus.2026-10" })
+            #expect(detail.sources.filter { $0.id.hasPrefix("study.scripture.") }.allSatisfy { $0.webURL != nil })
+            #expect(detail.eventSequence == nil && detail.originalTerm == nil)
+        }
+    }
+
     @Test func entityList() async throws {
         let live = GraphClient.live(api: Self.api("entities/people.json", at: "/v1/entities", query: "type=person&lang=en"), language: .english)
         let expected = try await GraphClient.fixtures.entities(type: .person)

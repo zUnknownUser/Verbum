@@ -1,0 +1,71 @@
+{
+  "entity": {
+    "id": "step.person.H0175",
+    "type": "person",
+    "name": "Arão",
+    "summary": "Arão acompanha Moisés diante do faraó e fala na função que lhe é atribuída. O sinal da vara introduz o confronto com a corte. Ele participa da missão, mas não é a origem da autoridade que anunciam.\n\nCom Hur, sustenta as mãos de Moisés durante a batalha contra Amaleque. Contudo, no episódio do bezerro de ouro, recebe o ouro do povo, faz o bezerro e constrói um altar. O contraste impede que sua liderança seja lida como um modelo de fidelidade sem falhas.\n\nAs instruções para instalar o santuário incluem lavar, vestir e ungir Arão para o serviço sacerdotal. Sua nomeação e sua falha pertencem à mesma narrativa; uma não deve apagar a outra.",
+    "nameLanguage": "pt-BR"
+  },
+  "aliases": [],
+  "role": "Irmão de Moisés, porta-voz e sacerdote",
+  "approximateDates": null,
+  "modernGeography": null,
+  "keyPassages": [
+    {
+      "bookId": "Exod",
+      "chapter": 7,
+      "verseStart": 1,
+      "verseEnd": 13
+    },
+    {
+      "bookId": "Exod",
+      "chapter": 17,
+      "verseStart": 8,
+      "verseEnd": 13
+    },
+    {
+      "bookId": "Exod",
+      "chapter": 32,
+      "verseStart": 1,
+      "verseEnd": 6
+    },
+    {
+      "bookId": "Exod",
+      "chapter": 40,
+      "verseStart": 12,
+      "verseEnd": 16
+    }
+  ],
+  "sources": [
+    {
+      "id": "editorial.profiles.exodus.2026-10",
+      "citation": "Verbum · Exodus people and places / Pessoas e lugares do Êxodo · 2026-10",
+      "url": null
+    },
+    {
+      "id": "step.TIPNR",
+      "citation": "STEP TIPNR · CC BY 4.0",
+      "url": null
+    },
+    {
+      "id": "study.scripture.Exod.32",
+      "citation": "Exodus 32 · World English Bible",
+      "url": "https://ebible.org/engwebp/EXO32.htm"
+    },
+    {
+      "id": "study.scripture.Exod.7",
+      "citation": "Exodus 7 · World English Bible",
+      "url": "https://ebible.org/engwebp/EXO07.htm"
+    },
+    {
+      "id": "study.scripture.Exod.17",
+      "citation": "Exodus 17 · World English Bible",
+      "url": "https://ebible.org/engwebp/EXO17.htm"
+    },
+    {
+      "id": "study.scripture.Exod.40",
+      "citation": "Exodus 40 · World English Bible",
+      "url": "https://ebible.org/engwebp/EXO40.htm"
+    }
+  ]
+}

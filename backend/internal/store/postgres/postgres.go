@@ -60,7 +60,8 @@ func localizedEntityJSON(parameter string) string {
 	fallback := `CASE WHEN ` + parameter + `='en' THEN '{}'::jsonb ELSE jsonb_build_object(
  'name',CASE WHEN e.type='originalTerm' THEN e.name ELSE 'Nome em tradução' END,
  'summary',NULL,'nameLanguage','pt-BR') END`
-	return `(` + entityJSON + ` || COALESCE(` + choice + `,` + fallback + `))`
+	profile := `(SELECT jsonb_build_object('name',ep.presentations->` + parameter + `->>'name','summary',ep.presentations->` + parameter + `->>'summary','nameLanguage',` + parameter + `::text) FROM entity_profiles ep WHERE ep.entity_id=e.id AND ep.presentations ? ` + parameter + `)`
+	return `(` + entityJSON + ` || COALESCE(` + profile + `,` + choice + `,` + fallback + `))`
 }
 
 func localizedSourceJSON(parameter string) string {
@@ -87,6 +88,9 @@ func (s *Store) Entities(ctx context.Context, kind domain.EntityType) ([]domain.
 const structuredMatch = `(
  EXISTS (SELECT 1 FROM entity_localizations l WHERE l.entity_id=e.id AND
  (strpos(lower(l.name),$1)>0 OR EXISTS (SELECT 1 FROM unnest(l.aliases) a WHERE strpos(lower(a),$1)>0)))
+ OR EXISTS (SELECT 1 FROM entity_profiles ep CROSS JOIN LATERAL jsonb_each(ep.presentations) p
+ WHERE ep.entity_id=e.id AND (strpos(lower(p.value->>'name'),$1)>0 OR
+ EXISTS (SELECT 1 FROM jsonb_array_elements_text(p.value->'aliases') a WHERE strpos(lower(a),$1)>0)))
  OR EXISTS (SELECT 1 FROM entity_source_records sr WHERE sr.entity_id=e.id AND
  EXISTS (SELECT 1 FROM jsonb_each(sr.identifiers) kv, jsonb_array_elements_text(kv.value) v
  WHERE lower(v)=$1)))`
@@ -190,14 +194,21 @@ func (s *Store) Detail(ctx context.Context, id string) (domain.EntityDetail, err
  'next',(SELECT `+localizedEntityJSON("$2")+` FROM event_sequence_items x JOIN entities e ON e.id=x.entity_id WHERE x.era_id=si.era_id AND x.position=si.position+1))
  FROM event_sequence_items si JOIN event_sequences seq ON seq.era_id=si.era_id WHERE si.entity_id=e.id),
  'originalTerm',(SELECT jsonb_build_object('language',r.lexical->>'language','transliteration',r.lexical->>'transliteration','strong',r.lexical->>'extendedStrong') FROM entity_source_records r WHERE r.entity_id=e.id AND r.lexical IS NOT NULL ORDER BY r.id LIMIT 1),
- 'aliases',COALESCE((SELECT to_jsonb(l.aliases) FROM entity_localizations l WHERE l.entity_id=e.id AND l.language=$2 ORDER BY (l.source_id LIKE 'step.%'),l.source_id LIMIT 1),
+ 'aliases',COALESCE(ep.body->'aliases',(SELECT to_jsonb(l.aliases) FROM entity_localizations l WHERE l.entity_id=e.id AND l.language=$2 ORDER BY (l.source_id LIKE 'step.%'),l.source_id LIMIT 1),
  (SELECT jsonb_agg(a.alias ORDER BY a.position,a.alias) FROM entity_aliases a WHERE a.entity_id=e.id AND $2='en'),'[]'::jsonb),
- 'approximateDates',COALESCE(dl.fields->>'approximateDates',CASE WHEN $2='en' THEN d.approximate_dates END),
- 'role',COALESCE(dl.fields->>'role',CASE WHEN $2='en' THEN d.role END),'modernGeography',COALESCE(dl.fields->>'modernGeography',CASE WHEN $2='en' THEN d.modern_geography END),
- 'keyPassages',COALESCE((SELECT jsonb_agg(`+passageJSON+` ORDER BY p.position) FROM entity_key_passages p WHERE p.entity_id=e.id),'[]'::jsonb),
+ 'approximateDates',CASE WHEN ep.body IS NULL THEN COALESCE(dl.fields->>'approximateDates',CASE WHEN $2='en' THEN d.approximate_dates END) END,
+ 'role',COALESCE(ep.body->>'role',dl.fields->>'role',CASE WHEN $2='en' THEN d.role END),'modernGeography',CASE WHEN ep.body IS NOT NULL THEN ep.body->>'modernGeography' ELSE COALESCE(dl.fields->>'modernGeography',CASE WHEN $2='en' THEN d.modern_geography END) END,
+ 'keyPassages',COALESCE((SELECT jsonb_agg(`+passageJSON+` ORDER BY p.priority,p.position) FROM (
+ SELECT p.*,0 priority FROM entity_profile_passages p WHERE p.entity_id=e.id AND ep.body IS NOT NULL
+ UNION ALL SELECT p.*,1 priority FROM entity_key_passages p WHERE p.entity_id=e.id AND NOT EXISTS (
+ SELECT 1 FROM entity_profile_passages x WHERE x.entity_id=e.id AND ep.body IS NOT NULL AND
+ (x.book_id,x.chapter,x.verse_start,x.verse_end) IS NOT DISTINCT FROM (p.book_id,p.chapter,p.verse_start,p.verse_end))
+ ) p),'[]'::jsonb),
  'sources',COALESCE((SELECT jsonb_agg(`+localizedSourceJSON("$2")+` ORDER BY s.position,s.id) FROM sources s WHERE s.id IN (
  SELECT ds.source_id FROM entity_detail_sources ds WHERE ds.entity_id=e.id
  UNION SELECT es.source_id FROM entity_sources es WHERE es.entity_id=e.id
+ UNION SELECT ps.source_id FROM entity_profile_sources ps WHERE ps.entity_id=e.id AND ep.body IS NOT NULL
+ UNION SELECT rs.source_id FROM relationship_sources rs JOIN relationships r ON r.id=rs.relationship_id WHERE ep.body IS NOT NULL AND (r.source_entity_id=e.id OR r.target_entity_id=e.id)
  UNION SELECT sr.source_id FROM entity_source_records sr WHERE sr.entity_id=e.id
  UNION SELECT (SELECT l.source_id FROM entity_localizations l WHERE l.entity_id=e.id AND l.language=$2 ORDER BY (l.source_id LIKE 'step.%'),l.source_id LIMIT 1))),
  '[]'::jsonb),
@@ -212,6 +223,7 @@ func (s *Store) Detail(ctx context.Context, id string) (domain.EntityDetail, err
  ORDER BY sr.id) FROM entity_source_records sr JOIN source_datasets ds
  ON ds.source_id=sr.source_id AND ds.revision=sr.revision WHERE sr.entity_id=e.id))
  FROM entities e LEFT JOIN entity_details d ON d.entity_id=e.id
+ LEFT JOIN LATERAL (SELECT presentations->$2 body FROM entity_profiles WHERE entity_id=e.id AND presentations ? $2) ep ON true
  LEFT JOIN LATERAL (SELECT fields FROM entity_localizations l WHERE l.entity_id=e.id AND l.language=$2
  ORDER BY (l.source_id LIKE 'step.%'),l.source_id LIMIT 1) dl ON true WHERE e.id=$1`, id, store.Language(ctx))
 }

@@ -1,0 +1,895 @@
+{
+  "version": 1,
+  "bundleHash": "800e1c40dafbb8954c7882b7bcde118c01da18ba8ab2aeae078a67620943c9ba",
+  "items": [
+    {
+      "key": "sources:editorial.profiles.exodus.2026-10",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Exod.2",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Exod.3",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Exod.14",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Exod.32",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Deut.34",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Exod.7",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Exod.17",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Exod.40",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Exod.15",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Num.26",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Exod.18",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Num.13",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Num.14",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Exod.24",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Num.22",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Exod.1",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Exod.9",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Exod.10",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Exod.12",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Exod.19",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Exod.20",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Exod.16",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Deut.1",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Num.21",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.relatedTo.step.person.H0175",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.relatedTo.step.person.H4813G",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.relatedTo.step.person.H3503",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.relatedTo.step.person.H6855",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.relatedTo.step.person.H1647G",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.relatedTo.step.person.H0461H",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.relatedTo.step.person.H3091G",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.relatedTo.step.person.H2354G",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.relatedTo.step.person.H6547I",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.relatedTo.step.person.H6547J",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.relatedTo.step.person.H6547O",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H3091G.relatedTo.step.person.H3612G",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H1109A.relatedTo.step.person.H1111",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H3503.relatedTo.step.person.H6855",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H1647G.relatedTo.step.person.H6855",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H0461H.relatedTo.step.person.H6855",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H0461H.relatedTo.step.person.H1647G",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H0175.relatedTo.step.person.H2354G",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.participatesIn.editorial.event.moses-born",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.participatesIn.editorial.event.burning-bush",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.participatesIn.editorial.event.plagues",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.participatesIn.editorial.event.passover",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.participatesIn.fixture.event.exodus",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.participatesIn.editorial.event.marah",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.participatesIn.editorial.event.manna",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.participatesIn.editorial.event.amalek",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.participatesIn.editorial.event.jethro",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.participatesIn.editorial.event.sinai",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.participatesIn.editorial.event.golden-calf",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.participatesIn.editorial.event.tabernacle",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.participatesIn.editorial.event.spies",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.participatesIn.editorial.event.bronze-serpent",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.participatesIn.editorial.event.moses-farewell",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H0175.participatesIn.editorial.event.plagues",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H0175.participatesIn.editorial.event.golden-calf",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H0175.participatesIn.editorial.event.tabernacle",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H4813G.participatesIn.fixture.event.exodus",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H3503.participatesIn.editorial.event.jethro",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H6855.participatesIn.editorial.event.jethro",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H1647G.participatesIn.editorial.event.jethro",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H0461H.participatesIn.editorial.event.jethro",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H3091G.participatesIn.editorial.event.amalek",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H3091G.participatesIn.editorial.event.spies",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H3091G.participatesIn.editorial.event.moses-farewell",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H3612G.participatesIn.editorial.event.spies",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H2354G.participatesIn.editorial.event.amalek",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H1109A.participatesIn.editorial.event.balaam",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H1111.participatesIn.editorial.event.balaam",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H6547I.participatesIn.editorial.event.moses-born",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H6547J.participatesIn.editorial.event.plagues",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H6547O.participatesIn.editorial.event.moses-born",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.editorial.event.moses-born.occursAt.fixture.place.egypt",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.editorial.event.plagues.occursAt.fixture.place.egypt",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.editorial.event.passover.occursAt.fixture.place.egypt",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.editorial.event.burning-bush.occursAt.step.place.H5514G",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.editorial.event.sinai.occursAt.step.place.H5514G",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.event.exodus.occursAt.step.place.H5488G",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.editorial.event.marah.occursAt.step.place.H4785",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.editorial.event.manna.occursAt.step.place.H5512B",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.editorial.event.amalek.occursAt.step.place.H7508",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.editorial.event.spies.occursAt.step.place.H6290G",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.editorial.event.spies.occursAt.step.place.H6946G",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.editorial.event.spies.occursAt.step.place.H3667A",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.editorial.event.balaam.occursAt.step.place.H4124G",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.editorial.event.moses-farewell.occursAt.step.place.H4124G",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.editorial.event.moses-farewell.occursAt.step.place.H5015H",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.relatedTo.step.place.H4080H",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.step.person.H3503.relatedTo.step.place.H4080H",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.relatedTo.step.place.H0362",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.relatedTo.step.place.H2809",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.profile.fixture.person.moses.relatedTo.step.place.H1316",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "dailyVersePool",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:fixture.person.moses",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.person.H0175",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.person.H4813G",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.person.H3503",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.person.H6855",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.person.H1647G",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.person.H0461H",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.person.H3091G",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.person.H3612G",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.person.H2354G",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.person.H1109A",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.person.H1111",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.person.H6547I",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.person.H6547J",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.person.H6547O",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:fixture.place.egypt",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.place.H4080H",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.place.H5514G",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.place.H5488G",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.place.H4785",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.place.H0362",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.place.H5512B",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.place.H7508",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.place.H6290G",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.place.H6946G",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.place.H3667A",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.place.H4124G",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.place.H5015H",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.place.H2809",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    },
+    {
+      "key": "entityProfile:step.place.H1316",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:12:48Z",
+      "note": "Original EN/PT-BR paraphrases checked against cited WEB passages and the existing STEP identity map. Technical publication tests are separate. This is delegated AI review, not independent human or theological review."
+    }
+  ]
+}

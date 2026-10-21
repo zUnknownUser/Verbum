@@ -1,0 +1,46 @@
+{
+  "entity": {
+    "id": "step.place.H5015H",
+    "type": "place",
+    "name": "Monte Nebo",
+    "summary": "Moisés vai das campinas de Moabe ao monte Nebo, ao cume de Pisga diante de Jericó. Deus lhe mostra a terra associada à promessa aos antepassados, dizendo que ele não passará para ela. A visão encerra sua jornada sem narrar a entrada posterior de Israel.\n\nOs versículos seguintes relatam sua morte, o lugar desconhecido da sepultura e a sucessão de Josué. Nebo é o monte dessa cena, não uma das cidades de mesmo nome. A relação entre Nebo e Pisga apresentada no texto é preservada, sem convertê-la em um mapa moderno medido nem identificar a sepultura de Moisés.",
+    "nameLanguage": "pt-BR"
+  },
+  "aliases": [
+    "Nebo"
+  ],
+  "role": "Monte da última visão de Moisés sobre a terra",
+  "approximateDates": null,
+  "modernGeography": null,
+  "keyPassages": [
+    {
+      "bookId": "Deut",
+      "chapter": 34,
+      "verseStart": 1,
+      "verseEnd": 4
+    },
+    {
+      "bookId": "Deut",
+      "chapter": 34,
+      "verseStart": 5,
+      "verseEnd": 12
+    }
+  ],
+  "sources": [
+    {
+      "id": "editorial.profiles.exodus.2026-10",
+      "citation": "Verbum · Exodus people and places / Pessoas e lugares do Êxodo · 2026-10",
+      "url": null
+    },
+    {
+      "id": "step.TIPNR",
+      "citation": "STEP TIPNR · CC BY 4.0",
+      "url": null
+    },
+    {
+      "id": "study.scripture.Deut.34",
+      "citation": "Deuteronomy 34 · World English Bible",
+      "url": "https://ebible.org/engwebp/DEU34.htm"
+    }
+  ]
+}

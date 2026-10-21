@@ -371,8 +371,30 @@ class ChapterStudy(Model):
     previousHash: Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")] | None = None
 
 
+class EntityProfilePresentation(Model):
+    name: Text
+    aliases: list[Text]
+    summary: Text
+    role: Text
+    modernGeography: Text | None = None
+
+
+class EntityProfile(Model):
+    entityId: Text
+    type: Literal["person", "place"]
+    # Exact existing STEP identity, not a match by display name.
+    recordId: Text
+    externalId: Text
+    uniqueName: Text
+    presentations: dict[str, EntityProfilePresentation]
+    keyPassages: Annotated[list[Reference], Field(min_length=1, max_length=8)]
+    sourceReferenceIds: Annotated[list[Text], Field(min_length=2)]
+    previousHash: Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")] | None = None
+
+
 class Bundle(Model):
-    version: Literal[1, 2, 3, 4, 5, 6, 7, 8] = 1
+    version: Literal[1, 2, 3, 4, 5, 6, 7, 8, 9] = 1
+    entityProfiles: list[EntityProfile] | None = None
     chapterStudies: list[ChapterStudy] | None = None
     eventSequences: list[EventSequence] | None = None
     eventCatalog: EventCatalog | None = None
@@ -390,6 +412,8 @@ class Bundle(Model):
     @model_serializer(mode="wrap")
     def serialize_bundle(self, handler):
         value = handler(self)
+        if self.version != 9:
+            value.pop("entityProfiles", None)
         if self.version != 8:
             value.pop("chapterStudies", None)
         if self.version != 6:
@@ -408,6 +432,40 @@ class Bundle(Model):
 
     @model_validator(mode="after")
     def evidence(self) -> Self:
+        if (self.version == 9) != (self.entityProfiles is not None):
+            raise ValueError("version 9 requires entity profiles")
+        if self.entityProfiles is not None:
+            if self.kind != "editorial" or not self.entityProfiles or any((
+                self.content.entities, self.content.details, self.content.timeline,
+                self.content.dailyVersePool,
+            )):
+                raise ValueError("profile batches only enrich existing people and places")
+            unique([p.entityId for p in self.entityProfiles], "entity profiles")
+            unique([p.recordId for p in self.entityProfiles], "profile identities")
+            ids = {p.entityId for p in self.entityProfiles}
+            sources = {s.id for s in self.content.sources}
+            if not ids <= set(self.content.referencedEntityIds):
+                raise ValueError("profiles require existing entity bindings")
+            for profile in self.entityProfiles:
+                if set(profile.presentations) != {"en", "pt-BR"}:
+                    raise ValueError("profiles require both languages")
+                unique(profile.sourceReferenceIds, "profile sources")
+                unique([str(r.model_dump()) for r in profile.keyPassages], "profile readings")
+                if not set(profile.sourceReferenceIds) <= sources:
+                    raise ValueError("unknown profile source")
+                for presentation in profile.presentations.values():
+                    unique(presentation.aliases, "profile aliases")
+                    if profile.type == "person" and presentation.modernGeography is not None:
+                        raise ValueError("people cannot have modern geography")
+            unique([
+                str((r.type, sorted([r.sourceId, r.targetId]) if r.type == "relatedTo"
+                     else [r.sourceId, r.targetId])) for r in self.content.relationships
+            ], "profile connections")
+            for relationship in self.content.relationships:
+                if not ({relationship.sourceId, relationship.targetId} & ids):
+                    raise ValueError("profile links must touch a curated profile")
+                if relationship.type not in ("relatedTo", "participatesIn", "occursAt"):
+                    raise ValueError("unsupported profile relationship")
         if (self.version == 8) != (self.chapterStudies is not None):
             raise ValueError("version 8 requires chapter studies")
         if self.chapterStudies is not None:
@@ -486,7 +544,7 @@ class Bundle(Model):
                 raise ValueError("timeline binding references an unknown event")
         if (self.version in (5, 7)) != (self.timelineDiscovery is not None):
             raise ValueError("version 5 requires timeline discovery")
-        if self.content.referencedEntityIds and self.version not in (5, 6, 7):
+        if self.content.referencedEntityIds and self.version not in (5, 6, 7, 9):
             raise ValueError("external graph links require version 5 or 6")
         if self.timelineDiscovery is not None:
             if self.kind != "editorial" or self.content.entities or self.content.relationships or self.content.details or self.content.dailyVersePool:

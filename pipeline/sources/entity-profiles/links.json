@@ -1,0 +1,574 @@
+[
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "step.person.H0175",
+    "type": "relatedTo",
+    "references": [
+      "Exod.7.1-13"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "step.person.H4813G",
+    "type": "relatedTo",
+    "references": [
+      "Num.26.59"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "step.person.H3503",
+    "type": "relatedTo",
+    "references": [
+      "Exod.18.1-27"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "step.person.H6855",
+    "type": "relatedTo",
+    "references": [
+      "Exod.2.21-22"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "step.person.H1647G",
+    "type": "relatedTo",
+    "references": [
+      "Exod.2.21-22"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "step.person.H0461H",
+    "type": "relatedTo",
+    "references": [
+      "Exod.18.2-6"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "step.person.H3091G",
+    "type": "relatedTo",
+    "references": [
+      "Deut.34.9"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "step.person.H2354G",
+    "type": "relatedTo",
+    "references": [
+      "Exod.17.10-12"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "step.person.H6547I",
+    "type": "relatedTo",
+    "references": [
+      "Exod.2.15"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "step.person.H6547J",
+    "type": "relatedTo",
+    "references": [
+      "Exod.7.1-13"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "step.person.H6547O",
+    "type": "relatedTo",
+    "references": [
+      "Exod.2.5-10"
+    ]
+  },
+  {
+    "sourceId": "step.person.H3091G",
+    "targetId": "step.person.H3612G",
+    "type": "relatedTo",
+    "references": [
+      "Num.14.6-9"
+    ]
+  },
+  {
+    "sourceId": "step.person.H1109A",
+    "targetId": "step.person.H1111",
+    "type": "relatedTo",
+    "references": [
+      "Num.22.36-41"
+    ]
+  },
+  {
+    "sourceId": "step.person.H3503",
+    "targetId": "step.person.H6855",
+    "type": "relatedTo",
+    "references": [
+      "Exod.18.1-6"
+    ]
+  },
+  {
+    "sourceId": "step.person.H1647G",
+    "targetId": "step.person.H6855",
+    "type": "relatedTo",
+    "references": [
+      "Exod.18.2-6"
+    ]
+  },
+  {
+    "sourceId": "step.person.H0461H",
+    "targetId": "step.person.H6855",
+    "type": "relatedTo",
+    "references": [
+      "Exod.18.2-6"
+    ]
+  },
+  {
+    "sourceId": "step.person.H0461H",
+    "targetId": "step.person.H1647G",
+    "type": "relatedTo",
+    "references": [
+      "Exod.18.2-6"
+    ]
+  },
+  {
+    "sourceId": "step.person.H0175",
+    "targetId": "step.person.H2354G",
+    "type": "relatedTo",
+    "references": [
+      "Exod.17.10-12"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "editorial.event.moses-born",
+    "type": "participatesIn",
+    "references": [
+      "Exod.2.1-10"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "editorial.event.burning-bush",
+    "type": "participatesIn",
+    "references": [
+      "Exod.3.1-15"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "editorial.event.plagues",
+    "type": "participatesIn",
+    "references": [
+      "Exod.7.1-13"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "editorial.event.passover",
+    "type": "participatesIn",
+    "references": [
+      "Exod.12.21-28"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "fixture.event.exodus",
+    "type": "participatesIn",
+    "references": [
+      "Exod.14.10-31"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "editorial.event.marah",
+    "type": "participatesIn",
+    "references": [
+      "Exod.15.22-26"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "editorial.event.manna",
+    "type": "participatesIn",
+    "references": [
+      "Exod.16.1-30"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "editorial.event.amalek",
+    "type": "participatesIn",
+    "references": [
+      "Exod.17.8-16"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "editorial.event.jethro",
+    "type": "participatesIn",
+    "references": [
+      "Exod.18.1-27"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "editorial.event.sinai",
+    "type": "participatesIn",
+    "references": [
+      "Exod.19.1-25"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "editorial.event.golden-calf",
+    "type": "participatesIn",
+    "references": [
+      "Exod.32.1-35"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "editorial.event.tabernacle",
+    "type": "participatesIn",
+    "references": [
+      "Exod.40.1-38"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "editorial.event.spies",
+    "type": "participatesIn",
+    "references": [
+      "Num.13.1-33"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "editorial.event.bronze-serpent",
+    "type": "participatesIn",
+    "references": [
+      "Num.21.4-9"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "editorial.event.moses-farewell",
+    "type": "participatesIn",
+    "references": [
+      "Deut.34.1-12"
+    ]
+  },
+  {
+    "sourceId": "step.person.H0175",
+    "targetId": "editorial.event.plagues",
+    "type": "participatesIn",
+    "references": [
+      "Exod.7.1-13"
+    ]
+  },
+  {
+    "sourceId": "step.person.H0175",
+    "targetId": "editorial.event.golden-calf",
+    "type": "participatesIn",
+    "references": [
+      "Exod.32.1-6"
+    ]
+  },
+  {
+    "sourceId": "step.person.H0175",
+    "targetId": "editorial.event.tabernacle",
+    "type": "participatesIn",
+    "references": [
+      "Exod.40.12-16"
+    ]
+  },
+  {
+    "sourceId": "step.person.H4813G",
+    "targetId": "fixture.event.exodus",
+    "type": "participatesIn",
+    "references": [
+      "Exod.15.19-21"
+    ]
+  },
+  {
+    "sourceId": "step.person.H3503",
+    "targetId": "editorial.event.jethro",
+    "type": "participatesIn",
+    "references": [
+      "Exod.18.1-27"
+    ]
+  },
+  {
+    "sourceId": "step.person.H6855",
+    "targetId": "editorial.event.jethro",
+    "type": "participatesIn",
+    "references": [
+      "Exod.18.1-6"
+    ]
+  },
+  {
+    "sourceId": "step.person.H1647G",
+    "targetId": "editorial.event.jethro",
+    "type": "participatesIn",
+    "references": [
+      "Exod.18.2-6"
+    ]
+  },
+  {
+    "sourceId": "step.person.H0461H",
+    "targetId": "editorial.event.jethro",
+    "type": "participatesIn",
+    "references": [
+      "Exod.18.2-6"
+    ]
+  },
+  {
+    "sourceId": "step.person.H3091G",
+    "targetId": "editorial.event.amalek",
+    "type": "participatesIn",
+    "references": [
+      "Exod.17.8-16"
+    ]
+  },
+  {
+    "sourceId": "step.person.H3091G",
+    "targetId": "editorial.event.spies",
+    "type": "participatesIn",
+    "references": [
+      "Num.14.6-9"
+    ]
+  },
+  {
+    "sourceId": "step.person.H3091G",
+    "targetId": "editorial.event.moses-farewell",
+    "type": "participatesIn",
+    "references": [
+      "Deut.34.9"
+    ]
+  },
+  {
+    "sourceId": "step.person.H3612G",
+    "targetId": "editorial.event.spies",
+    "type": "participatesIn",
+    "references": [
+      "Num.13.30",
+      "Num.14.6-9"
+    ]
+  },
+  {
+    "sourceId": "step.person.H2354G",
+    "targetId": "editorial.event.amalek",
+    "type": "participatesIn",
+    "references": [
+      "Exod.17.10-12"
+    ]
+  },
+  {
+    "sourceId": "step.person.H1109A",
+    "targetId": "editorial.event.balaam",
+    "type": "participatesIn",
+    "references": [
+      "Num.22.5-41"
+    ]
+  },
+  {
+    "sourceId": "step.person.H1111",
+    "targetId": "editorial.event.balaam",
+    "type": "participatesIn",
+    "references": [
+      "Num.22.1-41"
+    ]
+  },
+  {
+    "sourceId": "step.person.H6547I",
+    "targetId": "editorial.event.moses-born",
+    "type": "participatesIn",
+    "references": [
+      "Exod.2.1-10",
+      "Exod.1.22"
+    ]
+  },
+  {
+    "sourceId": "step.person.H6547J",
+    "targetId": "editorial.event.plagues",
+    "type": "participatesIn",
+    "references": [
+      "Exod.7.1-13"
+    ]
+  },
+  {
+    "sourceId": "step.person.H6547O",
+    "targetId": "editorial.event.moses-born",
+    "type": "participatesIn",
+    "references": [
+      "Exod.2.5-10"
+    ]
+  },
+  {
+    "sourceId": "editorial.event.moses-born",
+    "targetId": "fixture.place.egypt",
+    "type": "occursAt",
+    "references": [
+      "Exod.2.1-10"
+    ]
+  },
+  {
+    "sourceId": "editorial.event.plagues",
+    "targetId": "fixture.place.egypt",
+    "type": "occursAt",
+    "references": [
+      "Exod.7.1-25"
+    ]
+  },
+  {
+    "sourceId": "editorial.event.passover",
+    "targetId": "fixture.place.egypt",
+    "type": "occursAt",
+    "references": [
+      "Exod.12.1-42"
+    ]
+  },
+  {
+    "sourceId": "editorial.event.burning-bush",
+    "targetId": "step.place.H5514G",
+    "type": "occursAt",
+    "references": [
+      "Exod.3.1-12"
+    ]
+  },
+  {
+    "sourceId": "editorial.event.sinai",
+    "targetId": "step.place.H5514G",
+    "type": "occursAt",
+    "references": [
+      "Exod.19.1-25"
+    ]
+  },
+  {
+    "sourceId": "fixture.event.exodus",
+    "targetId": "step.place.H5488G",
+    "type": "occursAt",
+    "references": [
+      "Exod.14.10-31",
+      "Exod.15.4"
+    ]
+  },
+  {
+    "sourceId": "editorial.event.marah",
+    "targetId": "step.place.H4785",
+    "type": "occursAt",
+    "references": [
+      "Exod.15.22-26"
+    ]
+  },
+  {
+    "sourceId": "editorial.event.manna",
+    "targetId": "step.place.H5512B",
+    "type": "occursAt",
+    "references": [
+      "Exod.16.1-30"
+    ]
+  },
+  {
+    "sourceId": "editorial.event.amalek",
+    "targetId": "step.place.H7508",
+    "type": "occursAt",
+    "references": [
+      "Exod.17.8-16"
+    ]
+  },
+  {
+    "sourceId": "editorial.event.spies",
+    "targetId": "step.place.H6290G",
+    "type": "occursAt",
+    "references": [
+      "Num.13.1-3",
+      "Num.13.26"
+    ]
+  },
+  {
+    "sourceId": "editorial.event.spies",
+    "targetId": "step.place.H6946G",
+    "type": "occursAt",
+    "references": [
+      "Num.13.26"
+    ]
+  },
+  {
+    "sourceId": "editorial.event.spies",
+    "targetId": "step.place.H3667A",
+    "type": "occursAt",
+    "references": [
+      "Num.13.1-3"
+    ]
+  },
+  {
+    "sourceId": "editorial.event.balaam",
+    "targetId": "step.place.H4124G",
+    "type": "occursAt",
+    "references": [
+      "Num.22.1-7"
+    ]
+  },
+  {
+    "sourceId": "editorial.event.moses-farewell",
+    "targetId": "step.place.H4124G",
+    "type": "occursAt",
+    "references": [
+      "Deut.34.1-8"
+    ]
+  },
+  {
+    "sourceId": "editorial.event.moses-farewell",
+    "targetId": "step.place.H5015H",
+    "type": "occursAt",
+    "references": [
+      "Deut.34.1-4"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "step.place.H4080H",
+    "type": "relatedTo",
+    "references": [
+      "Exod.2.15-22"
+    ]
+  },
+  {
+    "sourceId": "step.person.H3503",
+    "targetId": "step.place.H4080H",
+    "type": "relatedTo",
+    "references": [
+      "Exod.3.1"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "step.place.H0362",
+    "type": "relatedTo",
+    "references": [
+      "Exod.15.22-27"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "step.place.H2809",
+    "type": "relatedTo",
+    "references": [
+      "Num.21.21-32"
+    ]
+  },
+  {
+    "sourceId": "fixture.person.moses",
+    "targetId": "step.place.H1316",
+    "type": "relatedTo",
+    "references": [
+      "Num.21.33-35"
+    ]
+  }
+]

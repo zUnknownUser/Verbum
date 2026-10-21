@@ -1,0 +1,624 @@
+[
+  {
+    "entityId": "fixture.person.moses",
+    "name": {
+      "en": "Moses",
+      "pt-BR": "Moisés"
+    },
+    "role": {
+      "en": "Prophet and leader in the departure from Egypt",
+      "pt-BR": "Profeta e líder na saída do Egito"
+    },
+    "aliases": {
+      "en": [],
+      "pt-BR": []
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Exod.2.1-25",
+          "Exod.3.1-15"
+        ],
+        "en": "Moses is the Hebrew child rescued and adopted by Pharaoh’s daughter. As an adult he kills an Egyptian who is beating a Hebrew and flees to Midian. At the burning bush, God calls him to return to Egypt and bring Israel out; the narrative includes his questions and reluctance, rather than presenting an effortless vocation.",
+        "pt-BR": "Moisés é o menino hebreu resgatado e adotado pela filha do faraó. Adulto, mata um egípcio que agride um hebreu e foge para Midiã. Na sarça ardente, Deus o chama a voltar ao Egito e tirar Israel de lá; o relato inclui suas perguntas e resistência, sem apresentar uma vocação fácil."
+      },
+      {
+        "references": [
+          "Exod.14.10-31",
+          "Exod.32.7-35"
+        ],
+        "en": "At the sea he addresses the frightened people and acts at God’s command. After the golden calf, he intercedes for the people but also confronts their worship. Read these scenes together: leadership involves both delivering a message and answering for a community in crisis.",
+        "pt-BR": "Diante do mar, dirige-se ao povo amedrontado e age por ordem de Deus. Depois do bezerro de ouro, intercede pelo povo e também confronta seu culto. Lidas em conjunto, essas cenas mostram uma liderança que comunica a palavra recebida e responde por uma comunidade em crise."
+      },
+      {
+        "references": [
+          "Deut.34.1-12"
+        ],
+        "en": "The closing chapter places his death in Moab and the transition to Joshua before entry into the land. Its tribute concerns his unique prophetic relationship with God. It does not supply a modern calendar date or locate his tomb for the reader.",
+        "pt-BR": "O capítulo final situa sua morte em Moabe e a transição para Josué antes da entrada na terra. A homenagem destaca sua relação profética singular com Deus. O texto não fornece uma data no calendário moderno nem localiza sua sepultura para o leitor."
+      }
+    ]
+  },
+  {
+    "entityId": "step.person.H0175",
+    "name": {
+      "en": "Aaron",
+      "pt-BR": "Arão"
+    },
+    "role": {
+      "en": "Moses’ brother, spokesman and priest",
+      "pt-BR": "Irmão de Moisés, porta-voz e sacerdote"
+    },
+    "aliases": {
+      "en": [],
+      "pt-BR": []
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Exod.7.1-13"
+        ],
+        "en": "Aaron accompanies Moses before Pharaoh and speaks in the role assigned to him. The staff sign introduces their confrontation with the court. He is a participant in the mission, not the source of the authority they announce.",
+        "pt-BR": "Arão acompanha Moisés diante do faraó e fala na função que lhe é atribuída. O sinal da vara introduz o confronto com a corte. Ele participa da missão, mas não é a origem da autoridade que anunciam."
+      },
+      {
+        "references": [
+          "Exod.17.8-13",
+          "Exod.32.1-6"
+        ],
+        "en": "With Hur he supports Moses’ hands during the battle against Amalek. Yet in the golden-calf episode he receives the people’s gold, makes the calf and builds an altar. These contrasting actions prevent his leadership from being read as an uninterrupted model of faithfulness.",
+        "pt-BR": "Com Hur, sustenta as mãos de Moisés durante a batalha contra Amaleque. Contudo, no episódio do bezerro de ouro, recebe o ouro do povo, faz o bezerro e constrói um altar. O contraste impede que sua liderança seja lida como um modelo de fidelidade sem falhas."
+      },
+      {
+        "references": [
+          "Exod.40.12-16"
+        ],
+        "en": "The instructions for setting up the sanctuary include washing, clothing and anointing Aaron for priestly service. His appointment and his failure belong to the same narrative; one should not erase the other.",
+        "pt-BR": "As instruções para instalar o santuário incluem lavar, vestir e ungir Arão para o serviço sacerdotal. Sua nomeação e sua falha pertencem à mesma narrativa; uma não deve apagar a outra."
+      }
+    ]
+  },
+  {
+    "entityId": "step.person.H4813G",
+    "name": {
+      "en": "Miriam",
+      "pt-BR": "Miriã"
+    },
+    "role": {
+      "en": "Prophetess and leader of the women’s song",
+      "pt-BR": "Profetisa e líder do cântico das mulheres"
+    },
+    "aliases": {
+      "en": [],
+      "pt-BR": []
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Exod.15.19-21"
+        ],
+        "en": "Miriam is named as a prophetess and Aaron’s sister when she leads the women with tambourines and dancing after the sea crossing. Her refrain answers the preceding song and attributes deliverance to the LORD.",
+        "pt-BR": "Miriã é chamada de profetisa e irmã de Arão quando conduz as mulheres com tamborins e danças depois da travessia do mar. Seu refrão responde ao cântico anterior e atribui o livramento ao Senhor."
+      },
+      {
+        "references": [
+          "Exod.2.4-10",
+          "Num.26.59"
+        ],
+        "en": "Exodus 2 describes the child Moses’ sister watching the basket and arranging for his mother to nurse him, but does not name her there. Numbers 26 names Miriam with Aaron and Moses in the family genealogy. The connection should be made explicitly across these passages, not treated as a name written in Exodus 2.",
+        "pt-BR": "Êxodo 2 descreve a irmã do menino Moisés observando o cesto e providenciando que sua mãe o amamente, mas não a nomeia ali. Números 26 nomeia Miriã com Arão e Moisés na genealogia da família. A conexão deve ser feita explicitamente entre os textos, sem tratar o nome como se estivesse escrito em Êxodo 2."
+      }
+    ]
+  },
+  {
+    "entityId": "step.person.H3503",
+    "name": {
+      "en": "Jethro",
+      "pt-BR": "Jetro"
+    },
+    "role": {
+      "en": "Priest of Midian and Moses’ father-in-law",
+      "pt-BR": "Sacerdote de Midiã e sogro de Moisés"
+    },
+    "aliases": {
+      "en": [
+        "Reuel"
+      ],
+      "pt-BR": [
+        "Reuel"
+      ]
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Exod.3.1",
+          "Exod.18.1-12"
+        ],
+        "en": "Jethro is the priest of Midian whose flock Moses tends. He later brings Zipporah and her sons to Moses, hears the account of deliverance and shares a sacrificial meal with Aaron and Israel’s elders. His advice follows this encounter and its acknowledgment of God’s action.",
+        "pt-BR": "Jetro é o sacerdote de Midiã cujo rebanho Moisés apascenta. Depois leva Zípora e os filhos dela a Moisés, ouve o relato do livramento e participa de uma refeição sacrificial com Arão e os anciãos de Israel. Seu conselho vem depois desse encontro e do reconhecimento da ação de Deus."
+      },
+      {
+        "references": [
+          "Exod.18.13-27"
+        ],
+        "en": "Seeing Moses judge disputes alone, he proposes capable, trustworthy leaders to share the work, with difficult matters reserved for Moses. The passage connects delegation with teaching the people and protecting both leader and community from exhaustion.",
+        "pt-BR": "Ao ver Moisés julgar as disputas sozinho, propõe líderes capazes e confiáveis para repartir o trabalho, deixando os casos difíceis para Moisés. A passagem liga a delegação ao ensino do povo e à proteção do líder e da comunidade contra o esgotamento."
+      },
+      {
+        "references": [
+          "Exod.2.16-22"
+        ],
+        "en": "The family scene in Exodus 2 calls the daughters’ father Reuel; Exodus 3 and 18 use Jethro for Moses’ father-in-law. This catalogue follows its existing combined identity while keeping the variation visible. The brief notices do not establish a full family history.",
+        "pt-BR": "A cena familiar de Êxodo 2 chama o pai das filhas de Reuel; Êxodo 3 e 18 usam Jetro para o sogro de Moisés. O catálogo mantém sua identidade combinada já existente, deixando a variação visível. Essas notícias breves não estabelecem uma história familiar completa."
+      }
+    ]
+  },
+  {
+    "entityId": "step.person.H6855",
+    "name": {
+      "en": "Zipporah",
+      "pt-BR": "Zípora"
+    },
+    "role": {
+      "en": "Moses’ wife, from the household in Midian",
+      "pt-BR": "Esposa de Moisés, da família de Midiã"
+    },
+    "aliases": {
+      "en": [],
+      "pt-BR": []
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Exod.2.16-22"
+        ],
+        "en": "Zipporah is named after Moses helps the daughters of the priest of Midian at the well. She becomes his wife and bears Gershom. This family scene belongs to Moses’ time as a foreigner, before his commission at the burning bush.",
+        "pt-BR": "Zípora é nomeada depois de Moisés ajudar as filhas do sacerdote de Midiã junto ao poço. Torna-se sua esposa e dá à luz Gérson. A cena familiar pertence ao período em que Moisés vive como estrangeiro, antes de sua missão na sarça ardente."
+      },
+      {
+        "references": [
+          "Exod.18.1-6"
+        ],
+        "en": "Jethro brings her and her two sons to Moses after the departure from Egypt. The text says she had been sent away, but this passage does not narrate the circumstances or give her own account. Her reunion is part of the story’s family setting, not a separate leadership appointment.",
+        "pt-BR": "Jetro a leva, com seus dois filhos, a Moisés depois da saída do Egito. O texto diz que ela havia sido enviada de volta, mas essa passagem não narra as circunstâncias nem apresenta seu próprio relato. O reencontro integra o contexto familiar da história, sem constituir uma nomeação de liderança."
+      }
+    ]
+  },
+  {
+    "entityId": "step.person.H1647G",
+    "name": {
+      "en": "Gershom, son of Moses",
+      "pt-BR": "Gérson, filho de Moisés"
+    },
+    "role": {
+      "en": "Son of Moses and Zipporah",
+      "pt-BR": "Filho de Moisés e Zípora"
+    },
+    "aliases": {
+      "en": [
+        "Gershom"
+      ],
+      "pt-BR": [
+        "Gérson",
+        "Gersom"
+      ]
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Exod.2.21-22"
+        ],
+        "en": "Gershom is born to Moses and Zipporah during Moses’ stay in Midian. Moses explains the name by recalling his life as a foreigner in another land. The naming preserves that experience within the family story.",
+        "pt-BR": "Gérson nasce de Moisés e Zípora durante a permanência de Moisés em Midiã. Moisés explica o nome recordando sua vida como estrangeiro em outra terra. A nomeação preserva essa experiência na história familiar."
+      },
+      {
+        "references": [
+          "Exod.18.2-6"
+        ],
+        "en": "He returns to Moses with his mother, his brother Eliezer and Jethro. The passage distinguishes the two sons and the memories attached to their names. It does not describe a public office or further achievements for Gershom in this part of the journey.",
+        "pt-BR": "Volta a Moisés com sua mãe, seu irmão Eliézer e Jetro. A passagem distingue os dois filhos e as lembranças associadas aos nomes. Não descreve um cargo público nem outros feitos de Gérson nessa parte da jornada."
+      }
+    ]
+  },
+  {
+    "entityId": "step.person.H0461H",
+    "name": {
+      "en": "Eliezer, son of Moses",
+      "pt-BR": "Eliézer, filho de Moisés"
+    },
+    "role": {
+      "en": "Son of Moses and Zipporah",
+      "pt-BR": "Filho de Moisés e Zípora"
+    },
+    "aliases": {
+      "en": [
+        "Eliezer"
+      ],
+      "pt-BR": [
+        "Eliézer"
+      ]
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Exod.18.2-6"
+        ],
+        "en": "Eliezer is the other son named when Jethro brings Moses’ family to the wilderness camp. Moses connects his name with God’s help and rescue from Pharaoh’s sword. Unlike Gershom’s naming in Exodus 2, this notice is given during the reunion.",
+        "pt-BR": "Eliézer é o outro filho nomeado quando Jetro leva a família de Moisés ao acampamento no deserto. Moisés associa seu nome à ajuda de Deus e ao livramento da espada do faraó. Diferentemente da nomeação de Gérson em Êxodo 2, essa notícia aparece durante o reencontro."
+      },
+      {
+        "references": [
+          "Exod.18.3-4"
+        ],
+        "en": "The two naming explanations hold foreignness and rescue together. This Eliezer is identified by his parents and brother; the passage gives no basis for merging him with other people of the same name or assigning him a leadership role.",
+        "pt-BR": "As duas explicações dos nomes aproximam a condição de estrangeiro e o livramento. Este Eliézer é identificado por seus pais e irmão; a passagem não permite reuni-lo com outros personagens de mesmo nome nem atribuir-lhe uma função de liderança."
+      }
+    ]
+  },
+  {
+    "entityId": "step.person.H3091G",
+    "name": {
+      "en": "Joshua, son of Nun",
+      "pt-BR": "Josué, filho de Num"
+    },
+    "role": {
+      "en": "Moses’ assistant and successor",
+      "pt-BR": "Auxiliar e sucessor de Moisés"
+    },
+    "aliases": {
+      "en": [
+        "Joshua",
+        "Hoshea son of Nun"
+      ],
+      "pt-BR": [
+        "Josué",
+        "Oseias, filho de Num"
+      ]
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Exod.17.8-16",
+          "Exod.32.17-18"
+        ],
+        "en": "Joshua leads the fighting against Amalek while Moses, Aaron and Hur remain on the hill. Later he hears the sound from the camp and thinks it is battle; Moses distinguishes it from a victory or defeat cry. These scenes place him beside Moses before the succession.",
+        "pt-BR": "Josué comanda a luta contra Amaleque enquanto Moisés, Arão e Hur ficam na colina. Depois ouve o som do acampamento e pensa ser uma batalha; Moisés o distingue de gritos de vitória ou derrota. Essas cenas o situam ao lado de Moisés antes da sucessão."
+      },
+      {
+        "references": [
+          "Num.13.8-16",
+          "Num.14.6-9"
+        ],
+        "en": "The list of scouts identifies him as Hoshea son of Nun, whom Moses calls Joshua. With Caleb he urges the congregation not to rebel or fear the inhabitants of the land. Their disagreement concerns how to respond to the same land, not a different expedition.",
+        "pt-BR": "A lista dos exploradores o identifica como Oseias, filho de Num, a quem Moisés chama Josué. Com Calebe, exorta a comunidade a não se rebelar nem temer os habitantes da terra. A discordância envolve a resposta à mesma terra, não uma expedição diferente."
+      },
+      {
+        "references": [
+          "Deut.34.9-12"
+        ],
+        "en": "At Moses’ death, Joshua is described as filled with the spirit of wisdom, and Israel listens to him. The transfer of leadership does not erase the chapter’s distinct tribute to Moses.",
+        "pt-BR": "Na morte de Moisés, Josué é descrito como cheio do espírito de sabedoria, e Israel o ouve. A transferência de liderança não apaga a homenagem particular que o capítulo presta a Moisés."
+      }
+    ]
+  },
+  {
+    "entityId": "step.person.H3612G",
+    "name": {
+      "en": "Caleb, son of Jephunneh",
+      "pt-BR": "Calebe, filho de Jefoné"
+    },
+    "role": {
+      "en": "Judah’s representative among the scouts",
+      "pt-BR": "Representante de Judá entre os exploradores"
+    },
+    "aliases": {
+      "en": [
+        "Caleb"
+      ],
+      "pt-BR": [
+        "Calebe"
+      ]
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Num.13.6",
+          "Num.13.26-33"
+        ],
+        "en": "Caleb son of Jephunneh represents Judah in the exploration of Canaan. When the report of strong inhabitants unsettles the people, he calls for going up and taking the land. His response contrasts with the fear expressed by the other speakers.",
+        "pt-BR": "Calebe, filho de Jefoné, representa Judá na exploração de Canaã. Quando o relato de habitantes fortes inquieta o povo, ele propõe subir e tomar a terra. Sua resposta contrasta com o medo expresso pelos outros participantes."
+      },
+      {
+        "references": [
+          "Num.14.6-9",
+          "Num.14.20-30"
+        ],
+        "en": "Together with Joshua he appeals to the LORD’s presence and warns against rebellion. The following judgment singles out his different spirit and wholehearted following; Caleb and Joshua are excepted from the exclusion of that generation. This profile concerns this named scout, not every Caleb in biblical genealogies.",
+        "pt-BR": "Com Josué, apela à presença do Senhor e adverte contra a rebelião. O julgamento seguinte destaca seu espírito diferente e sua fidelidade; Calebe e Josué são excetuados da exclusão daquela geração. Esta ficha trata desse explorador identificado, não de todo Calebe mencionado nas genealogias bíblicas."
+      }
+    ]
+  },
+  {
+    "entityId": "step.person.H2354G",
+    "name": {
+      "en": "Hur, companion of Moses",
+      "pt-BR": "Hur, companheiro de Moisés"
+    },
+    "role": {
+      "en": "Supporter of Moses during the battle with Amalek",
+      "pt-BR": "Auxiliar de Moisés na batalha contra Amaleque"
+    },
+    "aliases": {
+      "en": [
+        "Hur"
+      ],
+      "pt-BR": [
+        "Hur"
+      ]
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Exod.17.8-13"
+        ],
+        "en": "Hur goes with Moses and Aaron to the hill while Joshua fights Amalek. When Moses’ hands grow heavy, Aaron and Hur seat him on a stone and hold his hands steady until sunset. The scene gives practical support a visible place in the account of deliverance.",
+        "pt-BR": "Hur sobe à colina com Moisés e Arão enquanto Josué combate Amaleque. Quando as mãos de Moisés ficam pesadas, Arão e Hur o sentam sobre uma pedra e sustentam suas mãos até o pôr do sol. A cena dá ao auxílio concreto um lugar visível no relato do livramento."
+      },
+      {
+        "references": [
+          "Exod.24.12-14"
+        ],
+        "en": "A later notice leaves Aaron and Hur available for disputes while Moses goes up the mountain. These passages establish companionship and responsibility. They do not identify Hur’s wife or parents, so this profile does not add family traditions as if they were stated here.",
+        "pt-BR": "Uma notícia posterior deixa Arão e Hur disponíveis para resolver questões enquanto Moisés sobe ao monte. Essas passagens estabelecem companhia e responsabilidade. Não identificam a esposa nem os pais de Hur; por isso, esta ficha não acrescenta tradições familiares como se fossem afirmadas aqui."
+      }
+    ]
+  },
+  {
+    "entityId": "step.person.H1109A",
+    "name": {
+      "en": "Balaam",
+      "pt-BR": "Balaão"
+    },
+    "role": {
+      "en": "Seer summoned by Balak",
+      "pt-BR": "Vidente convocado por Balaque"
+    },
+    "aliases": {
+      "en": [],
+      "pt-BR": []
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Num.22.5-21"
+        ],
+        "en": "Balak summons Balaam son of Beor to curse Israel. Balaam consults God and initially refuses to go; after another embassy, he receives permission constrained by the command to speak only what God tells him. The successive messages matter for understanding the tension in the journey.",
+        "pt-BR": "Balaque convoca Balaão, filho de Beor, para amaldiçoar Israel. Balaão consulta Deus e inicialmente recusa ir; depois de outra comitiva, recebe permissão condicionada à ordem de falar apenas o que Deus lhe disser. As mensagens sucessivas importam para compreender a tensão da viagem."
+      },
+      {
+        "references": [
+          "Num.22.22-35"
+        ],
+        "en": "On the road, the donkey sees the angel before Balaam does. His anger and the opening of his eyes overturn the expected contrast between the seeing specialist and his animal. The angel again restricts what he may speak.",
+        "pt-BR": "No caminho, a jumenta vê o anjo antes de Balaão. Sua ira e a abertura de seus olhos invertem o contraste esperado entre o especialista em ver e seu animal. O anjo volta a restringir o que ele pode falar."
+      },
+      {
+        "references": [
+          "Num.22.36-41"
+        ],
+        "en": "The chapter ends with his arrival before Balak and preparation for the next scene. The oracles belong to the following chapters; the encounter on the road should not be presented as the complete account of Balaam.",
+        "pt-BR": "O capítulo termina com sua chegada diante de Balaque e a preparação da cena seguinte. Os oráculos pertencem aos capítulos posteriores; o encontro no caminho não deve ser apresentado como o relato completo de Balaão."
+      }
+    ]
+  },
+  {
+    "entityId": "step.person.H1111",
+    "name": {
+      "en": "Balak",
+      "pt-BR": "Balaque"
+    },
+    "role": {
+      "en": "King of Moab who summons Balaam",
+      "pt-BR": "Rei de Moabe que convoca Balaão"
+    },
+    "aliases": {
+      "en": [],
+      "pt-BR": []
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Num.22.1-7"
+        ],
+        "en": "Balak son of Zippor is king of Moab when Israel camps across the Jordan from Jericho. Alarmed by what Israel did to the Amorites and by the people’s numbers, he seeks a curse through Balaam. The passage locates his initiative in political fear.",
+        "pt-BR": "Balaque, filho de Zipor, é rei de Moabe quando Israel acampa do outro lado do Jordão, diante de Jericó. Alarmado pelo que Israel fez aos amorreus e pela quantidade de pessoas, procura obter uma maldição por meio de Balaão. A passagem situa sua iniciativa no medo político."
+      },
+      {
+        "references": [
+          "Num.22.15-17",
+          "Num.22.36-41"
+        ],
+        "en": "He sends a second, more distinguished delegation and offers honor, then challenges Balaam over the delay. Balaam answers that he can speak only the word God puts in his mouth. The contrast sets royal expectation against a speech the king cannot simply purchase or command.",
+        "pt-BR": "Envia uma segunda comitiva, mais importante, e oferece honra; depois questiona Balaão sobre a demora. Balaão responde que só pode dizer a palavra que Deus colocar em sua boca. O contraste opõe a expectativa real a uma fala que o rei não pode simplesmente comprar ou comandar."
+      }
+    ]
+  },
+  {
+    "entityId": "step.person.H6547I",
+    "name": {
+      "en": "Pharaoh during Moses’ early life",
+      "pt-BR": "Faraó da infância e fuga de Moisés"
+    },
+    "role": {
+      "en": "Egyptian ruler in the opening oppression narrative",
+      "pt-BR": "Governante egípcio no início da narrativa de opressão"
+    },
+    "aliases": {
+      "en": [
+        "Pharaoh"
+      ],
+      "pt-BR": [
+        "Faraó"
+      ]
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Exod.1.8-22",
+          "Exod.2.1-10"
+        ],
+        "en": "The opening narrative describes a king who fears Israel’s growth, imposes forced labor and orders the killing of Hebrew boys. His daughter nevertheless rescues the child Moses. The story contrasts royal violence with the actions that preserve a child.",
+        "pt-BR": "O início do relato descreve um rei que teme o crescimento de Israel, impõe trabalho forçado e ordena a morte dos meninos hebreus. Sua filha, contudo, resgata o menino Moisés. A narrativa contrasta a violência real com as ações que preservam uma criança."
+      },
+      {
+        "references": [
+          "Exod.2.11-25"
+        ],
+        "en": "After Moses kills an Egyptian, Pharaoh seeks to kill him, and Moses flees. The narrative then reports the king of Egypt’s death before Moses’ commission. This existing catalogue identity is therefore kept separate from the Pharaoh confronted during the plagues; no personal royal name or dynasty is supplied by these passages.",
+        "pt-BR": "Depois de Moisés matar um egípcio, o faraó procura matá-lo, e Moisés foge. A narrativa então relata a morte do rei do Egito antes do chamado de Moisés. Essa identidade já existente no catálogo é mantida separada do faraó confrontado nas pragas; essas passagens não fornecem um nome real pessoal nem uma dinastia."
+      }
+    ]
+  },
+  {
+    "entityId": "step.person.H6547J",
+    "name": {
+      "en": "Pharaoh of the exodus",
+      "pt-BR": "Faraó do êxodo"
+    },
+    "role": {
+      "en": "Egyptian ruler confronted by Moses and Aaron",
+      "pt-BR": "Governante egípcio confrontado por Moisés e Arão"
+    },
+    "aliases": {
+      "en": [
+        "Pharaoh"
+      ],
+      "pt-BR": [
+        "Faraó"
+      ]
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Exod.2.23",
+          "Exod.3.7-12",
+          "Exod.7.1-13"
+        ],
+        "en": "This Pharaoh is the king to whom Moses is sent to demand Israel’s release. Moses and Aaron confront his court with a message and signs. He belongs to the stage after the king’s death reported in Exodus 2, so the catalogue does not merge the two reigns.",
+        "pt-BR": "Este faraó é o rei a quem Moisés é enviado para exigir a libertação de Israel. Moisés e Arão confrontam sua corte com uma mensagem e sinais. Ele pertence à etapa posterior à morte do rei relatada em Êxodo 2; por isso, o catálogo não reúne os dois reinados."
+      },
+      {
+        "references": [
+          "Exod.9.27-35",
+          "Exod.10.24-29"
+        ],
+        "en": "His responses include confession, proposed restrictions on departure and renewed refusal. Read the changes in who is permitted to leave alongside the repeated hardening of his heart; the narrative develops a sustained conflict, not a single negotiation.",
+        "pt-BR": "Suas respostas incluem confissão, propostas de restrição à partida e nova recusa. Leia as mudanças sobre quem poderia sair junto ao endurecimento repetido de seu coração; o relato desenvolve um conflito prolongado, não uma única negociação."
+      },
+      {
+        "references": [
+          "Exod.12.29-32",
+          "Exod.14.5-31"
+        ],
+        "en": "After the deaths of the firstborn he orders Israel to leave, but later pursues the departing people with his forces. These chapters do not name a historical dynasty. The account should not silently turn a proposed identification with a particular ruler into a fact.",
+        "pt-BR": "Depois da morte dos primogênitos, ordena a saída de Israel, mas depois persegue o povo com suas forças. Esses capítulos não nomeiam uma dinastia histórica. O relato não deve transformar silenciosamente uma identificação proposta com determinado governante em fato."
+      }
+    ]
+  },
+  {
+    "entityId": "step.person.H6547O",
+    "name": {
+      "en": "Pharaoh’s daughter who rescued Moses",
+      "pt-BR": "Filha do faraó que resgatou Moisés"
+    },
+    "role": {
+      "en": "Royal woman who adopts the Hebrew child",
+      "pt-BR": "Mulher da família real que adota o menino hebreu"
+    },
+    "aliases": {
+      "en": [
+        "Pharaoh’s daughter"
+      ],
+      "pt-BR": [
+        "Filha do faraó"
+      ]
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Exod.2.5-10"
+        ],
+        "en": "Pharaoh’s daughter finds the basket at the river, recognizes a Hebrew child and has compassion on him. At the sister’s suggestion she pays the child’s own mother to nurse him, then receives him as her son and names him Moses. Her action crosses the boundary created by the royal order against Hebrew boys.",
+        "pt-BR": "A filha do faraó encontra o cesto no rio, reconhece um menino hebreu e se compadece dele. Por sugestão da irmã, paga à própria mãe do menino para amamentá-lo; depois o recebe como filho e lhe dá o nome de Moisés. Sua ação atravessa a barreira criada pela ordem real contra os meninos hebreus."
+      },
+      {
+        "references": [
+          "Exod.1.22",
+          "Exod.2.5-10"
+        ],
+        "en": "The passage identifies her through her relationship to Pharaoh and her actions, not by a personal name. This profile keeps that limit and remains distinct from the daughter of Pharaoh mentioned in Solomon’s story. It does not assign a name from a later tradition.",
+        "pt-BR": "A passagem a identifica por sua relação com o faraó e por suas ações, não por um nome pessoal. A ficha mantém esse limite e permanece distinta da filha do faraó mencionada na história de Salomão. Não lhe atribui um nome de tradição posterior."
+      }
+    ]
+  }
+]

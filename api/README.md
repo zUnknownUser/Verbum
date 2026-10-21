@@ -29,3 +29,9 @@ Things the contract decides on purpose:
 - Missing context is `404 content_unavailable`, never a generated paragraph (§3.5).
 - Every relationship, detail and dating claim carries `sourceReferenceIds` (§33).
 - `/v1/daily-verse` is not in §45; it exists so the apps can plan a week of notifications in one call.
+
+Bilingual entity profile examples (`entities/aaron.*.json`, `entities/nebo.*.json`)
+exercise the unchanged EntityDetail contract in iOS and Android. Pipeline integration
+tests compare these fields with real PostgreSQL-backed HTTP responses; no profile
+is added to the mobile fixture clients. See
+[Exodus profiles](../docs/ENTITY_PROFILES_2026-10-21.md).

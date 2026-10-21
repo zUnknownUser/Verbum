@@ -12,7 +12,7 @@ func (s *Store) EntityPage(ctx context.Context, kind domain.EntityType, request 
 	return readJSON[store.EntityPage](ctx, s, `WITH named AS (
  SELECT `+localizedEntityJSON("$2")+` AS value,e.id,
  CASE WHEN $8='narrative' THEN (SELECT si.position FROM event_sequence_items si WHERE si.entity_id=e.id AND si.era_id=$7) END AS narrative_position,
- lower(regexp_replace(normalize(COALESCE((SELECT array_to_string(l.aliases,' ') FROM entity_localizations l WHERE l.entity_id=e.id AND l.language=$2 ORDER BY (l.source_id LIKE 'step.%'),l.source_id LIMIT 1),''), NFD), U&'[\0300-\036f]', '', 'g')) AS aliases,
+ lower(regexp_replace(normalize(concat_ws(' ',(SELECT string_agg(a.value,' ') FROM entity_profiles ep CROSS JOIN LATERAL jsonb_array_elements_text(ep.presentations->$2->'aliases') a WHERE ep.entity_id=e.id),(SELECT array_to_string(l.aliases,' ') FROM entity_localizations l WHERE l.entity_id=e.id AND l.language=$2 ORDER BY (l.source_id LIKE 'step.%'),l.source_id LIMIT 1)), NFD), U&'[\0300-\036f]', '', 'g')) AS aliases,
  lower(regexp_replace(normalize(btrim((`+localizedEntityJSON("$2")+`)->>'name'), NFD), U&'[\0300-\036f]', '', 'g')) COLLATE "C" AS name
  FROM entities e WHERE e.type=$1 AND e.type<>'passage' AND ($7='' OR (e.type='theme' AND EXISTS (SELECT 1 FROM theme_categories tc WHERE tc.entity_id=e.id AND tc.category_id=$7)) OR (e.type='event' AND EXISTS (SELECT 1 FROM event_eras ee WHERE ee.entity_id=e.id AND ee.era_id=$7)))
  ), searched AS (

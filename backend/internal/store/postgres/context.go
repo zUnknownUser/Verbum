@@ -44,6 +44,7 @@ func (s *Store) Context(ctx context.Context, bookID string, chapter int) (domain
  WHERE book_id=$2 AND chapter=$3 AND EXISTS (SELECT 1 FROM study)
  UNION SELECT rs.source_id FROM relationship_sources rs JOIN direct_edges r ON r.id=rs.relationship_id
  UNION SELECT ds.source_id FROM entity_detail_sources ds JOIN details d ON d.entity_id=ds.entity_id
+ UNION SELECT ps.source_id FROM entity_profile_sources ps JOIN linked l ON l.id=ps.entity_id JOIN entity_profiles ep ON ep.entity_id=ps.entity_id WHERE ep.presentations ? $4
  UNION SELECT sr.source_id FROM entity_source_records sr JOIN entity_occurrences o ON o.record_id=sr.id WHERE o.book_id=$2 AND o.chapter=$3
  UNION SELECT (SELECT l.source_id FROM entity_localizations l WHERE l.entity_id=linked.id AND l.language=$4 ORDER BY (l.source_id LIKE 'step.%'),l.source_id LIMIT 1) FROM linked
  UNION SELECT rs.source_id FROM relationship_sources rs JOIN related r ON r.id=rs.relationship_id

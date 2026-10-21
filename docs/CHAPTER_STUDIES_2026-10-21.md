@@ -105,3 +105,9 @@ Permanecem revisão humana independente de conteúdo/tradução, homologação f
 e a próxima rodada delimitada de fichas de pessoas/lugares desse mesmo recorte.
 Outros capítulos, períodos e ampliação de catálogo não foram iniciados. Lojas e
 distribuição comercial ficam fora desta prioridade, conforme orientação do usuário.
+
+## Complemento posterior nesta data
+
+As 30 fichas principais de pessoas e lugares desse percurso foram aprofundadas
+na [rodada de fichas](ENTITY_PROFILES_2026-10-21.md), sem alterar os 21 estudos
+deste documento. Ambos os lotes aguardam publicação explícita em produção.

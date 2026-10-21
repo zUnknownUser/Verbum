@@ -1,0 +1,71 @@
+{
+  "entity": {
+    "id": "step.person.H0175",
+    "type": "person",
+    "name": "Aaron",
+    "summary": "Aaron accompanies Moses before Pharaoh and speaks in the role assigned to him. The staff sign introduces their confrontation with the court. He is a participant in the mission, not the source of the authority they announce.\n\nWith Hur he supports Moses’ hands during the battle against Amalek. Yet in the golden-calf episode he receives the people’s gold, makes the calf and builds an altar. These contrasting actions prevent his leadership from being read as an uninterrupted model of faithfulness.\n\nThe instructions for setting up the sanctuary include washing, clothing and anointing Aaron for priestly service. His appointment and his failure belong to the same narrative; one should not erase the other.",
+    "nameLanguage": "en"
+  },
+  "aliases": [],
+  "role": "Moses’ brother, spokesman and priest",
+  "approximateDates": null,
+  "modernGeography": null,
+  "keyPassages": [
+    {
+      "bookId": "Exod",
+      "chapter": 7,
+      "verseStart": 1,
+      "verseEnd": 13
+    },
+    {
+      "bookId": "Exod",
+      "chapter": 17,
+      "verseStart": 8,
+      "verseEnd": 13
+    },
+    {
+      "bookId": "Exod",
+      "chapter": 32,
+      "verseStart": 1,
+      "verseEnd": 6
+    },
+    {
+      "bookId": "Exod",
+      "chapter": 40,
+      "verseStart": 12,
+      "verseEnd": 16
+    }
+  ],
+  "sources": [
+    {
+      "id": "editorial.profiles.exodus.2026-10",
+      "citation": "Verbum · Exodus people and places / Pessoas e lugares do Êxodo · 2026-10",
+      "url": null
+    },
+    {
+      "id": "step.TIPNR",
+      "citation": "STEP TIPNR · CC BY 4.0",
+      "url": null
+    },
+    {
+      "id": "study.scripture.Exod.32",
+      "citation": "Exodus 32 · World English Bible",
+      "url": "https://ebible.org/engwebp/EXO32.htm"
+    },
+    {
+      "id": "study.scripture.Exod.7",
+      "citation": "Exodus 7 · World English Bible",
+      "url": "https://ebible.org/engwebp/EXO07.htm"
+    },
+    {
+      "id": "study.scripture.Exod.17",
+      "citation": "Exodus 17 · World English Bible",
+      "url": "https://ebible.org/engwebp/EXO17.htm"
+    },
+    {
+      "id": "study.scripture.Exod.40",
+      "citation": "Exodus 40 · World English Bible",
+      "url": "https://ebible.org/engwebp/EXO40.htm"
+    }
+  ]
+}

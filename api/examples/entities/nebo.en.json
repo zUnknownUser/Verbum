@@ -1,0 +1,46 @@
+{
+  "entity": {
+    "id": "step.place.H5015H",
+    "type": "place",
+    "name": "Mount Nebo",
+    "summary": "Moses goes from the plains of Moab to Mount Nebo, to the summit of Pisgah opposite Jericho. God shows him the land associated with the promise to the ancestors, while telling him he will not cross into it. The view closes his journey without narrating Israel’s later entry.\n\nThe following verses recount his death, the unknown burial place and Joshua’s succession. Nebo is the mountain in this scene, not one of the cities with the same name. The passage’s relationship between Nebo and Pisgah is preserved without turning it into a surveyed modern map or identifying Moses’ grave.",
+    "nameLanguage": "en"
+  },
+  "aliases": [
+    "Nebo"
+  ],
+  "role": "Mountain of Moses’ final view of the land",
+  "approximateDates": null,
+  "modernGeography": null,
+  "keyPassages": [
+    {
+      "bookId": "Deut",
+      "chapter": 34,
+      "verseStart": 1,
+      "verseEnd": 4
+    },
+    {
+      "bookId": "Deut",
+      "chapter": 34,
+      "verseStart": 5,
+      "verseEnd": 12
+    }
+  ],
+  "sources": [
+    {
+      "id": "editorial.profiles.exodus.2026-10",
+      "citation": "Verbum · Exodus people and places / Pessoas e lugares do Êxodo · 2026-10",
+      "url": null
+    },
+    {
+      "id": "step.TIPNR",
+      "citation": "STEP TIPNR · CC BY 4.0",
+      "url": null
+    },
+    {
+      "id": "study.scripture.Deut.34",
+      "citation": "Deuteronomy 34 · World English Bible",
+      "url": "https://ebible.org/engwebp/DEU34.htm"
+    }
+  ]
+}

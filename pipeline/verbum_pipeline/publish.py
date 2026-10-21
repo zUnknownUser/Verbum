@@ -79,6 +79,10 @@ def publish(source: Path, decisions: Path, database_url: str, *, allow_fixtures=
 
 
 def write_content(cur, bundle: Bundle) -> None:
+    if bundle.entityProfiles is not None:
+        from .entity_profiles import validate_publication
+
+        profile_links = validate_publication(cur, bundle)
     if bundle.chapterStudies is not None:
         from .chapter_studies import validate_references
 
@@ -153,6 +157,11 @@ def write_content(cur, bundle: Bundle) -> None:
                 },
                 "reference_id",
             )
+    if bundle.entityProfiles is not None:
+        from .entity_profiles import write_profiles
+
+        write_profiles(cur, bundle, profile_links)
+        return
     if bundle.chapterStudies is not None:
         for study in bundle.chapterStudies:
             ref = study.reference

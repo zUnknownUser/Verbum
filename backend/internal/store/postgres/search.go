@@ -61,6 +61,9 @@ const passageSearchSQL = `WITH concept_queries AS MATERIALIZED (
  SELECT e.id FROM entities e WHERE $1<>'' AND (
  EXISTS (SELECT 1 FROM entity_localizations l WHERE l.entity_id=e.id AND
  (lower(l.name)=lower($1) OR EXISTS (SELECT 1 FROM unnest(l.aliases) a WHERE lower(a)=lower($1))))
+ OR EXISTS (SELECT 1 FROM entity_profiles ep CROSS JOIN LATERAL jsonb_each(ep.presentations) p
+ WHERE ep.entity_id=e.id AND (lower(p.value->>'name')=lower($1) OR
+ EXISTS (SELECT 1 FROM jsonb_array_elements_text(p.value->'aliases') a WHERE lower(a)=lower($1))))
  OR EXISTS (SELECT 1 FROM entity_source_records r WHERE r.entity_id=e.id AND
  EXISTS (SELECT 1 FROM jsonb_each(r.identifiers) kv,jsonb_array_elements_text(kv.value) v WHERE lower(v)=lower($1))))
  ORDER BY e.id LIMIT 64

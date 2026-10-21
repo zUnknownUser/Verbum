@@ -1,0 +1,569 @@
+[
+  {
+    "entityId": "fixture.place.egypt",
+    "name": {
+      "en": "Egypt",
+      "pt-BR": "Egito"
+    },
+    "role": {
+      "en": "Land of oppression and departure in the Exodus account",
+      "pt-BR": "Terra da opressão e da partida no relato do Êxodo"
+    },
+    "aliases": {
+      "en": [],
+      "pt-BR": []
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Exod.2.1-25",
+          "Exod.3.7-10"
+        ],
+        "en": "Egypt is the setting of Israel’s forced labor and Moses’ early life. God’s commission at the bush answers the suffering heard there. In this reading sequence, Egypt is both the place to which Moses must return and the place from which the people are to depart.",
+        "pt-BR": "O Egito é o cenário do trabalho forçado de Israel e do início da vida de Moisés. O chamado de Deus na sarça responde ao sofrimento ouvido ali. Neste percurso, é tanto o lugar ao qual Moisés deve voltar quanto aquele do qual o povo deve partir."
+      },
+      {
+        "references": [
+          "Exod.12.29-42",
+          "Exod.14.5-31"
+        ],
+        "en": "The Passover departure and the pursuit toward the sea connect liberation with a final threat from the Egyptian forces. These passages describe a narrative route; they do not establish precise coordinates for every stop or identify the Pharaoh by a personal name.",
+        "pt-BR": "A partida da Páscoa e a perseguição em direção ao mar ligam a libertação a uma última ameaça das forças egípcias. Essas passagens descrevem um percurso narrativo; não estabelecem coordenadas precisas para cada parada nem identificam o faraó por um nome pessoal."
+      }
+    ]
+  },
+  {
+    "entityId": "step.place.H4080H",
+    "name": {
+      "en": "Midian",
+      "pt-BR": "Midiã"
+    },
+    "role": {
+      "en": "Region of Moses’ refuge and family life",
+      "pt-BR": "Região do refúgio e da vida familiar de Moisés"
+    },
+    "aliases": {
+      "en": [],
+      "pt-BR": []
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Exod.2.15-22"
+        ],
+        "en": "Moses settles in the land of Midian after fleeing Pharaoh. At a well he helps the daughters of the local priest, is welcomed into their household and marries Zipporah. The move shifts the story from the Egyptian court and violence to work, hospitality and life as a foreigner.",
+        "pt-BR": "Moisés se estabelece na terra de Midiã depois de fugir do faraó. Junto a um poço, ajuda as filhas do sacerdote local, é acolhido na família e se casa com Zípora. A mudança leva a narrativa da corte e da violência egípcias para o trabalho, a hospitalidade e a vida como estrangeiro."
+      },
+      {
+        "references": [
+          "Exod.3.1",
+          "Exod.18.1-6"
+        ],
+        "en": "Jethro’s title and the flock Moses tends retain this Midianite setting. Later Jethro brings Moses’ family to the wilderness camp. This profile concerns the region in these scenes, not the person named Midian in Genesis; the passages do not define its modern boundaries.",
+        "pt-BR": "O título de Jetro e o rebanho apascentado por Moisés preservam esse contexto midianita. Depois, Jetro leva a família de Moisés ao acampamento no deserto. A ficha trata da região dessas cenas, não da pessoa chamada Midiã em Gênesis; as passagens não definem suas fronteiras modernas."
+      }
+    ]
+  },
+  {
+    "entityId": "step.place.H5514G",
+    "name": {
+      "en": "Sinai / Horeb",
+      "pt-BR": "Sinai / Horebe"
+    },
+    "role": {
+      "en": "Mountain associated with the call and covenant",
+      "pt-BR": "Monte associado ao chamado e à aliança"
+    },
+    "aliases": {
+      "en": [
+        "Sinai",
+        "Horeb"
+      ],
+      "pt-BR": [
+        "Sinai",
+        "Horebe"
+      ]
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Exod.3.1-12"
+        ],
+        "en": "Exodus 3 calls the mountain of God Horeb: Moses reaches it while tending Jethro’s flock and encounters the burning bush. The promised worship at this mountain links his commission with the people’s future departure.",
+        "pt-BR": "Êxodo 3 chama o monte de Deus de Horebe: Moisés chega a ele ao apascentar o rebanho de Jetro e encontra a sarça ardente. O culto prometido nesse monte liga sua missão à futura saída do povo."
+      },
+      {
+        "references": [
+          "Exod.19.1-25",
+          "Exod.20.1-21"
+        ],
+        "en": "Exodus 19 names Sinai when Israel camps before the mountain. Preparation, boundaries and the divine appearance frame the giving of the commandments. The mountain is a setting for covenant and encounter, not merely a stop on a travel list.",
+        "pt-BR": "Êxodo 19 usa Sinai quando Israel acampa diante do monte. Preparação, limites e manifestação divina enquadram a entrega dos mandamentos. O monte é cenário de aliança e encontro, não apenas uma parada em uma lista de viagem."
+      },
+      {
+        "references": [
+          "Exod.3.1",
+          "Exod.19.1-2"
+        ],
+        "en": "The existing catalogue groups Sinai and Horeb under one identity while the notes retain each passage’s wording. These chapters do not identify a modern summit; this profile does not choose an archaeological location or equate the mountain with the entire Sinai wilderness.",
+        "pt-BR": "O catálogo existente reúne Sinai e Horebe em uma identidade, enquanto as notas preservam o nome usado em cada passagem. Esses capítulos não identificam um cume moderno; esta ficha não escolhe uma localização arqueológica nem confunde o monte com todo o deserto do Sinai."
+      }
+    ]
+  },
+  {
+    "entityId": "step.place.H5488G",
+    "name": {
+      "en": "Red Sea",
+      "pt-BR": "Mar Vermelho"
+    },
+    "role": {
+      "en": "Sea associated with Israel’s crossing and song",
+      "pt-BR": "Mar associado à travessia e ao cântico de Israel"
+    },
+    "aliases": {
+      "en": [],
+      "pt-BR": []
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Exod.14.10-31"
+        ],
+        "en": "The sea stands between the fleeing people and an escape from Pharaoh’s approaching forces. The narrative describes a passage through the waters, their return over the Egyptian force, and Israel’s recognition of deliverance. Moses acts at God’s command while the people move through.",
+        "pt-BR": "O mar se interpõe entre o povo em fuga e a saída diante das forças do faraó que se aproximam. A narrativa descreve a passagem entre as águas, a volta delas sobre a força egípcia e o reconhecimento do livramento por Israel. Moisés age por ordem de Deus enquanto o povo atravessa."
+      },
+      {
+        "references": [
+          "Exod.15.1-21"
+        ],
+        "en": "The following song recalls the event and names the Red Sea; Miriam leads the women’s answering refrain. The account and the song give complementary narrative and poetic perspectives. These passages do not settle a precise modern crossing point, so no coordinates are asserted here.",
+        "pt-BR": "O cântico seguinte recorda o acontecimento e nomeia o mar Vermelho; Miriã conduz a resposta das mulheres. O relato e o cântico oferecem perspectivas narrativas e poéticas complementares. Essas passagens não determinam um ponto moderno preciso de travessia; por isso, a ficha não afirma coordenadas."
+      }
+    ]
+  },
+  {
+    "entityId": "step.place.H4785",
+    "name": {
+      "en": "Marah",
+      "pt-BR": "Mara"
+    },
+    "role": {
+      "en": "Stop where bitter water becomes drinkable",
+      "pt-BR": "Parada em que águas amargas se tornam potáveis"
+    },
+    "aliases": {
+      "en": [],
+      "pt-BR": []
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Exod.15.22-25"
+        ],
+        "en": "After three days in the wilderness without finding water, Israel reaches Marah and cannot drink its bitter water. The people complain, Moses cries to the LORD, and the water becomes drinkable after he throws in the wood shown to him. The place introduces the water crises that follow the sea crossing.",
+        "pt-BR": "Depois de três dias no deserto sem encontrar água, Israel chega a Mara e não consegue beber suas águas amargas. O povo reclama, Moisés clama ao Senhor e a água se torna potável depois que ele lança nela a madeira que lhe é mostrada. O lugar introduz as crises de água que seguem a travessia do mar."
+      },
+      {
+        "references": [
+          "Exod.15.25-27"
+        ],
+        "en": "The scene connects testing with listening to God, then moves on to Elim. The account gives the place its narrative significance through the water; it does not identify a modern spring. Marah and Elim remain separate stops in this catalogue.",
+        "pt-BR": "A cena liga a prova à escuta de Deus e depois segue para Elim. O relato dá ao lugar sua importância narrativa por meio da água; não identifica uma fonte moderna. Mara e Elim permanecem como paradas distintas neste catálogo."
+      }
+    ]
+  },
+  {
+    "entityId": "step.place.H0362",
+    "name": {
+      "en": "Elim",
+      "pt-BR": "Elim"
+    },
+    "role": {
+      "en": "Encampment with springs and palm trees",
+      "pt-BR": "Acampamento com fontes e palmeiras"
+    },
+    "aliases": {
+      "en": [],
+      "pt-BR": []
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Exod.15.27"
+        ],
+        "en": "Elim follows the crisis at Marah. The brief notice describes twelve springs and seventy palm trees, with Israel camping beside the water. Its contrast with the preceding bitter water gives the stop significance even though the narrative is short.",
+        "pt-BR": "Elim vem depois da crise em Mara. A notícia breve descreve doze fontes e setenta palmeiras, com Israel acampando junto à água. O contraste com a água amarga anterior dá importância à parada, mesmo em um relato curto."
+      },
+      {
+        "references": [
+          "Exod.16.1-3"
+        ],
+        "en": "The next stage begins when the congregation leaves Elim for the wilderness of Sin. Remembering this order helps separate the provision at Elim from the hunger and complaints of the following chapter. Neither notice identifies a present-day oasis.",
+        "pt-BR": "A etapa seguinte começa quando a comunidade deixa Elim em direção ao deserto de Sim. Observar essa ordem ajuda a separar a provisão em Elim da fome e das reclamações do capítulo seguinte. Nenhuma das notícias identifica um oásis atual."
+      }
+    ]
+  },
+  {
+    "entityId": "step.place.H5512B",
+    "name": {
+      "en": "Wilderness of Sin",
+      "pt-BR": "Deserto de Sim"
+    },
+    "role": {
+      "en": "Wilderness setting of the manna instructions",
+      "pt-BR": "Deserto das instruções sobre o maná"
+    },
+    "aliases": {
+      "en": [
+        "Sin"
+      ],
+      "pt-BR": [
+        "Sim",
+        "Deserto de Sin"
+      ]
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Exod.16.1-12"
+        ],
+        "en": "The congregation reaches the wilderness of Sin between Elim and Sinai. Hunger prompts a comparison with food remembered in Egypt, and Moses and Aaron announce God’s provision. The location frames a test of trust after departure, before arrival at Sinai.",
+        "pt-BR": "A comunidade chega ao deserto de Sim, entre Elim e Sinai. A fome provoca uma comparação com a comida lembrada no Egito, e Moisés e Arão anunciam a provisão de Deus. O lugar enquadra uma prova de confiança depois da saída e antes da chegada ao Sinai."
+      },
+      {
+        "references": [
+          "Exod.16.13-30",
+          "Exod.17.1"
+        ],
+        "en": "The manna instructions regulate gathering, sharing and rest; they are not just a report of unusual food. Israel later travels from this wilderness toward Rephidim. This is the Sin of Exodus 16, not the wilderness of Zin mentioned in the scouts’ route in Numbers 13.",
+        "pt-BR": "As instruções sobre o maná regulam recolhimento, partilha e descanso; não são apenas um relato de alimento incomum. Israel depois viaja desse deserto em direção a Refidim. Trata-se do Sim de Êxodo 16, não do deserto de Zim mencionado no percurso dos exploradores em Números 13."
+      }
+    ]
+  },
+  {
+    "entityId": "step.place.H7508",
+    "name": {
+      "en": "Rephidim",
+      "pt-BR": "Refidim"
+    },
+    "role": {
+      "en": "Encampment associated with thirst and the battle with Amalek",
+      "pt-BR": "Acampamento associado à sede e à batalha contra Amaleque"
+    },
+    "aliases": {
+      "en": [],
+      "pt-BR": []
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Exod.17.1-7"
+        ],
+        "en": "At Rephidim the people find no water and quarrel with Moses. God directs him to the rock at Horeb, and the narrative names Massah and Meribah in connection with testing and quarrelling. The camp and the named rock scene should be read carefully without assuming every geographical term is interchangeable.",
+        "pt-BR": "Em Refidim, o povo não encontra água e discute com Moisés. Deus o dirige à rocha em Horebe, e o relato associa os nomes Massá e Meribá à prova e à discussão. O acampamento e a cena da rocha devem ser lidos com atenção, sem assumir que todos os termos geográficos sejam intercambiáveis."
+      },
+      {
+        "references": [
+          "Exod.17.8-16",
+          "Exod.19.1-2"
+        ],
+        "en": "Amalek then attacks Israel at Rephidim. Joshua fights while Aaron and Hur support Moses on the hill. The later departure from Rephidim leads to Sinai, placing both episodes before the covenant scene in this reading order. No modern site is fixed by these notices.",
+        "pt-BR": "Amaleque então ataca Israel em Refidim. Josué combate enquanto Arão e Hur sustentam Moisés na colina. A saída posterior de Refidim leva ao Sinai, situando os dois episódios antes da cena da aliança nesta ordem de leitura. Essas notícias não fixam um sítio moderno."
+      }
+    ]
+  },
+  {
+    "entityId": "step.place.H6290G",
+    "name": {
+      "en": "Wilderness of Paran",
+      "pt-BR": "Deserto de Parã"
+    },
+    "role": {
+      "en": "Region from which the scouts are sent",
+      "pt-BR": "Região de onde os exploradores são enviados"
+    },
+    "aliases": {
+      "en": [
+        "Paran"
+      ],
+      "pt-BR": [
+        "Parã"
+      ]
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Num.13.1-3",
+          "Num.13.25-29"
+        ],
+        "en": "Moses sends the tribal representatives from the wilderness of Paran to explore Canaan. They return to Moses, Aaron and the congregation at Kadesh in that wilderness. Paran provides the larger wilderness setting, while Kadesh names the place of their report.",
+        "pt-BR": "Moisés envia os representantes das tribos do deserto de Parã para explorar Canaã. Eles voltam a Moisés, Arão e à comunidade em Cades, nesse deserto. Parã fornece o cenário mais amplo, enquanto Cades nomeia o lugar da apresentação do relatório."
+      },
+      {
+        "references": [
+          "Num.14.1-10"
+        ],
+        "en": "The report becomes a crisis of confidence and leadership in the assembled community. Reading the return and the reaction together explains why this setting matters to the journey. The texts do not define a modern boundary for Paran or make it identical with Kadesh.",
+        "pt-BR": "O relatório provoca uma crise de confiança e liderança na comunidade reunida. Ler o retorno e a reação em conjunto explica a importância desse cenário para a jornada. Os textos não definem uma fronteira moderna para Parã nem o tornam idêntico a Cades."
+      }
+    ]
+  },
+  {
+    "entityId": "step.place.H6946G",
+    "name": {
+      "en": "Kadesh",
+      "pt-BR": "Cades"
+    },
+    "role": {
+      "en": "Place where the scouts report to the congregation",
+      "pt-BR": "Lugar em que os exploradores prestam contas à comunidade"
+    },
+    "aliases": {
+      "en": [
+        "Kadesh-barnea"
+      ],
+      "pt-BR": [
+        "Cades-Barneia"
+      ]
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Num.13.25-33",
+          "Deut.1.19"
+        ],
+        "en": "The scouts return to Kadesh in the wilderness of Paran, bringing fruit and their report. The account describes a land with abundance and powerful inhabitants; Caleb and the other speakers draw sharply different conclusions about going up.",
+        "pt-BR": "Os exploradores retornam a Cades, no deserto de Parã, trazendo frutos e seu relatório. O relato descreve uma terra abundante e habitantes poderosos; Calebe e os outros participantes chegam a conclusões bastante diferentes sobre avançar."
+      },
+      {
+        "references": [
+          "Num.14.1-10",
+          "Num.14.39-45"
+        ],
+        "en": "The congregation’s refusal, followed by an unauthorized attempt to advance, makes this a turning point in the journey. The later defeat should not be mistaken for the successful entry under Joshua. This profile explains the setting of this episode without assigning coordinates to the ancient site.",
+        "pt-BR": "A recusa da comunidade, seguida de uma tentativa não autorizada de avançar, torna esse momento decisivo na jornada. A derrota posterior não deve ser confundida com a entrada bem-sucedida sob Josué. A ficha explica o cenário desse episódio sem atribuir coordenadas ao sítio antigo."
+      }
+    ]
+  },
+  {
+    "entityId": "step.place.H3667A",
+    "name": {
+      "en": "Canaan",
+      "pt-BR": "Canaã"
+    },
+    "role": {
+      "en": "Land promised and explored in the wilderness narrative",
+      "pt-BR": "Terra prometida e explorada no relato do deserto"
+    },
+    "aliases": {
+      "en": [],
+      "pt-BR": []
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Num.13.1-3",
+          "Num.13.17-33"
+        ],
+        "en": "Canaan is the land the scouts are sent to examine. Their task concerns inhabitants, settlements, soil and produce. The fruit they bring back and the fear expressed in the report belong to the same examination; the text does not present an empty land.",
+        "pt-BR": "Canaã é a terra que os exploradores são enviados a examinar. A tarefa envolve habitantes, povoações, solo e produção. Os frutos trazidos e o medo expresso no relatório pertencem à mesma observação; o texto não apresenta uma terra vazia."
+      },
+      {
+        "references": [
+          "Num.14.6-9",
+          "Deut.34.1-4"
+        ],
+        "en": "Joshua and Caleb appeal to God’s gift and presence when urging the people to enter. At the end of Moses’ life, the view from Nebo recalls the promise while distinguishing seeing the land from crossing into it. This biblical regional designation is not a statement about the boundaries of a modern state.",
+        "pt-BR": "Josué e Calebe apelam à dádiva e à presença de Deus ao exortar o povo a entrar. No fim da vida de Moisés, a vista do Nebo retoma a promessa e distingue ver a terra de atravessar para ela. Essa designação regional bíblica não afirma as fronteiras de um Estado moderno."
+      }
+    ]
+  },
+  {
+    "entityId": "step.place.H4124G",
+    "name": {
+      "en": "Moab",
+      "pt-BR": "Moabe"
+    },
+    "role": {
+      "en": "Region of Balak’s kingdom and Israel’s final camp before crossing",
+      "pt-BR": "Região do reino de Balaque e do acampamento final antes da travessia"
+    },
+    "aliases": {
+      "en": [],
+      "pt-BR": []
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Num.22.1-7"
+        ],
+        "en": "Israel camps in the plains of Moab across the Jordan from Jericho. Balak’s fear and his summons to Balaam unfold in this setting. Distinguish the camp’s geographical designation from an assertion that Israel is already inside Jericho or across the river.",
+        "pt-BR": "Israel acampa nas campinas de Moabe, do outro lado do Jordão, diante de Jericó. O medo de Balaque e a convocação de Balaão se desenvolvem nesse cenário. O nome geográfico do acampamento não significa que Israel já esteja dentro de Jericó ou tenha atravessado o rio."
+      },
+      {
+        "references": [
+          "Deut.34.1-8"
+        ],
+        "en": "Moses ascends from the plains of Moab to Nebo; his death, burial and the people’s mourning are placed in Moab. The text explicitly says his tomb is unknown to its audience. The regional setting should not be turned into a claim to have located that grave.",
+        "pt-BR": "Moisés sobe das campinas de Moabe ao Nebo; sua morte, sepultamento e o luto do povo são situados em Moabe. O texto afirma expressamente que sua sepultura é desconhecida para seu público. O cenário regional não deve ser transformado em uma afirmação de que o túmulo foi localizado."
+      }
+    ]
+  },
+  {
+    "entityId": "step.place.H5015H",
+    "name": {
+      "en": "Mount Nebo",
+      "pt-BR": "Monte Nebo"
+    },
+    "role": {
+      "en": "Mountain of Moses’ final view of the land",
+      "pt-BR": "Monte da última visão de Moisés sobre a terra"
+    },
+    "aliases": {
+      "en": [
+        "Nebo"
+      ],
+      "pt-BR": [
+        "Nebo"
+      ]
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Deut.34.1-4"
+        ],
+        "en": "Moses goes from the plains of Moab to Mount Nebo, to the summit of Pisgah opposite Jericho. God shows him the land associated with the promise to the ancestors, while telling him he will not cross into it. The view closes his journey without narrating Israel’s later entry.",
+        "pt-BR": "Moisés vai das campinas de Moabe ao monte Nebo, ao cume de Pisga diante de Jericó. Deus lhe mostra a terra associada à promessa aos antepassados, dizendo que ele não passará para ela. A visão encerra sua jornada sem narrar a entrada posterior de Israel."
+      },
+      {
+        "references": [
+          "Deut.34.5-12"
+        ],
+        "en": "The following verses recount his death, the unknown burial place and Joshua’s succession. Nebo is the mountain in this scene, not one of the cities with the same name. The passage’s relationship between Nebo and Pisgah is preserved without turning it into a surveyed modern map or identifying Moses’ grave.",
+        "pt-BR": "Os versículos seguintes relatam sua morte, o lugar desconhecido da sepultura e a sucessão de Josué. Nebo é o monte dessa cena, não uma das cidades de mesmo nome. A relação entre Nebo e Pisga apresentada no texto é preservada, sem convertê-la em um mapa moderno medido nem identificar a sepultura de Moisés."
+      }
+    ]
+  },
+  {
+    "entityId": "step.place.H2809",
+    "name": {
+      "en": "Heshbon",
+      "pt-BR": "Hesbom"
+    },
+    "role": {
+      "en": "City of Sihon in the account east of the Jordan",
+      "pt-BR": "Cidade de Seom no relato a leste do Jordão"
+    },
+    "aliases": {
+      "en": [],
+      "pt-BR": []
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Num.21.21-26"
+        ],
+        "en": "Israel asks Sihon for passage through his territory, but he gathers his forces against them. The account then describes Israel taking his cities, including Heshbon. It identifies Heshbon as Sihon’s city and recalls that he had taken territory from a former king of Moab.",
+        "pt-BR": "Israel pede a Seom passagem por seu território, mas ele reúne suas forças contra o povo. O relato então descreve Israel tomando suas cidades, incluindo Hesbom. Identifica Hesbom como cidade de Seom e recorda que ele havia tomado território de um antigo rei de Moabe."
+      },
+      {
+        "references": [
+          "Num.21.27-32"
+        ],
+        "en": "A quoted poem about Heshbon interrupts the travel-and-battle account before the narrative resumes. Its poetic voice should be distinguished from the surrounding prose. This profile concerns that literary and narrative setting; it does not independently date a destruction layer or identify archaeological remains.",
+        "pt-BR": "Um poema citado sobre Hesbom interrompe o relato de viagem e batalha antes que a narrativa prossiga. Sua voz poética deve ser distinguida da prosa que a cerca. A ficha trata desse cenário literário e narrativo; não data de forma independente uma camada de destruição nem identifica vestígios arqueológicos."
+      }
+    ]
+  },
+  {
+    "entityId": "step.place.H1316",
+    "name": {
+      "en": "Bashan",
+      "pt-BR": "Basã"
+    },
+    "role": {
+      "en": "Region of Og’s kingdom in Numbers 21",
+      "pt-BR": "Região do reino de Ogue em Números 21"
+    },
+    "aliases": {
+      "en": [],
+      "pt-BR": []
+    },
+    "modernGeography": {
+      "en": null,
+      "pt-BR": null
+    },
+    "paragraphs": [
+      {
+        "references": [
+          "Num.21.33-35"
+        ],
+        "en": "After the account of Sihon, Israel turns toward Bashan. Og and his people come out to battle at Edrei, and the LORD tells Moses not to fear. The short report links the outcome with the earlier encounter with Sihon, while keeping the rulers and settings distinct.",
+        "pt-BR": "Depois do relato sobre Seom, Israel se dirige a Basã. Ogue e seu povo saem para a batalha em Edrei, e o Senhor diz a Moisés que não tema. O relato breve liga o resultado ao encontro anterior com Seom, mantendo distintos os governantes e os cenários."
+      },
+      {
+        "references": [
+          "Num.22.1-4"
+        ],
+        "en": "The next chapter moves Israel to the plains of Moab and explains Balak’s fear by what happened to the Amorites. This sequence connects the regional conflicts to the Balaam episode. Bashan is a region in this account, not another name for Heshbon or the plains of Moab.",
+        "pt-BR": "O capítulo seguinte leva Israel às campinas de Moabe e explica o medo de Balaque pelo que aconteceu aos amorreus. Essa sequência conecta os conflitos regionais ao episódio de Balaão. Basã é uma região nesse relato, não outro nome para Hesbom ou para as campinas de Moabe."
+      }
+    ]
+  }
+]

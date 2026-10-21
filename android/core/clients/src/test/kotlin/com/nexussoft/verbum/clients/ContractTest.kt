@@ -51,6 +51,31 @@ class ContractTest {
     }
 
     @Test
+    fun exodusProfilesUseExistingDetailContract() = runTest {
+        for (language in listOf(BookLanguage.ENGLISH, BookLanguage.PORTUGUESE)) {
+            val suffix = language.tag
+            for ((slug, id, en, pt) in listOf(
+                listOf("aaron", "step.person.H0175", "Aaron", "Arão"),
+                listOf("nebo", "step.place.H5015H", "Mount Nebo", "Monte Nebo"),
+            )) {
+                val detail = api("entities/$slug.$suffix.json", "/v1/entities/$id?lang=$suffix")
+                    .entityDetail(id, language)
+                assertEquals(id, detail.entity.id)
+                assertEquals(if (language == BookLanguage.PORTUGUESE) pt else en, detail.entity.name)
+                assertTrue(detail.entity.summary?.contains("\n\n") == true)
+                assertNotNull(detail.role)
+                assertTrue(detail.approximateDates == null && detail.modernGeography == null)
+                assertEquals(if (slug == "aaron") PassageReference("Exod", 7, 1..13)
+                    else PassageReference("Deut", 34, 1..4), detail.keyPassages.first())
+                assertTrue(detail.sources.any { it.id == "editorial.profiles.exodus.2026-10" })
+                assertTrue(detail.sources.filter { it.id.startsWith("study.scripture.") }
+                    .all { it.webUrl != null })
+                assertTrue(detail.eventSequence == null && detail.originalTerm == null)
+            }
+        }
+    }
+
+    @Test
     fun entityList() = runTest {
         val live = LiveGraphClient(api("entities/people.json", "/v1/entities?type=person&lang=en")) { BookLanguage.ENGLISH }
         val expected = FixtureGraphClient.entities(BibleEntityType.PERSON)

@@ -1,0 +1,212 @@
+[
+  {
+    "entityId": "fixture.person.moses",
+    "type": "person",
+    "recordId": "step.TIPNR.H4872",
+    "externalId": "H4872",
+    "uniqueName": "Moses@Exo.2.10-Rev"
+  },
+  {
+    "entityId": "step.person.H0175",
+    "type": "person",
+    "recordId": "step.TIPNR.H0175",
+    "externalId": "H0175",
+    "uniqueName": "Aaron@Exo.4.14-Heb"
+  },
+  {
+    "entityId": "step.person.H4813G",
+    "type": "person",
+    "recordId": "step.TIPNR.H4813G",
+    "externalId": "H4813G",
+    "uniqueName": "Miriam@Exo.15.20-Mic"
+  },
+  {
+    "entityId": "step.person.H3503",
+    "type": "person",
+    "recordId": "step.TIPNR.H3503",
+    "externalId": "H3503",
+    "uniqueName": "Jethro@Exo.2.18-Num"
+  },
+  {
+    "entityId": "step.person.H6855",
+    "type": "person",
+    "recordId": "step.TIPNR.H6855",
+    "externalId": "H6855",
+    "uniqueName": "Zipporah@Exo.2.21-"
+  },
+  {
+    "entityId": "step.person.H1647G",
+    "type": "person",
+    "recordId": "step.TIPNR.H1647G",
+    "externalId": "H1647G",
+    "uniqueName": "Gershom@Exo.2.22-1Ch"
+  },
+  {
+    "entityId": "step.person.H0461H",
+    "type": "person",
+    "recordId": "step.TIPNR.H0461H",
+    "externalId": "H0461H",
+    "uniqueName": "Eliezer@Exo.18.4-1Ch"
+  },
+  {
+    "entityId": "step.person.H3091G",
+    "type": "person",
+    "recordId": "step.TIPNR.H3091G",
+    "externalId": "H3091G",
+    "uniqueName": "Joshua@Exo.17.9-Heb"
+  },
+  {
+    "entityId": "step.person.H3612G",
+    "type": "person",
+    "recordId": "step.TIPNR.H3612G",
+    "externalId": "H3612G",
+    "uniqueName": "Caleb@Num.13.6-1Ch"
+  },
+  {
+    "entityId": "step.person.H2354G",
+    "type": "person",
+    "recordId": "step.TIPNR.H2354G",
+    "externalId": "H2354G",
+    "uniqueName": "Hur@Exo.17.10-2Ch"
+  },
+  {
+    "entityId": "step.person.H1109A",
+    "type": "person",
+    "recordId": "step.TIPNR.H1109A",
+    "externalId": "H1109A",
+    "uniqueName": "Balaam@Num.22.5-Rev"
+  },
+  {
+    "entityId": "step.person.H1111",
+    "type": "person",
+    "recordId": "step.TIPNR.H1111",
+    "externalId": "H1111",
+    "uniqueName": "Balak@Num.22.2-Rev"
+  },
+  {
+    "entityId": "step.person.H6547I",
+    "type": "person",
+    "recordId": "step.TIPNR.H6547I",
+    "externalId": "H6547I",
+    "uniqueName": "Pharaoh@Exo.1.11-Heb"
+  },
+  {
+    "entityId": "step.person.H6547J",
+    "type": "person",
+    "recordId": "step.TIPNR.H6547J",
+    "externalId": "H6547J",
+    "uniqueName": "Pharaoh@Exo.3.10-Rom"
+  },
+  {
+    "entityId": "step.person.H6547O",
+    "type": "person",
+    "recordId": "step.TIPNR.H6547O",
+    "externalId": "H6547O",
+    "uniqueName": "daughter_of_Pharaoh@Exo.2.5"
+  },
+  {
+    "entityId": "fixture.place.egypt",
+    "type": "place",
+    "recordId": "step.TIPNR.H4714G",
+    "externalId": "H4714G",
+    "uniqueName": "Egypt@Gen.12.10-Rev"
+  },
+  {
+    "entityId": "step.place.H4080H",
+    "type": "place",
+    "recordId": "step.TIPNR.H4080H",
+    "externalId": "H4080H",
+    "uniqueName": "Midian@Gen.36.35-Act"
+  },
+  {
+    "entityId": "step.place.H5514G",
+    "type": "place",
+    "recordId": "step.TIPNR.H5514G",
+    "externalId": "H5514G",
+    "uniqueName": "Sinai@Exo.3.1-Gal"
+  },
+  {
+    "entityId": "step.place.H5488G",
+    "type": "place",
+    "recordId": "step.TIPNR.H5488G",
+    "externalId": "H5488G",
+    "uniqueName": "Red_Sea@Exo.10.19-Heb"
+  },
+  {
+    "entityId": "step.place.H4785",
+    "type": "place",
+    "recordId": "step.TIPNR.H4785",
+    "externalId": "H4785",
+    "uniqueName": "Marah@Exo.15.23-Num"
+  },
+  {
+    "entityId": "step.place.H0362",
+    "type": "place",
+    "recordId": "step.TIPNR.H0362",
+    "externalId": "H0362",
+    "uniqueName": "Elim@Exo.15.27-Num"
+  },
+  {
+    "entityId": "step.place.H5512B",
+    "type": "place",
+    "recordId": "step.TIPNR.H5512B",
+    "externalId": "H5512B",
+    "uniqueName": "Sin@Exo.16.1-Num"
+  },
+  {
+    "entityId": "step.place.H7508",
+    "type": "place",
+    "recordId": "step.TIPNR.H7508",
+    "externalId": "H7508",
+    "uniqueName": "Rephidim@Exo.17.1-Num"
+  },
+  {
+    "entityId": "step.place.H6290G",
+    "type": "place",
+    "recordId": "step.TIPNR.H6290G",
+    "externalId": "H6290G",
+    "uniqueName": "Paran@Gen.21.21-1Ki"
+  },
+  {
+    "entityId": "step.place.H6946G",
+    "type": "place",
+    "recordId": "step.TIPNR.H6946G",
+    "externalId": "H6946G",
+    "uniqueName": "Kadesh@Gen.14.7-Psa"
+  },
+  {
+    "entityId": "step.place.H3667A",
+    "type": "place",
+    "recordId": "step.TIPNR.H3667A",
+    "externalId": "H3667A",
+    "uniqueName": "Canaan@Gen.10.18-Act"
+  },
+  {
+    "entityId": "step.place.H4124G",
+    "type": "place",
+    "recordId": "step.TIPNR.H4124G",
+    "externalId": "H4124G",
+    "uniqueName": "Moab@Gen.19.37b-Zep"
+  },
+  {
+    "entityId": "step.place.H5015H",
+    "type": "place",
+    "recordId": "step.TIPNR.H5015H",
+    "externalId": "H5015H",
+    "uniqueName": "Nebo_Mount@Num.27.12-Jer"
+  },
+  {
+    "entityId": "step.place.H2809",
+    "type": "place",
+    "recordId": "step.TIPNR.H2809",
+    "externalId": "H2809",
+    "uniqueName": "Heshbon@Num.21.25-Jer"
+  },
+  {
+    "entityId": "step.place.H1316",
+    "type": "place",
+    "recordId": "step.TIPNR.H1316",
+    "externalId": "H1316",
+    "uniqueName": "Bashan@Num.21.33-Zec"
+  }
+]

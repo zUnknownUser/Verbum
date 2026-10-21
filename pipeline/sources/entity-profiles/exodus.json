@@ -1,0 +1,2698 @@
+{
+  "version": 9,
+  "entityProfiles": [
+    {
+      "entityId": "fixture.person.moses",
+      "type": "person",
+      "recordId": "step.TIPNR.H4872",
+      "externalId": "H4872",
+      "uniqueName": "Moses@Exo.2.10-Rev",
+      "presentations": {
+        "en": {
+          "name": "Moses",
+          "aliases": [],
+          "summary": "Moses is the Hebrew child rescued and adopted by Pharaoh’s daughter. As an adult he kills an Egyptian who is beating a Hebrew and flees to Midian. At the burning bush, God calls him to return to Egypt and bring Israel out; the narrative includes his questions and reluctance, rather than presenting an effortless vocation.\n\nAt the sea he addresses the frightened people and acts at God’s command. After the golden calf, he intercedes for the people but also confronts their worship. Read these scenes together: leadership involves both delivering a message and answering for a community in crisis.\n\nThe closing chapter places his death in Moab and the transition to Joshua before entry into the land. Its tribute concerns his unique prophetic relationship with God. It does not supply a modern calendar date or locate his tomb for the reader.",
+          "role": "Prophet and leader in the departure from Egypt",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Moisés",
+          "aliases": [],
+          "summary": "Moisés é o menino hebreu resgatado e adotado pela filha do faraó. Adulto, mata um egípcio que agride um hebreu e foge para Midiã. Na sarça ardente, Deus o chama a voltar ao Egito e tirar Israel de lá; o relato inclui suas perguntas e resistência, sem apresentar uma vocação fácil.\n\nDiante do mar, dirige-se ao povo amedrontado e age por ordem de Deus. Depois do bezerro de ouro, intercede pelo povo e também confronta seu culto. Lidas em conjunto, essas cenas mostram uma liderança que comunica a palavra recebida e responde por uma comunidade em crise.\n\nO capítulo final situa sua morte em Moabe e a transição para Josué antes da entrada na terra. A homenagem destaca sua relação profética singular com Deus. O texto não fornece uma data no calendário moderno nem localiza sua sepultura para o leitor.",
+          "role": "Profeta e líder na saída do Egito",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Exod",
+          "chapter": 2,
+          "verseStart": 1,
+          "verseEnd": 25
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 3,
+          "verseStart": 1,
+          "verseEnd": 15
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 14,
+          "verseStart": 10,
+          "verseEnd": 31
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 32,
+          "verseStart": 7,
+          "verseEnd": 35
+        },
+        {
+          "bookId": "Deut",
+          "chapter": 34,
+          "verseStart": 1,
+          "verseEnd": 12
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Deut.34",
+        "study.scripture.Exod.14",
+        "study.scripture.Exod.2",
+        "study.scripture.Exod.3",
+        "study.scripture.Exod.32"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.person.H0175",
+      "type": "person",
+      "recordId": "step.TIPNR.H0175",
+      "externalId": "H0175",
+      "uniqueName": "Aaron@Exo.4.14-Heb",
+      "presentations": {
+        "en": {
+          "name": "Aaron",
+          "aliases": [],
+          "summary": "Aaron accompanies Moses before Pharaoh and speaks in the role assigned to him. The staff sign introduces their confrontation with the court. He is a participant in the mission, not the source of the authority they announce.\n\nWith Hur he supports Moses’ hands during the battle against Amalek. Yet in the golden-calf episode he receives the people’s gold, makes the calf and builds an altar. These contrasting actions prevent his leadership from being read as an uninterrupted model of faithfulness.\n\nThe instructions for setting up the sanctuary include washing, clothing and anointing Aaron for priestly service. His appointment and his failure belong to the same narrative; one should not erase the other.",
+          "role": "Moses’ brother, spokesman and priest",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Arão",
+          "aliases": [],
+          "summary": "Arão acompanha Moisés diante do faraó e fala na função que lhe é atribuída. O sinal da vara introduz o confronto com a corte. Ele participa da missão, mas não é a origem da autoridade que anunciam.\n\nCom Hur, sustenta as mãos de Moisés durante a batalha contra Amaleque. Contudo, no episódio do bezerro de ouro, recebe o ouro do povo, faz o bezerro e constrói um altar. O contraste impede que sua liderança seja lida como um modelo de fidelidade sem falhas.\n\nAs instruções para instalar o santuário incluem lavar, vestir e ungir Arão para o serviço sacerdotal. Sua nomeação e sua falha pertencem à mesma narrativa; uma não deve apagar a outra.",
+          "role": "Irmão de Moisés, porta-voz e sacerdote",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Exod",
+          "chapter": 7,
+          "verseStart": 1,
+          "verseEnd": 13
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 17,
+          "verseStart": 8,
+          "verseEnd": 13
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 32,
+          "verseStart": 1,
+          "verseEnd": 6
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 40,
+          "verseStart": 12,
+          "verseEnd": 16
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Exod.17",
+        "study.scripture.Exod.32",
+        "study.scripture.Exod.40",
+        "study.scripture.Exod.7"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.person.H4813G",
+      "type": "person",
+      "recordId": "step.TIPNR.H4813G",
+      "externalId": "H4813G",
+      "uniqueName": "Miriam@Exo.15.20-Mic",
+      "presentations": {
+        "en": {
+          "name": "Miriam",
+          "aliases": [],
+          "summary": "Miriam is named as a prophetess and Aaron’s sister when she leads the women with tambourines and dancing after the sea crossing. Her refrain answers the preceding song and attributes deliverance to the LORD.\n\nExodus 2 describes the child Moses’ sister watching the basket and arranging for his mother to nurse him, but does not name her there. Numbers 26 names Miriam with Aaron and Moses in the family genealogy. The connection should be made explicitly across these passages, not treated as a name written in Exodus 2.",
+          "role": "Prophetess and leader of the women’s song",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Miriã",
+          "aliases": [],
+          "summary": "Miriã é chamada de profetisa e irmã de Arão quando conduz as mulheres com tamborins e danças depois da travessia do mar. Seu refrão responde ao cântico anterior e atribui o livramento ao Senhor.\n\nÊxodo 2 descreve a irmã do menino Moisés observando o cesto e providenciando que sua mãe o amamente, mas não a nomeia ali. Números 26 nomeia Miriã com Arão e Moisés na genealogia da família. A conexão deve ser feita explicitamente entre os textos, sem tratar o nome como se estivesse escrito em Êxodo 2.",
+          "role": "Profetisa e líder do cântico das mulheres",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Exod",
+          "chapter": 15,
+          "verseStart": 19,
+          "verseEnd": 21
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 2,
+          "verseStart": 4,
+          "verseEnd": 10
+        },
+        {
+          "bookId": "Num",
+          "chapter": 26,
+          "verseStart": 59,
+          "verseEnd": 59
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Exod.15",
+        "study.scripture.Exod.2",
+        "study.scripture.Num.26"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.person.H3503",
+      "type": "person",
+      "recordId": "step.TIPNR.H3503",
+      "externalId": "H3503",
+      "uniqueName": "Jethro@Exo.2.18-Num",
+      "presentations": {
+        "en": {
+          "name": "Jethro",
+          "aliases": [
+            "Reuel"
+          ],
+          "summary": "Jethro is the priest of Midian whose flock Moses tends. He later brings Zipporah and her sons to Moses, hears the account of deliverance and shares a sacrificial meal with Aaron and Israel’s elders. His advice follows this encounter and its acknowledgment of God’s action.\n\nSeeing Moses judge disputes alone, he proposes capable, trustworthy leaders to share the work, with difficult matters reserved for Moses. The passage connects delegation with teaching the people and protecting both leader and community from exhaustion.\n\nThe family scene in Exodus 2 calls the daughters’ father Reuel; Exodus 3 and 18 use Jethro for Moses’ father-in-law. This catalogue follows its existing combined identity while keeping the variation visible. The brief notices do not establish a full family history.",
+          "role": "Priest of Midian and Moses’ father-in-law",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Jetro",
+          "aliases": [
+            "Reuel"
+          ],
+          "summary": "Jetro é o sacerdote de Midiã cujo rebanho Moisés apascenta. Depois leva Zípora e os filhos dela a Moisés, ouve o relato do livramento e participa de uma refeição sacrificial com Arão e os anciãos de Israel. Seu conselho vem depois desse encontro e do reconhecimento da ação de Deus.\n\nAo ver Moisés julgar as disputas sozinho, propõe líderes capazes e confiáveis para repartir o trabalho, deixando os casos difíceis para Moisés. A passagem liga a delegação ao ensino do povo e à proteção do líder e da comunidade contra o esgotamento.\n\nA cena familiar de Êxodo 2 chama o pai das filhas de Reuel; Êxodo 3 e 18 usam Jetro para o sogro de Moisés. O catálogo mantém sua identidade combinada já existente, deixando a variação visível. Essas notícias breves não estabelecem uma história familiar completa.",
+          "role": "Sacerdote de Midiã e sogro de Moisés",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Exod",
+          "chapter": 3,
+          "verseStart": 1,
+          "verseEnd": 1
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 18,
+          "verseStart": 1,
+          "verseEnd": 12
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 18,
+          "verseStart": 13,
+          "verseEnd": 27
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 2,
+          "verseStart": 16,
+          "verseEnd": 22
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Exod.18",
+        "study.scripture.Exod.2",
+        "study.scripture.Exod.3"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.person.H6855",
+      "type": "person",
+      "recordId": "step.TIPNR.H6855",
+      "externalId": "H6855",
+      "uniqueName": "Zipporah@Exo.2.21-",
+      "presentations": {
+        "en": {
+          "name": "Zipporah",
+          "aliases": [],
+          "summary": "Zipporah is named after Moses helps the daughters of the priest of Midian at the well. She becomes his wife and bears Gershom. This family scene belongs to Moses’ time as a foreigner, before his commission at the burning bush.\n\nJethro brings her and her two sons to Moses after the departure from Egypt. The text says she had been sent away, but this passage does not narrate the circumstances or give her own account. Her reunion is part of the story’s family setting, not a separate leadership appointment.",
+          "role": "Moses’ wife, from the household in Midian",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Zípora",
+          "aliases": [],
+          "summary": "Zípora é nomeada depois de Moisés ajudar as filhas do sacerdote de Midiã junto ao poço. Torna-se sua esposa e dá à luz Gérson. A cena familiar pertence ao período em que Moisés vive como estrangeiro, antes de sua missão na sarça ardente.\n\nJetro a leva, com seus dois filhos, a Moisés depois da saída do Egito. O texto diz que ela havia sido enviada de volta, mas essa passagem não narra as circunstâncias nem apresenta seu próprio relato. O reencontro integra o contexto familiar da história, sem constituir uma nomeação de liderança.",
+          "role": "Esposa de Moisés, da família de Midiã",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Exod",
+          "chapter": 2,
+          "verseStart": 16,
+          "verseEnd": 22
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 18,
+          "verseStart": 1,
+          "verseEnd": 6
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Exod.18",
+        "study.scripture.Exod.2"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.person.H1647G",
+      "type": "person",
+      "recordId": "step.TIPNR.H1647G",
+      "externalId": "H1647G",
+      "uniqueName": "Gershom@Exo.2.22-1Ch",
+      "presentations": {
+        "en": {
+          "name": "Gershom, son of Moses",
+          "aliases": [
+            "Gershom"
+          ],
+          "summary": "Gershom is born to Moses and Zipporah during Moses’ stay in Midian. Moses explains the name by recalling his life as a foreigner in another land. The naming preserves that experience within the family story.\n\nHe returns to Moses with his mother, his brother Eliezer and Jethro. The passage distinguishes the two sons and the memories attached to their names. It does not describe a public office or further achievements for Gershom in this part of the journey.",
+          "role": "Son of Moses and Zipporah",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Gérson, filho de Moisés",
+          "aliases": [
+            "Gérson",
+            "Gersom"
+          ],
+          "summary": "Gérson nasce de Moisés e Zípora durante a permanência de Moisés em Midiã. Moisés explica o nome recordando sua vida como estrangeiro em outra terra. A nomeação preserva essa experiência na história familiar.\n\nVolta a Moisés com sua mãe, seu irmão Eliézer e Jetro. A passagem distingue os dois filhos e as lembranças associadas aos nomes. Não descreve um cargo público nem outros feitos de Gérson nessa parte da jornada.",
+          "role": "Filho de Moisés e Zípora",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Exod",
+          "chapter": 2,
+          "verseStart": 21,
+          "verseEnd": 22
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 18,
+          "verseStart": 2,
+          "verseEnd": 6
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Exod.18",
+        "study.scripture.Exod.2"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.person.H0461H",
+      "type": "person",
+      "recordId": "step.TIPNR.H0461H",
+      "externalId": "H0461H",
+      "uniqueName": "Eliezer@Exo.18.4-1Ch",
+      "presentations": {
+        "en": {
+          "name": "Eliezer, son of Moses",
+          "aliases": [
+            "Eliezer"
+          ],
+          "summary": "Eliezer is the other son named when Jethro brings Moses’ family to the wilderness camp. Moses connects his name with God’s help and rescue from Pharaoh’s sword. Unlike Gershom’s naming in Exodus 2, this notice is given during the reunion.\n\nThe two naming explanations hold foreignness and rescue together. This Eliezer is identified by his parents and brother; the passage gives no basis for merging him with other people of the same name or assigning him a leadership role.",
+          "role": "Son of Moses and Zipporah",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Eliézer, filho de Moisés",
+          "aliases": [
+            "Eliézer"
+          ],
+          "summary": "Eliézer é o outro filho nomeado quando Jetro leva a família de Moisés ao acampamento no deserto. Moisés associa seu nome à ajuda de Deus e ao livramento da espada do faraó. Diferentemente da nomeação de Gérson em Êxodo 2, essa notícia aparece durante o reencontro.\n\nAs duas explicações dos nomes aproximam a condição de estrangeiro e o livramento. Este Eliézer é identificado por seus pais e irmão; a passagem não permite reuni-lo com outros personagens de mesmo nome nem atribuir-lhe uma função de liderança.",
+          "role": "Filho de Moisés e Zípora",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Exod",
+          "chapter": 18,
+          "verseStart": 2,
+          "verseEnd": 6
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 18,
+          "verseStart": 3,
+          "verseEnd": 4
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Exod.18"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.person.H3091G",
+      "type": "person",
+      "recordId": "step.TIPNR.H3091G",
+      "externalId": "H3091G",
+      "uniqueName": "Joshua@Exo.17.9-Heb",
+      "presentations": {
+        "en": {
+          "name": "Joshua, son of Nun",
+          "aliases": [
+            "Joshua",
+            "Hoshea son of Nun"
+          ],
+          "summary": "Joshua leads the fighting against Amalek while Moses, Aaron and Hur remain on the hill. Later he hears the sound from the camp and thinks it is battle; Moses distinguishes it from a victory or defeat cry. These scenes place him beside Moses before the succession.\n\nThe list of scouts identifies him as Hoshea son of Nun, whom Moses calls Joshua. With Caleb he urges the congregation not to rebel or fear the inhabitants of the land. Their disagreement concerns how to respond to the same land, not a different expedition.\n\nAt Moses’ death, Joshua is described as filled with the spirit of wisdom, and Israel listens to him. The transfer of leadership does not erase the chapter’s distinct tribute to Moses.",
+          "role": "Moses’ assistant and successor",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Josué, filho de Num",
+          "aliases": [
+            "Josué",
+            "Oseias, filho de Num"
+          ],
+          "summary": "Josué comanda a luta contra Amaleque enquanto Moisés, Arão e Hur ficam na colina. Depois ouve o som do acampamento e pensa ser uma batalha; Moisés o distingue de gritos de vitória ou derrota. Essas cenas o situam ao lado de Moisés antes da sucessão.\n\nA lista dos exploradores o identifica como Oseias, filho de Num, a quem Moisés chama Josué. Com Calebe, exorta a comunidade a não se rebelar nem temer os habitantes da terra. A discordância envolve a resposta à mesma terra, não uma expedição diferente.\n\nNa morte de Moisés, Josué é descrito como cheio do espírito de sabedoria, e Israel o ouve. A transferência de liderança não apaga a homenagem particular que o capítulo presta a Moisés.",
+          "role": "Auxiliar e sucessor de Moisés",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Exod",
+          "chapter": 17,
+          "verseStart": 8,
+          "verseEnd": 16
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 32,
+          "verseStart": 17,
+          "verseEnd": 18
+        },
+        {
+          "bookId": "Num",
+          "chapter": 13,
+          "verseStart": 8,
+          "verseEnd": 16
+        },
+        {
+          "bookId": "Num",
+          "chapter": 14,
+          "verseStart": 6,
+          "verseEnd": 9
+        },
+        {
+          "bookId": "Deut",
+          "chapter": 34,
+          "verseStart": 9,
+          "verseEnd": 12
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Deut.34",
+        "study.scripture.Exod.17",
+        "study.scripture.Exod.32",
+        "study.scripture.Num.13",
+        "study.scripture.Num.14"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.person.H3612G",
+      "type": "person",
+      "recordId": "step.TIPNR.H3612G",
+      "externalId": "H3612G",
+      "uniqueName": "Caleb@Num.13.6-1Ch",
+      "presentations": {
+        "en": {
+          "name": "Caleb, son of Jephunneh",
+          "aliases": [
+            "Caleb"
+          ],
+          "summary": "Caleb son of Jephunneh represents Judah in the exploration of Canaan. When the report of strong inhabitants unsettles the people, he calls for going up and taking the land. His response contrasts with the fear expressed by the other speakers.\n\nTogether with Joshua he appeals to the LORD’s presence and warns against rebellion. The following judgment singles out his different spirit and wholehearted following; Caleb and Joshua are excepted from the exclusion of that generation. This profile concerns this named scout, not every Caleb in biblical genealogies.",
+          "role": "Judah’s representative among the scouts",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Calebe, filho de Jefoné",
+          "aliases": [
+            "Calebe"
+          ],
+          "summary": "Calebe, filho de Jefoné, representa Judá na exploração de Canaã. Quando o relato de habitantes fortes inquieta o povo, ele propõe subir e tomar a terra. Sua resposta contrasta com o medo expresso pelos outros participantes.\n\nCom Josué, apela à presença do Senhor e adverte contra a rebelião. O julgamento seguinte destaca seu espírito diferente e sua fidelidade; Calebe e Josué são excetuados da exclusão daquela geração. Esta ficha trata desse explorador identificado, não de todo Calebe mencionado nas genealogias bíblicas.",
+          "role": "Representante de Judá entre os exploradores",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Num",
+          "chapter": 13,
+          "verseStart": 6,
+          "verseEnd": 6
+        },
+        {
+          "bookId": "Num",
+          "chapter": 13,
+          "verseStart": 26,
+          "verseEnd": 33
+        },
+        {
+          "bookId": "Num",
+          "chapter": 14,
+          "verseStart": 6,
+          "verseEnd": 9
+        },
+        {
+          "bookId": "Num",
+          "chapter": 14,
+          "verseStart": 20,
+          "verseEnd": 30
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Num.13",
+        "study.scripture.Num.14"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.person.H2354G",
+      "type": "person",
+      "recordId": "step.TIPNR.H2354G",
+      "externalId": "H2354G",
+      "uniqueName": "Hur@Exo.17.10-2Ch",
+      "presentations": {
+        "en": {
+          "name": "Hur, companion of Moses",
+          "aliases": [
+            "Hur"
+          ],
+          "summary": "Hur goes with Moses and Aaron to the hill while Joshua fights Amalek. When Moses’ hands grow heavy, Aaron and Hur seat him on a stone and hold his hands steady until sunset. The scene gives practical support a visible place in the account of deliverance.\n\nA later notice leaves Aaron and Hur available for disputes while Moses goes up the mountain. These passages establish companionship and responsibility. They do not identify Hur’s wife or parents, so this profile does not add family traditions as if they were stated here.",
+          "role": "Supporter of Moses during the battle with Amalek",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Hur, companheiro de Moisés",
+          "aliases": [
+            "Hur"
+          ],
+          "summary": "Hur sobe à colina com Moisés e Arão enquanto Josué combate Amaleque. Quando as mãos de Moisés ficam pesadas, Arão e Hur o sentam sobre uma pedra e sustentam suas mãos até o pôr do sol. A cena dá ao auxílio concreto um lugar visível no relato do livramento.\n\nUma notícia posterior deixa Arão e Hur disponíveis para resolver questões enquanto Moisés sobe ao monte. Essas passagens estabelecem companhia e responsabilidade. Não identificam a esposa nem os pais de Hur; por isso, esta ficha não acrescenta tradições familiares como se fossem afirmadas aqui.",
+          "role": "Auxiliar de Moisés na batalha contra Amaleque",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Exod",
+          "chapter": 17,
+          "verseStart": 8,
+          "verseEnd": 13
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 24,
+          "verseStart": 12,
+          "verseEnd": 14
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Exod.17",
+        "study.scripture.Exod.24"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.person.H1109A",
+      "type": "person",
+      "recordId": "step.TIPNR.H1109A",
+      "externalId": "H1109A",
+      "uniqueName": "Balaam@Num.22.5-Rev",
+      "presentations": {
+        "en": {
+          "name": "Balaam",
+          "aliases": [],
+          "summary": "Balak summons Balaam son of Beor to curse Israel. Balaam consults God and initially refuses to go; after another embassy, he receives permission constrained by the command to speak only what God tells him. The successive messages matter for understanding the tension in the journey.\n\nOn the road, the donkey sees the angel before Balaam does. His anger and the opening of his eyes overturn the expected contrast between the seeing specialist and his animal. The angel again restricts what he may speak.\n\nThe chapter ends with his arrival before Balak and preparation for the next scene. The oracles belong to the following chapters; the encounter on the road should not be presented as the complete account of Balaam.",
+          "role": "Seer summoned by Balak",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Balaão",
+          "aliases": [],
+          "summary": "Balaque convoca Balaão, filho de Beor, para amaldiçoar Israel. Balaão consulta Deus e inicialmente recusa ir; depois de outra comitiva, recebe permissão condicionada à ordem de falar apenas o que Deus lhe disser. As mensagens sucessivas importam para compreender a tensão da viagem.\n\nNo caminho, a jumenta vê o anjo antes de Balaão. Sua ira e a abertura de seus olhos invertem o contraste esperado entre o especialista em ver e seu animal. O anjo volta a restringir o que ele pode falar.\n\nO capítulo termina com sua chegada diante de Balaque e a preparação da cena seguinte. Os oráculos pertencem aos capítulos posteriores; o encontro no caminho não deve ser apresentado como o relato completo de Balaão.",
+          "role": "Vidente convocado por Balaque",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Num",
+          "chapter": 22,
+          "verseStart": 5,
+          "verseEnd": 21
+        },
+        {
+          "bookId": "Num",
+          "chapter": 22,
+          "verseStart": 22,
+          "verseEnd": 35
+        },
+        {
+          "bookId": "Num",
+          "chapter": 22,
+          "verseStart": 36,
+          "verseEnd": 41
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Num.22"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.person.H1111",
+      "type": "person",
+      "recordId": "step.TIPNR.H1111",
+      "externalId": "H1111",
+      "uniqueName": "Balak@Num.22.2-Rev",
+      "presentations": {
+        "en": {
+          "name": "Balak",
+          "aliases": [],
+          "summary": "Balak son of Zippor is king of Moab when Israel camps across the Jordan from Jericho. Alarmed by what Israel did to the Amorites and by the people’s numbers, he seeks a curse through Balaam. The passage locates his initiative in political fear.\n\nHe sends a second, more distinguished delegation and offers honor, then challenges Balaam over the delay. Balaam answers that he can speak only the word God puts in his mouth. The contrast sets royal expectation against a speech the king cannot simply purchase or command.",
+          "role": "King of Moab who summons Balaam",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Balaque",
+          "aliases": [],
+          "summary": "Balaque, filho de Zipor, é rei de Moabe quando Israel acampa do outro lado do Jordão, diante de Jericó. Alarmado pelo que Israel fez aos amorreus e pela quantidade de pessoas, procura obter uma maldição por meio de Balaão. A passagem situa sua iniciativa no medo político.\n\nEnvia uma segunda comitiva, mais importante, e oferece honra; depois questiona Balaão sobre a demora. Balaão responde que só pode dizer a palavra que Deus colocar em sua boca. O contraste opõe a expectativa real a uma fala que o rei não pode simplesmente comprar ou comandar.",
+          "role": "Rei de Moabe que convoca Balaão",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Num",
+          "chapter": 22,
+          "verseStart": 1,
+          "verseEnd": 7
+        },
+        {
+          "bookId": "Num",
+          "chapter": 22,
+          "verseStart": 15,
+          "verseEnd": 17
+        },
+        {
+          "bookId": "Num",
+          "chapter": 22,
+          "verseStart": 36,
+          "verseEnd": 41
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Num.22"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.person.H6547I",
+      "type": "person",
+      "recordId": "step.TIPNR.H6547I",
+      "externalId": "H6547I",
+      "uniqueName": "Pharaoh@Exo.1.11-Heb",
+      "presentations": {
+        "en": {
+          "name": "Pharaoh during Moses’ early life",
+          "aliases": [
+            "Pharaoh"
+          ],
+          "summary": "The opening narrative describes a king who fears Israel’s growth, imposes forced labor and orders the killing of Hebrew boys. His daughter nevertheless rescues the child Moses. The story contrasts royal violence with the actions that preserve a child.\n\nAfter Moses kills an Egyptian, Pharaoh seeks to kill him, and Moses flees. The narrative then reports the king of Egypt’s death before Moses’ commission. This existing catalogue identity is therefore kept separate from the Pharaoh confronted during the plagues; no personal royal name or dynasty is supplied by these passages.",
+          "role": "Egyptian ruler in the opening oppression narrative",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Faraó da infância e fuga de Moisés",
+          "aliases": [
+            "Faraó"
+          ],
+          "summary": "O início do relato descreve um rei que teme o crescimento de Israel, impõe trabalho forçado e ordena a morte dos meninos hebreus. Sua filha, contudo, resgata o menino Moisés. A narrativa contrasta a violência real com as ações que preservam uma criança.\n\nDepois de Moisés matar um egípcio, o faraó procura matá-lo, e Moisés foge. A narrativa então relata a morte do rei do Egito antes do chamado de Moisés. Essa identidade já existente no catálogo é mantida separada do faraó confrontado nas pragas; essas passagens não fornecem um nome real pessoal nem uma dinastia.",
+          "role": "Governante egípcio no início da narrativa de opressão",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Exod",
+          "chapter": 1,
+          "verseStart": 8,
+          "verseEnd": 22
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 2,
+          "verseStart": 1,
+          "verseEnd": 10
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 2,
+          "verseStart": 11,
+          "verseEnd": 25
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Exod.1",
+        "study.scripture.Exod.2"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.person.H6547J",
+      "type": "person",
+      "recordId": "step.TIPNR.H6547J",
+      "externalId": "H6547J",
+      "uniqueName": "Pharaoh@Exo.3.10-Rom",
+      "presentations": {
+        "en": {
+          "name": "Pharaoh of the exodus",
+          "aliases": [
+            "Pharaoh"
+          ],
+          "summary": "This Pharaoh is the king to whom Moses is sent to demand Israel’s release. Moses and Aaron confront his court with a message and signs. He belongs to the stage after the king’s death reported in Exodus 2, so the catalogue does not merge the two reigns.\n\nHis responses include confession, proposed restrictions on departure and renewed refusal. Read the changes in who is permitted to leave alongside the repeated hardening of his heart; the narrative develops a sustained conflict, not a single negotiation.\n\nAfter the deaths of the firstborn he orders Israel to leave, but later pursues the departing people with his forces. These chapters do not name a historical dynasty. The account should not silently turn a proposed identification with a particular ruler into a fact.",
+          "role": "Egyptian ruler confronted by Moses and Aaron",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Faraó do êxodo",
+          "aliases": [
+            "Faraó"
+          ],
+          "summary": "Este faraó é o rei a quem Moisés é enviado para exigir a libertação de Israel. Moisés e Arão confrontam sua corte com uma mensagem e sinais. Ele pertence à etapa posterior à morte do rei relatada em Êxodo 2; por isso, o catálogo não reúne os dois reinados.\n\nSuas respostas incluem confissão, propostas de restrição à partida e nova recusa. Leia as mudanças sobre quem poderia sair junto ao endurecimento repetido de seu coração; o relato desenvolve um conflito prolongado, não uma única negociação.\n\nDepois da morte dos primogênitos, ordena a saída de Israel, mas depois persegue o povo com suas forças. Esses capítulos não nomeiam uma dinastia histórica. O relato não deve transformar silenciosamente uma identificação proposta com determinado governante em fato.",
+          "role": "Governante egípcio confrontado por Moisés e Arão",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Exod",
+          "chapter": 2,
+          "verseStart": 23,
+          "verseEnd": 23
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 3,
+          "verseStart": 7,
+          "verseEnd": 12
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 7,
+          "verseStart": 1,
+          "verseEnd": 13
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 9,
+          "verseStart": 27,
+          "verseEnd": 35
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 10,
+          "verseStart": 24,
+          "verseEnd": 29
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 12,
+          "verseStart": 29,
+          "verseEnd": 32
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 14,
+          "verseStart": 5,
+          "verseEnd": 31
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Exod.10",
+        "study.scripture.Exod.12",
+        "study.scripture.Exod.14",
+        "study.scripture.Exod.2",
+        "study.scripture.Exod.3",
+        "study.scripture.Exod.7",
+        "study.scripture.Exod.9"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.person.H6547O",
+      "type": "person",
+      "recordId": "step.TIPNR.H6547O",
+      "externalId": "H6547O",
+      "uniqueName": "daughter_of_Pharaoh@Exo.2.5",
+      "presentations": {
+        "en": {
+          "name": "Pharaoh’s daughter who rescued Moses",
+          "aliases": [
+            "Pharaoh’s daughter"
+          ],
+          "summary": "Pharaoh’s daughter finds the basket at the river, recognizes a Hebrew child and has compassion on him. At the sister’s suggestion she pays the child’s own mother to nurse him, then receives him as her son and names him Moses. Her action crosses the boundary created by the royal order against Hebrew boys.\n\nThe passage identifies her through her relationship to Pharaoh and her actions, not by a personal name. This profile keeps that limit and remains distinct from the daughter of Pharaoh mentioned in Solomon’s story. It does not assign a name from a later tradition.",
+          "role": "Royal woman who adopts the Hebrew child",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Filha do faraó que resgatou Moisés",
+          "aliases": [
+            "Filha do faraó"
+          ],
+          "summary": "A filha do faraó encontra o cesto no rio, reconhece um menino hebreu e se compadece dele. Por sugestão da irmã, paga à própria mãe do menino para amamentá-lo; depois o recebe como filho e lhe dá o nome de Moisés. Sua ação atravessa a barreira criada pela ordem real contra os meninos hebreus.\n\nA passagem a identifica por sua relação com o faraó e por suas ações, não por um nome pessoal. A ficha mantém esse limite e permanece distinta da filha do faraó mencionada na história de Salomão. Não lhe atribui um nome de tradição posterior.",
+          "role": "Mulher da família real que adota o menino hebreu",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Exod",
+          "chapter": 2,
+          "verseStart": 5,
+          "verseEnd": 10
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 1,
+          "verseStart": 22,
+          "verseEnd": 22
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Exod.1",
+        "study.scripture.Exod.2"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "fixture.place.egypt",
+      "type": "place",
+      "recordId": "step.TIPNR.H4714G",
+      "externalId": "H4714G",
+      "uniqueName": "Egypt@Gen.12.10-Rev",
+      "presentations": {
+        "en": {
+          "name": "Egypt",
+          "aliases": [],
+          "summary": "Egypt is the setting of Israel’s forced labor and Moses’ early life. God’s commission at the bush answers the suffering heard there. In this reading sequence, Egypt is both the place to which Moses must return and the place from which the people are to depart.\n\nThe Passover departure and the pursuit toward the sea connect liberation with a final threat from the Egyptian forces. These passages describe a narrative route; they do not establish precise coordinates for every stop or identify the Pharaoh by a personal name.",
+          "role": "Land of oppression and departure in the Exodus account",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Egito",
+          "aliases": [],
+          "summary": "O Egito é o cenário do trabalho forçado de Israel e do início da vida de Moisés. O chamado de Deus na sarça responde ao sofrimento ouvido ali. Neste percurso, é tanto o lugar ao qual Moisés deve voltar quanto aquele do qual o povo deve partir.\n\nA partida da Páscoa e a perseguição em direção ao mar ligam a libertação a uma última ameaça das forças egípcias. Essas passagens descrevem um percurso narrativo; não estabelecem coordenadas precisas para cada parada nem identificam o faraó por um nome pessoal.",
+          "role": "Terra da opressão e da partida no relato do Êxodo",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Exod",
+          "chapter": 2,
+          "verseStart": 1,
+          "verseEnd": 25
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 3,
+          "verseStart": 7,
+          "verseEnd": 10
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 12,
+          "verseStart": 29,
+          "verseEnd": 42
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 14,
+          "verseStart": 5,
+          "verseEnd": 31
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Exod.12",
+        "study.scripture.Exod.14",
+        "study.scripture.Exod.2",
+        "study.scripture.Exod.3"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.place.H4080H",
+      "type": "place",
+      "recordId": "step.TIPNR.H4080H",
+      "externalId": "H4080H",
+      "uniqueName": "Midian@Gen.36.35-Act",
+      "presentations": {
+        "en": {
+          "name": "Midian",
+          "aliases": [],
+          "summary": "Moses settles in the land of Midian after fleeing Pharaoh. At a well he helps the daughters of the local priest, is welcomed into their household and marries Zipporah. The move shifts the story from the Egyptian court and violence to work, hospitality and life as a foreigner.\n\nJethro’s title and the flock Moses tends retain this Midianite setting. Later Jethro brings Moses’ family to the wilderness camp. This profile concerns the region in these scenes, not the person named Midian in Genesis; the passages do not define its modern boundaries.",
+          "role": "Region of Moses’ refuge and family life",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Midiã",
+          "aliases": [],
+          "summary": "Moisés se estabelece na terra de Midiã depois de fugir do faraó. Junto a um poço, ajuda as filhas do sacerdote local, é acolhido na família e se casa com Zípora. A mudança leva a narrativa da corte e da violência egípcias para o trabalho, a hospitalidade e a vida como estrangeiro.\n\nO título de Jetro e o rebanho apascentado por Moisés preservam esse contexto midianita. Depois, Jetro leva a família de Moisés ao acampamento no deserto. A ficha trata da região dessas cenas, não da pessoa chamada Midiã em Gênesis; as passagens não definem suas fronteiras modernas.",
+          "role": "Região do refúgio e da vida familiar de Moisés",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Exod",
+          "chapter": 2,
+          "verseStart": 15,
+          "verseEnd": 22
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 3,
+          "verseStart": 1,
+          "verseEnd": 1
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 18,
+          "verseStart": 1,
+          "verseEnd": 6
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Exod.18",
+        "study.scripture.Exod.2",
+        "study.scripture.Exod.3"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.place.H5514G",
+      "type": "place",
+      "recordId": "step.TIPNR.H5514G",
+      "externalId": "H5514G",
+      "uniqueName": "Sinai@Exo.3.1-Gal",
+      "presentations": {
+        "en": {
+          "name": "Sinai / Horeb",
+          "aliases": [
+            "Sinai",
+            "Horeb"
+          ],
+          "summary": "Exodus 3 calls the mountain of God Horeb: Moses reaches it while tending Jethro’s flock and encounters the burning bush. The promised worship at this mountain links his commission with the people’s future departure.\n\nExodus 19 names Sinai when Israel camps before the mountain. Preparation, boundaries and the divine appearance frame the giving of the commandments. The mountain is a setting for covenant and encounter, not merely a stop on a travel list.\n\nThe existing catalogue groups Sinai and Horeb under one identity while the notes retain each passage’s wording. These chapters do not identify a modern summit; this profile does not choose an archaeological location or equate the mountain with the entire Sinai wilderness.",
+          "role": "Mountain associated with the call and covenant",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Sinai / Horebe",
+          "aliases": [
+            "Sinai",
+            "Horebe"
+          ],
+          "summary": "Êxodo 3 chama o monte de Deus de Horebe: Moisés chega a ele ao apascentar o rebanho de Jetro e encontra a sarça ardente. O culto prometido nesse monte liga sua missão à futura saída do povo.\n\nÊxodo 19 usa Sinai quando Israel acampa diante do monte. Preparação, limites e manifestação divina enquadram a entrega dos mandamentos. O monte é cenário de aliança e encontro, não apenas uma parada em uma lista de viagem.\n\nO catálogo existente reúne Sinai e Horebe em uma identidade, enquanto as notas preservam o nome usado em cada passagem. Esses capítulos não identificam um cume moderno; esta ficha não escolhe uma localização arqueológica nem confunde o monte com todo o deserto do Sinai.",
+          "role": "Monte associado ao chamado e à aliança",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Exod",
+          "chapter": 3,
+          "verseStart": 1,
+          "verseEnd": 12
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 19,
+          "verseStart": 1,
+          "verseEnd": 25
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 20,
+          "verseStart": 1,
+          "verseEnd": 21
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 3,
+          "verseStart": 1,
+          "verseEnd": 1
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 19,
+          "verseStart": 1,
+          "verseEnd": 2
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Exod.19",
+        "study.scripture.Exod.20",
+        "study.scripture.Exod.3"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.place.H5488G",
+      "type": "place",
+      "recordId": "step.TIPNR.H5488G",
+      "externalId": "H5488G",
+      "uniqueName": "Red_Sea@Exo.10.19-Heb",
+      "presentations": {
+        "en": {
+          "name": "Red Sea",
+          "aliases": [],
+          "summary": "The sea stands between the fleeing people and an escape from Pharaoh’s approaching forces. The narrative describes a passage through the waters, their return over the Egyptian force, and Israel’s recognition of deliverance. Moses acts at God’s command while the people move through.\n\nThe following song recalls the event and names the Red Sea; Miriam leads the women’s answering refrain. The account and the song give complementary narrative and poetic perspectives. These passages do not settle a precise modern crossing point, so no coordinates are asserted here.",
+          "role": "Sea associated with Israel’s crossing and song",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Mar Vermelho",
+          "aliases": [],
+          "summary": "O mar se interpõe entre o povo em fuga e a saída diante das forças do faraó que se aproximam. A narrativa descreve a passagem entre as águas, a volta delas sobre a força egípcia e o reconhecimento do livramento por Israel. Moisés age por ordem de Deus enquanto o povo atravessa.\n\nO cântico seguinte recorda o acontecimento e nomeia o mar Vermelho; Miriã conduz a resposta das mulheres. O relato e o cântico oferecem perspectivas narrativas e poéticas complementares. Essas passagens não determinam um ponto moderno preciso de travessia; por isso, a ficha não afirma coordenadas.",
+          "role": "Mar associado à travessia e ao cântico de Israel",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Exod",
+          "chapter": 14,
+          "verseStart": 10,
+          "verseEnd": 31
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 15,
+          "verseStart": 1,
+          "verseEnd": 21
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Exod.14",
+        "study.scripture.Exod.15"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.place.H4785",
+      "type": "place",
+      "recordId": "step.TIPNR.H4785",
+      "externalId": "H4785",
+      "uniqueName": "Marah@Exo.15.23-Num",
+      "presentations": {
+        "en": {
+          "name": "Marah",
+          "aliases": [],
+          "summary": "After three days in the wilderness without finding water, Israel reaches Marah and cannot drink its bitter water. The people complain, Moses cries to the LORD, and the water becomes drinkable after he throws in the wood shown to him. The place introduces the water crises that follow the sea crossing.\n\nThe scene connects testing with listening to God, then moves on to Elim. The account gives the place its narrative significance through the water; it does not identify a modern spring. Marah and Elim remain separate stops in this catalogue.",
+          "role": "Stop where bitter water becomes drinkable",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Mara",
+          "aliases": [],
+          "summary": "Depois de três dias no deserto sem encontrar água, Israel chega a Mara e não consegue beber suas águas amargas. O povo reclama, Moisés clama ao Senhor e a água se torna potável depois que ele lança nela a madeira que lhe é mostrada. O lugar introduz as crises de água que seguem a travessia do mar.\n\nA cena liga a prova à escuta de Deus e depois segue para Elim. O relato dá ao lugar sua importância narrativa por meio da água; não identifica uma fonte moderna. Mara e Elim permanecem como paradas distintas neste catálogo.",
+          "role": "Parada em que águas amargas se tornam potáveis",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Exod",
+          "chapter": 15,
+          "verseStart": 22,
+          "verseEnd": 25
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 15,
+          "verseStart": 25,
+          "verseEnd": 27
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Exod.15"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.place.H0362",
+      "type": "place",
+      "recordId": "step.TIPNR.H0362",
+      "externalId": "H0362",
+      "uniqueName": "Elim@Exo.15.27-Num",
+      "presentations": {
+        "en": {
+          "name": "Elim",
+          "aliases": [],
+          "summary": "Elim follows the crisis at Marah. The brief notice describes twelve springs and seventy palm trees, with Israel camping beside the water. Its contrast with the preceding bitter water gives the stop significance even though the narrative is short.\n\nThe next stage begins when the congregation leaves Elim for the wilderness of Sin. Remembering this order helps separate the provision at Elim from the hunger and complaints of the following chapter. Neither notice identifies a present-day oasis.",
+          "role": "Encampment with springs and palm trees",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Elim",
+          "aliases": [],
+          "summary": "Elim vem depois da crise em Mara. A notícia breve descreve doze fontes e setenta palmeiras, com Israel acampando junto à água. O contraste com a água amarga anterior dá importância à parada, mesmo em um relato curto.\n\nA etapa seguinte começa quando a comunidade deixa Elim em direção ao deserto de Sim. Observar essa ordem ajuda a separar a provisão em Elim da fome e das reclamações do capítulo seguinte. Nenhuma das notícias identifica um oásis atual.",
+          "role": "Acampamento com fontes e palmeiras",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Exod",
+          "chapter": 15,
+          "verseStart": 27,
+          "verseEnd": 27
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 16,
+          "verseStart": 1,
+          "verseEnd": 3
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Exod.15",
+        "study.scripture.Exod.16"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.place.H5512B",
+      "type": "place",
+      "recordId": "step.TIPNR.H5512B",
+      "externalId": "H5512B",
+      "uniqueName": "Sin@Exo.16.1-Num",
+      "presentations": {
+        "en": {
+          "name": "Wilderness of Sin",
+          "aliases": [
+            "Sin"
+          ],
+          "summary": "The congregation reaches the wilderness of Sin between Elim and Sinai. Hunger prompts a comparison with food remembered in Egypt, and Moses and Aaron announce God’s provision. The location frames a test of trust after departure, before arrival at Sinai.\n\nThe manna instructions regulate gathering, sharing and rest; they are not just a report of unusual food. Israel later travels from this wilderness toward Rephidim. This is the Sin of Exodus 16, not the wilderness of Zin mentioned in the scouts’ route in Numbers 13.",
+          "role": "Wilderness setting of the manna instructions",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Deserto de Sim",
+          "aliases": [
+            "Sim",
+            "Deserto de Sin"
+          ],
+          "summary": "A comunidade chega ao deserto de Sim, entre Elim e Sinai. A fome provoca uma comparação com a comida lembrada no Egito, e Moisés e Arão anunciam a provisão de Deus. O lugar enquadra uma prova de confiança depois da saída e antes da chegada ao Sinai.\n\nAs instruções sobre o maná regulam recolhimento, partilha e descanso; não são apenas um relato de alimento incomum. Israel depois viaja desse deserto em direção a Refidim. Trata-se do Sim de Êxodo 16, não do deserto de Zim mencionado no percurso dos exploradores em Números 13.",
+          "role": "Deserto das instruções sobre o maná",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Exod",
+          "chapter": 16,
+          "verseStart": 1,
+          "verseEnd": 12
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 16,
+          "verseStart": 13,
+          "verseEnd": 30
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 17,
+          "verseStart": 1,
+          "verseEnd": 1
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Exod.16",
+        "study.scripture.Exod.17"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.place.H7508",
+      "type": "place",
+      "recordId": "step.TIPNR.H7508",
+      "externalId": "H7508",
+      "uniqueName": "Rephidim@Exo.17.1-Num",
+      "presentations": {
+        "en": {
+          "name": "Rephidim",
+          "aliases": [],
+          "summary": "At Rephidim the people find no water and quarrel with Moses. God directs him to the rock at Horeb, and the narrative names Massah and Meribah in connection with testing and quarrelling. The camp and the named rock scene should be read carefully without assuming every geographical term is interchangeable.\n\nAmalek then attacks Israel at Rephidim. Joshua fights while Aaron and Hur support Moses on the hill. The later departure from Rephidim leads to Sinai, placing both episodes before the covenant scene in this reading order. No modern site is fixed by these notices.",
+          "role": "Encampment associated with thirst and the battle with Amalek",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Refidim",
+          "aliases": [],
+          "summary": "Em Refidim, o povo não encontra água e discute com Moisés. Deus o dirige à rocha em Horebe, e o relato associa os nomes Massá e Meribá à prova e à discussão. O acampamento e a cena da rocha devem ser lidos com atenção, sem assumir que todos os termos geográficos sejam intercambiáveis.\n\nAmaleque então ataca Israel em Refidim. Josué combate enquanto Arão e Hur sustentam Moisés na colina. A saída posterior de Refidim leva ao Sinai, situando os dois episódios antes da cena da aliança nesta ordem de leitura. Essas notícias não fixam um sítio moderno.",
+          "role": "Acampamento associado à sede e à batalha contra Amaleque",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Exod",
+          "chapter": 17,
+          "verseStart": 1,
+          "verseEnd": 7
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 17,
+          "verseStart": 8,
+          "verseEnd": 16
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 19,
+          "verseStart": 1,
+          "verseEnd": 2
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Exod.17",
+        "study.scripture.Exod.19"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.place.H6290G",
+      "type": "place",
+      "recordId": "step.TIPNR.H6290G",
+      "externalId": "H6290G",
+      "uniqueName": "Paran@Gen.21.21-1Ki",
+      "presentations": {
+        "en": {
+          "name": "Wilderness of Paran",
+          "aliases": [
+            "Paran"
+          ],
+          "summary": "Moses sends the tribal representatives from the wilderness of Paran to explore Canaan. They return to Moses, Aaron and the congregation at Kadesh in that wilderness. Paran provides the larger wilderness setting, while Kadesh names the place of their report.\n\nThe report becomes a crisis of confidence and leadership in the assembled community. Reading the return and the reaction together explains why this setting matters to the journey. The texts do not define a modern boundary for Paran or make it identical with Kadesh.",
+          "role": "Region from which the scouts are sent",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Deserto de Parã",
+          "aliases": [
+            "Parã"
+          ],
+          "summary": "Moisés envia os representantes das tribos do deserto de Parã para explorar Canaã. Eles voltam a Moisés, Arão e à comunidade em Cades, nesse deserto. Parã fornece o cenário mais amplo, enquanto Cades nomeia o lugar da apresentação do relatório.\n\nO relatório provoca uma crise de confiança e liderança na comunidade reunida. Ler o retorno e a reação em conjunto explica a importância desse cenário para a jornada. Os textos não definem uma fronteira moderna para Parã nem o tornam idêntico a Cades.",
+          "role": "Região de onde os exploradores são enviados",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Num",
+          "chapter": 13,
+          "verseStart": 1,
+          "verseEnd": 3
+        },
+        {
+          "bookId": "Num",
+          "chapter": 13,
+          "verseStart": 25,
+          "verseEnd": 29
+        },
+        {
+          "bookId": "Num",
+          "chapter": 14,
+          "verseStart": 1,
+          "verseEnd": 10
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Num.13",
+        "study.scripture.Num.14"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.place.H6946G",
+      "type": "place",
+      "recordId": "step.TIPNR.H6946G",
+      "externalId": "H6946G",
+      "uniqueName": "Kadesh@Gen.14.7-Psa",
+      "presentations": {
+        "en": {
+          "name": "Kadesh",
+          "aliases": [
+            "Kadesh-barnea"
+          ],
+          "summary": "The scouts return to Kadesh in the wilderness of Paran, bringing fruit and their report. The account describes a land with abundance and powerful inhabitants; Caleb and the other speakers draw sharply different conclusions about going up.\n\nThe congregation’s refusal, followed by an unauthorized attempt to advance, makes this a turning point in the journey. The later defeat should not be mistaken for the successful entry under Joshua. This profile explains the setting of this episode without assigning coordinates to the ancient site.",
+          "role": "Place where the scouts report to the congregation",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Cades",
+          "aliases": [
+            "Cades-Barneia"
+          ],
+          "summary": "Os exploradores retornam a Cades, no deserto de Parã, trazendo frutos e seu relatório. O relato descreve uma terra abundante e habitantes poderosos; Calebe e os outros participantes chegam a conclusões bastante diferentes sobre avançar.\n\nA recusa da comunidade, seguida de uma tentativa não autorizada de avançar, torna esse momento decisivo na jornada. A derrota posterior não deve ser confundida com a entrada bem-sucedida sob Josué. A ficha explica o cenário desse episódio sem atribuir coordenadas ao sítio antigo.",
+          "role": "Lugar em que os exploradores prestam contas à comunidade",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Num",
+          "chapter": 13,
+          "verseStart": 25,
+          "verseEnd": 33
+        },
+        {
+          "bookId": "Deut",
+          "chapter": 1,
+          "verseStart": 19,
+          "verseEnd": 19
+        },
+        {
+          "bookId": "Num",
+          "chapter": 14,
+          "verseStart": 1,
+          "verseEnd": 10
+        },
+        {
+          "bookId": "Num",
+          "chapter": 14,
+          "verseStart": 39,
+          "verseEnd": 45
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Deut.1",
+        "study.scripture.Num.13",
+        "study.scripture.Num.14"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.place.H3667A",
+      "type": "place",
+      "recordId": "step.TIPNR.H3667A",
+      "externalId": "H3667A",
+      "uniqueName": "Canaan@Gen.10.18-Act",
+      "presentations": {
+        "en": {
+          "name": "Canaan",
+          "aliases": [],
+          "summary": "Canaan is the land the scouts are sent to examine. Their task concerns inhabitants, settlements, soil and produce. The fruit they bring back and the fear expressed in the report belong to the same examination; the text does not present an empty land.\n\nJoshua and Caleb appeal to God’s gift and presence when urging the people to enter. At the end of Moses’ life, the view from Nebo recalls the promise while distinguishing seeing the land from crossing into it. This biblical regional designation is not a statement about the boundaries of a modern state.",
+          "role": "Land promised and explored in the wilderness narrative",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Canaã",
+          "aliases": [],
+          "summary": "Canaã é a terra que os exploradores são enviados a examinar. A tarefa envolve habitantes, povoações, solo e produção. Os frutos trazidos e o medo expresso no relatório pertencem à mesma observação; o texto não apresenta uma terra vazia.\n\nJosué e Calebe apelam à dádiva e à presença de Deus ao exortar o povo a entrar. No fim da vida de Moisés, a vista do Nebo retoma a promessa e distingue ver a terra de atravessar para ela. Essa designação regional bíblica não afirma as fronteiras de um Estado moderno.",
+          "role": "Terra prometida e explorada no relato do deserto",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Num",
+          "chapter": 13,
+          "verseStart": 1,
+          "verseEnd": 3
+        },
+        {
+          "bookId": "Num",
+          "chapter": 13,
+          "verseStart": 17,
+          "verseEnd": 33
+        },
+        {
+          "bookId": "Num",
+          "chapter": 14,
+          "verseStart": 6,
+          "verseEnd": 9
+        },
+        {
+          "bookId": "Deut",
+          "chapter": 34,
+          "verseStart": 1,
+          "verseEnd": 4
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Deut.34",
+        "study.scripture.Num.13",
+        "study.scripture.Num.14"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.place.H4124G",
+      "type": "place",
+      "recordId": "step.TIPNR.H4124G",
+      "externalId": "H4124G",
+      "uniqueName": "Moab@Gen.19.37b-Zep",
+      "presentations": {
+        "en": {
+          "name": "Moab",
+          "aliases": [],
+          "summary": "Israel camps in the plains of Moab across the Jordan from Jericho. Balak’s fear and his summons to Balaam unfold in this setting. Distinguish the camp’s geographical designation from an assertion that Israel is already inside Jericho or across the river.\n\nMoses ascends from the plains of Moab to Nebo; his death, burial and the people’s mourning are placed in Moab. The text explicitly says his tomb is unknown to its audience. The regional setting should not be turned into a claim to have located that grave.",
+          "role": "Region of Balak’s kingdom and Israel’s final camp before crossing",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Moabe",
+          "aliases": [],
+          "summary": "Israel acampa nas campinas de Moabe, do outro lado do Jordão, diante de Jericó. O medo de Balaque e a convocação de Balaão se desenvolvem nesse cenário. O nome geográfico do acampamento não significa que Israel já esteja dentro de Jericó ou tenha atravessado o rio.\n\nMoisés sobe das campinas de Moabe ao Nebo; sua morte, sepultamento e o luto do povo são situados em Moabe. O texto afirma expressamente que sua sepultura é desconhecida para seu público. O cenário regional não deve ser transformado em uma afirmação de que o túmulo foi localizado.",
+          "role": "Região do reino de Balaque e do acampamento final antes da travessia",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Num",
+          "chapter": 22,
+          "verseStart": 1,
+          "verseEnd": 7
+        },
+        {
+          "bookId": "Deut",
+          "chapter": 34,
+          "verseStart": 1,
+          "verseEnd": 8
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Deut.34",
+        "study.scripture.Num.22"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.place.H5015H",
+      "type": "place",
+      "recordId": "step.TIPNR.H5015H",
+      "externalId": "H5015H",
+      "uniqueName": "Nebo_Mount@Num.27.12-Jer",
+      "presentations": {
+        "en": {
+          "name": "Mount Nebo",
+          "aliases": [
+            "Nebo"
+          ],
+          "summary": "Moses goes from the plains of Moab to Mount Nebo, to the summit of Pisgah opposite Jericho. God shows him the land associated with the promise to the ancestors, while telling him he will not cross into it. The view closes his journey without narrating Israel’s later entry.\n\nThe following verses recount his death, the unknown burial place and Joshua’s succession. Nebo is the mountain in this scene, not one of the cities with the same name. The passage’s relationship between Nebo and Pisgah is preserved without turning it into a surveyed modern map or identifying Moses’ grave.",
+          "role": "Mountain of Moses’ final view of the land",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Monte Nebo",
+          "aliases": [
+            "Nebo"
+          ],
+          "summary": "Moisés vai das campinas de Moabe ao monte Nebo, ao cume de Pisga diante de Jericó. Deus lhe mostra a terra associada à promessa aos antepassados, dizendo que ele não passará para ela. A visão encerra sua jornada sem narrar a entrada posterior de Israel.\n\nOs versículos seguintes relatam sua morte, o lugar desconhecido da sepultura e a sucessão de Josué. Nebo é o monte dessa cena, não uma das cidades de mesmo nome. A relação entre Nebo e Pisga apresentada no texto é preservada, sem convertê-la em um mapa moderno medido nem identificar a sepultura de Moisés.",
+          "role": "Monte da última visão de Moisés sobre a terra",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Deut",
+          "chapter": 34,
+          "verseStart": 1,
+          "verseEnd": 4
+        },
+        {
+          "bookId": "Deut",
+          "chapter": 34,
+          "verseStart": 5,
+          "verseEnd": 12
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Deut.34"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.place.H2809",
+      "type": "place",
+      "recordId": "step.TIPNR.H2809",
+      "externalId": "H2809",
+      "uniqueName": "Heshbon@Num.21.25-Jer",
+      "presentations": {
+        "en": {
+          "name": "Heshbon",
+          "aliases": [],
+          "summary": "Israel asks Sihon for passage through his territory, but he gathers his forces against them. The account then describes Israel taking his cities, including Heshbon. It identifies Heshbon as Sihon’s city and recalls that he had taken territory from a former king of Moab.\n\nA quoted poem about Heshbon interrupts the travel-and-battle account before the narrative resumes. Its poetic voice should be distinguished from the surrounding prose. This profile concerns that literary and narrative setting; it does not independently date a destruction layer or identify archaeological remains.",
+          "role": "City of Sihon in the account east of the Jordan",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Hesbom",
+          "aliases": [],
+          "summary": "Israel pede a Seom passagem por seu território, mas ele reúne suas forças contra o povo. O relato então descreve Israel tomando suas cidades, incluindo Hesbom. Identifica Hesbom como cidade de Seom e recorda que ele havia tomado território de um antigo rei de Moabe.\n\nUm poema citado sobre Hesbom interrompe o relato de viagem e batalha antes que a narrativa prossiga. Sua voz poética deve ser distinguida da prosa que a cerca. A ficha trata desse cenário literário e narrativo; não data de forma independente uma camada de destruição nem identifica vestígios arqueológicos.",
+          "role": "Cidade de Seom no relato a leste do Jordão",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Num",
+          "chapter": 21,
+          "verseStart": 21,
+          "verseEnd": 26
+        },
+        {
+          "bookId": "Num",
+          "chapter": 21,
+          "verseStart": 27,
+          "verseEnd": 32
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Num.21"
+      ],
+      "previousHash": null
+    },
+    {
+      "entityId": "step.place.H1316",
+      "type": "place",
+      "recordId": "step.TIPNR.H1316",
+      "externalId": "H1316",
+      "uniqueName": "Bashan@Num.21.33-Zec",
+      "presentations": {
+        "en": {
+          "name": "Bashan",
+          "aliases": [],
+          "summary": "After the account of Sihon, Israel turns toward Bashan. Og and his people come out to battle at Edrei, and the LORD tells Moses not to fear. The short report links the outcome with the earlier encounter with Sihon, while keeping the rulers and settings distinct.\n\nThe next chapter moves Israel to the plains of Moab and explains Balak’s fear by what happened to the Amorites. This sequence connects the regional conflicts to the Balaam episode. Bashan is a region in this account, not another name for Heshbon or the plains of Moab.",
+          "role": "Region of Og’s kingdom in Numbers 21",
+          "modernGeography": null
+        },
+        "pt-BR": {
+          "name": "Basã",
+          "aliases": [],
+          "summary": "Depois do relato sobre Seom, Israel se dirige a Basã. Ogue e seu povo saem para a batalha em Edrei, e o Senhor diz a Moisés que não tema. O relato breve liga o resultado ao encontro anterior com Seom, mantendo distintos os governantes e os cenários.\n\nO capítulo seguinte leva Israel às campinas de Moabe e explica o medo de Balaque pelo que aconteceu aos amorreus. Essa sequência conecta os conflitos regionais ao episódio de Balaão. Basã é uma região nesse relato, não outro nome para Hesbom ou para as campinas de Moabe.",
+          "role": "Região do reino de Ogue em Números 21",
+          "modernGeography": null
+        }
+      },
+      "keyPassages": [
+        {
+          "bookId": "Num",
+          "chapter": 21,
+          "verseStart": 33,
+          "verseEnd": 35
+        },
+        {
+          "bookId": "Num",
+          "chapter": 22,
+          "verseStart": 1,
+          "verseEnd": 4
+        }
+      ],
+      "sourceReferenceIds": [
+        "editorial.profiles.exodus.2026-10",
+        "study.scripture.Num.21",
+        "study.scripture.Num.22"
+      ],
+      "previousHash": null
+    }
+  ],
+  "enrichment": null,
+  "kind": "editorial",
+  "content": {
+    "referencedEntityIds": [
+      "editorial.event.amalek",
+      "editorial.event.balaam",
+      "editorial.event.bronze-serpent",
+      "editorial.event.burning-bush",
+      "editorial.event.golden-calf",
+      "editorial.event.jethro",
+      "editorial.event.manna",
+      "editorial.event.marah",
+      "editorial.event.moses-born",
+      "editorial.event.moses-farewell",
+      "editorial.event.passover",
+      "editorial.event.plagues",
+      "editorial.event.sinai",
+      "editorial.event.spies",
+      "editorial.event.tabernacle",
+      "fixture.event.exodus",
+      "fixture.person.moses",
+      "fixture.place.egypt",
+      "step.person.H0175",
+      "step.person.H0461H",
+      "step.person.H1109A",
+      "step.person.H1111",
+      "step.person.H1647G",
+      "step.person.H2354G",
+      "step.person.H3091G",
+      "step.person.H3503",
+      "step.person.H3612G",
+      "step.person.H4813G",
+      "step.person.H6547I",
+      "step.person.H6547J",
+      "step.person.H6547O",
+      "step.person.H6855",
+      "step.place.H0362",
+      "step.place.H1316",
+      "step.place.H2809",
+      "step.place.H3667A",
+      "step.place.H4080H",
+      "step.place.H4124G",
+      "step.place.H4785",
+      "step.place.H5015H",
+      "step.place.H5488G",
+      "step.place.H5512B",
+      "step.place.H5514G",
+      "step.place.H6290G",
+      "step.place.H6946G",
+      "step.place.H7508"
+    ],
+    "sources": [
+      {
+        "id": "editorial.profiles.exodus.2026-10",
+        "citation": "Verbum · Exodus people and places / Pessoas e lugares do Êxodo · 2026-10",
+        "url": null
+      },
+      {
+        "id": "study.scripture.Exod.2",
+        "citation": "Exodus 2 · World English Bible",
+        "url": "https://ebible.org/engwebp/EXO02.htm"
+      },
+      {
+        "id": "study.scripture.Exod.3",
+        "citation": "Exodus 3 · World English Bible",
+        "url": "https://ebible.org/engwebp/EXO03.htm"
+      },
+      {
+        "id": "study.scripture.Exod.14",
+        "citation": "Exodus 14 · World English Bible",
+        "url": "https://ebible.org/engwebp/EXO14.htm"
+      },
+      {
+        "id": "study.scripture.Exod.32",
+        "citation": "Exodus 32 · World English Bible",
+        "url": "https://ebible.org/engwebp/EXO32.htm"
+      },
+      {
+        "id": "study.scripture.Deut.34",
+        "citation": "Deuteronomy 34 · World English Bible",
+        "url": "https://ebible.org/engwebp/DEU34.htm"
+      },
+      {
+        "id": "study.scripture.Exod.7",
+        "citation": "Exodus 7 · World English Bible",
+        "url": "https://ebible.org/engwebp/EXO07.htm"
+      },
+      {
+        "id": "study.scripture.Exod.17",
+        "citation": "Exodus 17 · World English Bible",
+        "url": "https://ebible.org/engwebp/EXO17.htm"
+      },
+      {
+        "id": "study.scripture.Exod.40",
+        "citation": "Exodus 40 · World English Bible",
+        "url": "https://ebible.org/engwebp/EXO40.htm"
+      },
+      {
+        "id": "study.scripture.Exod.15",
+        "citation": "Exodus 15 · World English Bible",
+        "url": "https://ebible.org/engwebp/EXO15.htm"
+      },
+      {
+        "id": "study.scripture.Num.26",
+        "citation": "Numbers 26 · World English Bible",
+        "url": "https://ebible.org/engwebp/NUM26.htm"
+      },
+      {
+        "id": "study.scripture.Exod.18",
+        "citation": "Exodus 18 · World English Bible",
+        "url": "https://ebible.org/engwebp/EXO18.htm"
+      },
+      {
+        "id": "study.scripture.Num.13",
+        "citation": "Numbers 13 · World English Bible",
+        "url": "https://ebible.org/engwebp/NUM13.htm"
+      },
+      {
+        "id": "study.scripture.Num.14",
+        "citation": "Numbers 14 · World English Bible",
+        "url": "https://ebible.org/engwebp/NUM14.htm"
+      },
+      {
+        "id": "study.scripture.Exod.24",
+        "citation": "Exodus 24 · World English Bible",
+        "url": "https://ebible.org/engwebp/EXO24.htm"
+      },
+      {
+        "id": "study.scripture.Num.22",
+        "citation": "Numbers 22 · World English Bible",
+        "url": "https://ebible.org/engwebp/NUM22.htm"
+      },
+      {
+        "id": "study.scripture.Exod.1",
+        "citation": "Exodus 1 · World English Bible",
+        "url": "https://ebible.org/engwebp/EXO01.htm"
+      },
+      {
+        "id": "study.scripture.Exod.9",
+        "citation": "Exodus 9 · World English Bible",
+        "url": "https://ebible.org/engwebp/EXO09.htm"
+      },
+      {
+        "id": "study.scripture.Exod.10",
+        "citation": "Exodus 10 · World English Bible",
+        "url": "https://ebible.org/engwebp/EXO10.htm"
+      },
+      {
+        "id": "study.scripture.Exod.12",
+        "citation": "Exodus 12 · World English Bible",
+        "url": "https://ebible.org/engwebp/EXO12.htm"
+      },
+      {
+        "id": "study.scripture.Exod.19",
+        "citation": "Exodus 19 · World English Bible",
+        "url": "https://ebible.org/engwebp/EXO19.htm"
+      },
+      {
+        "id": "study.scripture.Exod.20",
+        "citation": "Exodus 20 · World English Bible",
+        "url": "https://ebible.org/engwebp/EXO20.htm"
+      },
+      {
+        "id": "study.scripture.Exod.16",
+        "citation": "Exodus 16 · World English Bible",
+        "url": "https://ebible.org/engwebp/EXO16.htm"
+      },
+      {
+        "id": "study.scripture.Deut.1",
+        "citation": "Deuteronomy 1 · World English Bible",
+        "url": "https://ebible.org/engwebp/DEU01.htm"
+      },
+      {
+        "id": "study.scripture.Num.21",
+        "citation": "Numbers 21 · World English Bible",
+        "url": "https://ebible.org/engwebp/NUM21.htm"
+      }
+    ],
+    "entities": [],
+    "relationships": [
+      {
+        "id": "editorial.profile.fixture.person.moses.relatedTo.step.person.H0175",
+        "sourceId": "fixture.person.moses",
+        "targetId": "step.person.H0175",
+        "type": "relatedTo",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.7"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.relatedTo.step.person.H4813G",
+        "sourceId": "fixture.person.moses",
+        "targetId": "step.person.H4813G",
+        "type": "relatedTo",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Num.26"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.relatedTo.step.person.H3503",
+        "sourceId": "fixture.person.moses",
+        "targetId": "step.person.H3503",
+        "type": "relatedTo",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.18"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.relatedTo.step.person.H6855",
+        "sourceId": "fixture.person.moses",
+        "targetId": "step.person.H6855",
+        "type": "relatedTo",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.2"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.relatedTo.step.person.H1647G",
+        "sourceId": "fixture.person.moses",
+        "targetId": "step.person.H1647G",
+        "type": "relatedTo",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.2"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.relatedTo.step.person.H0461H",
+        "sourceId": "fixture.person.moses",
+        "targetId": "step.person.H0461H",
+        "type": "relatedTo",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.18"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.relatedTo.step.person.H3091G",
+        "sourceId": "fixture.person.moses",
+        "targetId": "step.person.H3091G",
+        "type": "relatedTo",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Deut.34"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.relatedTo.step.person.H2354G",
+        "sourceId": "fixture.person.moses",
+        "targetId": "step.person.H2354G",
+        "type": "relatedTo",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.17"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.relatedTo.step.person.H6547I",
+        "sourceId": "fixture.person.moses",
+        "targetId": "step.person.H6547I",
+        "type": "relatedTo",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.2"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.relatedTo.step.person.H6547J",
+        "sourceId": "fixture.person.moses",
+        "targetId": "step.person.H6547J",
+        "type": "relatedTo",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.7"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.relatedTo.step.person.H6547O",
+        "sourceId": "fixture.person.moses",
+        "targetId": "step.person.H6547O",
+        "type": "relatedTo",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.2"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H3091G.relatedTo.step.person.H3612G",
+        "sourceId": "step.person.H3091G",
+        "targetId": "step.person.H3612G",
+        "type": "relatedTo",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Num.14"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H1109A.relatedTo.step.person.H1111",
+        "sourceId": "step.person.H1109A",
+        "targetId": "step.person.H1111",
+        "type": "relatedTo",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Num.22"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H3503.relatedTo.step.person.H6855",
+        "sourceId": "step.person.H3503",
+        "targetId": "step.person.H6855",
+        "type": "relatedTo",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.18"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H1647G.relatedTo.step.person.H6855",
+        "sourceId": "step.person.H1647G",
+        "targetId": "step.person.H6855",
+        "type": "relatedTo",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.18"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H0461H.relatedTo.step.person.H6855",
+        "sourceId": "step.person.H0461H",
+        "targetId": "step.person.H6855",
+        "type": "relatedTo",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.18"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H0461H.relatedTo.step.person.H1647G",
+        "sourceId": "step.person.H0461H",
+        "targetId": "step.person.H1647G",
+        "type": "relatedTo",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.18"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H0175.relatedTo.step.person.H2354G",
+        "sourceId": "step.person.H0175",
+        "targetId": "step.person.H2354G",
+        "type": "relatedTo",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.17"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.participatesIn.editorial.event.moses-born",
+        "sourceId": "fixture.person.moses",
+        "targetId": "editorial.event.moses-born",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.2"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.participatesIn.editorial.event.burning-bush",
+        "sourceId": "fixture.person.moses",
+        "targetId": "editorial.event.burning-bush",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.3"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.participatesIn.editorial.event.plagues",
+        "sourceId": "fixture.person.moses",
+        "targetId": "editorial.event.plagues",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.7"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.participatesIn.editorial.event.passover",
+        "sourceId": "fixture.person.moses",
+        "targetId": "editorial.event.passover",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.12"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.participatesIn.fixture.event.exodus",
+        "sourceId": "fixture.person.moses",
+        "targetId": "fixture.event.exodus",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.14"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.participatesIn.editorial.event.marah",
+        "sourceId": "fixture.person.moses",
+        "targetId": "editorial.event.marah",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.15"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.participatesIn.editorial.event.manna",
+        "sourceId": "fixture.person.moses",
+        "targetId": "editorial.event.manna",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.16"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.participatesIn.editorial.event.amalek",
+        "sourceId": "fixture.person.moses",
+        "targetId": "editorial.event.amalek",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.17"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.participatesIn.editorial.event.jethro",
+        "sourceId": "fixture.person.moses",
+        "targetId": "editorial.event.jethro",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.18"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.participatesIn.editorial.event.sinai",
+        "sourceId": "fixture.person.moses",
+        "targetId": "editorial.event.sinai",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.19"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.participatesIn.editorial.event.golden-calf",
+        "sourceId": "fixture.person.moses",
+        "targetId": "editorial.event.golden-calf",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.32"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.participatesIn.editorial.event.tabernacle",
+        "sourceId": "fixture.person.moses",
+        "targetId": "editorial.event.tabernacle",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.40"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.participatesIn.editorial.event.spies",
+        "sourceId": "fixture.person.moses",
+        "targetId": "editorial.event.spies",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Num.13"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.participatesIn.editorial.event.bronze-serpent",
+        "sourceId": "fixture.person.moses",
+        "targetId": "editorial.event.bronze-serpent",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Num.21"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.participatesIn.editorial.event.moses-farewell",
+        "sourceId": "fixture.person.moses",
+        "targetId": "editorial.event.moses-farewell",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Deut.34"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H0175.participatesIn.editorial.event.plagues",
+        "sourceId": "step.person.H0175",
+        "targetId": "editorial.event.plagues",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.7"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H0175.participatesIn.editorial.event.golden-calf",
+        "sourceId": "step.person.H0175",
+        "targetId": "editorial.event.golden-calf",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.32"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H0175.participatesIn.editorial.event.tabernacle",
+        "sourceId": "step.person.H0175",
+        "targetId": "editorial.event.tabernacle",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.40"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H4813G.participatesIn.fixture.event.exodus",
+        "sourceId": "step.person.H4813G",
+        "targetId": "fixture.event.exodus",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.15"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H3503.participatesIn.editorial.event.jethro",
+        "sourceId": "step.person.H3503",
+        "targetId": "editorial.event.jethro",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.18"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H6855.participatesIn.editorial.event.jethro",
+        "sourceId": "step.person.H6855",
+        "targetId": "editorial.event.jethro",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.18"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H1647G.participatesIn.editorial.event.jethro",
+        "sourceId": "step.person.H1647G",
+        "targetId": "editorial.event.jethro",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.18"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H0461H.participatesIn.editorial.event.jethro",
+        "sourceId": "step.person.H0461H",
+        "targetId": "editorial.event.jethro",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.18"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H3091G.participatesIn.editorial.event.amalek",
+        "sourceId": "step.person.H3091G",
+        "targetId": "editorial.event.amalek",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.17"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H3091G.participatesIn.editorial.event.spies",
+        "sourceId": "step.person.H3091G",
+        "targetId": "editorial.event.spies",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Num.14"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H3091G.participatesIn.editorial.event.moses-farewell",
+        "sourceId": "step.person.H3091G",
+        "targetId": "editorial.event.moses-farewell",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Deut.34"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H3612G.participatesIn.editorial.event.spies",
+        "sourceId": "step.person.H3612G",
+        "targetId": "editorial.event.spies",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Num.13",
+          "study.scripture.Num.14"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H2354G.participatesIn.editorial.event.amalek",
+        "sourceId": "step.person.H2354G",
+        "targetId": "editorial.event.amalek",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.17"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H1109A.participatesIn.editorial.event.balaam",
+        "sourceId": "step.person.H1109A",
+        "targetId": "editorial.event.balaam",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Num.22"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H1111.participatesIn.editorial.event.balaam",
+        "sourceId": "step.person.H1111",
+        "targetId": "editorial.event.balaam",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Num.22"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H6547I.participatesIn.editorial.event.moses-born",
+        "sourceId": "step.person.H6547I",
+        "targetId": "editorial.event.moses-born",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.1",
+          "study.scripture.Exod.2"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H6547J.participatesIn.editorial.event.plagues",
+        "sourceId": "step.person.H6547J",
+        "targetId": "editorial.event.plagues",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.7"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H6547O.participatesIn.editorial.event.moses-born",
+        "sourceId": "step.person.H6547O",
+        "targetId": "editorial.event.moses-born",
+        "type": "participatesIn",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.2"
+        ]
+      },
+      {
+        "id": "editorial.profile.editorial.event.moses-born.occursAt.fixture.place.egypt",
+        "sourceId": "editorial.event.moses-born",
+        "targetId": "fixture.place.egypt",
+        "type": "occursAt",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.2"
+        ]
+      },
+      {
+        "id": "editorial.profile.editorial.event.plagues.occursAt.fixture.place.egypt",
+        "sourceId": "editorial.event.plagues",
+        "targetId": "fixture.place.egypt",
+        "type": "occursAt",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.7"
+        ]
+      },
+      {
+        "id": "editorial.profile.editorial.event.passover.occursAt.fixture.place.egypt",
+        "sourceId": "editorial.event.passover",
+        "targetId": "fixture.place.egypt",
+        "type": "occursAt",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.12"
+        ]
+      },
+      {
+        "id": "editorial.profile.editorial.event.burning-bush.occursAt.step.place.H5514G",
+        "sourceId": "editorial.event.burning-bush",
+        "targetId": "step.place.H5514G",
+        "type": "occursAt",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.3"
+        ]
+      },
+      {
+        "id": "editorial.profile.editorial.event.sinai.occursAt.step.place.H5514G",
+        "sourceId": "editorial.event.sinai",
+        "targetId": "step.place.H5514G",
+        "type": "occursAt",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.19"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.event.exodus.occursAt.step.place.H5488G",
+        "sourceId": "fixture.event.exodus",
+        "targetId": "step.place.H5488G",
+        "type": "occursAt",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.14",
+          "study.scripture.Exod.15"
+        ]
+      },
+      {
+        "id": "editorial.profile.editorial.event.marah.occursAt.step.place.H4785",
+        "sourceId": "editorial.event.marah",
+        "targetId": "step.place.H4785",
+        "type": "occursAt",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.15"
+        ]
+      },
+      {
+        "id": "editorial.profile.editorial.event.manna.occursAt.step.place.H5512B",
+        "sourceId": "editorial.event.manna",
+        "targetId": "step.place.H5512B",
+        "type": "occursAt",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.16"
+        ]
+      },
+      {
+        "id": "editorial.profile.editorial.event.amalek.occursAt.step.place.H7508",
+        "sourceId": "editorial.event.amalek",
+        "targetId": "step.place.H7508",
+        "type": "occursAt",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.17"
+        ]
+      },
+      {
+        "id": "editorial.profile.editorial.event.spies.occursAt.step.place.H6290G",
+        "sourceId": "editorial.event.spies",
+        "targetId": "step.place.H6290G",
+        "type": "occursAt",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Num.13"
+        ]
+      },
+      {
+        "id": "editorial.profile.editorial.event.spies.occursAt.step.place.H6946G",
+        "sourceId": "editorial.event.spies",
+        "targetId": "step.place.H6946G",
+        "type": "occursAt",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Num.13"
+        ]
+      },
+      {
+        "id": "editorial.profile.editorial.event.spies.occursAt.step.place.H3667A",
+        "sourceId": "editorial.event.spies",
+        "targetId": "step.place.H3667A",
+        "type": "occursAt",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Num.13"
+        ]
+      },
+      {
+        "id": "editorial.profile.editorial.event.balaam.occursAt.step.place.H4124G",
+        "sourceId": "editorial.event.balaam",
+        "targetId": "step.place.H4124G",
+        "type": "occursAt",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Num.22"
+        ]
+      },
+      {
+        "id": "editorial.profile.editorial.event.moses-farewell.occursAt.step.place.H4124G",
+        "sourceId": "editorial.event.moses-farewell",
+        "targetId": "step.place.H4124G",
+        "type": "occursAt",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Deut.34"
+        ]
+      },
+      {
+        "id": "editorial.profile.editorial.event.moses-farewell.occursAt.step.place.H5015H",
+        "sourceId": "editorial.event.moses-farewell",
+        "targetId": "step.place.H5015H",
+        "type": "occursAt",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Deut.34"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.relatedTo.step.place.H4080H",
+        "sourceId": "fixture.person.moses",
+        "targetId": "step.place.H4080H",
+        "type": "relatedTo",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.2"
+        ]
+      },
+      {
+        "id": "editorial.profile.step.person.H3503.relatedTo.step.place.H4080H",
+        "sourceId": "step.person.H3503",
+        "targetId": "step.place.H4080H",
+        "type": "relatedTo",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.3"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.relatedTo.step.place.H0362",
+        "sourceId": "fixture.person.moses",
+        "targetId": "step.place.H0362",
+        "type": "relatedTo",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Exod.15"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.relatedTo.step.place.H2809",
+        "sourceId": "fixture.person.moses",
+        "targetId": "step.place.H2809",
+        "type": "relatedTo",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Num.21"
+        ]
+      },
+      {
+        "id": "editorial.profile.fixture.person.moses.relatedTo.step.place.H1316",
+        "sourceId": "fixture.person.moses",
+        "targetId": "step.place.H1316",
+        "type": "relatedTo",
+        "confidence": null,
+        "sourceReferenceIds": [
+          "editorial.profiles.exodus.2026-10",
+          "study.scripture.Num.21"
+        ]
+      }
+    ],
+    "details": [],
+    "timeline": [],
+    "dailyVersePool": []
+  },
+  "provenance": {
+    "editorial.profiles.exodus.2026-10": {
+      "sourceId": "editorial.profiles.exodus.2026-10",
+      "license": "Original Verbum editorial prose",
+      "page": null,
+      "section": "Bilingual paraphrases; existing STEP identities retained (CC BY 4.0)"
+    },
+    "study.scripture.Exod.2": {
+      "sourceId": "https://ebible.org/engwebp/",
+      "license": "Public Domain",
+      "page": null,
+      "section": "Exod 2; https://ebible.org/engwebp/copyright.htm"
+    },
+    "study.scripture.Exod.3": {
+      "sourceId": "https://ebible.org/engwebp/",
+      "license": "Public Domain",
+      "page": null,
+      "section": "Exod 3; https://ebible.org/engwebp/copyright.htm"
+    },
+    "study.scripture.Exod.14": {
+      "sourceId": "https://ebible.org/engwebp/",
+      "license": "Public Domain",
+      "page": null,
+      "section": "Exod 14; https://ebible.org/engwebp/copyright.htm"
+    },
+    "study.scripture.Exod.32": {
+      "sourceId": "https://ebible.org/engwebp/",
+      "license": "Public Domain",
+      "page": null,
+      "section": "Exod 32; https://ebible.org/engwebp/copyright.htm"
+    },
+    "study.scripture.Deut.34": {
+      "sourceId": "https://ebible.org/engwebp/",
+      "license": "Public Domain",
+      "page": null,
+      "section": "Deut 34; https://ebible.org/engwebp/copyright.htm"
+    },
+    "study.scripture.Exod.7": {
+      "sourceId": "https://ebible.org/engwebp/",
+      "license": "Public Domain",
+      "page": null,
+      "section": "Exod 7; https://ebible.org/engwebp/copyright.htm"
+    },
+    "study.scripture.Exod.17": {
+      "sourceId": "https://ebible.org/engwebp/",
+      "license": "Public Domain",
+      "page": null,
+      "section": "Exod 17; https://ebible.org/engwebp/copyright.htm"
+    },
+    "study.scripture.Exod.40": {
+      "sourceId": "https://ebible.org/engwebp/",
+      "license": "Public Domain",
+      "page": null,
+      "section": "Exod 40; https://ebible.org/engwebp/copyright.htm"
+    },
+    "study.scripture.Exod.15": {
+      "sourceId": "https://ebible.org/engwebp/",
+      "license": "Public Domain",
+      "page": null,
+      "section": "Exod 15; https://ebible.org/engwebp/copyright.htm"
+    },
+    "study.scripture.Num.26": {
+      "sourceId": "https://ebible.org/engwebp/",
+      "license": "Public Domain",
+      "page": null,
+      "section": "Num 26; https://ebible.org/engwebp/copyright.htm"
+    },
+    "study.scripture.Exod.18": {
+      "sourceId": "https://ebible.org/engwebp/",
+      "license": "Public Domain",
+      "page": null,
+      "section": "Exod 18; https://ebible.org/engwebp/copyright.htm"
+    },
+    "study.scripture.Num.13": {
+      "sourceId": "https://ebible.org/engwebp/",
+      "license": "Public Domain",
+      "page": null,
+      "section": "Num 13; https://ebible.org/engwebp/copyright.htm"
+    },
+    "study.scripture.Num.14": {
+      "sourceId": "https://ebible.org/engwebp/",
+      "license": "Public Domain",
+      "page": null,
+      "section": "Num 14; https://ebible.org/engwebp/copyright.htm"
+    },
+    "study.scripture.Exod.24": {
+      "sourceId": "https://ebible.org/engwebp/",
+      "license": "Public Domain",
+      "page": null,
+      "section": "Exod 24; https://ebible.org/engwebp/copyright.htm"
+    },
+    "study.scripture.Num.22": {
+      "sourceId": "https://ebible.org/engwebp/",
+      "license": "Public Domain",
+      "page": null,
+      "section": "Num 22; https://ebible.org/engwebp/copyright.htm"
+    },
+    "study.scripture.Exod.1": {
+      "sourceId": "https://ebible.org/engwebp/",
+      "license": "Public Domain",
+      "page": null,
+      "section": "Exod 1; https://ebible.org/engwebp/copyright.htm"
+    },
+    "study.scripture.Exod.9": {
+      "sourceId": "https://ebible.org/engwebp/",
+      "license": "Public Domain",
+      "page": null,
+      "section": "Exod 9; https://ebible.org/engwebp/copyright.htm"
+    },
+    "study.scripture.Exod.10": {
+      "sourceId": "https://ebible.org/engwebp/",
+      "license": "Public Domain",
+      "page": null,
+      "section": "Exod 10; https://ebible.org/engwebp/copyright.htm"
+    },
+    "study.scripture.Exod.12": {
+      "sourceId": "https://ebible.org/engwebp/",
+      "license": "Public Domain",
+      "page": null,
+      "section": "Exod 12; https://ebible.org/engwebp/copyright.htm"
+    },
+    "study.scripture.Exod.19": {
+      "sourceId": "https://ebible.org/engwebp/",
+      "license": "Public Domain",
+      "page": null,
+      "section": "Exod 19; https://ebible.org/engwebp/copyright.htm"
+    },
+    "study.scripture.Exod.20": {
+      "sourceId": "https://ebible.org/engwebp/",
+      "license": "Public Domain",
+      "page": null,
+      "section": "Exod 20; https://ebible.org/engwebp/copyright.htm"
+    },
+    "study.scripture.Exod.16": {
+      "sourceId": "https://ebible.org/engwebp/",
+      "license": "Public Domain",
+      "page": null,
+      "section": "Exod 16; https://ebible.org/engwebp/copyright.htm"
+    },
+    "study.scripture.Deut.1": {
+      "sourceId": "https://ebible.org/engwebp/",
+      "license": "Public Domain",
+      "page": null,
+      "section": "Deut 1; https://ebible.org/engwebp/copyright.htm"
+    },
+    "study.scripture.Num.21": {
+      "sourceId": "https://ebible.org/engwebp/",
+      "license": "Public Domain",
+      "page": null,
+      "section": "Num 21; https://ebible.org/engwebp/copyright.htm"
+    }
+  },
+  "entitySources": {}
+}
