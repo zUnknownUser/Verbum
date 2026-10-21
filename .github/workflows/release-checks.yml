@@ -1,0 +1,122 @@
+name: Release checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend-and-content:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: verbum
+          POSTGRES_PASSWORD: verbum_test_only
+          POSTGRES_DB: verbum_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U verbum -d verbum_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      VERBUM_TEST_DATABASE_URL: postgres://verbum:verbum_test_only@localhost:5432/verbum_test?sslmode=disable
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: backend/go.mod
+          cache-dependency-path: backend/go.sum
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install audio test dependency
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Backend tests and static checks
+        working-directory: backend
+        run: |
+          go test -race -count=1 ./...
+          go vet ./...
+          go build -o "${RUNNER_TEMP}/verbum-test-api" ./cmd/api
+      - name: Install pipeline test dependencies
+        run: python -m pip install -e ./pipeline "pytest>=8,<10"
+      - name: Content and cross-language API contract tests
+        working-directory: backend
+        env:
+          VERBUM_TEST_API_BINARY: ${{ runner.temp }}/verbum-test-api
+        run: python -m pytest ../pipeline/tests
+
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Install the SDK required by the project
+        run: sdkmanager "platforms;android-37"
+      - name: Unit tests and debug build
+        working-directory: android
+        run: bash ./gradlew :core:models:test :core:common:test :core:clients:test testDebugUnitTest assembleDebug --no-daemon
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: android-test-results
+          path: |
+            android/**/build/reports/tests/
+            android/**/build/test-results/
+
+  ios:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Report installed toolchain
+        run: |
+          xcodebuild -version
+          xcrun swift --version
+      - name: Build iOS app without distribution signing
+        run: >-
+          xcodebuild -project Verbum.xcodeproj -scheme Verbum
+          -configuration Debug -destination 'generic/platform=iOS Simulator'
+          -derivedDataPath "${RUNNER_TEMP}/verbum-derived"
+          CODE_SIGNING_ALLOWED=NO build
+      - name: Select an available iPhone simulator
+        run: |
+          xcrun simctl list devices available -j > "${RUNNER_TEMP}/simulators.json"
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          devices = json.loads(Path(os.environ["RUNNER_TEMP"], "simulators.json").read_text())["devices"]
+          phones = [d for runtime, rows in devices.items() if ".iOS-" in runtime
+                    for d in rows if d.get("isAvailable") and d["name"].startswith("iPhone")]
+          if not phones:
+              raise SystemExit("No available iPhone simulator: install a compatible iOS runtime.")
+          with open(os.environ["GITHUB_ENV"], "a") as out:
+              out.write("VERBUM_TEST_SIMULATOR=" + phones[0]["udid"] + "\n")
+          PY
+      - name: Test Swift package on iOS
+        working-directory: VerbumKit
+        run: >-
+          xcodebuild -scheme VerbumKit-Package
+          -destination "platform=iOS Simulator,id=${VERBUM_TEST_SIMULATOR}"
+          -derivedDataPath "${RUNNER_TEMP}/verbum-derived"
+          -resultBundlePath "${RUNNER_TEMP}/verbum-tests.xcresult"
+          CODE_SIGNING_ALLOWED=NO test
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: ios-test-results
+          path: ${{ runner.temp }}/verbum-tests.xcresult

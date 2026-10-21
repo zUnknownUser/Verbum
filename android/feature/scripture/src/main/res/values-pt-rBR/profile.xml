@@ -43,7 +43,7 @@
     <string name="profile_help_offline">Capítulos abertos anteriormente podem estar disponíveis no cache. Busca, contexto de estudo, voz e novos áudios podem precisar de conexão com a internet.</string>
     <string name="profile_privacy">Privacidade</string>
     <string name="profile_privacy_local">Suas notas, destaques, passagens salvas e histórico são salvos offline e sincronizados de forma privada quando você entra na conta. Notas pessoais nunca acompanham perguntas de estudo. Ao sair, os dados locais desta conta continuam separados de outras contas.</string>
-    <string name="profile_privacy_account">Sua conta é usada para autenticar o acesso. Em Detalhes da conta, gerencie email, senha e exclusão da conta. Excluir a conta não apaga os dados locais de leitura.</string>
+    <string name="profile_privacy_account">Sua conta é usada para autenticar o acesso. Em Detalhes da conta, gerencie email, senha e exclusão da conta. Excluir uma conta cadastrada apaga seus dados pessoais sincronizados e seus dados de leitura neste aparelho. Sair da conta não apaga esses dados.</string>
     <string name="profile_privacy_a_i">Ao fazer uma pergunta ou usar voz, sua pergunta e o contexto relevante de estudo são enviados ao serviço para produzir uma resposta. O acesso ao microfone é solicitado ao iniciar uma conversa por voz.</string>
     <string name="profile_about">Sobre o Verbum</string>
     <string name="profile_about_body">Você encontrou o versículo. Agora compreenda. O Verbum reúne leitura, contexto e conexões para que sua exploração comece nas Escrituras.</string>

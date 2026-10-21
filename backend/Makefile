@@ -1,7 +1,10 @@
-.PHONY: run test vet fmt build docker migrate seed
+.PHONY: run run-fixtures test vet fmt build docker migrate seed
 
-run:      ## serve the fixtures on :8080
+run:      ## serve configured PostgreSQL content on :8080
 	go run ./cmd/api
+
+run-fixtures: ## explicitly opt into development fixtures
+	VERBUM_ENV=development VERBUM_CONTENT_MODE=fixtures go run ./cmd/api
 
 test:     ## unit + contract tests (api/examples must match)
 	go test ./...

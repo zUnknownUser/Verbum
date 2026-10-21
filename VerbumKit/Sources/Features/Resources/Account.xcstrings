@@ -1656,13 +1656,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your account is used to authenticate access. Account details lets you manage your email, password and account deletion. Deleting your account does not erase local reading data."
+            "value" : "Your account is used to authenticate access. Account details lets you manage your email, password and account deletion. Deleting a registered account erases its synced personal data and its saved reading data on this device. Signing out does not delete this data."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sua conta é usada para autenticar o acesso. Em Detalhes da conta, gerencie email, senha e exclusão da conta. Excluir a conta não apaga os dados locais de leitura."
+            "value" : "Sua conta é usada para autenticar o acesso. Em Detalhes da conta, gerencie email, senha e exclusão da conta. Excluir uma conta cadastrada apaga seus dados pessoais sincronizados e seus dados de leitura neste aparelho. Sair da conta não apaga esses dados."
           }
         }
       }

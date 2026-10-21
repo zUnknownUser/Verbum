@@ -200,7 +200,7 @@ func (s *Store) Detail(ctx context.Context, id string) (domain.EntityDetail, err
  UNION SELECT es.source_id FROM entity_sources es WHERE es.entity_id=e.id
  UNION SELECT sr.source_id FROM entity_source_records sr WHERE sr.entity_id=e.id
  UNION SELECT l.source_id FROM entity_localizations l WHERE l.entity_id=e.id AND l.language IN ($2,'en'))),
- (SELECT jsonb_agg(`+localizedSourceJSON("$2")+`) FROM sources s WHERE s.id='fixture.source.editorial'),'[]'::jsonb),
+ '[]'::jsonb),
  'localizations',(SELECT jsonb_agg(jsonb_build_object('language',l.language,'sourceId',l.source_id,
  'name',l.name,'aliases',l.aliases,'description',l.description) ORDER BY l.language,l.source_id)
  FROM entity_localizations l WHERE l.entity_id=e.id),

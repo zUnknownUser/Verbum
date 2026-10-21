@@ -42,20 +42,25 @@ Google Cloud reading audio: `POST /v1/tts` (MP3, pt-BR/en-US). Configuration, sa
 validation and App integration handoff: [TTS.md](TTS.md).
 
 Serves [`api/openapi.yaml`](../api/openapi.yaml). Uses `net/http` and PostgreSQL through pgx (the driver already specified by Task 11).
-With `VERBUM_DATABASE_URL` it reads PostgreSQL; without it, it reads the explicitly labelled
-development fixtures (`db/seed/fixtures.json`). The wire contract is unchanged.
+PostgreSQL is required by default. Missing `VERBUM_DATABASE_URL` stops startup.
+Development fixtures (`db/seed/fixtures.json`) require both `VERBUM_ENV=development`
+and `VERBUM_CONTENT_MODE=fixtures`, with no database URL. Unknown modes are rejected.
+The wire contract is unchanged.
 
 ## Run it
 
 ```sh
 cd backend
-go run ./cmd/api                 # http://localhost:8080
+go run ./cmd/api                 # http://localhost:8080; requires VERBUM_DATABASE_URL
+# Local fixture-only development: make run-fixtures
 curl localhost:8080/v1/entities/fixture.person.david
 curl "localhost:8080/v1/daily-verse?days=3"
 go test ./...                    # contract tests: responses must equal api/examples/*.json
 ```
 
-Docker (from the repo root): `docker build -f backend/Dockerfile -t verbum-api . && docker run -p 8080:8080 verbum-api`.
+Docker (from the repo root): build with `docker build -f backend/Dockerfile -t verbum-api .`.
+Run with `docker run --rm -p 8080:8080 -e VERBUM_DATABASE_URL verbum-api`, using an already
+exported database URL. The image defaults to production PostgreSQL mode.
 
 ## How it is laid out
 

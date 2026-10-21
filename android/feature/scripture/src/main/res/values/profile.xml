@@ -43,7 +43,7 @@
     <string name="profile_help_offline">Previously opened chapters may be available from the cache. Search, study context, voice and new audio may need an internet connection.</string>
     <string name="profile_privacy">Privacy</string>
     <string name="profile_privacy_local">Your notes, highlights, saved passages and reading history are saved offline and synced privately when you sign in. Personal notes are never included in study questions. Signing out keeps this account’s local data separate from other accounts.</string>
-    <string name="profile_privacy_account">Your account is used to authenticate access. Account details lets you manage your email, password and account deletion. Deleting your account does not erase local reading data.</string>
+    <string name="profile_privacy_account">Your account is used to authenticate access. Account details lets you manage your email, password and account deletion. Deleting a registered account erases its synced personal data and its saved reading data on this device. Signing out does not delete this data.</string>
     <string name="profile_privacy_a_i">When you ask a question or use voice, your question and the relevant study context are sent to the service to produce a response. Microphone access is requested when you start a voice conversation.</string>
     <string name="profile_about">About Verbum</string>
     <string name="profile_about_body">You found the verse. Now understand it. Verbum brings reading, context and connections together, so your exploration can begin with Scripture.</string>

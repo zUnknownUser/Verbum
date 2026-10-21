@@ -1,11 +1,9 @@
 // The Verbum API. Wires config → store → HTTP and runs until SIGTERM.
 //
-//	go run ./cmd/api                       # serves the fixtures on :8080
-//	VERBUM_ADDR=:9000 go run ./cmd/api     # another port
+//	VERBUM_DATABASE_URL=... go run ./cmd/api
+//	VERBUM_ENV=development VERBUM_CONTENT_MODE=fixtures go run ./cmd/api
 //
-// VERBUM_DATABASE_URL selects the Postgres store;
-// with no database configured the fixture file is served, which is also
-// what the tests use.
+// PostgreSQL is required by default. Fixtures require explicit development mode.
 package main
 
 import (
@@ -53,11 +51,16 @@ func main() {
 		addr = ":" + env("PORT", "8080")
 	}
 	fixtures := env("VERBUM_FIXTURES", "db/seed/fixtures.json")
+	databaseURL, err := contentDatabaseURL(os.Getenv)
+	if err != nil {
+		slog.Error("invalid content configuration", "err", err)
+		os.Exit(1)
+	}
 
 	var s store.Store
-	if url := os.Getenv("VERBUM_DATABASE_URL"); url != "" {
+	if databaseURL != "" {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		db, err := postgres.Open(ctx, url)
+		db, err := postgres.Open(ctx, databaseURL)
 		cancel()
 		if err != nil {
 			slog.Error("open database", "err", err)

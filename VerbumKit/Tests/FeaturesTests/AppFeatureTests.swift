@@ -13,8 +13,12 @@ import Testing
         let store = TestStore(initialState: AppFeature.State()) { AppFeature() }
         await store.send(.tabChanged(.explore)) { $0.tab = .explore; $0.contentTab = .explore }
         await store.send(.tabChanged(.search)) { $0.tab = .search }
-        await store.send(.tabChanged(.library)) { $0.tab = .library }
-        #expect(store.state.contentTab == .explore)
+        await store.send(.tabChanged(.library)) { $0.tab = .library; $0.contentTab = .library }
+        await store.send(.tabChanged(.search)) { $0.tab = .search }
+        #expect(store.state.contentTab == .library)
+        await store.send(.tabChanged(.journey)) { $0.tab = .journey; $0.contentTab = .journey }
+        await store.send(.tabChanged(.search)) { $0.tab = .search }
+        #expect(store.state.contentTab == .journey)
     }
 
     @Test func searchResultsLandOnTheContentTabAndShowIt() async {
@@ -246,15 +250,31 @@ import Testing
     }
 
     @Test func readerRecordsWhereYouAre() async {
-        let store = TestStore(initialState: ChapterReaderFeature.State(reference: PassageReference(bookId: "Rom", chapter: 8))) {
+        let reference = PassageReference(bookId: "Rom", chapter: 8)
+        let clock = TestClock()
+        var initial = ChapterReaderFeature.State(reference: reference)
+        initial.chapters["Rom.7"] = []
+        initial.chapters["Rom.9"] = []
+        let store = TestStore(initialState: initial) {
             ChapterReaderFeature()
         } withDependencies: {
-            $0.bibleClient.chapter = { _, _ in [] }
+            $0.contextClient.chapter = { _ in
+                try await clock.sleep(for: .seconds(1))
+                return nil
+            }
         }
-        await store.send(.task) { $0.content = .loading }
-        await store.receive(\.chapterResponse.success) {
+        await store.send(.chapterResponse(.success([]))) {
             $0.content = .loaded([])
-            $0.$lastRead.withLock { $0 = PassageReference(bookId: "Rom", chapter: 8) }
+            $0.chapters["Rom.8"] = []
+            $0.$lastRead.withLock { $0 = reference }
         }
+        await store.receive(\.ensureChapter)
+        await store.receive(\.ensureChapter)
+        await clock.advance(by: .seconds(1))
+        await store.receive(\.contextResponse)
+        // A prefetched neighbor must not replace the chapter being read.
+        await store.send(.cachedChapter(PassageReference(bookId: "Rom", chapter: 9), .success([])))
+        #expect(store.state.lastRead == reference)
+        await store.finish()
     }
 }

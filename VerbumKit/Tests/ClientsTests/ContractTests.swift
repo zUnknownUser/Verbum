@@ -40,7 +40,7 @@ import Models
     /// edge among `root + nodes` (§44); the fixture keeps insertion order and
     /// only the root's edges. Same neighbourhood, richer edges.
     @Test func graph() async throws {
-        let live = GraphClient.live(api: Self.api("graph/david.json", at: "/v1/entities/fixture.person.david/graph", query: "limit=24"))
+        let live = GraphClient.live(api: Self.api("graph/david.json", at: "/v1/entities/fixture.person.david/graph", query: "limit=24&lang=en"), language: .english)
         let got = try await live.neighbors(id: "fixture.person.david", limit: 24)
         let expected = try await GraphClient.fixtures.neighbors(id: "fixture.person.david", limit: 24)
         #expect(got.root == expected.root)
@@ -52,7 +52,8 @@ import Models
     }
 
     @Test func context() async throws {
-        let live = ContextClient.live(api: Self.api("context/1Sam.17.json", at: "/v1/passages/1Sam.17/context"))
+        // ContextClient forwards the app language and selected verse to the API.
+        let live = ContextClient.live(api: Self.api("context/1Sam.17.json", at: "/v1/passages/1Sam.17/context", query: "lang=\(BookLanguage.current.rawValue)&verse=45"))
         let reference = PassageReference(bookId: "1Sam", chapter: 17, verses: 45...47)
         let got = try #require(try await live.chapter(reference: reference))
         let expected = try #require(try await ContextClient.fixtures.chapter(reference: reference))

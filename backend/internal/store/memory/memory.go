@@ -74,10 +74,10 @@ func (s *Store) Detail(_ context.Context, id string) (domain.EntityDetail, error
 	if !ok {
 		return domain.EntityDetail{}, store.ErrNotFound
 	}
-	// No curated facts yet: the entity itself, honestly sourced as editorial.
+	// No curated facts or explicit sources: do not invent an editorial attribution.
 	return domain.EntityDetail{
 		Entity: e, Aliases: []string{}, KeyPassages: []domain.PassageReference{},
-		Sources: []domain.SourceReference{s.sourceBy["fixture.source.editorial"]},
+		Sources: []domain.SourceReference{},
 	}, nil
 }
 
