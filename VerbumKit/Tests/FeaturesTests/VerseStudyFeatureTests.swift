@@ -2,6 +2,7 @@ import Clients
 import ComposableArchitecture
 import Models
 import Testing
+import Foundation
 @testable import Features
 
 @MainActor struct VerseStudyFeatureTests {
@@ -10,6 +11,28 @@ import Testing
     private func context(_ entities: [BibleEntity] = [], references: [PassageReference] = []) -> PassageContext {
         .init(reference: .init(bookId: "John", chapter: 3), entities: entities,
               relatedPassages: references, sources: [], isFixture: true)
+    }
+
+    @Test func editorialConnectionsRemainAvailableWithoutEntitiesAndPreviewPreservesStudy() async throws {
+        let file = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+            .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+            .appendingPathComponent("api/examples/context/Exod.2.pt.json")
+        let json = try #require(JSONSerialization.jsonObject(with: Data(contentsOf: file)) as? [String: Any])
+        let study = try JSONDecoder().decode(ChapterStudy.self, from: JSONSerialization.data(withJSONObject: json["study"]!))
+        let target = study.connections[0].reference
+        let page = PassageContext(reference: .init(bookId: "Exod", chapter: 2), entities: [],
+            relatedPassages: [target], sources: [], isFixture: false, study: study)
+        let initial = VerseStudyFeature.State(passage: verse, annotation: nil, context: page, chapterGuide: true)
+        let preview = ChapterReaderFeatureTests.verses("Gen", 15, count: 1)[0]
+        let store = TestStore(initialState: initial) { VerseStudyFeature() } withDependencies: {
+            $0.bibleClient.passage = { ref in #expect(ref == target); return preview }
+        }
+        #expect(store.state.resourceTypes.isEmpty)
+        #expect(store.state.studyReferences == study.connections.map(\.reference))
+        await store.send(.previewPassage(target)) { $0.previewReference = target; $0.previewLoading = true }
+        await store.receive(.previewResponse(target, .success(preview))) { $0.preview = preview; $0.previewLoading = false }
+        await store.send(.closePreview) { $0.previewReference = nil; $0.preview = nil }
+        #expect(store.state == initial)
     }
 
     @Test func categoriesExposeAllResourcesWithoutDuplicatesOrSilentTruncation() async {

@@ -1,0 +1,503 @@
+{
+  "version": 1,
+  "bundleHash": "23c3928e4f62364f677ad64165216e79c2245d7ecb96dbcbcd866b418ff618f0",
+  "items": [
+    {
+      "key": "sources:editorial.chapter-studies.exodus.2026-10",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399304+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Exod.1",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399715+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Exod.2",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399717+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Exod.3",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399718+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Gen.15",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399718+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Exod.4",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399719+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Exod.6",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399720+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Exod.19",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399720+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Exod.7",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399721+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Exod.12",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399722+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Exod.8",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399722+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Exod.9",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399723+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Exod.10",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399724+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Exod.11",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399724+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Deut.16",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399725+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.1Cor.5",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399725+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Exod.14",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399726+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Exod.15",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399727+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Ps.106",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399727+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Exod.17",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399728+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Exod.16",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399729+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Deut.8",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399729+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.John.6",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399730+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Num.20",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399730+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Deut.25",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399731+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Exod.18",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399732+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Deut.1",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399732+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Num.11",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399733+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Exod.20",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399733+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Exod.24",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399734+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Deut.5",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399735+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Exod.32",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399735+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Exod.34",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399736+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Exod.40",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399736+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Exod.13",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399737+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Exod.25",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399738+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Num.9",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399738+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Num.13",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399739+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Num.14",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399739+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Heb.3",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399740+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Num.21",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399740+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.2Kgs.18",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399741+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.John.3",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399742+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Num.22",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399742+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Num.23",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399743+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Deut.23",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399743+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Deut.34",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399744+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Josh.1",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399745+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "sources:study.scripture.Num.27",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399745+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "dailyVersePool",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399746+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "chapterStudy:Exod.2",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399746+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "chapterStudy:Exod.3",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399747+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "chapterStudy:Exod.7",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399747+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "chapterStudy:Exod.8",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399748+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "chapterStudy:Exod.9",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399749+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "chapterStudy:Exod.10",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399749+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "chapterStudy:Exod.12",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399750+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "chapterStudy:Exod.14",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399750+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "chapterStudy:Exod.15",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399751+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "chapterStudy:Exod.16",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399752+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "chapterStudy:Exod.17",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399752+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "chapterStudy:Exod.18",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399753+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "chapterStudy:Exod.19",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399753+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "chapterStudy:Exod.20",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399754+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "chapterStudy:Exod.32",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399755+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "chapterStudy:Exod.40",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399755+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "chapterStudy:Num.13",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399756+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "chapterStudy:Num.14",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399756+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "chapterStudy:Num.21",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399757+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "chapterStudy:Num.22",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399757+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    },
+    {
+      "key": "chapterStudy:Deut.34",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T16:39:46.399758+00:00",
+      "note": "Original EN/PT-BR reading notes checked against the cited biblical passages and local WEB verse inventory. Narrative setting is distinguished from historical reconstruction. Scripture URLs checked with GET. Not independent human or theological review; publication remains separate."
+    }
+  ]
+}

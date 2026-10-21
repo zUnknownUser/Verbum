@@ -29,7 +29,7 @@ object VerseStudyFeature {
         val activeType get()=selectedType?.takeIf {it in entityTypes} ?: entityTypes.firstOrNull()
         val matchingEntities get()=contextEntities.filter {it.type==activeType}
         val visibleEntities get()=matchingEntities.take(entityLimit)
-        val relatedPassages get()=context?.relatedPassages.orEmpty().distinct()
+        val relatedPassages get()=(context?.study?.connections.orEmpty().map {it.reference}+context?.relatedPassages.orEmpty()).distinct()
         val keyPassages get()=entity?.keyPassages.orEmpty().distinct()
         val availableTabs get()=if(chapterGuide) listOf(Tab.CONTEXT,Tab.REFERENCES) else Tab.entries
         companion object {

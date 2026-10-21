@@ -100,8 +100,36 @@ internal data class WirePassageContext(
     val entities: List<WireEntity>,
     val relatedPassages: List<WirePassageReference>,
     val sources: List<WireSourceReference>,
+    val study: WireChapterStudy? = null,
 ) {
-    fun toModel() = PassageContext(reference.toModel(), entities.map { it.toModel() }, relatedPassages.map { it.toModel() }, sources.map { it.toModel() }, isFixture = false)
+    fun toModel() = PassageContext(reference.toModel(), entities.map { it.toModel() }, relatedPassages.map { it.toModel() }, sources.map { it.toModel() }, isFixture = false, study = study?.toModel())
+}
+
+@Serializable
+internal data class WireStudyNote(val text: String, val references: List<WirePassageReference>) {
+    fun toModel() = com.nexussoft.verbum.models.StudyNote(text, references.map { it.toModel() })
+}
+
+@Serializable
+internal data class WireStudyOutline(val title: String, val reference: WirePassageReference) {
+    fun toModel() = com.nexussoft.verbum.models.StudyOutline(title, reference.toModel())
+}
+
+@Serializable
+internal data class WireStudyConnection(val reference: WirePassageReference, val explanation: String) {
+    fun toModel() = com.nexussoft.verbum.models.StudyConnection(reference.toModel(), explanation)
+}
+
+@Serializable
+internal data class WireChapterStudy(
+    val title: String, val summary: WireStudyNote, val participants: WireStudyNote,
+    val setting: WireStudyNote, val literaryContext: WireStudyNote,
+    val outline: List<WireStudyOutline>, val connections: List<WireStudyConnection>,
+    val sourceReferenceIds: List<String>,
+) {
+    fun toModel() = com.nexussoft.verbum.models.ChapterStudy(title, summary.toModel(),
+        participants.toModel(), setting.toModel(), literaryContext.toModel(),
+        outline.map { it.toModel() }, connections.map { it.toModel() }, sourceReferenceIds)
 }
 
 @Serializable

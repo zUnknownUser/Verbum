@@ -28,6 +28,9 @@ public struct ContextView: View {
                         Button(L10n.t("Try Again")) { store.send(.retryTapped) }
                     }
                 case .loaded(let context):
+                    if let study = context.study {
+                        ChapterStudyView(study: study, sources: context.sources) { store.send(.passageTapped($0)) }
+                    }
                     if context.isFixture {
                         Text(L10n.t("Demonstration content · Connections from the sample collection; not a complete or reviewed commentary."))
                             .font(Typography.footnote).foregroundStyle(Palette.inkSecondary)

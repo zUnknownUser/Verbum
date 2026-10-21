@@ -1,0 +1,11 @@
+<resources>
+    <string name="chapter_study_intro">Guia editorial de leitura · Consulte as passagens citadas.</string>
+    <string name="chapter_study_people">Participantes e funções</string>
+    <string name="chapter_study_setting">Cenário do relato</string>
+    <string name="chapter_study_literary">Contexto literário</string>
+    <string name="chapter_study_outline">Estrutura do capítulo</string>
+    <string name="chapter_study_connections">Conexões explicadas</string>
+    <string name="chapter_study_sources">Fontes deste estudo</string>
+    <string name="chapter_study_expanded">Expandido</string>
+    <string name="chapter_study_collapsed">Recolhido</string>
+</resources>

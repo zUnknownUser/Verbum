@@ -1,0 +1,11 @@
+<resources>
+    <string name="chapter_study_intro">Editorial reading guide · Consult the cited passages.</string>
+    <string name="chapter_study_people">People and roles</string>
+    <string name="chapter_study_setting">Setting in the narrative</string>
+    <string name="chapter_study_literary">Literary context</string>
+    <string name="chapter_study_outline">Chapter structure</string>
+    <string name="chapter_study_connections">Connections explained</string>
+    <string name="chapter_study_sources">Study sources</string>
+    <string name="chapter_study_expanded">Expanded</string>
+    <string name="chapter_study_collapsed">Collapsed</string>
+</resources>

@@ -1,0 +1,162 @@
+{
+  "reference": {
+    "bookId": "Exod",
+    "chapter": 2
+  },
+  "entities": [],
+  "relatedPassages": [],
+  "sources": [
+    {
+      "id": "editorial.chapter-studies.exodus.2026-10",
+      "citation": "Verbum · Exodus chapter studies / Estudos de capítulos do Êxodo · 2026-10",
+      "url": null
+    },
+    {
+      "id": "study.scripture.Exod.1",
+      "citation": "Exodus 1 · World English Bible",
+      "url": "https://ebible.org/engwebp/EXO01.htm"
+    },
+    {
+      "id": "study.scripture.Exod.2",
+      "citation": "Exodus 2 · World English Bible",
+      "url": "https://ebible.org/engwebp/EXO02.htm"
+    },
+    {
+      "id": "study.scripture.Exod.3",
+      "citation": "Exodus 3 · World English Bible",
+      "url": "https://ebible.org/engwebp/EXO03.htm"
+    },
+    {
+      "id": "study.scripture.Gen.15",
+      "citation": "Genesis 15 · World English Bible",
+      "url": "https://ebible.org/engwebp/GEN15.htm"
+    }
+  ],
+  "study": {
+    "title": "Moisés: resgate, fuga e aliança lembrada",
+    "summary": {
+      "text": "Moisés sobrevive ao decreto contra os meninos hebreus pela ação de sua família e da filha de Faraó. Sua intervenção em uma situação de violência leva à fuga para Midiã. A cena final passa de sua nova família ao clamor de Israel e à atenção de Deus à aliança.",
+      "references": [
+        {
+          "bookId": "Exod",
+          "chapter": 1,
+          "verseStart": 22,
+          "verseEnd": 22
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 2,
+          "verseStart": 1,
+          "verseEnd": 25
+        }
+      ]
+    },
+    "participants": {
+      "text": "A mãe e a irmã de Moisés, a filha de Faraó e suas servas protegem a criança. Depois, Moisés encontra as filhas de Reuel, casa-se com Zípora e dá ao filho o nome de Gérson. Os israelitas escravizados continuam centrais mesmo quando a narrativa acompanha Moisés longe deles.",
+      "references": [
+        {
+          "bookId": "Exod",
+          "chapter": 2,
+          "verseStart": 1,
+          "verseEnd": 25
+        }
+      ]
+    },
+    "setting": {
+      "text": "A história vai do Nilo, no Egito, a um poço e a uma família em Midiã. O rei do Egito não é nomeado aqui; este capítulo, sozinho, não estabelece uma data nem identifica um faraó específico.",
+      "references": [
+        {
+          "bookId": "Exod",
+          "chapter": 2,
+          "verseStart": 3,
+          "verseEnd": 5
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 2,
+          "verseStart": 15,
+          "verseEnd": 25
+        }
+      ]
+    },
+    "literaryContext": {
+      "text": "Leia este capítulo entre a opressão de Êxodo 1 e o chamado de Êxodo 3. A libertação ainda não aconteceu: o final apresenta a aliança como referência para a ação seguinte, em vez de tratar a fuga de Moisés como conclusão.",
+      "references": [
+        {
+          "bookId": "Exod",
+          "chapter": 1,
+          "verseStart": 8,
+          "verseEnd": 22
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 2,
+          "verseStart": 23,
+          "verseEnd": 25
+        },
+        {
+          "bookId": "Exod",
+          "chapter": 3,
+          "verseStart": 7,
+          "verseEnd": 10
+        }
+      ]
+    },
+    "outline": [
+      {
+        "title": "Uma criança resgatada",
+        "reference": {
+          "bookId": "Exod",
+          "chapter": 2,
+          "verseStart": 1,
+          "verseEnd": 10
+        }
+      },
+      {
+        "title": "Violência, fuga e uma nova família",
+        "reference": {
+          "bookId": "Exod",
+          "chapter": 2,
+          "verseStart": 11,
+          "verseEnd": 22
+        }
+      },
+      {
+        "title": "O clamor de Israel e a aliança",
+        "reference": {
+          "bookId": "Exod",
+          "chapter": 2,
+          "verseStart": 23,
+          "verseEnd": 25
+        }
+      }
+    ],
+    "connections": [
+      {
+        "reference": {
+          "bookId": "Gen",
+          "chapter": 15,
+          "verseStart": 13,
+          "verseEnd": 16
+        },
+        "explanation": "A promessa a Abrão já inclui opressão e uma saída posterior; compare essa promessa com a aliança lembrada aqui."
+      },
+      {
+        "reference": {
+          "bookId": "Exod",
+          "chapter": 3,
+          "verseStart": 7,
+          "verseEnd": 10
+        },
+        "explanation": "O ouvir e o ver de Deus se desdobram em uma missão para Moisés no capítulo seguinte."
+      }
+    ],
+    "sourceReferenceIds": [
+      "editorial.chapter-studies.exodus.2026-10",
+      "study.scripture.Exod.1",
+      "study.scripture.Exod.2",
+      "study.scripture.Exod.3",
+      "study.scripture.Gen.15"
+    ]
+  }
+}

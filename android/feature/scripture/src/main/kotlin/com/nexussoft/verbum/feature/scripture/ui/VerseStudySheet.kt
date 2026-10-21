@@ -138,14 +138,21 @@ internal fun VerseStudySheet(state: VerseStudyFeature.State, send: (Action)->Uni
                             Text(stringResource(R.string.context_title),style=VerbumTypography.editorialHeadline)
                             Text(stringResource(if(state.chapterGuide) R.string.reader_guide_scope else R.string.reader_chapter_scope),style=MaterialTheme.typography.bodySmall)
                             if(state.contextLoading) CircularProgressIndicator()
-                            else if(state.contextEntities.isNotEmpty()) {
-                                Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(Spacing.sm)) {
-                                    state.entityTypes.forEach {type->
-                                        FilterChip(selected=state.activeType==type,onClick={send(Action.EntityTypeChanged(type))},label={Text("${stringResource(studyTypeTitle(type))} (${state.contextEntities.count {it.type==type}})")})
+                            else if(state.context != null || state.contextEntities.isNotEmpty()) {
+                                state.context?.let {context->
+                                    context.study?.let {study->
+                                        ChapterStudyContent(study,context.sources) {send(Action.PreviewPassage(it))}
                                     }
                                 }
-                                state.visibleEntities.forEach {StudyEntity(it,send)}
-                                if(state.matchingEntities.size>state.entityLimit) TextButton(onClick={send(Action.MoreEntities)}) {Text(stringResource(R.string.history_more))}
+                                if(state.contextEntities.isNotEmpty()) {
+                                    Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(Spacing.sm)) {
+                                        state.entityTypes.forEach {type->
+                                            FilterChip(selected=state.activeType==type,onClick={send(Action.EntityTypeChanged(type))},label={Text("${stringResource(studyTypeTitle(type))} (${state.contextEntities.count {it.type==type}})")})
+                                        }
+                                    }
+                                    state.visibleEntities.forEach {StudyEntity(it,send)}
+                                    if(state.matchingEntities.size>state.entityLimit) TextButton(onClick={send(Action.MoreEntities)}) {Text(stringResource(R.string.history_more))}
+                                } else if(state.context?.study==null) Text(stringResource(R.string.reader_no_context))
                                 state.context?.let {StudySources(it.sources)}
                             } else if(state.contextFailed) LayerRetry {send(Action.TabChanged(Tab.CONTEXT))}
                             else Text(stringResource(R.string.reader_no_context))

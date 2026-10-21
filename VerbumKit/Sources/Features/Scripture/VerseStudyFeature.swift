@@ -41,7 +41,8 @@ public struct VerseStudyFeature {
         public var visibleEntities: [BibleEntity] { Array(filteredEntities.prefix(entityLimit)) }
         public var studyReferences: [PassageReference] {
             var seen = Set<PassageReference>()
-            return (entity?.keyPassages ?? context?.relatedPassages ?? []).filter { seen.insert($0).inserted }
+            let references = entity?.keyPassages ?? ((context?.study?.connections.map(\.reference) ?? []) + (context?.relatedPassages ?? []))
+            return references.filter { seen.insert($0).inserted }
         }
         public var context: PassageContext?
         public var contextLoading = false

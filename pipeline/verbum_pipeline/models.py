@@ -337,8 +337,43 @@ class EventSequence(Model):
     presentations: dict[str, SequencePresentation]
     items: Annotated[list[SequenceItem], Field(min_length=2)]
 
+
+class StudyNote(Model):
+    text: Text
+    references: Annotated[list[Reference], Field(min_length=1, max_length=4)]
+
+
+class StudyOutline(Model):
+    title: Text
+    reference: Reference
+
+
+class StudyConnection(Model):
+    reference: Reference
+    explanation: Text
+
+
+class ChapterStudyPresentation(Model):
+    title: Text
+    summary: StudyNote
+    participants: StudyNote
+    setting: StudyNote
+    literaryContext: StudyNote
+    outline: Annotated[list[StudyOutline], Field(min_length=2, max_length=6)]
+    connections: Annotated[list[StudyConnection], Field(min_length=1, max_length=4)]
+    sourceReferenceIds: Annotated[list[Text], Field(min_length=1)]
+
+
+class ChapterStudy(Model):
+    reference: Reference
+    presentations: dict[str, ChapterStudyPresentation]
+    # Updates must identify the exact published presentation they intend to replace.
+    previousHash: Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")] | None = None
+
+
 class Bundle(Model):
-    version: Literal[1, 2, 3, 4, 5, 6, 7] = 1
+    version: Literal[1, 2, 3, 4, 5, 6, 7, 8] = 1
+    chapterStudies: list[ChapterStudy] | None = None
     eventSequences: list[EventSequence] | None = None
     eventCatalog: EventCatalog | None = None
     timelineDiscovery: TimelineDiscovery | None = None
@@ -355,6 +390,8 @@ class Bundle(Model):
     @model_serializer(mode="wrap")
     def serialize_bundle(self, handler):
         value = handler(self)
+        if self.version != 8:
+            value.pop("chapterStudies", None)
         if self.version != 6:
             value.pop("eventCatalog", None)
         if self.version != 7:
@@ -371,6 +408,38 @@ class Bundle(Model):
 
     @model_validator(mode="after")
     def evidence(self) -> Self:
+        if (self.version == 8) != (self.chapterStudies is not None):
+            raise ValueError("version 8 requires chapter studies")
+        if self.chapterStudies is not None:
+            if self.kind != "editorial" or not self.chapterStudies or any((
+                self.content.entities, self.content.details, self.content.relationships,
+                self.content.timeline, self.content.dailyVersePool,
+                self.content.referencedEntityIds,
+            )):
+                raise ValueError("chapter study batches cannot change other modules")
+            unique([f"{s.reference.bookId}.{s.reference.chapter}" for s in self.chapterStudies],
+                   "chapter studies")
+            sources = {s.id for s in self.content.sources}
+            for study in self.chapterStudies:
+                if study.reference.verseStart is not None:
+                    raise ValueError("studies must cover a whole chapter")
+                if set(study.presentations) != {"en", "pt-BR"}:
+                    raise ValueError("chapter studies require both languages")
+                en, pt = study.presentations["en"], study.presentations["pt-BR"]
+                for field in ("summary", "participants", "setting", "literaryContext"):
+                    if getattr(en, field).references != getattr(pt, field).references:
+                        raise ValueError("chapter study evidence differs between languages")
+                for field in ("outline", "connections"):
+                    if [p.reference for p in getattr(en, field)] != [p.reference for p in getattr(pt, field)]:
+                        raise ValueError("chapter study navigation differs between languages")
+                if en.sourceReferenceIds != pt.sourceReferenceIds:
+                    raise ValueError("chapter study sources differ between languages")
+                unique(en.sourceReferenceIds, "chapter study sources")
+                if not set(en.sourceReferenceIds) <= sources:
+                    raise ValueError("unknown chapter study source")
+                for part in en.outline:
+                    if (part.reference.bookId, part.reference.chapter) != (study.reference.bookId, study.reference.chapter):
+                        raise ValueError("outline must stay within its chapter")
         if (self.version == 7) != (self.eventSequences is not None):
             raise ValueError("version 7 requires event sequences")
         if self.eventSequences is not None:

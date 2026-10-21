@@ -1107,6 +1107,11 @@ components:
       type: object
       required: [reference, entities, relatedPassages, sources]
       properties:
+        study:
+          description: Optional reviewed chapter study in the requested language. Absence does not hide existing entity context.
+          anyOf:
+            - { $ref: '#/components/schemas/ChapterStudy' }
+            - { type: 'null' }
         reference: { $ref: '#/components/schemas/PassageReference', description: Always a whole chapter. }
         entities: { type: array, items: { $ref: '#/components/schemas/BibleEntity' } }
         relatedPassages:
@@ -1114,6 +1119,51 @@ components:
           items: { $ref: '#/components/schemas/PassageReference' }
           description: Share a connected entity with the chapter; not asserted to be quotations or parallels.
         sources: { type: array, items: { $ref: '#/components/schemas/SourceReference' } }
+
+    StudyNote:
+      type: object
+      required: [text, references]
+      properties:
+        text: { type: string }
+        references:
+          type: array
+          minItems: 1
+          items: { $ref: '#/components/schemas/PassageReference' }
+
+    StudyOutline:
+      type: object
+      required: [title, reference]
+      properties:
+        title: { type: string }
+        reference: { $ref: '#/components/schemas/PassageReference' }
+
+    StudyConnection:
+      type: object
+      required: [reference, explanation]
+      properties:
+        reference: { $ref: '#/components/schemas/PassageReference' }
+        explanation: { type: string, description: Editorial explanation of this connection; not an automatic claim of a parallel account. }
+
+    ChapterStudy:
+      type: object
+      description: Authored study. Setting describes the biblical narrative rather than asserting an independent historical reconstruction. References open in the reader's selected translation.
+      required: [title, summary, participants, setting, literaryContext, outline, connections, sourceReferenceIds]
+      properties:
+        title: { type: string }
+        summary: { $ref: '#/components/schemas/StudyNote' }
+        participants: { $ref: '#/components/schemas/StudyNote' }
+        setting: { $ref: '#/components/schemas/StudyNote' }
+        literaryContext: { $ref: '#/components/schemas/StudyNote' }
+        outline:
+          type: array
+          items: { $ref: '#/components/schemas/StudyOutline' }
+        connections:
+          type: array
+          items: { $ref: '#/components/schemas/StudyConnection' }
+        sourceReferenceIds:
+          type: array
+          items: { type: string }
+          description: IDs in the enclosing context sources; includes editorial attribution and Scripture sources.
 
     # ---- §22.5 (+ sourceReferenceIds)
     TimelineDatePrecision:

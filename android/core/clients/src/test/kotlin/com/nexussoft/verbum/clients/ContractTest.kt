@@ -86,8 +86,26 @@ class ContractTest {
         assertEquals(expected.entities, got.entities)
         assertEquals(expected.relatedPassages, got.relatedPassages)
         assertEquals(expected.sources, got.sources)
+        assertTrue(got.study == null, "older API responses remain compatible")
         assertFalse(got.isFixture, "the server's content is not labelled as a fixture")
         assertTrue(expected.isFixture)
+    }
+
+    @Test
+    fun chapterStudyDecodesWithoutEntitiesAndPreservesEvidence() = runTest {
+        for (language in listOf(BookLanguage.ENGLISH, BookLanguage.PORTUGUESE)) {
+            val suffix = language.tag
+            val page = assertNotNull(api("context/Exod.2.$suffix.json", "/v1/passages/Exod.2/context?lang=$suffix")
+                .context(PassageReference("Exod", 2), language))
+            val study = assertNotNull(page.study)
+            assertTrue(page.entities.isEmpty())
+            assertEquals(if (language == BookLanguage.PORTUGUESE) "Moisés: resgate, fuga e aliança lembrada" else "Moses: rescue, flight and a remembered covenant", study.title)
+            assertEquals(listOf(PassageReference("Exod", 1, 22..22), PassageReference("Exod", 2, 1..25)), study.summary.references)
+            assertEquals(listOf(1..10, 11..22, 23..25), study.outline.map { it.reference.verses })
+            assertEquals(PassageReference("Gen", 15, 13..16), study.connections.first().reference)
+            assertEquals(page.sources.map { it.id }.toSet(), study.sourceReferenceIds.toSet())
+            assertFalse(page.isFixture)
+        }
     }
 
     @Test

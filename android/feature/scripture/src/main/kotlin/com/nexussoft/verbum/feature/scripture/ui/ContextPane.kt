@@ -46,6 +46,9 @@ internal fun ContextPane(state: ContextFeature.State, onBack: () -> Unit, send: 
                     TextButton(onClick = { send(ContextFeature.Action.RetryTapped) }) { Text(stringResource(R.string.try_again)) }
                 }
                 is ContextFeature.Content.Loaded -> {
+                    content.page.study?.let { study ->
+                        item { ChapterStudyContent(study, content.page.sources) { send(ContextFeature.Action.PassageTapped(it)) } }
+                    }
                     if (content.page.isFixture) item {
                         Text(stringResource(R.string.context_fixture), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }

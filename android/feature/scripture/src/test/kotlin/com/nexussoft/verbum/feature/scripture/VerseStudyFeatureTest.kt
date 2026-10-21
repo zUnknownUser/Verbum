@@ -22,6 +22,21 @@ class VerseStudyFeatureTest {
     private fun reducer(bible:BibleClient=StubBibleClient(passageStub={preview}),graph:GraphClient=StubGraphClient())=
         VerseStudyFeature.reducer(ContextClient {null},graph,AskScriptureClient {throw AssertionError("unexpected ask")},PreferenceReaderAnnotationsClient(preferences),BibleComparisonClient {throw AssertionError("unexpected comparison")},bible)
 
+    @Test fun editorialConnectionsRemainAvailableWithoutEntitiesAndPreviewPreservesStudy()=runTest {
+        val note=StudyNote("Editorial test note",listOf(reference))
+        val study=ChapterStudy("Study",note,note,note,note,emptyList(),listOf(StudyConnection(target,"Test connection")),emptyList())
+        val page=PassageContext(reference,emptyList(),listOf(target),emptyList(),false,study)
+        val state=initial(page,guide=true)
+        val store=Store(state,reducer(),this)
+        assertTrue(state.contextEntities.isEmpty())
+        assertEquals(listOf(target),state.relatedPassages)
+        store.send(Action.PreviewPassage(target));runCurrent()
+        assertEquals(preview,store.state.value.preview)
+        store.send(Action.ClosePreview)
+        assertEquals(state,store.state.value)
+        advanceUntilIdle()
+    }
+
     @Test fun contextGroupsEveryTypeDeduplicatesAndCanReachBeyondFormerCap() {
         val entities=(1..31).map {BibleEntity("person-$it",BibleEntityType.PERSON,"Person $it",null)} +
             BibleEntityType.entries.filter {it!=BibleEntityType.PERSON}.map {BibleEntity(it.wireValue,it,it.wireValue,null)}

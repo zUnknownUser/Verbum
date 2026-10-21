@@ -76,6 +76,12 @@ def items(bundle: Bundle) -> list[dict]:
     )
     if bundle.eventSequences is not None:
         result.append({"key": "eventSequences", "proposal": [s.model_dump() for s in bundle.eventSequences], "sourceReferenceIds": [s.id for s in bundle.content.sources]})
+    for study in bundle.chapterStudies or []:
+        result.append({
+            "key": f"chapterStudy:{study.reference.bookId}.{study.reference.chapter}",
+            "proposal": study.model_dump(),
+            "sourceReferenceIds": study.presentations["en"].sourceReferenceIds,
+        })
     if bundle.eventCatalog is not None:
         result.append({"key": "eventCatalog", "proposal": bundle.eventCatalog.model_dump(), "sourceReferenceIds": [s.id for s in bundle.content.sources]})
     if bundle.timelineDiscovery is not None:

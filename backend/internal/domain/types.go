@@ -105,6 +105,35 @@ type PassageContext struct {
 	Entities        []Entity           `json:"entities"`
 	RelatedPassages []PassageReference `json:"relatedPassages"`
 	Sources         []SourceReference  `json:"sources"`
+	Study           *ChapterStudy      `json:"study,omitempty"`
+}
+
+// ChapterStudy is authored content, never generated while opening a passage.
+// Its Scripture references explain the basis of each editorial paragraph.
+type StudyNote struct {
+	Text       string             `json:"text"`
+	References []PassageReference `json:"references"`
+}
+
+type StudyOutline struct {
+	Title     string           `json:"title"`
+	Reference PassageReference `json:"reference"`
+}
+
+type StudyConnection struct {
+	Reference   PassageReference `json:"reference"`
+	Explanation string           `json:"explanation"`
+}
+
+type ChapterStudy struct {
+	Title              string            `json:"title"`
+	Summary            StudyNote         `json:"summary"`
+	Participants       StudyNote         `json:"participants"`
+	Setting            StudyNote         `json:"setting"`
+	LiteraryContext    StudyNote         `json:"literaryContext"`
+	Outline            []StudyOutline    `json:"outline"`
+	Connections        []StudyConnection `json:"connections"`
+	SourceReferenceIDs []string          `json:"sourceReferenceIds"`
 }
 
 // TimelineEvent is a period or event with hedged dating (§22.5).

@@ -1,5 +1,9 @@
 # Bounded study guide — 2026-10-12
 
+The 21/10 chapter-content increment adds 21 bilingual Exodus-sequence studies to
+this existing guide; see [chapter studies](CHAPTER_STUDIES_2026-10-21.md). The
+implementation and publication status below describe the original 12/10 delivery.
+
 ## Evidence and scope
 
 The user requested improvements inspired by Olive Tree, Logos and YouVersion,

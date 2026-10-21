@@ -79,6 +79,19 @@ def publish(source: Path, decisions: Path, database_url: str, *, allow_fixtures=
 
 
 def write_content(cur, bundle: Bundle) -> None:
+    if bundle.chapterStudies is not None:
+        from .chapter_studies import validate_references
+
+        validate_references(bundle)
+        for study in bundle.chapterStudies:
+            cur.execute("SELECT presentations FROM chapter_studies WHERE book_id=%s AND chapter=%s",
+                        (study.reference.bookId, study.reference.chapter))
+            existing = cur.fetchone()
+            proposed = {lang: p.model_dump() for lang, p in study.presentations.items()}
+            if existing and existing[0] != proposed and digest(existing[0]) != study.previousHash:
+                raise ValueError("chapter study changed since review; refresh its previousHash")
+            if not existing and study.previousHash is not None:
+                raise ValueError("chapter study to update is missing")
     if bundle.translations is not None:
         from .localize import validate_snapshot
 
@@ -140,6 +153,21 @@ def write_content(cur, bundle: Bundle) -> None:
                 },
                 "reference_id",
             )
+    if bundle.chapterStudies is not None:
+        for study in bundle.chapterStudies:
+            ref = study.reference
+            cur.execute("""INSERT INTO chapter_studies(book_id,chapter,presentations)
+                VALUES(%s,%s,%s) ON CONFLICT(book_id,chapter) DO UPDATE
+                SET presentations=EXCLUDED.presentations""",
+                (ref.bookId, ref.chapter,
+                 Jsonb({lang: p.model_dump() for lang, p in study.presentations.items()})))
+            cur.execute("DELETE FROM chapter_study_sources WHERE book_id=%s AND chapter=%s",
+                        (ref.bookId, ref.chapter))
+            cur.executemany("""INSERT INTO chapter_study_sources
+                (book_id,chapter,source_id,position) VALUES(%s,%s,%s,%s)""",
+                [(ref.bookId, ref.chapter, sid, i)
+                 for i, sid in enumerate(study.presentations["en"].sourceReferenceIds)])
+        return
     if bundle.translations is not None:
         from .localize import write_translations
 

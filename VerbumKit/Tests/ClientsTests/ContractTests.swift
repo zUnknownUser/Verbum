@@ -61,7 +61,23 @@ import Models
         #expect(got.entities == expected.entities)
         #expect(got.relatedPassages == expected.relatedPassages)
         #expect(got.sources == expected.sources)
+        #expect(got.study == nil, "older API responses remain compatible")
         #expect(!got.isFixture && expected.isFixture, "the server's content is not labelled as a fixture")
+    }
+
+    @Test(arguments: [BookLanguage.english, .portuguese])
+    func chapterStudyDecodesWithoutEntitiesAndPreservesEvidence(language: BookLanguage) async throws {
+        let suffix = language == .portuguese ? "pt" : "en"
+        let api = Self.api("context/Exod.2.\(suffix).json", at: "/v1/passages/Exod.2/context", query: "lang=\(suffix)")
+        let page = try #require(await api.context(.init(bookId: "Exod", chapter: 2), language: language))
+        let study = try #require(page.study)
+        #expect(page.entities.isEmpty)
+        #expect(study.title == (language == .portuguese ? "Moisés: resgate, fuga e aliança lembrada" : "Moses: rescue, flight and a remembered covenant"))
+        #expect(study.summary.references == [.init(bookId: "Exod", chapter: 1, verses: 22...22), .init(bookId: "Exod", chapter: 2, verses: 1...25)])
+        #expect(study.outline.map(\.reference.verses) == [1...10, 11...22, 23...25])
+        #expect(study.connections.first?.reference == .init(bookId: "Gen", chapter: 15, verses: 13...16))
+        #expect(Set(study.sourceReferenceIds) == Set(page.sources.map(\.id)))
+        #expect(!page.isFixture)
     }
 
     @Test func timeline() async throws {

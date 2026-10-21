@@ -127,9 +127,12 @@ struct VerseStudyView: View {
                 Text(store.chapterGuide ? StudyGuideCopy.chapterScope : L10n.t("Connections documented for this chapter; not every link is a direct parallel to this verse.")).font(Typography.footnote).foregroundStyle(Palette.inkSecondary)
                 if store.contextLoading { ProgressView() }
                 else if let context = store.context {
-                    if store.resourceTypes.isEmpty {
+                    if let study = context.study {
+                        ChapterStudyView(study: study, sources: context.sources) { store.send(.previewPassage($0)) }
+                    }
+                    if store.resourceTypes.isEmpty && context.study == nil {
                         Text(L10n.t("No sourced context is available for this passage yet.")).font(Typography.subheadline)
-                    } else {
+                    } else if !store.resourceTypes.isEmpty {
                         resourceBrowser
                     }
                     sources(context.sources)
@@ -139,7 +142,7 @@ struct VerseStudyView: View {
         case .references:
             Text(L10n.t("Follow the references")).font(Typography.editorialHeadline)
             if store.contextLoading { ProgressView() }
-            else if let context = store.context, !context.relatedPassages.isEmpty {
+            else if let context = store.context, !store.studyReferences.isEmpty {
                 Text(L10n.t("Related passages from the chapter’s documented connections.")).font(Typography.footnote)
                 referenceList
                 sources(context.sources)
