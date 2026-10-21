@@ -59,6 +59,23 @@ import Models
         #expect(!expected.isEmpty)
     }
 
+    @Test(arguments: [BookLanguage.english, .portuguese])
+    func themeStudyPreservesLanguageReferencesAndSourcedEntityConnections(language: BookLanguage) async throws {
+        let suffix = language == .portuguese ? "pt" : "en"
+        let id = "fixture.theme.faith"
+        let api = Self.api("entities/faith-study.\(suffix).json", at: "/v1/entities/\(id)", query: "lang=\(suffix)")
+        let detail = try await api.entityDetail(id, language: language)
+        let study = try #require(detail.themeStudy)
+        #expect(detail.entity.id == id)
+        #expect(detail.entity.name == (language == .portuguese ? "Fé" : "Faith"))
+        #expect(study.readings.count == 5 && study.comparisons.count == 2)
+        #expect(Set(study.readings.map(\.reference)).isSubset(of: Set(detail.keyPassages)))
+        #expect(study.comparisons.allSatisfy { $0.references.count >= 2 && !$0.difference.isEmpty })
+        #expect(study.connections.allSatisfy { !$0.entity.name.isEmpty && !$0.explanation.isEmpty })
+        #expect(Set(study.sourceReferenceIds).isSubset(of: Set(detail.sources.map(\.id))))
+        #expect(detail.sources.filter { $0.url != nil }.allSatisfy { $0.webURL != nil })
+    }
+
     /// The server orders neighbours by confidence then name and returns every
     /// edge among `root + nodes` (§44); the fixture keeps insertion order and
     /// only the root's edges. Same neighbourhood, richer edges.

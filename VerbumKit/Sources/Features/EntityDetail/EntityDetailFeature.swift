@@ -4,14 +4,16 @@ import Foundation
 import Models
 
 /// One entity's page (spec §9): the facts, the passages that matter, and the
-/// one-hop neighbourhood grouped by kind. Passages go to the reader; related
-/// entities push another page. Sources are always listed (§33).
+/// one-hop neighbourhood grouped by kind. Guide references open a local preview;
+/// related entities push another page. Sources are always listed (§33).
 @Reducer
 public struct EntityDetailFeature {
     @ObservableState
     public struct State: Equatable, Identifiable {
         public let entityID: EntityID
         public var content: Content = .idle
+        public var expandedStudySections: Set<String> = []
+        @Presents public var passagePreview: PassagePreviewFeature.State?
 
         public init(entityID: EntityID) {
             self.entityID = entityID
@@ -41,12 +43,33 @@ public struct EntityDetailFeature {
         }
 
         public var entity: BibleEntity { detail.entity }
-        public func related(_ type: BibleEntityType) -> [BibleEntity] { neighborhood.nodes(of: type) }
+        public func related(_ type: BibleEntityType) -> [BibleEntity] {
+            let explained = Set(detail.themeStudy?.connections.map(\.entity.id) ?? [])
+            return neighborhood.nodes(of: type).filter { !explained.contains($0.id) }
+        }
 
         /// Detail's key passages, or the passage nodes of the neighbourhood when the detail lists none.
         public var passages: [PassageReference] {
             if !detail.keyPassages.isEmpty { return detail.keyPassages }
             return neighborhood.nodes(of: .passage).compactMap { EntityFixturePassages.reference(for: $0) }
+        }
+
+        /// The guide already presents its reading sequence. Keep other existing
+        /// references available without repeating the same reading buttons.
+        public var additionalPassages: [PassageReference] {
+            let guideReferences = Set(detail.themeStudy?.readings.map(\.reference) ?? [])
+            var seen = Set<PassageReference>()
+            return passages.filter { !guideReferences.contains($0) && seen.insert($0).inserted }
+        }
+
+        public var studySources: [SourceReference] {
+            let ids = Set(detail.themeStudy?.sourceReferenceIds ?? [])
+            return sources.filter { ids.contains($0.id) }
+        }
+
+        public var otherSources: [SourceReference] {
+            let ids = Set(detail.themeStudy?.sourceReferenceIds ?? [])
+            return sources.filter { !ids.contains($0.id) }
         }
 
         /// Sources cited by the detail and by every visible edge, without duplicates.
@@ -63,6 +86,9 @@ public struct EntityDetailFeature {
         case retryTapped
         case pageResponse(Result<Page, Failure>)
         case passageTapped(PassageReference)
+        case previewPassage(PassageReference)
+        case passagePreview(PresentationAction<PassagePreviewFeature.Action>)
+        case studySectionChanged(String, Bool)
         case entityTapped(BibleEntity)
         case graphTapped
         case timelineTapped
@@ -98,6 +124,12 @@ public struct EntityDetailFeature {
         Reduce { state, action in
             switch action {
             case .task, .retryTapped:
+                if case .task = action {
+                    switch state.content {
+                    case .loaded, .failed: return .none
+                    case .idle, .loading: break
+                    }
+                }
                 state.content = .loading
                 let id = state.entityID
                 return .run { [graphClient, timelineClient] send in
@@ -124,6 +156,22 @@ public struct EntityDetailFeature {
             case .passageTapped(let reference):
                 return .send(.delegate(.openPassage(reference)))
 
+            case .previewPassage(let reference):
+                state.passagePreview = PassagePreviewFeature.State(reference: reference)
+                return .none
+
+            case .passagePreview(.presented(.delegate(.openReader(let reference)))):
+                state.passagePreview = nil
+                return .send(.delegate(.openPassage(reference)))
+
+            case .studySectionChanged(let id, let expanded):
+                if expanded { state.expandedStudySections.insert(id) }
+                else { state.expandedStudySections.remove(id) }
+                return .none
+
+            case .passagePreview:
+                return .none
+
             case .entityTapped(let entity):
                 if let reference = EntityFixturePassages.reference(for: entity) {
                     return .send(.delegate(.openPassage(reference)))
@@ -144,6 +192,7 @@ public struct EntityDetailFeature {
                 return .none
             }
         }
+        .ifLet(\.$passagePreview, action: \.passagePreview) { PassagePreviewFeature() }
     }
 
     private enum CancelID { case load }

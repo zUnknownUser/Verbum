@@ -1,0 +1,16 @@
+<resources>
+    <string name="theme_study_title">Estudo do tema</string>
+    <string name="theme_study_intro">Leia as passagens em seu contexto, acompanhe os comentários e compare as conexões.</string>
+    <string name="theme_study_readings">Leituras comentadas</string>
+    <string name="theme_study_reading_title">%1$d. %2$s</string>
+    <string name="theme_study_context">Contexto</string>
+    <string name="theme_study_observation">O que observar</string>
+    <string name="theme_study_significance">Por que importa</string>
+    <string name="theme_study_question">Pergunta para estudo</string>
+    <string name="theme_study_comparisons">Compare as passagens</string>
+    <string name="theme_study_connection">Relação entre os textos</string>
+    <string name="theme_study_difference">Diferenças de contexto</string>
+    <string name="theme_study_entities">Conexões explicadas</string>
+    <string name="theme_study_more_readings">Outras leituras</string>
+    <string name="theme_study_sources">Fontes deste estudo</string>
+</resources>

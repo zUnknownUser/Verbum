@@ -1,0 +1,328 @@
+{
+  "themeStudy": {
+    "overview": {
+      "text": "A fé assume formas diferentes nestas passagens: confiança diante do perigo, recusa em abandonar uma promessa, dependência sincera, perseverança e cuidado concreto. Comece com Israel junto ao mar e compare a reação de medo em Números. Marcos aproxima a questão do pedido de um pai por seu filho; Hebreus apresenta pessoas que agem antes de receber tudo o que foi prometido; Tiago examina o significado de afirmar ter fé quando alguém precisa do básico. Esses textos não apresentam a fé como técnica para controlar resultados. Suas situações e argumentos diferem, mas todos perguntam como a confiança se torna resposta. Leia os detalhes antes de aplicar: observe quem age, o que é prometido, o que permanece em aberto e como outra pessoa é afetada.",
+      "references": [
+        {
+          "bookId": "Exod",
+          "chapter": 14,
+          "verseStart": 10,
+          "verseEnd": 31
+        },
+        {
+          "bookId": "Num",
+          "chapter": 14,
+          "verseStart": 1,
+          "verseEnd": 9
+        },
+        {
+          "bookId": "Mark",
+          "chapter": 9,
+          "verseStart": 14,
+          "verseEnd": 29
+        },
+        {
+          "bookId": "Heb",
+          "chapter": 11,
+          "verseStart": 1,
+          "verseEnd": 16
+        },
+        {
+          "bookId": "Jas",
+          "chapter": 2,
+          "verseStart": 14,
+          "verseEnd": 26
+        }
+      ]
+    },
+    "readings": [
+      {
+        "id": "faith-at-the-sea",
+        "title": "Confiança quando a saída parece impossível",
+        "reference": {
+          "bookId": "Exod",
+          "chapter": 14,
+          "verseStart": 10,
+          "verseEnd": 31
+        },
+        "context": "Israel vê o exército egípcio se aproximar e interpreta a saída da escravidão como um erro fatal. A cena passa das queixas contra Moisés às instruções para atravessar o mar. Leia o perigo, a ordem de avançar e a reação final como partes de uma mesma narrativa.",
+        "observation": "Moisés pede que o povo permaneça firme; em seguida, Deus ordena que avance. A nuvem separa os grupos, o mar se abre, Israel atravessa e o exército perseguidor é submerso. O último versículo descreve o temor do Senhor e a confiança do povo nele e em Moisés.",
+        "significance": "A narrativa fundamenta a confiança de Israel em um ato de libertação, e não na segurança inicial do povo. Permanecer firme e avançar pertencem a momentos distintos do mesmo resgate. Essa sequência impede transformar tanto a espera quanto a ação em regra para toda crise.",
+        "question": "Como a interpretação do povo sobre a saída do Egito muda entre os versículos 11–12 e o versículo 31?"
+      },
+      {
+        "id": "faith-and-fear",
+        "title": "Lembrar a promessa em meio ao medo",
+        "reference": {
+          "bookId": "Num",
+          "chapter": 14,
+          "verseStart": 1,
+          "verseEnd": 9
+        },
+        "context": "A comunidade ouviu relatos sobre a terra e agora prevê derrota, cativeiro e morte. A solução proposta é escolher um líder e voltar ao Egito. A passagem selecionada coloca essa reação coletiva ao lado do apelo de Josué e Calebe.",
+        "observation": "Moisés e Arão se prostram; Josué e Calebe rasgam as roupas. Os dois exploradores afirmam que a terra é boa e relacionam a entrada nela ao favor e à presença do Senhor. Apresentam a recusa como rebeldia e respondem ao medo lembrando quem acompanha o povo.",
+        "significance": "A confiança aqui diz respeito a uma promessa específica na história de Israel. Josué e Calebe não oferecem aprovação geral a planos arriscados. Seu apelo confronta o desejo de voltar à escravidão ao relacionar o perigo presente com o Deus que conduziu o povo até ali.",
+        "question": "Que razões a comunidade apresenta para voltar, e que razões Josué e Calebe apresentam para continuar?"
+      },
+      {
+        "id": "faith-asking-for-help",
+        "title": "Um pai pede ajuda para sua falta de fé",
+        "reference": {
+          "bookId": "Mark",
+          "chapter": 9,
+          "verseStart": 14,
+          "verseEnd": 29
+        },
+        "context": "Um pai levou o filho que sofre aos discípulos de Jesus, mas eles não conseguiram ajudá-lo. Jesus entra em uma cena de discussão e aflição. A conversa passa do relato do sofrimento prolongado ao pedido de compaixão e, depois, à pergunta dos discípulos.",
+        "observation": "O pai expressa confiança enquanto pede ajuda para sua falta de confiança. Jesus se dirige ao espírito, toma o menino pela mão e o levanta. Em particular, os discípulos perguntam sobre o próprio fracasso, e Jesus os direciona à oração, em vez de à capacidade deles.",
+        "significance": "O pedido do pai permite que necessidade e confiança imperfeita apareçam juntas. A cena enfatiza a dependência de Jesus, e não a conquista de um estado interior sem falhas. Ela não deve servir para culpar quem continua sofrendo nem para supor que todo pedido terá o mesmo desfecho.",
+        "question": "O que o apelo do pai e a pergunta particular dos discípulos revelam sobre suas diferentes formas de dependência?"
+      },
+      {
+        "id": "faith-before-fulfillment",
+        "title": "Agir antes de receber plenamente a promessa",
+        "reference": {
+          "bookId": "Heb",
+          "chapter": 11,
+          "verseStart": 1,
+          "verseEnd": 16
+        },
+        "context": "Hebreus apresenta a fé e percorre exemplos de narrativas bíblicas anteriores. Abel, Enoque, Noé, Abraão e Sara aparecem em um argumento conectado. Acompanhe tanto as ações atribuídas à fé quanto a afirmação de que alguns morreram sem receber plenamente o que havia sido prometido.",
+        "observation": "Os exemplos incluem oferecer, aproximar-se de Deus, preparar uma arca, deixar a própria terra e viver como estrangeiro. A passagem relaciona repetidamente realidades ainda não vistas com ações concretas. Seu movimento final descreve pessoas que reconhecem a distância do cumprimento e buscam uma pátria melhor preparada por Deus.",
+        "significance": "A fé é apresentada ao longo do tempo, e não apenas no momento de um resultado favorável. A organização retrospectiva do autor ajuda a comparar respostas em histórias diferentes. Neste argumento, uma vida de fé pode incluir espera e morte antes de se ver plenamente o futuro prometido.",
+        "question": "Como o versículo 13 limita uma interpretação da fé que espera o cumprimento imediato de toda promessa?"
+      },
+      {
+        "id": "faith-and-a-neighbors-need",
+        "title": "Fé que responde à necessidade do próximo",
+        "reference": {
+          "bookId": "Jas",
+          "chapter": 2,
+          "verseStart": 14,
+          "verseEnd": 26
+        },
+        "context": "Tiago se dirige a quem afirma ter fé sem apresentar ações correspondentes. Começa com um irmão ou irmã sem roupa adequada e alimento diário. O argumento prossegue com um diálogo, exemplos bíblicos e uma comparação final entre o corpo e o espírito que lhe dá vida.",
+        "observation": "Palavras de boa vontade não atendem à necessidade de quem tem fome. Tiago distingue uma afirmação ou mero reconhecimento da fé que atua por meio de ações. Abraão e Raabe ilustram essa relação; a imagem final descreve a fé sem obras como um corpo sem espírito, sem vida.",
+        "significance": "Comece pelo teste concreto de Tiago: a profissão de fé leva à ajuda? Seu uso posterior da linguagem de justificação pertence a esse argumento sobre uma afirmação sem ação. Uma comparação completa com outros tratamentos bíblicos da justificação exige ler também suas perguntas e seus contextos próprios.",
+        "question": "Por que Tiago começa com alimento e roupa antes de discutir Abraão, Raabe e a relação entre fé e obras?"
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "faith-danger-and-memory",
+        "title": "Perigo, memória e a escolha de voltar",
+        "references": [
+          {
+            "bookId": "Exod",
+            "chapter": 14,
+            "verseStart": 10,
+            "verseEnd": 31
+          },
+          {
+            "bookId": "Num",
+            "chapter": 14,
+            "verseStart": 1,
+            "verseEnd": 9
+          }
+        ],
+        "explanation": "As duas cenas aproximam o medo da tentação de considerar o Egito preferível ao perigo presente. Junto ao mar, a narrativa termina com libertação e confiança; em Números, Josué e Calebe apelam à presença do Senhor enquanto a comunidade propõe voltar. Compare como a memória do resgate poderia orientar a interpretação de uma nova ameaça.",
+        "difference": "Êxodo narra uma travessia realizada. Os versículos selecionados de Números apresentam um apelo contestado antes do desfecho. São etapas diferentes da jornada de Israel, não relatos do mesmo acontecimento nem uma promessa de que toda situação de medo terminará da mesma forma."
+      },
+      {
+        "id": "faith-dependence-and-action",
+        "title": "Dependência e ação pertencem ao mesmo estudo",
+        "references": [
+          {
+            "bookId": "Mark",
+            "chapter": 9,
+            "verseStart": 14,
+            "verseEnd": 29
+          },
+          {
+            "bookId": "Heb",
+            "chapter": 11,
+            "verseStart": 1,
+            "verseEnd": 16
+          },
+          {
+            "bookId": "Jas",
+            "chapter": 2,
+            "verseStart": 14,
+            "verseEnd": 26
+          }
+        ],
+        "explanation": "Marcos retrata um pedido sincero de ajuda; Hebreus acompanha ações e perseverança; Tiago questiona uma profissão de fé que deixa o próximo sem auxílio. Lidas juntas, essas passagens oferecem perguntas para examinar a fé: de quem a pessoa depende, como essa confiança orienta ações e o que acontece quando o cumprimento ainda não pode ser visto?",
+        "difference": "O pai não é o personagem sem ação confrontado por Tiago, e Hebreus não prescreve uma única ação para todos. Uma narrativa de cura, um panorama retrospectivo e um argumento ético contribuem com perspectivas distintas; suas diferenças impedem medir a fé por um único resultado visível."
+      }
+    ],
+    "connections": [
+      {
+        "entity": {
+          "id": "fixture.person.moses",
+          "type": "person",
+          "name": "Moisés",
+          "nameLanguage": "pt-BR",
+          "summary": "Moisés é o menino hebreu resgatado e adotado pela filha do faraó. Adulto, mata um egípcio que agride um hebreu e foge para Midiã. Na sarça ardente, Deus o chama a voltar ao Egito e tirar Israel de lá; o relato inclui suas perguntas e resistência, sem apresentar uma vocação fácil.\n\nDiante do mar, dirige-se ao povo amedrontado e age por ordem de Deus. Depois do bezerro de ouro, intercede pelo povo e também confronta seu culto. Lidas em conjunto, essas cenas mostram uma liderança que comunica a palavra recebida e responde por uma comunidade em crise.\n\nO capítulo final situa sua morte em Moabe e a transição para Josué antes da entrada na terra. A homenagem destaca sua relação profética singular com Deus. O texto não fornece uma data no calendário moderno nem localiza sua sepultura para o leitor."
+        },
+        "reference": {
+          "bookId": "Exod",
+          "chapter": 14,
+          "verseStart": 13,
+          "verseEnd": 16
+        },
+        "explanation": "Moisés transmite segurança e recebe a ordem de conduzir Israel adiante. Seu papel pode ser acompanhado na cena sem tratá-lo como a origem do resgate."
+      },
+      {
+        "entity": {
+          "id": "step.person.H3091G",
+          "type": "person",
+          "name": "Josué, filho de Num",
+          "nameLanguage": "pt-BR",
+          "summary": "Josué comanda a luta contra Amaleque enquanto Moisés, Arão e Hur ficam na colina. Depois ouve o som do acampamento e pensa ser uma batalha; Moisés o distingue de gritos de vitória ou derrota. Essas cenas o situam ao lado de Moisés antes da sucessão.\n\nA lista dos exploradores o identifica como Oseias, filho de Num, a quem Moisés chama Josué. Com Calebe, exorta a comunidade a não se rebelar nem temer os habitantes da terra. A discordância envolve a resposta à mesma terra, não uma expedição diferente.\n\nNa morte de Moisés, Josué é descrito como cheio do espírito de sabedoria, e Israel o ouve. A transferência de liderança não apaga a homenagem particular que o capítulo presta a Moisés."
+        },
+        "reference": {
+          "bookId": "Num",
+          "chapter": 14,
+          "verseStart": 6,
+          "verseEnd": 9
+        },
+        "explanation": "Josué se une a Calebe para interpretar a terra e seus perigos à luz da presença do Senhor. Seu apelo contrasta de forma concreta com o plano da comunidade de voltar."
+      },
+      {
+        "entity": {
+          "id": "step.person.H3612G",
+          "type": "person",
+          "name": "Calebe, filho de Jefoné",
+          "nameLanguage": "pt-BR",
+          "summary": "Calebe, filho de Jefoné, representa Judá na exploração de Canaã. Quando o relato de habitantes fortes inquieta o povo, ele propõe subir e tomar a terra. Sua resposta contrasta com o medo expresso pelos outros participantes.\n\nCom Josué, apela à presença do Senhor e adverte contra a rebelião. O julgamento seguinte destaca seu espírito diferente e sua fidelidade; Calebe e Josué são excetuados da exclusão daquela geração. Esta ficha trata desse explorador identificado, não de todo Calebe mencionado nas genealogias bíblicas."
+        },
+        "reference": {
+          "bookId": "Num",
+          "chapter": 14,
+          "verseStart": 6,
+          "verseEnd": 9
+        },
+        "explanation": "O apelo de Calebe aparece junto ao de Josué, e não como gesto de um herói sem vínculos. A passagem apresenta a resposta conjunta deles ao medo da comunidade e à proposta de retorno."
+      }
+    ],
+    "sourceReferenceIds": [
+      "editorial.theme-studies.2026-10",
+      "study.scripture.Exod.14",
+      "study.scripture.Heb.11",
+      "study.scripture.Jas.2",
+      "study.scripture.Mark.9",
+      "study.scripture.Num.14"
+    ]
+  },
+  "localizations": [
+    {
+      "language": "en",
+      "sourceId": "editorial.themes.2026-10",
+      "name": "Faith",
+      "aliases": [],
+      "description": "Trusting God and responding to his word with perseverance and action."
+    },
+    {
+      "language": "pt-BR",
+      "sourceId": "editorial.themes.2026-10",
+      "name": "Fé",
+      "aliases": [],
+      "description": "Confiar em Deus e responder à sua palavra com perseverança e ações."
+    }
+  ],
+  "entity": {
+    "id": "fixture.theme.faith",
+    "type": "theme",
+    "name": "Fé",
+    "nameLanguage": "pt-BR",
+    "summary": "Confiar em Deus e responder à sua palavra com perseverança e ações."
+  },
+  "aliases": [],
+  "approximateDates": null,
+  "role": null,
+  "modernGeography": null,
+  "keyPassages": [
+    {
+      "bookId": "Exod",
+      "chapter": 14,
+      "verseStart": 10,
+      "verseEnd": 31
+    },
+    {
+      "bookId": "Num",
+      "chapter": 14,
+      "verseStart": 1,
+      "verseEnd": 9
+    },
+    {
+      "bookId": "Mark",
+      "chapter": 9,
+      "verseStart": 14,
+      "verseEnd": 29
+    },
+    {
+      "bookId": "Heb",
+      "chapter": 11,
+      "verseStart": 1,
+      "verseEnd": 16
+    },
+    {
+      "bookId": "Jas",
+      "chapter": 2,
+      "verseStart": 14,
+      "verseEnd": 26
+    }
+  ],
+  "sources": [
+    {
+      "id": "editorial.themes.2026-10",
+      "citation": "Verbum — seleção temática e resumos editoriais / thematic selection and editorial summaries (2026-10).",
+      "url": null
+    },
+    {
+      "id": "editorial.theme-studies.2026-10",
+      "citation": "Verbum · Five theme study guides / Cinco guias de estudo temático · 2026-10",
+      "url": null
+    },
+    {
+      "id": "scripture.theme.Heb.11.1-16",
+      "citation": "Heb 11:1-16",
+      "url": "https://www.biblegateway.com/passage/?search=Heb+11%3A1-16"
+    },
+    {
+      "id": "study.scripture.Exod.14",
+      "citation": "Exodus 14 · World English Bible",
+      "url": "https://ebible.org/engwebp/EXO14.htm"
+    },
+    {
+      "id": "scripture.theme.Mark.9.14-29",
+      "citation": "Mark 9:14-29",
+      "url": "https://www.biblegateway.com/passage/?search=Mark+9%3A14-29"
+    },
+    {
+      "id": "study.scripture.Num.14",
+      "citation": "Numbers 14 · World English Bible",
+      "url": "https://ebible.org/engwebp/NUM14.htm"
+    },
+    {
+      "id": "scripture.theme.Jas.2.14-26",
+      "citation": "Jas 2:14-26",
+      "url": "https://www.biblegateway.com/passage/?search=Jas+2%3A14-26"
+    },
+    {
+      "id": "study.scripture.Mark.9",
+      "citation": "Mark 9 · World English Bible",
+      "url": "https://ebible.org/engwebp/MRK09.htm"
+    },
+    {
+      "id": "study.scripture.Heb.11",
+      "citation": "Hebrews 11 · World English Bible",
+      "url": "https://ebible.org/engwebp/HEB11.htm"
+    },
+    {
+      "id": "study.scripture.Jas.2",
+      "citation": "James 2 · World English Bible",
+      "url": "https://ebible.org/engwebp/JAS02.htm"
+    }
+  ]
+}

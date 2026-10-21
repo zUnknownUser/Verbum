@@ -29,6 +29,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.distinctUntilChanged
 import android.content.Intent
@@ -135,6 +137,17 @@ private fun AudioAccessory(store: Store<AppFeature.State, Action>) {
 /** A tab's stack: root, or the top destination with back popping state. */
 @Composable
 private fun TabStack(path: List<Destination>, root: @Composable () -> Unit, onPop: () -> Unit, send: (Int, DestinationAction) -> Unit) {
+    // Retain an entity's scroll/disclosures while reading a linked page; discard popped pages.
+    val entityStates = rememberSaveableStateHolder()
+    val retainedKeys = remember { mutableSetOf<String>() }
+    val entityKeys = path.mapIndexedNotNull { index, destination ->
+        (destination as? Destination.Entity)?.let { "entity-$index-${it.state.entityId}" }
+    }.toSet()
+    LaunchedEffect(entityKeys) {
+        (retainedKeys - entityKeys).forEach(entityStates::removeState)
+        retainedKeys.clear()
+        retainedKeys.addAll(entityKeys)
+    }
     if (path.isNotEmpty()) BackHandler(onBack = onPop)
     AnimatedContent(
         targetState = path.size,
@@ -150,7 +163,11 @@ private fun TabStack(path: List<Destination>, root: @Composable () -> Unit, onPo
             val index = depth - 1
             // AnimatedContent can still render the outgoing depth after a pop.
             path.getOrNull(index)?.let { destination ->
-                DestinationScreen(destination, onBack = onPop) { send(index, it) }
+                if (destination is Destination.Entity) {
+                    entityStates.SaveableStateProvider("entity-$index-${destination.state.entityId}") {
+                        DestinationScreen(destination, onBack = onPop) { send(index, it) }
+                    }
+                } else DestinationScreen(destination, onBack = onPop) { send(index, it) }
             }
         }
     }

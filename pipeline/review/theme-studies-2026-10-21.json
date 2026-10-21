@@ -1,0 +1,314 @@
+{
+  "version": 1,
+  "bundleHash": "9ac5ff9087a1da6532122d9f226b046a282759838a84e368c9d0a041746f0ca2",
+  "items": [
+    {
+      "key": "sources:editorial.theme-studies.2026-10",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Exod.14",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Num.14",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Mark.9",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Heb.11",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Jas.2",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Gen.15",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Exod.19",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Exod.24",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Jer.31",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Luke.22",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Exod.20",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Exod.32",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Ps.95",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.John.4",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Rom.12",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Exod.16",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Deut.6",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.John.14",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Jas.1",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Exod.40",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.Lev.19",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "sources:study.scripture.1Pet.1",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.theme-study.fixture.person.moses.fixture.theme.faith",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.theme-study.step.person.H3091G.fixture.theme.faith",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.theme-study.step.person.H3612G.fixture.theme.faith",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.theme-study.editorial.event.abraham-covenant.editorial.theme.covenant",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.theme-study.step.place.H5514G.editorial.theme.covenant",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.theme-study.editorial.event.last-supper.editorial.theme.covenant",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.theme-study.step.person.H0175.editorial.theme.worship",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.theme-study.editorial.event.golden-calf.editorial.theme.worship",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.theme-study.fixture.person.moses.editorial.theme.worship",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.theme-study.editorial.event.manna.editorial.theme.obedience",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.theme-study.fixture.person.moses.editorial.theme.obedience",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.theme-study.fixture.place.egypt.editorial.theme.obedience",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.theme-study.step.place.H5514G.editorial.theme.holiness",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.theme-study.editorial.event.tabernacle.editorial.theme.holiness",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "relationships:editorial.theme-study.fixture.person.moses.editorial.theme.holiness",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "dailyVersePool",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "themeStudy:fixture.theme.faith",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "themeStudy:editorial.theme.covenant",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "themeStudy:editorial.theme.worship",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "themeStudy:editorial.theme.obedience",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    },
+    {
+      "key": "themeStudy:editorial.theme.holiness",
+      "status": "approved",
+      "reviewer": "Codex — delegated AI editorial review requested by Lucas",
+      "reviewedAt": "2026-10-21T18:32:59Z",
+      "note": "Original EN/PT-BR commentary checked against the cited WEB passages; 22 official chapter links verified. Observation, editorial interpretation and later reuse remain distinct. Existing entity identities and legacy readings preserved. Delegated AI editorial review, not independent human or theological review."
+    }
+  ]
+}

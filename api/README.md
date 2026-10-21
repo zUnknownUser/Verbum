@@ -35,3 +35,12 @@ exercise the unchanged EntityDetail contract in iOS and Android. Pipeline integr
 tests compare these fields with real PostgreSQL-backed HTTP responses; no profile
 is added to the mobile fixture clients. See
 [Exodus profiles](../docs/ENTITY_PROFILES_2026-10-21.md).
+
+## In-depth theme guides
+
+`EntityDetail.themeStudy` optionally supplies a localized editorial guide with
+overview, commented readings, comparisons, explained canonical connections and
+source IDs. Older detail responses remain valid. The existing passage Context
+associations include those readings, and citation sources accompany the guide.
+Shared EN/PT examples are `examples/entities/faith-study.*.json`; see
+[delivery and publication](../docs/THEME_STUDIES_2026-10-21.md).

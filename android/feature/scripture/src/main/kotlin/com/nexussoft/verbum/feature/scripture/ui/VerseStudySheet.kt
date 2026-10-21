@@ -13,6 +13,7 @@ import androidx.compose.material.icons.automirrored.outlined.MenuBook
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,14 +33,16 @@ import com.nexussoft.verbum.models.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun VerseStudySheet(state: VerseStudyFeature.State, send: (Action)->Unit,onDismiss:()->Unit) {
-    val studyScroll=rememberScrollState()
-    BackHandler(enabled=state.previewReference!=null) {send(Action.ClosePreview)}
+    val studyStates=rememberSaveableStateHolder()
     val canDismiss=!state.saving && state.annotation.note==state.savedNote
     val currentDismiss by rememberUpdatedState(canDismiss)
     val sheet=rememberModalBottomSheetState(skipPartiallyExpanded=state.chapterGuide,confirmValueChange={it!=SheetValue.Hidden || currentDismiss})
     LaunchedEffect(state.reference) {send(Action.Started)}
     ModalBottomSheet(onDismissRequest={if(canDismiss) onDismiss()},sheetState=sheet,
         containerColor=MaterialTheme.colorScheme.surface.copy(alpha=0.97f), tonalElevation=0.dp) {
+        BackHandler(enabled=state.previewReference!=null || (state.tab==Tab.CONTEXT && state.entityHistory.isNotEmpty())) {
+            send(if(state.previewReference!=null) Action.ClosePreview else Action.CloseEntity)
+        }
         Column(Modifier.fillMaxWidth().fillMaxHeight(0.9f).imePadding()) {
             Row(Modifier.fillMaxWidth().padding(horizontal=Spacing.lg),verticalAlignment=Alignment.CenterVertically) {
                 if(state.ask!=null) TextButton(onClick={send(Action.CloseAnswer)}) {Text(stringResource(R.string.reader_study))}
@@ -50,21 +53,15 @@ internal fun VerseStudySheet(state: VerseStudyFeature.State, send: (Action)->Uni
                 TextButton(onClick={send(Action.Done)},enabled=!state.saving) {Text(stringResource(R.string.reader_done))}
             }
             if(state.previewReference!=null) {
-                Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal=Spacing.lg).padding(bottom=Spacing.xxl),verticalArrangement=Arrangement.spacedBy(Spacing.lg)) {
-                    TextButton(onClick={send(Action.ClosePreview)}) {Text(stringResource(R.string.reader_back_to_study))}
-                    Text(state.previewReference.formatted,style=VerbumTypography.editorialTitle)
-                    if(state.previewLoading) CircularProgressIndicator()
-                    else if(state.previewFailed) LayerRetry {send(Action.RetryPreview)}
-                    else state.preview?.let {passage->
-                        Text(HelloAOTranslation.name(passage.translationId),style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.onSurfaceVariant)
-                        Text(passage.text,style=VerbumTypography.scripture)
-                    }
-                    TextButton(onClick={send(Action.OpenPreviewInReader)},enabled=!state.saving) {Text(stringResource(R.string.reader_open_in_reader))}
+                PassagePreviewContent(state.previewReference,state.preview,state.previewLoading,state.previewFailed,
+                    onClose={send(Action.ClosePreview)},onRetry={send(Action.RetryPreview)},onOpenInReader={send(Action.OpenPreviewInReader)},
+                    modifier=Modifier.weight(1f),canOpen=!state.saving) {
                     if(state.saveFailed) SaveStatus(state)
                 }
             } else if(state.ask!=null) {
                 AskPane(state.ask,onBack={send(Action.CloseAnswer)},embedded=true) {send(Action.Ask(it))}
-            } else Column(Modifier.weight(1f).verticalScroll(studyScroll).padding(horizontal=Spacing.lg).padding(bottom=Spacing.xxl),verticalArrangement=Arrangement.spacedBy(Spacing.lg)) {
+            } else studyStates.SaveableStateProvider(state.selectedEntity?.id ?: "chapter-study") {
+              Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal=Spacing.lg).padding(bottom=Spacing.xxl),verticalArrangement=Arrangement.spacedBy(Spacing.lg)) {
                 if(state.text.isNotEmpty()) Text(state.text,style=VerbumTypography.scripture,maxLines=4)
                 Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),horizontalArrangement=Arrangement.spacedBy(Spacing.sm)) {
                     state.availableTabs.forEach {tab->
@@ -122,7 +119,9 @@ internal fun VerseStudySheet(state: VerseStudyFeature.State, send: (Action)->Uni
                     }
                     Tab.CONTEXT -> {
                         if(state.selectedEntity!=null) {
-                            TextButton(onClick={send(Action.CloseEntity)}) {Text(stringResource(R.string.context_title))}
+                            TextButton(onClick={send(Action.CloseEntity)}) {
+                                Text(state.entityHistory.lastOrNull()?.detail?.entity?.name ?: stringResource(R.string.context_title))
+                            }
                             if(state.entityLoading) CircularProgressIndicator()
                             else if(state.entityFailed) LayerRetry {send(Action.RetryEntity)}
                             else state.entity?.let {detail->
@@ -130,9 +129,15 @@ internal fun VerseStudySheet(state: VerseStudyFeature.State, send: (Action)->Uni
                                 detail.entity.summary?.let {Text(it,style=VerbumTypography.scripture)}
                                 detail.role?.let {Text(it)}
                                 detail.approximateDates?.let {Text(it,style=MaterialTheme.typography.bodySmall)}
+                                detail.themeStudy?.let {study->
+                                    ThemeStudyContent(detail.entity.id,study,detail.sources,
+                                        openPassage={send(Action.PreviewPassage(it))},openEntity={send(Action.ConnectedEntityTapped(it))})
+                                    if(state.keyPassages.isNotEmpty()) Text(stringResource(R.string.theme_study_more_readings),style=VerbumTypography.editorialHeadline)
+                                }
                                 state.keyPassages.take(state.entityPassageLimit).forEach {PassageLink(it,send)}
                                 if(state.keyPassages.size>state.entityPassageLimit) TextButton(onClick={send(Action.MoreEntityPassages)}) {Text(stringResource(R.string.history_more))}
-                                StudySources(detail.sources)
+                                val otherSources=detail.sources.filter {it.id !in detail.themeStudy?.sourceReferenceIds.orEmpty()}
+                                if(otherSources.isNotEmpty()) StudySources(otherSources)
                             }
                         } else {
                             Text(stringResource(R.string.context_title),style=VerbumTypography.editorialHeadline)
@@ -176,6 +181,7 @@ internal fun VerseStudySheet(state: VerseStudyFeature.State, send: (Action)->Uni
                         TextButton(onClick={send(Action.Submit)},enabled=state.question.isNotBlank()) {Text(stringResource(R.string.reader_ask_passage))}
                     }
                 }
+              }
             }
         }
     }

@@ -1030,6 +1030,7 @@ components:
       type: object
       required: [entity, aliases, keyPassages, sources]
       properties:
+        themeStudy: { anyOf: [{ $ref: '#/components/schemas/ThemeStudy' }, { type: 'null' }], description: Optional in-depth guide for this theme in the requested language. }
         eventSequence: { anyOf: [{ $ref: '#/components/schemas/EventStudySequence' }, { type: 'null' }], description: Optional adjacent canonical events in a curated reading sequence. }
         originalTerm: { $ref: "#/components/schemas/OriginalTermPresentation", description: Canonical study metadata; localized meaning is entity.summary. }
         sourceRecords: { type: array, items: { $ref: '#/components/schemas/EntitySourceRecord' }, description: Optional attributed structured enrichment. }
@@ -1164,6 +1165,59 @@ components:
           type: array
           items: { type: string }
           description: IDs in the enclosing context sources; includes editorial attribution and Scripture sources.
+
+    ThemeStudyReading:
+      type: object
+      required: [id, title, reference, context, observation, significance, question]
+      properties:
+        id: { type: string, description: Stable section ID shared across languages. }
+        title: { type: string }
+        reference: { $ref: '#/components/schemas/PassageReference' }
+        context: { type: string }
+        observation: { type: string }
+        significance: { type: string, description: Editorial reading of the passage in its context. }
+        question: { type: string }
+
+    ThemeStudyComparison:
+      type: object
+      required: [id, title, references, explanation, difference]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        references:
+          type: array
+          minItems: 2
+          items: { $ref: '#/components/schemas/PassageReference' }
+        explanation: { type: string }
+        difference: { type: string, description: Distinguishes the passages and their original settings. }
+
+    ThemeStudyEntityConnection:
+      type: object
+      required: [entity, reference, explanation]
+      properties:
+        entity: { $ref: '#/components/schemas/BibleEntity' }
+        reference: { $ref: '#/components/schemas/PassageReference' }
+        explanation: { type: string, description: Sourced explanation of this existing entity's relationship to the theme. }
+
+    ThemeStudy:
+      type: object
+      description: Authored bilingual guide. Commentary is original editorial prose, separate from Scripture; references open in the reader's selected translation.
+      required: [overview, readings, comparisons, connections, sourceReferenceIds]
+      properties:
+        overview: { $ref: '#/components/schemas/StudyNote' }
+        readings:
+          type: array
+          items: { $ref: '#/components/schemas/ThemeStudyReading' }
+        comparisons:
+          type: array
+          items: { $ref: '#/components/schemas/ThemeStudyComparison' }
+        connections:
+          type: array
+          items: { $ref: '#/components/schemas/ThemeStudyEntityConnection' }
+        sourceReferenceIds:
+          type: array
+          items: { type: string }
+          description: IDs in the enclosing entity detail sources; includes Scripture and editorial attribution.
 
     # ---- §22.5 (+ sourceReferenceIds)
     TimelineDatePrecision:

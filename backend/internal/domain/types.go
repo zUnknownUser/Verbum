@@ -79,6 +79,7 @@ type EventStudySequence struct {
 }
 
 type EntityDetail struct {
+	ThemeStudy       *ThemeStudy               `json:"themeStudy,omitempty"`
 	EventSequence    *EventStudySequence       `json:"eventSequence,omitempty"`
 	OriginalTerm     *OriginalTermPresentation `json:"originalTerm,omitempty"`
 	SourceRecords    []EntitySourceRecord      `json:"sourceRecords,omitempty"`
@@ -134,6 +135,39 @@ type ChapterStudy struct {
 	Outline            []StudyOutline    `json:"outline"`
 	Connections        []StudyConnection `json:"connections"`
 	SourceReferenceIDs []string          `json:"sourceReferenceIds"`
+}
+
+// ThemeStudy keeps commentary separate from the cited biblical text.
+type ThemeStudyReading struct {
+	ID           string           `json:"id"`
+	Title        string           `json:"title"`
+	Reference    PassageReference `json:"reference"`
+	Context      string           `json:"context"`
+	Observation  string           `json:"observation"`
+	Significance string           `json:"significance"`
+	Question     string           `json:"question"`
+}
+
+type ThemeStudyComparison struct {
+	ID          string             `json:"id"`
+	Title       string             `json:"title"`
+	References  []PassageReference `json:"references"`
+	Explanation string             `json:"explanation"`
+	Difference  string             `json:"difference"`
+}
+
+type ThemeStudyEntityConnection struct {
+	Entity      Entity           `json:"entity"`
+	Reference   PassageReference `json:"reference"`
+	Explanation string           `json:"explanation"`
+}
+
+type ThemeStudy struct {
+	Overview           StudyNote                    `json:"overview"`
+	Readings           []ThemeStudyReading          `json:"readings"`
+	Comparisons        []ThemeStudyComparison       `json:"comparisons"`
+	Connections        []ThemeStudyEntityConnection `json:"connections"`
+	SourceReferenceIDs []string                     `json:"sourceReferenceIds"`
 }
 
 // TimelineEvent is a period or event with hedged dating (§22.5).

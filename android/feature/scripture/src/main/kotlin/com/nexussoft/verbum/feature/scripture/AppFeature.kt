@@ -142,7 +142,7 @@ object AppFeature {
 
     fun reducer(deps: Dependencies): Reducer<State, Action> {
         val reader = ScriptureFeature.reducer(deps.bibleClient, deps.preferences, deps.contextClient, deps.graphClient, deps.askClient)
-        val entity = EntityDetailFeature.reducer(deps.graphClient, deps.timelineClient)
+        val entity = EntityDetailFeature.reducer(deps.graphClient, deps.bibleClient, deps.timelineClient)
         val timeline = TimelineFeature.reducer(deps.timelineClient, deps.graphClient)
         val entities = EntityListFeature.reducer(deps.graphClient)
         val books = BookPickerFeature.reducer

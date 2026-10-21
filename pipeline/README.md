@@ -34,6 +34,7 @@ full citation validation belongs to the Task 12 Ask block.
 | `scripture.py` | Loads Scripture text + embeddings into `scripture_verses` for retrieval (§27-29). Outside the review flow on purpose — see "Scripture embeddings" below. |
 | `review.py` | Proposal queue and separate human decisions, initially pending. SHA-256 binds review to content/evidence/license metadata. |
 | `publish.py` | Transactional upserts, scoped link replacement, audit and repeat-batch idempotence. |
+| `theme_studies.py` | Bundle v10: five bilingual theme guides, 25 commented readings, comparisons and sourced connections on existing identities. See [delivery](../docs/THEME_STUDIES_2026-10-21.md). |
 | `entity_profiles.py` | Bundle v9: 30 bilingual profiles of existing Exodus people/places, sourced readings and additive graph links; exact identity and revision guards. See [delivery](../docs/ENTITY_PROFILES_2026-10-21.md). |
 | `chapter_studies.py` | Bundle v8: 21 bilingual chapter studies from the existing Exodus sequence, complete verse outlines and explained connections; validates Scripture/source links before publication. No paid generation. |
 | `cli.py` | Explicit `import`, `normalize`, `extract`, `embed-scripture`, `review`, `validate`, `publish` stages. No approval command. |

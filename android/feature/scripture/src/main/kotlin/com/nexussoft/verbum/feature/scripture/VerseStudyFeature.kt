@@ -8,11 +8,13 @@ import java.util.UUID
 
 object VerseStudyFeature {
     enum class Tab { HIGHLIGHT, NOTE, COMPARE, CONTEXT, REFERENCES, ASK }
+    data class EntityLayer(val detail: EntityDetail, val passageLimit: Int)
     data class State(
         val reference: PassageReference, val text: String, val translationId: String,
         val chapterGuide: Boolean=false,
         val selectedType: BibleEntityType?=null, val entityLimit: Int=6, val referenceLimit: Int=6, val entityPassageLimit: Int=6,
         val selectedEntity: BibleEntity?=null, val entityRequest: String?=null,
+        val entityHistory: List<EntityLayer> = emptyList(),
         val previewReference: PassageReference?=null, val previewRequest: String?=null,
         val preview: BiblePassage?=null, val previewLoading: Boolean=false, val previewFailed: Boolean=false,
         val annotation: ReaderAnnotation, val savedNote: String = annotation.note,
@@ -30,7 +32,7 @@ object VerseStudyFeature {
         val matchingEntities get()=contextEntities.filter {it.type==activeType}
         val visibleEntities get()=matchingEntities.take(entityLimit)
         val relatedPassages get()=(context?.study?.connections.orEmpty().map {it.reference}+context?.relatedPassages.orEmpty()).distinct()
-        val keyPassages get()=entity?.keyPassages.orEmpty().distinct()
+        val keyPassages get()=entity?.keyPassages.orEmpty().distinct().filter {reference->entity?.themeStudy?.readings?.none {it.reference==reference} != false}
         val availableTabs get()=if(chapterGuide) listOf(Tab.CONTEXT,Tab.REFERENCES) else Tab.entries
         companion object {
             fun initial(passage: BiblePassage,annotation: ReaderAnnotation?,context: PassageContext?,candidates: List<BibleEntity>,chapterGuide: Boolean=false): State {
@@ -51,6 +53,7 @@ object VerseStudyFeature {
         data class ContextLoaded(val value: PassageContext?): Action
         data object ContextFailed: Action
         data class EntityTapped(val value: BibleEntity): Action
+        data class ConnectedEntityTapped(val value: BibleEntity): Action
         data class EntityLoaded(val request: String,val value: EntityDetail): Action
         data class EntityFailed(val request: String): Action
         data object RetryEntity: Action; data object CloseEntity: Action
@@ -122,10 +125,17 @@ object VerseStudyFeature {
                         try {send(Action.EntityLoaded(request,graph.detail(action.value.id)))} catch(e:CancellationException){throw e} catch(e:Exception){send(Action.EntityFailed(request))}
                     })
                 }
+                is Action.ConnectedEntityTapped -> if(state.entity?.entity?.id==action.value.id) state.only()
+                    else state.copy(entityHistory=state.entity?.let {state.entityHistory+EntityLayer(it,state.entityPassageLimit)} ?: state.entityHistory)
+                        .with(Effect.Send(Action.EntityTapped(action.value)))
                 is Action.EntityLoaded -> if(state.entityRequest!=action.request) state.only() else state.copy(entityLoading=false,entity=action.value).only()
                 is Action.EntityFailed -> if(state.entityRequest!=action.request) state.only() else state.copy(entityLoading=false,entityFailed=true).only()
                 Action.RetryEntity -> state.selectedEntity?.let {state.with(Effect.Send(Action.EntityTapped(it)))} ?: state.only()
-                Action.CloseEntity -> state.copy(entity=null,selectedEntity=null,entityRequest=null,entityLoading=false,entityFailed=false,candidates=emptyList()).with(merge(
+                Action.CloseEntity -> state.entityHistory.lastOrNull()?.let {parent->
+                    state.copy(entity=parent.detail,selectedEntity=parent.detail.entity,entityRequest=null,
+                        entityLoading=false,entityFailed=false,entityPassageLimit=parent.passageLimit,entityHistory=state.entityHistory.dropLast(1))
+                        .with(runEffect(id=EntityId,cancelInFlight=true) {})
+                } ?: state.copy(entity=null,selectedEntity=null,entityRequest=null,entityLoading=false,entityFailed=false,candidates=emptyList()).with(merge(
                     runEffect(id=EntityId,cancelInFlight=true) {},
                     if(state.context==null) Effect.Send(Action.TabChanged(Tab.CONTEXT)) else Effect.None,
                 ))

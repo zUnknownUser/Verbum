@@ -1,0 +1,1019 @@
+[
+  {
+    "entityId": "fixture.theme.faith",
+    "overview": {
+      "en": "Faith takes different forms in these passages: trust amid danger, refusal to abandon a promise, honest dependence, endurance and practical care. Begin with Israel at the sea, then compare the fearful response in Numbers. Mark brings the question into a father’s request for his son; Hebrews surveys people who act before receiving everything promised; James examines what a claim to faith means when a neighbor lacks necessities. These texts do not make faith a technique for controlling outcomes. Their situations and arguments differ, but each asks how trust becomes a response. Read the narrative details before drawing an application, and notice who acts, what is promised, what remains unresolved and how another person is affected.",
+      "pt-BR": "A fé assume formas diferentes nestas passagens: confiança diante do perigo, recusa em abandonar uma promessa, dependência sincera, perseverança e cuidado concreto. Comece com Israel junto ao mar e compare a reação de medo em Números. Marcos aproxima a questão do pedido de um pai por seu filho; Hebreus apresenta pessoas que agem antes de receber tudo o que foi prometido; Tiago examina o significado de afirmar ter fé quando alguém precisa do básico. Esses textos não apresentam a fé como técnica para controlar resultados. Suas situações e argumentos diferem, mas todos perguntam como a confiança se torna resposta. Leia os detalhes antes de aplicar: observe quem age, o que é prometido, o que permanece em aberto e como outra pessoa é afetada.",
+      "references": [
+        "Exod.14.10-31",
+        "Num.14.1-9",
+        "Mark.9.14-29",
+        "Heb.11.1-16",
+        "Jas.2.14-26"
+      ]
+    },
+    "readings": [
+      {
+        "id": "faith-at-the-sea",
+        "reference": "Exod.14.10-31",
+        "title": {
+          "en": "Trust when escape seems impossible",
+          "pt-BR": "Confiança quando a saída parece impossível"
+        },
+        "context": {
+          "en": "Israel sees the Egyptian force approaching and interprets departure from slavery as a fatal mistake. The scene moves from complaints against Moses to instructions for crossing the sea. Read the danger, the command to move and the final response as parts of one narrative.",
+          "pt-BR": "Israel vê o exército egípcio se aproximar e interpreta a saída da escravidão como um erro fatal. A cena passa das queixas contra Moisés às instruções para atravessar o mar. Leia o perigo, a ordem de avançar e a reação final como partes de uma mesma narrativa."
+        },
+        "observation": {
+          "en": "Moses tells the people to stand firm; God then tells them to move forward. The cloud separates the groups, the sea opens, Israel crosses and the pursuing force is overwhelmed. The closing verse describes the people’s fear of the Lord and their trust in him and Moses.",
+          "pt-BR": "Moisés pede que o povo permaneça firme; em seguida, Deus ordena que avance. A nuvem separa os grupos, o mar se abre, Israel atravessa e o exército perseguidor é submerso. O último versículo descreve o temor do Senhor e a confiança do povo nele e em Moisés."
+        },
+        "significance": {
+          "en": "The narrative grounds Israel’s trust in an act of deliverance rather than in the people’s initial confidence. Standing firm and moving forward belong to different moments of the same rescue. Their sequence resists turning either stillness or action into a rule for every crisis.",
+          "pt-BR": "A narrativa fundamenta a confiança de Israel em um ato de libertação, e não na segurança inicial do povo. Permanecer firme e avançar pertencem a momentos distintos do mesmo resgate. Essa sequência impede transformar tanto a espera quanto a ação em regra para toda crise."
+        },
+        "question": {
+          "en": "How does the people’s interpretation of leaving Egypt change between verses 11–12 and verse 31?",
+          "pt-BR": "Como a interpretação do povo sobre a saída do Egito muda entre os versículos 11–12 e o versículo 31?"
+        }
+      },
+      {
+        "id": "faith-and-fear",
+        "reference": "Num.14.1-9",
+        "title": {
+          "en": "Remembering a promise amid fear",
+          "pt-BR": "Lembrar a promessa em meio ao medo"
+        },
+        "context": {
+          "en": "The assembly has heard reports about the land and now anticipates defeat, captivity and death. Its proposed solution is to appoint a leader and return to Egypt. The selected passage sets this collective response beside the appeal made by Joshua and Caleb.",
+          "pt-BR": "A comunidade ouviu relatos sobre a terra e agora prevê derrota, cativeiro e morte. A solução proposta é escolher um líder e voltar ao Egito. A passagem selecionada coloca essa reação coletiva ao lado do apelo de Josué e Calebe."
+        },
+        "observation": {
+          "en": "Moses and Aaron fall facedown; Joshua and Caleb tear their clothes. The two scouts call the land good and connect entry into it with the Lord’s favor and presence. They frame refusal as rebellion and answer the assembly’s fear with a different account of who is with them.",
+          "pt-BR": "Moisés e Arão se prostram; Josué e Calebe rasgam as roupas. Os dois exploradores afirmam que a terra é boa e relacionam a entrada nela ao favor e à presença do Senhor. Apresentam a recusa como rebeldia e respondem ao medo lembrando quem acompanha o povo."
+        },
+        "significance": {
+          "en": "Trust here concerns a particular promise within Israel’s story. Joshua and Caleb do not offer a general endorsement of risky plans. Their appeal challenges the wish to return to slavery by interpreting the present danger in relation to the God who has brought the people this far.",
+          "pt-BR": "A confiança aqui diz respeito a uma promessa específica na história de Israel. Josué e Calebe não oferecem aprovação geral a planos arriscados. Seu apelo confronta o desejo de voltar à escravidão ao relacionar o perigo presente com o Deus que conduziu o povo até ali."
+        },
+        "question": {
+          "en": "Which reasons does the assembly give for returning, and which reasons do Joshua and Caleb give for continuing?",
+          "pt-BR": "Que razões a comunidade apresenta para voltar, e que razões Josué e Calebe apresentam para continuar?"
+        }
+      },
+      {
+        "id": "faith-asking-for-help",
+        "reference": "Mark.9.14-29",
+        "title": {
+          "en": "A father asks for help with unbelief",
+          "pt-BR": "Um pai pede ajuda para sua falta de fé"
+        },
+        "context": {
+          "en": "A father has brought his suffering son to Jesus’ disciples, but they have been unable to help. Jesus enters a scene of argument and distress. The conversation moves from the father’s account of prolonged suffering to his request for compassion and the disciples’ later question.",
+          "pt-BR": "Um pai levou o filho que sofre aos discípulos de Jesus, mas eles não conseguiram ajudá-lo. Jesus entra em uma cena de discussão e aflição. A conversa passa do relato do sofrimento prolongado ao pedido de compaixão e, depois, à pergunta dos discípulos."
+        },
+        "observation": {
+          "en": "The father expresses trust while asking for help with his lack of trust. Jesus addresses the spirit, takes the boy by the hand and raises him. In private, the disciples ask about their failure, and Jesus directs their attention to prayer rather than to their own competence.",
+          "pt-BR": "O pai expressa confiança enquanto pede ajuda para sua falta de confiança. Jesus se dirige ao espírito, toma o menino pela mão e o levanta. Em particular, os discípulos perguntam sobre o próprio fracasso, e Jesus os direciona à oração, em vez de à capacidade deles."
+        },
+        "significance": {
+          "en": "The father’s request allows need and imperfect trust to appear together. The scene emphasizes dependence on Jesus, not the achievement of a flawless inner state. It should not be used to blame people whose suffering continues or to infer that every request will have this narrative’s outcome.",
+          "pt-BR": "O pedido do pai permite que necessidade e confiança imperfeita apareçam juntas. A cena enfatiza a dependência de Jesus, e não a conquista de um estado interior sem falhas. Ela não deve servir para culpar quem continua sofrendo nem para supor que todo pedido terá o mesmo desfecho."
+        },
+        "question": {
+          "en": "What do the father’s plea and the disciples’ private question reveal about their different forms of dependence?",
+          "pt-BR": "O que o apelo do pai e a pergunta particular dos discípulos revelam sobre suas diferentes formas de dependência?"
+        }
+      },
+      {
+        "id": "faith-before-fulfillment",
+        "reference": "Heb.11.1-16",
+        "title": {
+          "en": "Acting before the promise is fully received",
+          "pt-BR": "Agir antes de receber plenamente a promessa"
+        },
+        "context": {
+          "en": "Hebrews introduces faith and then moves through examples drawn from earlier biblical narratives. Abel, Enoch, Noah, Abraham and Sarah are presented within a connected argument. Follow both the actions attributed to faith and the author’s statement that some died without receiving the promises in full.",
+          "pt-BR": "Hebreus apresenta a fé e percorre exemplos de narrativas bíblicas anteriores. Abel, Enoque, Noé, Abraão e Sara aparecem em um argumento conectado. Acompanhe tanto as ações atribuídas à fé quanto a afirmação de que alguns morreram sem receber plenamente o que havia sido prometido."
+        },
+        "observation": {
+          "en": "The examples include offering, approaching God, preparing an ark, leaving home and living as a foreigner. The passage repeatedly links unseen realities with concrete actions. Its final movement describes people who acknowledge their distance from fulfillment while seeking a better homeland prepared by God.",
+          "pt-BR": "Os exemplos incluem oferecer, aproximar-se de Deus, preparar uma arca, deixar a própria terra e viver como estrangeiro. A passagem relaciona repetidamente realidades ainda não vistas com ações concretas. Seu movimento final descreve pessoas que reconhecem a distância do cumprimento e buscam uma pátria melhor preparada por Deus."
+        },
+        "significance": {
+          "en": "Faith is portrayed across a span of time, not merely at the moment of a successful outcome. The author’s retrospective arrangement helps readers compare responses across different stories. A faithful life, within this argument, can include waiting and dying before the promised future is fully seen.",
+          "pt-BR": "A fé é apresentada ao longo do tempo, e não apenas no momento de um resultado favorável. A organização retrospectiva do autor ajuda a comparar respostas em histórias diferentes. Neste argumento, uma vida de fé pode incluir espera e morte antes de se ver plenamente o futuro prometido."
+        },
+        "question": {
+          "en": "How does verse 13 qualify an interpretation of faith that expects every promise to be fulfilled immediately?",
+          "pt-BR": "Como o versículo 13 limita uma interpretação da fé que espera o cumprimento imediato de toda promessa?"
+        }
+      },
+      {
+        "id": "faith-and-a-neighbors-need",
+        "reference": "Jas.2.14-26",
+        "title": {
+          "en": "Faith that answers a neighbor’s need",
+          "pt-BR": "Fé que responde à necessidade do próximo"
+        },
+        "context": {
+          "en": "James addresses someone who claims to have faith while lacking corresponding actions. He begins with a brother or sister without adequate clothing and daily food. The argument then uses a dialogue, biblical examples and a final comparison between a body and its animating spirit.",
+          "pt-BR": "Tiago se dirige a quem afirma ter fé sem apresentar ações correspondentes. Começa com um irmão ou irmã sem roupa adequada e alimento diário. O argumento prossegue com um diálogo, exemplos bíblicos e uma comparação final entre o corpo e o espírito que lhe dá vida."
+        },
+        "observation": {
+          "en": "Words of goodwill do not meet the hungry person’s needs. James distinguishes a claim or bare acknowledgment from faith working through action. Abraham and Rahab illustrate this connection; the concluding image describes faith without works as lifeless, like a body without its spirit.",
+          "pt-BR": "Palavras de boa vontade não atendem à necessidade de quem tem fome. Tiago distingue uma afirmação ou mero reconhecimento da fé que atua por meio de ações. Abraão e Raabe ilustram essa relação; a imagem final descreve a fé sem obras como um corpo sem espírito, sem vida."
+        },
+        "significance": {
+          "en": "Start with James’s concrete test: does the profession of faith lead to help? His later use of justification language belongs to this argument about a claim without action. A full comparison with other biblical treatments of justification requires reading their distinct questions and contexts as well.",
+          "pt-BR": "Comece pelo teste concreto de Tiago: a profissão de fé leva à ajuda? Seu uso posterior da linguagem de justificação pertence a esse argumento sobre uma afirmação sem ação. Uma comparação completa com outros tratamentos bíblicos da justificação exige ler também suas perguntas e seus contextos próprios."
+        },
+        "question": {
+          "en": "Why does James begin with food and clothing before discussing Abraham, Rahab and the relation between faith and works?",
+          "pt-BR": "Por que Tiago começa com alimento e roupa antes de discutir Abraão, Raabe e a relação entre fé e obras?"
+        }
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "faith-danger-and-memory",
+        "title": {
+          "en": "Danger, memory and the choice to return",
+          "pt-BR": "Perigo, memória e a escolha de voltar"
+        },
+        "references": [
+          "Exod.14.10-31",
+          "Num.14.1-9"
+        ],
+        "explanation": {
+          "en": "Both scenes place fear beside the temptation to interpret Egypt as preferable to the present danger. At the sea, the narrative ends with deliverance and trust; in Numbers, Joshua and Caleb appeal to the Lord’s presence while the assembly proposes returning. Compare how the memory of rescue could shape the interpretation of a new threat.",
+          "pt-BR": "As duas cenas aproximam o medo da tentação de considerar o Egito preferível ao perigo presente. Junto ao mar, a narrativa termina com libertação e confiança; em Números, Josué e Calebe apelam à presença do Senhor enquanto a comunidade propõe voltar. Compare como a memória do resgate poderia orientar a interpretação de uma nova ameaça."
+        },
+        "difference": {
+          "en": "Exodus narrates an accomplished crossing. The selected verses of Numbers present a contested appeal before the outcome. They are different stages of Israel’s journey, not two reports of the same event or a promise that every fearful situation ends identically.",
+          "pt-BR": "Êxodo narra uma travessia realizada. Os versículos selecionados de Números apresentam um apelo contestado antes do desfecho. São etapas diferentes da jornada de Israel, não relatos do mesmo acontecimento nem uma promessa de que toda situação de medo terminará da mesma forma."
+        }
+      },
+      {
+        "id": "faith-dependence-and-action",
+        "title": {
+          "en": "Dependence and action belong in the same study",
+          "pt-BR": "Dependência e ação pertencem ao mesmo estudo"
+        },
+        "references": [
+          "Mark.9.14-29",
+          "Heb.11.1-16",
+          "Jas.2.14-26"
+        ],
+        "explanation": {
+          "en": "Mark portrays an honest request for help; Hebrews traces actions and endurance; James challenges a profession that leaves a needy neighbor unaided. Read together, these passages give questions for examining faith: on whom does the person depend, how does that trust shape action, and what happens when fulfillment remains beyond sight?",
+          "pt-BR": "Marcos retrata um pedido sincero de ajuda; Hebreus acompanha ações e perseverança; Tiago questiona uma profissão de fé que deixa o próximo sem auxílio. Lidas juntas, essas passagens oferecem perguntas para examinar a fé: de quem a pessoa depende, como essa confiança orienta ações e o que acontece quando o cumprimento ainda não pode ser visto?"
+        },
+        "difference": {
+          "en": "The father is not the inactive claimant confronted by James, and Hebrews is not prescribing one action for everyone. A healing narrative, a retrospective survey and an ethical argument each contribute a distinct perspective; their differences prevent measuring faith by one visible outcome.",
+          "pt-BR": "O pai não é o personagem sem ação confrontado por Tiago, e Hebreus não prescreve uma única ação para todos. Uma narrativa de cura, um panorama retrospectivo e um argumento ético contribuem com perspectivas distintas; suas diferenças impedem medir a fé por um único resultado visível."
+        }
+      }
+    ],
+    "connections": [
+      {
+        "entityId": "fixture.person.moses",
+        "reference": "Exod.14.13-16",
+        "explanation": {
+          "en": "Moses voices reassurance and receives the command to lead Israel forward. His role can be followed within the scene without treating him as the source of the rescue.",
+          "pt-BR": "Moisés transmite segurança e recebe a ordem de conduzir Israel adiante. Seu papel pode ser acompanhado na cena sem tratá-lo como a origem do resgate."
+        }
+      },
+      {
+        "entityId": "step.person.H3091G",
+        "reference": "Num.14.6-9",
+        "explanation": {
+          "en": "Joshua joins Caleb in interpreting the land and its dangers in light of the Lord’s presence. His appeal offers a concrete contrast to the assembly’s plan to return.",
+          "pt-BR": "Josué se une a Calebe para interpretar a terra e seus perigos à luz da presença do Senhor. Seu apelo contrasta de forma concreta com o plano da comunidade de voltar."
+        }
+      },
+      {
+        "entityId": "step.person.H3612G",
+        "reference": "Num.14.6-9",
+        "explanation": {
+          "en": "Caleb’s appeal belongs alongside Joshua’s, rather than to an unnamed heroic individual. The passage presents their shared response to the community’s fear and proposed retreat.",
+          "pt-BR": "O apelo de Calebe aparece junto ao de Josué, e não como gesto de um herói sem vínculos. A passagem apresenta a resposta conjunta deles ao medo da comunidade e à proposta de retorno."
+        }
+      }
+    ]
+  },
+  {
+    "entityId": "editorial.theme.covenant",
+    "overview": {
+      "en": "Covenant language connects promise, belonging and responsibility, but these five passages do not describe an identical arrangement. Genesis presents God’s promise to Abram amid questions about an heir and land. Exodus addresses a people already brought out of Egypt, then narrates their public commitment and a covenant meal. Jeremiah announces a new covenant to Israel and Judah after a broken relationship. Luke places new-covenant language in Jesus’ final meal with his apostles. Follow the participants, the commitments and the signs in each text before comparing them. The sequence provides a basis for studying continuity and change while leaving broader disputes about how all biblical covenants relate open to further reading.",
+      "pt-BR": "A linguagem da aliança relaciona promessa, pertencimento e responsabilidade, mas estas cinco passagens não descrevem um acordo idêntico. Gênesis apresenta a promessa de Deus a Abrão em meio a perguntas sobre um herdeiro e uma terra. Êxodo se dirige a um povo já retirado do Egito e depois narra seu compromisso público e uma refeição de aliança. Jeremias anuncia uma nova aliança a Israel e Judá após uma relação rompida. Lucas situa a linguagem da nova aliança na última refeição de Jesus com os apóstolos. Acompanhe os participantes, compromissos e sinais em cada texto antes de compará-los. A sequência permite estudar continuidade e mudança, deixando questões mais amplas sobre a relação entre todas as alianças bíblicas para outras leituras.",
+      "references": [
+        "Gen.15.1-21",
+        "Exod.19.1-8",
+        "Exod.24.1-11",
+        "Jer.31.31-34",
+        "Luke.22.14-20"
+      ]
+    },
+    "readings": [
+      {
+        "id": "covenant-promise-to-abram",
+        "reference": "Gen.15.1-21",
+        "title": {
+          "en": "A promise in the midst of questions",
+          "pt-BR": "Uma promessa em meio a perguntas"
+        },
+        "context": {
+          "en": "Abram receives a divine word of reassurance but raises two unresolved questions: who will inherit, and how will he know that he will possess the land? The chapter links the promised descendant, Abram’s trust and a covenant scene that also anticipates his descendants’ suffering.",
+          "pt-BR": "Abrão recebe uma palavra divina de segurança, mas apresenta duas questões ainda abertas: quem será seu herdeiro e como saberá que possuirá a terra? O capítulo relaciona o descendente prometido, a confiança de Abrão e uma cena de aliança que também antecipa o sofrimento de seus descendentes."
+        },
+        "observation": {
+          "en": "The promise answers the question about an heir; Abram believes God. Later, divided animals, deep sleep, darkness and the passing fire accompany the declaration of a covenant. The announced future includes oppression and delayed return, so the promise is not presented as immediate possession without hardship.",
+          "pt-BR": "A promessa responde à pergunta sobre um herdeiro; Abrão crê em Deus. Depois, animais divididos, sono profundo, escuridão e fogo que passa acompanham a declaração da aliança. O futuro anunciado inclui opressão e retorno posterior, de modo que a promessa não significa posse imediata sem sofrimento."
+        },
+        "significance": {
+          "en": "The chapter invites readers to hold divine commitment together with a long and difficult future. Abram’s questions remain part of the conversation in which he trusts. Follow what the narrator explicitly says about the covenant rather than supplying an entire ancient ritual theory from the imagery alone.",
+          "pt-BR": "O capítulo convida a manter juntas a promessa divina e a perspectiva de um futuro longo e difícil. As perguntas de Abrão fazem parte da conversa em que ele confia. Acompanhe o que o narrador afirma sobre a aliança, sem construir toda uma teoria ritual apenas a partir das imagens."
+        },
+        "question": {
+          "en": "How do the promised descendant, the announced oppression and the delayed return shape the meaning of the covenant?",
+          "pt-BR": "Como o descendente prometido, a opressão anunciada e o retorno posterior ajudam a compreender o significado da aliança?"
+        }
+      },
+      {
+        "id": "covenant-people-at-sinai",
+        "reference": "Exod.19.1-8",
+        "title": {
+          "en": "A rescued people called into a covenant",
+          "pt-BR": "Um povo resgatado é chamado à aliança"
+        },
+        "context": {
+          "en": "Israel camps before Sinai after leaving Egypt. Moses goes up the mountain and receives words for the whole community. The passage places the memory of deliverance before the covenant invitation and records the people’s initial answer, before the detailed commands that follow.",
+          "pt-BR": "Israel acampa diante do Sinai após sair do Egito. Moisés sobe ao monte e recebe palavras para toda a comunidade. A passagem coloca a memória da libertação antes do convite à aliança e registra a resposta inicial do povo, antes dos mandamentos detalhados que vêm depois."
+        },
+        "observation": {
+          "en": "God recalls carrying Israel and bringing the people to himself. Listening and keeping the covenant are connected with belonging as a treasured people, a priestly kingdom and a holy nation. Moses communicates the words to the elders, and the people respond together with a commitment to do them.",
+          "pt-BR": "Deus recorda que sustentou Israel e trouxe o povo para junto de si. Ouvir e guardar a aliança são relacionados ao pertencimento como povo precioso, reino de sacerdotes e nação santa. Moisés transmite as palavras aos anciãos, e o povo responde unido, comprometendo-se a praticá-las."
+        },
+        "significance": {
+          "en": "Belonging and responsibility appear together. The order matters: the appeal recalls rescue before asking for a response. The community’s agreement is a starting point in the narrative, not evidence that every later action will fulfill it; subsequent episodes must be read in relation to this commitment.",
+          "pt-BR": "Pertencimento e responsabilidade aparecem juntos. A ordem importa: o apelo lembra o resgate antes de pedir uma resposta. A concordância da comunidade é um ponto de partida na narrativa, não prova de que toda ação posterior a cumprirá; os episódios seguintes devem ser lidos em relação a esse compromisso."
+        },
+        "question": {
+          "en": "What has God already done in verse 4, and what response is requested in verses 5–8?",
+          "pt-BR": "O que Deus já fez no versículo 4, e que resposta é solicitada nos versículos 5–8?"
+        }
+      },
+      {
+        "id": "covenant-words-blood-meal",
+        "reference": "Exod.24.1-11",
+        "title": {
+          "en": "Words, blood and a shared meal",
+          "pt-BR": "Palavras, sangue e uma refeição compartilhada"
+        },
+        "context": {
+          "en": "The covenant is publicly affirmed through Moses, the people and their representatives. The scene combines a spoken and written record with sacrifices and a meal. Read its sequence carefully: the people hear and respond to the words before the narrative follows the leaders up the mountain.",
+          "pt-BR": "A aliança é afirmada publicamente por meio de Moisés, do povo e de seus representantes. A cena reúne um registro falado e escrito, sacrifícios e uma refeição. Observe a sequência: o povo ouve e responde às palavras antes que a narrativa acompanhe os líderes na subida ao monte."
+        },
+        "observation": {
+          "en": "Moses reports and writes the words, builds an altar with twelve pillars, and reads the covenant document aloud. The people pledge obedience. Blood is applied to the altar and the people, and Moses names its covenant significance. The representatives then see God and eat and drink.",
+          "pt-BR": "Moisés comunica e escreve as palavras, constrói um altar com doze colunas e lê o documento da aliança em voz alta. O povo promete obedecer. O sangue é aplicado ao altar e ao povo, e Moisés explica seu significado na aliança. Os representantes então veem Deus, comem e bebem."
+        },
+        "significance": {
+          "en": "The covenant is more than a private sentiment: words, communal response and embodied actions belong together. The meal follows the solemn commitment and shows the representatives remaining alive in God’s presence. This scene supplies language for later biblical texts, but those later uses need their own contextual reading.",
+          "pt-BR": "A aliança vai além de um sentimento particular: palavras, resposta comunitária e ações concretas aparecem juntas. A refeição segue o compromisso solene e mostra os representantes vivos na presença de Deus. A cena fornece linguagem para textos bíblicos posteriores, cujos usos também precisam ser lidos em seus próprios contextos."
+        },
+        "question": {
+          "en": "What does each element contribute: the written words, the people’s response, the blood and the meal?",
+          "pt-BR": "O que cada elemento acrescenta à cena: as palavras escritas, a resposta do povo, o sangue e a refeição?"
+        }
+      },
+      {
+        "id": "covenant-written-on-the-heart",
+        "reference": "Jer.31.31-34",
+        "title": {
+          "en": "A renewed relationship promised to Israel and Judah",
+          "pt-BR": "Uma relação renovada prometida a Israel e Judá"
+        },
+        "context": {
+          "en": "Jeremiah announces a future covenant with the house of Israel and the house of Judah. The promise explicitly recalls the departure from Egypt and a covenant that was broken. Read the announced renewal in relation to those named communities and that remembered breach.",
+          "pt-BR": "Jeremias anuncia uma aliança futura com a casa de Israel e a casa de Judá. A promessa recorda explicitamente a saída do Egito e uma aliança que foi rompida. Leia a renovação anunciada em relação a essas comunidades nomeadas e a essa ruptura lembrada."
+        },
+        "observation": {
+          "en": "The passage promises God’s instruction within the people, a renewed bond of belonging, knowledge of the Lord from least to greatest, and forgiveness. The contrast with the broken covenant does not remove instruction; it describes that instruction as written on the heart rather than merely left outside.",
+          "pt-BR": "A passagem promete a instrução de Deus no interior do povo, um vínculo renovado de pertencimento, o conhecimento do Senhor do menor ao maior e o perdão. O contraste com a aliança rompida não elimina a instrução: apresenta-a escrita no coração, em vez de permanecer apenas fora da pessoa."
+        },
+        "significance": {
+          "en": "The center of the promise is a transformed relationship marked by knowledge and forgiveness. The original addressees, Israel and Judah, remain important when later texts use this language. Reading the passage carefully does not require settling every later debate about covenant continuity, fulfillment or the identity of its participants.",
+          "pt-BR": "O centro da promessa é uma relação transformada, marcada por conhecimento e perdão. Os destinatários originais, Israel e Judá, continuam importantes quando textos posteriores usam essa linguagem. Ler a passagem com cuidado não exige resolver toda discussão posterior sobre continuidade, cumprimento ou identidade dos participantes da aliança."
+        },
+        "question": {
+          "en": "Which elements are renewed in verses 33–34, and how do they answer the problem of the broken covenant in verse 32?",
+          "pt-BR": "Que elementos são renovados nos versículos 33–34, e como respondem ao problema da aliança rompida no versículo 32?"
+        }
+      },
+      {
+        "id": "covenant-at-the-final-meal",
+        "reference": "Luke.22.14-20",
+        "title": {
+          "en": "New-covenant language at Jesus’ meal",
+          "pt-BR": "A linguagem da nova aliança na refeição de Jesus"
+        },
+        "context": {
+          "en": "Jesus eats the Passover with the apostles and speaks about suffering and the kingdom of God. Within this meal, he gives bread and a cup meaning in relation to himself. The selected verses should be read as part of this particular farewell setting.",
+          "pt-BR": "Jesus celebra a Páscoa com os apóstolos e fala sobre sofrimento e reino de Deus. Nessa refeição, atribui ao pão e ao cálice um significado relacionado a si mesmo. Os versículos selecionados devem ser lidos como parte desse contexto específico de despedida."
+        },
+        "observation": {
+          "en": "Jesus expresses his desire to share the meal before suffering. He speaks of a future fulfillment in God’s kingdom, gives bread in remembrance of himself, and identifies the cup with the new covenant in his blood. The words connect the shared meal with his coming self-giving.",
+          "pt-BR": "Jesus expressa o desejo de compartilhar a refeição antes de sofrer. Fala de um cumprimento futuro no reino de Deus, oferece o pão em memória de si e identifica o cálice com a nova aliança em seu sangue. As palavras relacionam a refeição compartilhada à entrega que se aproxima."
+        },
+        "significance": {
+          "en": "Luke presents Jesus’ death through the language of covenant and remembrance within Passover. This gives a concrete starting point for comparing Jeremiah’s promise and Exodus’s covenant meal. The passage itself does not explain every later Christian understanding of the meal, so those differences should not be silently resolved here.",
+          "pt-BR": "Lucas apresenta a morte de Jesus pela linguagem da aliança e da memória dentro da Páscoa. Isso oferece um ponto de partida concreto para comparar a promessa de Jeremias e a refeição da aliança em Êxodo. A passagem não explica todas as interpretações cristãs posteriores da ceia, que não devem ser resolvidas implicitamente aqui."
+        },
+        "question": {
+          "en": "How do the references to suffering, remembrance and the coming kingdom shape the meaning of the bread and cup?",
+          "pt-BR": "Como as referências ao sofrimento, à memória e ao reino que virá orientam o significado do pão e do cálice?"
+        }
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "covenant-promise-and-response",
+        "title": {
+          "en": "Divine initiative and a people’s response",
+          "pt-BR": "Iniciativa divina e resposta de um povo"
+        },
+        "references": [
+          "Gen.15.1-21",
+          "Exod.19.1-8",
+          "Exod.24.1-11"
+        ],
+        "explanation": {
+          "en": "Genesis stresses God’s promise to Abram about descendants and land. Exodus recalls an accomplished rescue, invites a people into covenant responsibility and narrates their public response. Comparing the passages helps distinguish what God commits to do, what the recipients are asked to do, and the signs or actions that accompany each scene.",
+          "pt-BR": "Gênesis enfatiza a promessa de Deus a Abrão sobre descendentes e terra. Êxodo recorda um resgate realizado, chama um povo à responsabilidade da aliança e narra sua resposta pública. A comparação ajuda a distinguir o que Deus se compromete a fazer, o que se pede aos destinatários e os sinais ou ações que acompanham cada cena."
+        },
+        "difference": {
+          "en": "Abram receives a promise concerning future descendants, while Exodus addresses an assembled people and records their commitments. The participants, immediate concerns and ceremonies differ. Shared covenant language should not make every feature of one passage an unstated feature of the others.",
+          "pt-BR": "Abrão recebe uma promessa sobre descendentes futuros, enquanto Êxodo se dirige a um povo reunido e registra seus compromissos. Os participantes, as questões imediatas e as cerimônias diferem. A linguagem comum de aliança não transforma cada elemento de uma passagem em elemento implícito das demais."
+        }
+      },
+      {
+        "id": "covenant-new-language-and-meal",
+        "title": {
+          "en": "A promised renewal and a later covenant meal",
+          "pt-BR": "Uma renovação prometida e uma refeição posterior de aliança"
+        },
+        "references": [
+          "Exod.24.1-11",
+          "Jer.31.31-34",
+          "Luke.22.14-20"
+        ],
+        "explanation": {
+          "en": "Exodus connects covenant words, blood and a meal; Jeremiah promises a new covenant with inward instruction and forgiveness; Luke presents Jesus using new-covenant language over the cup. Reading them together reveals why covenant language carries more than the idea of a meal alone: it concerns a relationship, commitments and the way that relationship is established or renewed.",
+          "pt-BR": "Êxodo relaciona palavras de aliança, sangue e refeição; Jeremias promete uma nova aliança com instrução interior e perdão; Lucas apresenta Jesus usando a linguagem da nova aliança sobre o cálice. Juntos, os textos mostram por que essa linguagem envolve mais do que uma refeição: trata de uma relação, de compromissos e de como esse vínculo é estabelecido ou renovado."
+        },
+        "difference": {
+          "en": "Jeremiah addresses Israel and Judah; Exodus describes the Sinai community; Luke narrates Jesus with the apostles before his death. Luke’s use is a later interpretation within his Gospel. These passages do not all describe the same ceremony, audience or historical moment.",
+          "pt-BR": "Jeremias se dirige a Israel e Judá; Êxodo descreve a comunidade do Sinai; Lucas narra Jesus com os apóstolos antes de sua morte. O uso de Lucas é uma interpretação posterior dentro de seu Evangelho. As passagens não descrevem a mesma cerimônia, o mesmo público nem o mesmo momento histórico."
+        }
+      }
+    ],
+    "connections": [
+      {
+        "entityId": "editorial.event.abraham-covenant",
+        "reference": "Gen.15.1-21",
+        "explanation": {
+          "en": "This event gathers the promise about descendants and land into its narrative setting. Abram’s questions and the announced delay are part of the covenant account, not details to omit from it.",
+          "pt-BR": "Este acontecimento reúne a promessa sobre descendentes e terra em seu contexto narrativo. As perguntas de Abrão e a espera anunciada fazem parte do relato da aliança, não são detalhes a descartar."
+        }
+      },
+      {
+        "entityId": "step.place.H5514G",
+        "reference": "Exod.19.1-8",
+        "explanation": {
+          "en": "Sinai is the narrative setting where the rescued people hear the covenant invitation. The passage identifies its role in the story without establishing a modern geographic identification.",
+          "pt-BR": "O Sinai é o cenário narrativo em que o povo resgatado ouve o convite à aliança. A passagem identifica seu papel no relato sem estabelecer uma identificação geográfica moderna."
+        }
+      },
+      {
+        "entityId": "editorial.event.last-supper",
+        "reference": "Luke.22.14-20",
+        "explanation": {
+          "en": "Jesus’ final meal supplies the immediate setting for the bread, cup, remembrance and new-covenant language. Reading the event keeps these words connected to Passover, suffering and the kingdom.",
+          "pt-BR": "A última refeição de Jesus fornece o contexto imediato para o pão, o cálice, a memória e a linguagem da nova aliança. Ler o acontecimento mantém essas palavras ligadas à Páscoa, ao sofrimento e ao reino."
+        }
+      }
+    ]
+  },
+  {
+    "entityId": "editorial.theme.worship",
+    "overview": {
+      "en": "These readings examine worship through its object, its practices and the life that accompanies it. Exodus introduces exclusive allegiance to the God who brought Israel out of slavery, then narrates a crisis in which religious celebration surrounds a forbidden image. Psalm 95 joins singing and bowing with a warning to listen. John records Jesus addressing a dispute about the proper place of worship, while Romans extends sacrificial language to embodied life and renewed discernment. The study therefore moves beyond a list of songs or ceremonies. Compare what each text says about God, what the worshipers do and whether their response corresponds to the relationship they profess. Preserve the differences between Israel’s covenant setting, Jesus’ conversation and Paul’s appeal.",
+      "pt-BR": "Estas leituras examinam a adoração por seu destinatário, suas práticas e a vida que a acompanha. Êxodo apresenta a lealdade exclusiva ao Deus que retirou Israel da escravidão e depois narra uma crise em que a celebração religiosa envolve uma imagem proibida. O Salmo 95 reúne canto e reverência com uma advertência para ouvir. João registra Jesus respondendo a uma disputa sobre o lugar apropriado para adorar, enquanto Romanos aplica a linguagem sacrificial à vida concreta e ao discernimento renovado. O estudo, assim, vai além de uma lista de músicas ou cerimônias. Compare o que cada texto afirma sobre Deus, o que os adoradores fazem e se a resposta corresponde à relação que professam. Preserve as diferenças entre a aliança de Israel, a conversa de Jesus e o apelo de Paulo.",
+      "references": [
+        "Exod.20.1-6",
+        "Exod.32.1-14",
+        "Ps.95.1-11",
+        "John.4.19-26",
+        "Rom.12.1-2"
+      ]
+    },
+    "readings": [
+      {
+        "id": "worship-and-deliverance",
+        "reference": "Exod.20.1-6",
+        "title": {
+          "en": "Allegiance to the God who delivered Israel",
+          "pt-BR": "Lealdade ao Deus que libertou Israel"
+        },
+        "context": {
+          "en": "The commands begin with God identifying himself as the one who brought Israel out of Egypt and slavery. Before later commands address social relationships, these verses address other gods and images. Read the prohibitions within that opening account of an existing relationship and rescue.",
+          "pt-BR": "Os mandamentos começam com Deus se identificando como aquele que retirou Israel do Egito e da escravidão. Antes de os mandamentos seguintes tratarem das relações sociais, estes versículos abordam outros deuses e imagens. Leia as proibições dentro dessa apresentação inicial de uma relação e de um resgate já realizados."
+        },
+        "observation": {
+          "en": "The people are forbidden to place other gods alongside the Lord, make an image for worship or serve it. The passage describes the seriousness of divided allegiance and contrasts consequences of rejection with enduring covenant kindness toward those who love God and keep his commands.",
+          "pt-BR": "O povo é proibido de colocar outros deuses ao lado do Senhor, fabricar uma imagem para adoração ou servi-la. A passagem descreve a gravidade da lealdade dividida e contrasta as consequências da rejeição com a fidelidade duradoura para com aqueles que amam a Deus e guardam seus mandamentos."
+        },
+        "significance": {
+          "en": "Worship is presented as a response to the identity and action of the one addressed. Religious activity is therefore not sufficient by itself; the object of allegiance matters. The passage’s intergenerational language should be examined in its covenant setting rather than used to diagnose a present person’s misfortune.",
+          "pt-BR": "A adoração é apresentada como resposta à identidade e à ação daquele a quem se dirige. A atividade religiosa, por si só, não basta: importa a quem se presta lealdade. A linguagem entre gerações precisa ser examinada em seu contexto de aliança, sem servir para diagnosticar a desgraça de uma pessoa hoje."
+        },
+        "question": {
+          "en": "How does the reminder of deliverance in verse 2 explain the allegiance requested in verses 3–6?",
+          "pt-BR": "Como a lembrança da libertação no versículo 2 explica a lealdade solicitada nos versículos 3–6?"
+        }
+      },
+      {
+        "id": "worship-in-the-calf-crisis",
+        "reference": "Exod.32.1-14",
+        "title": {
+          "en": "A celebration that contradicts the covenant",
+          "pt-BR": "Uma celebração que contradiz a aliança"
+        },
+        "context": {
+          "en": "The people interpret Moses’ delay as a problem requiring a visible religious solution. Aaron receives their gold and makes a calf. The narrative moves from the people’s gathering and feast to God’s assessment of their action and Moses’ intercession on their behalf.",
+          "pt-BR": "O povo interpreta a demora de Moisés como um problema que exige uma solução religiosa visível. Arão recebe o ouro e fabrica um bezerro. A narrativa passa da reunião e da festa do povo à avaliação divina de sua ação e à intercessão de Moisés por eles."
+        },
+        "observation": {
+          "en": "The calf is credited with bringing Israel out of Egypt, and Aaron announces a feast to the Lord. Yet God describes the action as corruption and a quick departure from the commanded way. Moses appeals to God’s reputation and the promises to Abraham, Isaac and Israel.",
+          "pt-BR": "Atribui-se ao bezerro a saída de Israel do Egito, e Arão anuncia uma festa ao Senhor. Entretanto, Deus descreve a ação como corrupção e rápido abandono do caminho ordenado. Moisés apela à reputação de Deus e às promessas feitas a Abraão, Isaque e Israel."
+        },
+        "significance": {
+          "en": "The scene distinguishes naming the Lord in a celebration from honoring the relationship as commanded. Familiar religious language can coexist with a serious breach. Moses’ appeal also keeps the covenant promises in view. These verses open the crisis; they do not narrate every consequence or settle its aftermath.",
+          "pt-BR": "A cena distingue mencionar o Senhor em uma celebração de honrar a relação conforme o que foi ordenado. Uma linguagem religiosa familiar pode coexistir com uma grave ruptura. O apelo de Moisés mantém as promessas da aliança em vista. Estes versículos abrem a crise; não narram todas as consequências nem encerram seus desdobramentos."
+        },
+        "question": {
+          "en": "What makes the feast unacceptable in the narrative even though Aaron announces it in the Lord’s name?",
+          "pt-BR": "O que torna a festa inaceitável na narrativa, mesmo quando Arão a anuncia em nome do Senhor?"
+        }
+      },
+      {
+        "id": "worship-that-listens",
+        "reference": "Ps.95.1-11",
+        "title": {
+          "en": "Praise that also listens",
+          "pt-BR": "Louvor que também ouve"
+        },
+        "context": {
+          "en": "The psalm first invites a community to sing, give thanks and bow before its maker. It then changes to a warning about refusing God’s voice. Read the joyful invitation and the wilderness warning together rather than treating the second part as unrelated to worship.",
+          "pt-BR": "O salmo primeiro convida uma comunidade a cantar, agradecer e se curvar diante de seu criador. Depois passa a uma advertência sobre rejeitar a voz de Deus. Leia o convite alegre e a advertência do deserto juntos, sem tratar a segunda parte como assunto separado da adoração."
+        },
+        "observation": {
+          "en": "Creation and the image of a shepherd caring for a flock give reasons for praise. The call to hear God’s voice leads directly to the memory of Meribah and Massah. The remembered generation saw God’s works but is described as wandering in heart and failing to know his ways.",
+          "pt-BR": "A criação e a imagem de um pastor que cuida do rebanho dão razões para louvar. O chamado para ouvir a voz de Deus leva diretamente à memória de Meribá e Massá. A geração lembrada viu as obras divinas, mas é descrita como desviada de coração e sem conhecer seus caminhos."
+        },
+        "significance": {
+          "en": "The psalm places attentive response inside worship itself. Singing about God’s greatness does not make listening unnecessary. Its use of an earlier generation turns remembered history into an address to those worshiping now, asking them to hear rather than merely repeat the language of belonging.",
+          "pt-BR": "O salmo inclui a resposta atenta dentro da própria adoração. Cantar sobre a grandeza de Deus não dispensa ouvir. A lembrança de uma geração anterior transforma a história em um chamado aos que adoram no presente: ouvir, em vez de apenas repetir a linguagem do pertencimento."
+        },
+        "question": {
+          "en": "What changes at the invitation to hear in verse 7, and how does the warning reshape the opening call to praise?",
+          "pt-BR": "O que muda no convite para ouvir no versículo 7, e como a advertência transforma a leitura do chamado inicial ao louvor?"
+        }
+      },
+      {
+        "id": "worship-in-spirit-and-truth",
+        "reference": "John.4.19-26",
+        "title": {
+          "en": "Beyond the dispute over the place of worship",
+          "pt-BR": "Além da disputa sobre o lugar de adoração"
+        },
+        "context": {
+          "en": "The woman raises a disagreement between her ancestral place of worship and Jerusalem. Jesus responds within that conversation, speaking about the Father, an approaching hour and the worshipers the Father seeks. The discussion concludes with the woman mentioning the Messiah and Jesus identifying himself.",
+          "pt-BR": "A mulher apresenta uma divergência entre o lugar de adoração de seus antepassados e Jerusalém. Jesus responde nessa conversa, falando sobre o Pai, uma hora que se aproxima e os adoradores que o Pai procura. A discussão termina com a mulher mencionando o Messias e Jesus se identificando."
+        },
+        "observation": {
+          "en": "Jesus does not simply declare all religious knowledge equivalent: he locates salvation in the Jewish story. He also announces worship of the Father in spirit and truth that will not be defined by the competing locations. The conversation’s movement is connected with his disclosure of himself to the woman.",
+          "pt-BR": "Jesus não declara que todo conhecimento religioso é equivalente: situa a salvação na história judaica. Também anuncia a adoração ao Pai em espírito e verdade, que não será definida pelos lugares concorrentes. O movimento da conversa se relaciona com sua revelação de identidade à mulher."
+        },
+        "significance": {
+          "en": "The passage shifts the dispute toward the Father’s initiative and the new situation Jesus announces. Spirit and truth should be studied in relation to that conversation, not reduced to a choice between emotional and intellectual worship. The text addresses more than a preference about buildings or musical styles.",
+          "pt-BR": "A passagem desloca a disputa para a iniciativa do Pai e a nova situação anunciada por Jesus. Espírito e verdade devem ser estudados nessa conversa, sem serem reduzidos a uma escolha entre adoração emocional e intelectual. O texto trata de mais do que preferências sobre edifícios ou estilos musicais."
+        },
+        "question": {
+          "en": "How does Jesus both retain the Jewish setting of salvation and move the conversation beyond the two competing places?",
+          "pt-BR": "Como Jesus mantém o contexto judaico da salvação e, ao mesmo tempo, conduz a conversa para além dos dois lugares concorrentes?"
+        }
+      },
+      {
+        "id": "worship-and-embodied-life",
+        "reference": "Rom.12.1-2",
+        "title": {
+          "en": "A whole life offered in response to mercy",
+          "pt-BR": "Uma vida inteira oferecida em resposta à misericórdia"
+        },
+        "context": {
+          "en": "Paul’s appeal explicitly rests on God’s mercies. He uses sacrificial language to describe the response he seeks from his readers, then immediately speaks about patterns of thought and discernment. Read the two verses together so that bodily offering and renewed understanding remain connected.",
+          "pt-BR": "O apelo de Paulo se apoia explicitamente nas misericórdias de Deus. Ele usa a linguagem sacrificial para descrever a resposta esperada dos leitores e logo aborda os padrões de pensamento e o discernimento. Leia os dois versículos juntos, mantendo unidas a entrega do corpo e a compreensão renovada."
+        },
+        "observation": {
+          "en": "The offering is described as living, holy and acceptable to God. The readers are told not to take the surrounding age as their pattern, but to be transformed through the renewal of the mind. The stated result is the ability to discern God’s good and acceptable will.",
+          "pt-BR": "A oferta é descrita como viva, santa e agradável a Deus. Os leitores são chamados a não adotar o presente século como padrão, mas a ser transformados pela renovação da mente. O resultado apresentado é a capacidade de discernir a vontade boa e agradável de Deus."
+        },
+        "significance": {
+          "en": "Worship here includes embodied conduct and the formation of judgment. Mercy provides the basis for the response, so the appeal is not a method for purchasing divine favor. Its imagery widens the study beyond ceremonies while leaving readers responsible for considering how discernment shapes actual choices.",
+          "pt-BR": "A adoração aqui inclui a conduta concreta e a formação do julgamento. A misericórdia fundamenta a resposta, de modo que o apelo não é um método para comprar o favor divino. A imagem amplia o estudo para além das cerimônias e chama a considerar como o discernimento orienta escolhas reais."
+        },
+        "question": {
+          "en": "What relationship does Paul establish between God’s mercies, bodily offering and the renewal of the mind?",
+          "pt-BR": "Que relação Paulo estabelece entre as misericórdias de Deus, a entrega do corpo e a renovação da mente?"
+        }
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "worship-command-and-counterexample",
+        "title": {
+          "en": "A command and its narrative counterexample",
+          "pt-BR": "Um mandamento e seu contraste narrativo"
+        },
+        "references": [
+          "Exod.20.1-6",
+          "Exod.32.1-14"
+        ],
+        "explanation": {
+          "en": "The opening commands identify the Lord as Israel’s deliverer and prohibit worship of an image. The calf episode credits a made object with that deliverance while retaining religious language about the Lord. Comparing the passages shows why the narrator treats the feast as a breach rather than accepting the presence of sacrifices and celebration as sufficient evidence of faithful worship.",
+          "pt-BR": "Os mandamentos iniciais identificam o Senhor como libertador de Israel e proíbem adorar uma imagem. O episódio do bezerro atribui essa libertação a um objeto fabricado enquanto conserva a linguagem religiosa sobre o Senhor. A comparação mostra por que a narrativa trata a festa como ruptura, sem aceitar sacrifícios e celebração como provas suficientes de adoração fiel."
+        },
+        "difference": {
+          "en": "Exodus 20 gives commands; Exodus 32 tells a story of disobedience, judgment announced and intercession. The latter does not merely illustrate how people feel during worship. Its conflict concerns allegiance within a particular covenant relationship and the attribution of Israel’s rescue.",
+          "pt-BR": "Êxodo 20 apresenta mandamentos; Êxodo 32 narra desobediência, juízo anunciado e intercessão. O segundo texto não ilustra apenas os sentimentos das pessoas na adoração. Seu conflito envolve a lealdade dentro de uma relação específica de aliança e a atribuição do resgate de Israel."
+        }
+      },
+      {
+        "id": "worship-listening-and-renewal",
+        "title": {
+          "en": "Listening, truth and renewed conduct",
+          "pt-BR": "Escuta, verdade e conduta renovada"
+        },
+        "references": [
+          "Ps.95.1-11",
+          "John.4.19-26",
+          "Rom.12.1-2"
+        ],
+        "explanation": {
+          "en": "The psalm joins praise to hearing, John’s conversation connects worship with the Father and Jesus’ disclosure, and Romans links an offering of life with renewed discernment. Together they challenge an account of worship limited to outward activity. Each asks how the worshiper responds to God, while supplying a different setting in which to examine that response.",
+          "pt-BR": "O salmo une louvor e escuta, a conversa em João relaciona a adoração ao Pai e à revelação de Jesus, e Romanos associa a entrega da vida ao discernimento renovado. Juntos, questionam uma compreensão da adoração limitada à atividade exterior. Cada texto pergunta como o adorador responde a Deus e oferece um contexto diferente para examinar essa resposta."
+        },
+        "difference": {
+          "en": "A communal song with a historical warning, a conversation about competing sacred places and an apostolic ethical appeal are different forms of writing. One should not use their shared theme to erase their audiences or make any single phrase explain every feature of worship.",
+          "pt-BR": "Um canto comunitário com advertência histórica, uma conversa sobre lugares sagrados concorrentes e um apelo ético apostólico são formas distintas de escrita. O tema compartilhado não deve apagar seus destinatários nem transformar uma única frase em explicação de todos os aspectos da adoração."
+        }
+      }
+    ],
+    "connections": [
+      {
+        "entityId": "step.person.H0175",
+        "reference": "Exod.32.1-6",
+        "explanation": {
+          "en": "Aaron receives the gold, makes the calf and announces the feast. His actions make the contrast between religious leadership and covenant faithfulness visible within the passage.",
+          "pt-BR": "Arão recebe o ouro, fabrica o bezerro e anuncia a festa. Suas ações tornam visível, na passagem, a diferença entre liderança religiosa e fidelidade à aliança."
+        }
+      },
+      {
+        "entityId": "editorial.event.golden-calf",
+        "reference": "Exod.32.1-14",
+        "explanation": {
+          "en": "The golden-calf event provides the narrative case for comparing celebration with obedience to the opening commands. The selected scene also includes Moses’ appeal, so the crisis is not reduced to the image alone.",
+          "pt-BR": "O acontecimento do bezerro de ouro permite comparar a celebração com a obediência aos mandamentos iniciais. A cena selecionada inclui o apelo de Moisés, de modo que a crise não se reduz à imagem."
+        }
+      },
+      {
+        "entityId": "fixture.person.moses",
+        "reference": "Exod.32.7-14",
+        "explanation": {
+          "en": "Moses responds to the announced judgment by appealing to the rescue from Egypt and the ancestral promises. His intercession keeps the crisis connected with the covenant story.",
+          "pt-BR": "Moisés responde ao juízo anunciado apelando ao resgate do Egito e às promessas aos antepassados. Sua intercessão mantém a crise ligada à história da aliança."
+        }
+      }
+    ]
+  },
+  {
+    "entityId": "editorial.theme.obedience",
+    "overview": {
+      "en": "Obedience in these readings involves hearing, remembering and practicing within a relationship. The manna narrative makes attention to a specific instruction visible in daily food and rest. The commands in Exodus connect allegiance to God with treatment of other people. Deuteronomy places teaching and love within ordinary household rhythms. John relates keeping Jesus’ words to love and promised presence, while James tests hearing by speech and care for vulnerable people. The sequence moves from concrete episodes to sustained habits, rather than treating obedience as an isolated act. For each passage, identify who is addressed, what is asked and why. Distinguishing those settings helps readers seek meaningful application without turning every instruction into an identical command for every situation.",
+      "pt-BR": "A obediência nestas leituras envolve ouvir, lembrar e praticar dentro de uma relação. A narrativa do maná torna a atenção a uma instrução específica visível no alimento e no descanso diários. Os mandamentos em Êxodo relacionam a lealdade a Deus ao tratamento de outras pessoas. Deuteronômio situa ensino e amor nos ritmos comuns da casa. João relaciona guardar as palavras de Jesus ao amor e à presença prometida, enquanto Tiago verifica a escuta pela fala e pelo cuidado com pessoas vulneráveis. A sequência passa de episódios concretos a hábitos constantes, sem tratar a obediência como ato isolado. Em cada passagem, identifique quem recebe a palavra, o que se pede e por quê. Distinguir esses contextos ajuda a buscar aplicações relevantes sem transformar toda instrução em ordem idêntica para qualquer situação.",
+      "references": [
+        "Exod.16.13-30",
+        "Exod.20.1-17",
+        "Deut.6.1-9",
+        "John.14.15-24",
+        "Jas.1.19-27"
+      ]
+    },
+    "readings": [
+      {
+        "id": "obedience-in-daily-provision",
+        "reference": "Exod.16.13-30",
+        "title": {
+          "en": "Learning through food and rest",
+          "pt-BR": "Aprender por meio do alimento e do descanso"
+        },
+        "context": {
+          "en": "Israel receives food in the wilderness, and Moses explains how it is to be gathered and kept. The passage follows the people across ordinary days, the sixth day and the Sabbath. Its different instructions must be read within that rhythm rather than separated into unrelated rules.",
+          "pt-BR": "Israel recebe alimento no deserto, e Moisés explica como recolhê-lo e guardá-lo. A passagem acompanha o povo nos dias comuns, no sexto dia e no sábado. As diferentes instruções precisam ser lidas dentro desse ritmo, em vez de separadas como regras sem relação entre si."
+        },
+        "observation": {
+          "en": "Some keep food overnight against the instruction, and it spoils. On the sixth day, however, keeping a double portion is commanded, and the stored food remains good for the Sabbath. Others go out to gather on the Sabbath and find nothing; the passage ends with the people resting.",
+          "pt-BR": "Alguns guardam alimento durante a noite contrariando a instrução, e ele estraga. No sexto dia, porém, guardar uma porção dupla é ordenado, e o alimento permanece bom para o sábado. Outros saem para recolher no sábado e nada encontram; a passagem termina com o povo descansando."
+        },
+        "significance": {
+          "en": "Obedience requires attending to the actual instruction and its purpose in a given moment. The same outward action, storing food, differs according to the day. Daily provision and Sabbath rest also show how the commands organize a community’s dependence rather than merely test isolated individual effort.",
+          "pt-BR": "Obedecer exige atenção à instrução efetiva e ao seu propósito em cada momento. A mesma ação exterior, guardar alimento, muda conforme o dia. A provisão diária e o descanso sabático mostram como as ordens organizam a dependência de uma comunidade, em vez de apenas testar o esforço individual."
+        },
+        "question": {
+          "en": "Why is keeping food overnight disobedient in one scene and obedient in another?",
+          "pt-BR": "Por que guardar alimento durante a noite é desobediência em uma cena e obediência em outra?"
+        }
+      },
+      {
+        "id": "obedience-and-the-rescued-community",
+        "reference": "Exod.20.1-17",
+        "title": {
+          "en": "Commands within a rescued community",
+          "pt-BR": "Mandamentos dentro de uma comunidade resgatada"
+        },
+        "context": {
+          "en": "God’s opening self-identification recalls bringing Israel out of slavery. The commands then address worship, the divine name, rest, parents and relationships with neighbors. Read their whole range before isolating an individual command; the passage concerns the shape of life within the community.",
+          "pt-BR": "A apresentação inicial de Deus recorda a libertação de Israel da escravidão. Os mandamentos passam a tratar da adoração, do nome divino, do descanso, dos pais e das relações com o próximo. Leia seu conjunto antes de isolar uma ordem: a passagem trata da forma de vida da comunidade."
+        },
+        "observation": {
+          "en": "The Sabbath command explicitly includes children, servants, animals and the resident foreigner. The later prohibitions protect life, marriage, property and truthful testimony, and they reach the desire for what belongs to another. Responsibilities toward God and toward neighbors appear within the same sequence of words.",
+          "pt-BR": "O mandamento do sábado inclui explicitamente filhos, servos, animais e o estrangeiro residente. As proibições seguintes protegem a vida, o casamento, os bens e o testemunho verdadeiro, alcançando também o desejo pelo que pertence a outra pessoa. Responsabilidades diante de Deus e do próximo aparecem na mesma sequência."
+        },
+        "significance": {
+          "en": "The opening rescue gives the commands a narrative setting; they do not begin as an abstract list detached from a people’s history. Their social reach also means that obedience cannot be assessed only as private religious observance. Consider whose well-being is involved when each instruction is practiced or ignored.",
+          "pt-BR": "O resgate inicial situa os mandamentos na narrativa; eles não começam como uma lista abstrata separada da história de um povo. Seu alcance social mostra que a obediência não pode ser avaliada apenas como prática religiosa particular. Considere o bem-estar de quem está envolvido quando cada instrução é praticada ou ignorada."
+        },
+        "question": {
+          "en": "Who benefits from the Sabbath instruction, and how does that widen the way you read the other commands?",
+          "pt-BR": "Quem se beneficia da instrução sobre o sábado, e como isso amplia a leitura dos demais mandamentos?"
+        }
+      },
+      {
+        "id": "obedience-taught-through-daily-life",
+        "reference": "Deut.6.1-9",
+        "title": {
+          "en": "Hearing and remembering across generations",
+          "pt-BR": "Ouvir e lembrar entre gerações"
+        },
+        "context": {
+          "en": "Moses addresses Israel about life in the land the people are preparing to enter. The instructions explicitly include children and grandchildren. The selected passage moves from hearing and keeping the commands to love for God, inward remembrance and repeated teaching within daily life.",
+          "pt-BR": "Moisés se dirige a Israel sobre a vida na terra em que o povo se prepara para entrar. As instruções incluem explicitamente filhos e netos. A passagem vai da escuta e da prática dos mandamentos ao amor a Deus, à lembrança interior e ao ensino repetido na vida diária."
+        },
+        "observation": {
+          "en": "Love is described with the whole heart, life and strength. The words are to remain on the heart and be taught while sitting at home, walking, lying down and rising. Signs on the body and words at household entrances extend remembrance into ordinary spaces and routines.",
+          "pt-BR": "O amor é descrito com todo o coração, a vida e a força. As palavras devem permanecer no coração e ser ensinadas ao sentar em casa, caminhar, deitar e levantar. Sinais no corpo e palavras nas entradas da casa estendem a lembrança aos espaços e às rotinas comuns."
+        },
+        "significance": {
+          "en": "The passage links love, memory and practice rather than presenting instruction as information to be stored once. Repetition serves a life shared across generations. Its household imagery also invites readers to notice how learning is embodied and sustained, while respecting the particular practices and audience named in the text.",
+          "pt-BR": "A passagem une amor, memória e prática, sem apresentar a instrução como informação a ser armazenada uma única vez. A repetição serve a uma vida compartilhada entre gerações. As imagens da casa permitem observar como o aprendizado ganha forma e continuidade, respeitando as práticas e os destinatários específicos do texto."
+        },
+        "question": {
+          "en": "How do the daily activities in verses 7–9 help carry the commitment described in verses 4–6?",
+          "pt-BR": "Como as atividades diárias dos versículos 7–9 ajudam a sustentar o compromisso descrito nos versículos 4–6?"
+        }
+      },
+      {
+        "id": "obedience-love-and-presence",
+        "reference": "John.14.15-24",
+        "title": {
+          "en": "Keeping Jesus’ words within a relationship of love",
+          "pt-BR": "Guardar as palavras de Jesus em uma relação de amor"
+        },
+        "context": {
+          "en": "Jesus speaks to his disciples about a coming change in how they will experience his presence. His appeal to keep his commands appears alongside promises concerning the Father, the Spirit of truth and his refusal to leave them abandoned. Read the commands together with those promises.",
+          "pt-BR": "Jesus fala aos discípulos sobre uma mudança na maneira como experimentarão sua presença. O apelo para guardar seus mandamentos aparece junto às promessas sobre o Pai, o Espírito da verdade e sua decisão de não deixá-los abandonados. Leia as ordens junto com essas promessas."
+        },
+        "observation": {
+          "en": "Love and keeping Jesus’ words recur throughout the passage. Jesus promises another Counselor, speaks of life shared with him, and answers Judas’s question by describing the Father and Son making their home with the one who loves him. He also identifies his words with the Father who sent him.",
+          "pt-BR": "O amor e a prática das palavras de Jesus se repetem ao longo da passagem. Jesus promete outro Consolador, fala da vida compartilhada com ele e responde à pergunta de Judas descrevendo o Pai e o Filho fazendo morada naquele que o ama. Também relaciona suas palavras ao Pai que o enviou."
+        },
+        "significance": {
+          "en": "Obedience is located within love, belonging and promised help, not described as detached performance. The disciples’ concern about presence matters to the meaning of the appeal. The words do not authorize treating a human leader’s every demand as if it were automatically a command of Jesus.",
+          "pt-BR": "A obediência se situa no amor, no pertencimento e na ajuda prometida, sem ser descrita como desempenho isolado. A preocupação dos discípulos com a presença importa para compreender o apelo. As palavras não autorizam tratar toda exigência de um líder humano como se fosse automaticamente um mandamento de Jesus."
+        },
+        "question": {
+          "en": "Which promises surround the repeated call to keep Jesus’ words, and how do they affect its meaning?",
+          "pt-BR": "Que promessas acompanham o chamado repetido para guardar as palavras de Jesus, e como influenciam seu significado?"
+        }
+      },
+      {
+        "id": "obedience-that-does-not-forget",
+        "reference": "Jas.1.19-27",
+        "title": {
+          "en": "Hearing that becomes speech and care",
+          "pt-BR": "Escuta que se torna fala e cuidado"
+        },
+        "context": {
+          "en": "James connects listening, speech and anger before urging readers to receive the implanted word. He then contrasts hearing with doing and uses a mirror to illustrate forgetfulness. The passage closes with practical tests involving the tongue, vulnerable people and resistance to corrupting patterns.",
+          "pt-BR": "Tiago relaciona escuta, fala e ira antes de pedir que os leitores recebam a palavra implantada. Depois contrasta ouvir e praticar, usando um espelho para ilustrar o esquecimento. A passagem termina com critérios concretos ligados à língua, a pessoas vulneráveis e à resistência a padrões que corrompem."
+        },
+        "observation": {
+          "en": "The forgetful hearer sees and walks away without a lasting response. The doer continues in the law described as freedom. James then rejects religious self-assurance accompanied by an uncontrolled tongue and names care for orphans and widows in distress as part of undefiled devotion.",
+          "pt-BR": "O ouvinte esquecido vê e se afasta sem uma resposta duradoura. Quem pratica persevera na lei descrita como liberdade. Tiago rejeita a segurança religiosa acompanhada de uma língua sem controle e apresenta o cuidado com órfãos e viúvas em aflição como parte de uma devoção sem mácula."
+        },
+        "significance": {
+          "en": "Receiving the word is not complete at the point of recognition or agreement. James tests its continuing effect in speech and responsibility toward others. The mirror image makes the issue concrete: a moment of seeing may fail to shape what a person does after leaving.",
+          "pt-BR": "Receber a palavra não se completa no reconhecimento ou na concordância. Tiago examina seu efeito contínuo na fala e na responsabilidade por outras pessoas. A imagem do espelho torna a questão concreta: um momento de percepção pode não orientar o que a pessoa faz depois de se afastar."
+        },
+        "question": {
+          "en": "How do the final examples about speech and care explain what the mirror illustration means by forgetting?",
+          "pt-BR": "Como os exemplos finais sobre fala e cuidado explicam o que a ilustração do espelho chama de esquecer?"
+        }
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "obedience-gift-and-instruction",
+        "title": {
+          "en": "Provision and rescue precede the response",
+          "pt-BR": "Provisão e resgate antecedem a resposta"
+        },
+        "references": [
+          "Exod.16.13-30",
+          "Exod.20.1-17"
+        ],
+        "explanation": {
+          "en": "The manna passage shows food given with instructions about gathering and rest. The commands begin by recalling liberation from slavery. In both, response occurs within an account of divine provision rather than in an empty setting. Compare how Sabbath rest extends that response beyond an isolated act to the habits and welfare of a community.",
+          "pt-BR": "A passagem do maná mostra alimento concedido com instruções de recolhimento e descanso. Os mandamentos começam lembrando a libertação da escravidão. Em ambos, a resposta acontece dentro de um relato de provisão divina, e não em um contexto vazio. Compare como o descanso sabático amplia essa resposta para os hábitos e o bem-estar de uma comunidade."
+        },
+        "difference": {
+          "en": "The manna instructions address a specific wilderness provision and change across the week. Exodus 20 states commands with a broader range of communal responsibilities. Their relation illuminates the narrative, but does not turn the manna’s storage rules into instructions for every later household.",
+          "pt-BR": "As instruções do maná tratam de uma provisão específica no deserto e mudam durante a semana. Êxodo 20 apresenta mandamentos com um alcance mais amplo de responsabilidades comunitárias. A relação esclarece a narrativa, mas não transforma as regras de armazenamento do maná em ordens para toda casa posterior."
+        }
+      },
+      {
+        "id": "obedience-hearing-love-and-practice",
+        "title": {
+          "en": "Hearing, love and a lasting response",
+          "pt-BR": "Escuta, amor e uma resposta duradoura"
+        },
+        "references": [
+          "Deut.6.1-9",
+          "John.14.15-24",
+          "Jas.1.19-27"
+        ],
+        "explanation": {
+          "en": "Deuteronomy keeps the words within the rhythms of a household; John relates keeping Jesus’ words to love and promised presence; James asks whether hearing changes speech and care. Together they provide a way to study the movement from attention to sustained practice, without reducing obedience to recalling information or completing an isolated religious action.",
+          "pt-BR": "Deuteronômio mantém as palavras nos ritmos da casa; João relaciona guardar as palavras de Jesus ao amor e à presença prometida; Tiago pergunta se a escuta transforma a fala e o cuidado. Juntos, oferecem um caminho para estudar a passagem da atenção à prática constante, sem reduzir a obediência a lembrar informações ou cumprir uma ação religiosa isolada."
+        },
+        "difference": {
+          "en": "Moses addresses Israel preparing for life in the land, Jesus addresses his disciples in farewell teaching, and James instructs his readers through ethical examples. The commands and promises should first be heard by those audiences before similarities are drawn for a thematic study.",
+          "pt-BR": "Moisés fala a Israel que se prepara para viver na terra, Jesus se dirige aos discípulos em seu ensino de despedida, e Tiago orienta os leitores por exemplos éticos. Os mandamentos e as promessas devem primeiro ser ouvidos por esses públicos, antes de traçar semelhanças para um estudo temático."
+        }
+      }
+    ],
+    "connections": [
+      {
+        "entityId": "editorial.event.manna",
+        "reference": "Exod.16.13-30",
+        "explanation": {
+          "en": "The manna event shows how the same community learns through provision, failed attention and rest. Its sequence gives substance to the question of what obedience requires in a particular situation.",
+          "pt-BR": "O acontecimento do maná mostra a mesma comunidade aprendendo pela provisão, pela falta de atenção e pelo descanso. Sua sequência dá conteúdo à pergunta sobre o que a obediência exige em uma situação específica."
+        }
+      },
+      {
+        "entityId": "fixture.person.moses",
+        "reference": "Exod.16.15-26",
+        "explanation": {
+          "en": "Moses explains the gift of food and communicates the different instructions for ordinary days and the Sabbath. Following his words alongside the people’s actions reveals where misunderstanding or refusal occurs.",
+          "pt-BR": "Moisés explica o alimento recebido e transmite as diferentes instruções para os dias comuns e o sábado. Acompanhar suas palavras junto às ações do povo mostra onde ocorrem incompreensão ou recusa."
+        }
+      },
+      {
+        "entityId": "fixture.place.egypt",
+        "reference": "Exod.20.1-2",
+        "explanation": {
+          "en": "Egypt appears here as the place of slavery from which Israel was brought out. That remembered rescue frames the commands that follow, giving the place a specific narrative role in the study.",
+          "pt-BR": "O Egito aparece aqui como o lugar da escravidão de onde Israel foi retirado. Esse resgate lembrado situa os mandamentos seguintes, dando ao lugar um papel narrativo específico neste estudo."
+        }
+      }
+    ]
+  },
+  {
+    "entityId": "editorial.theme.holiness",
+    "overview": {
+      "en": "Holiness in these passages concerns God’s presence, a people’s belonging and the conduct expected within that relationship. Sinai introduces preparation and limits around an encounter; the tabernacle scene places divine glory within Israel’s journey. Leviticus then connects the call to be holy with worship, family life, fair dealing and care for the vulnerable. First Peter reuses the holiness command for readers whose hope is centered on Christ, and Romans describes an embodied response to God’s mercies. Study these dimensions together without making them interchangeable. Ritual preparation is not identical to ethical conduct, but neither is absent from the biblical picture. Ask what is set apart, who is addressed, and how reverence affects the treatment of others.",
+      "pt-BR": "A santidade nestas passagens envolve a presença de Deus, o pertencimento de um povo e a conduta esperada nessa relação. O Sinai apresenta preparação e limites em torno de um encontro; a cena do tabernáculo situa a glória divina na jornada de Israel. Levítico relaciona o chamado à santidade com adoração, vida familiar, justiça e cuidado com pessoas vulneráveis. A primeira carta de Pedro retoma o mandamento da santidade para leitores cuja esperança se concentra em Cristo, e Romanos descreve uma resposta concreta às misericórdias de Deus. Estude essas dimensões juntas sem tratá-las como equivalentes. Preparação ritual não é o mesmo que conduta ética, mas ambas pertencem ao quadro bíblico. Pergunte o que é separado, a quem se dirige a palavra e como a reverência afeta o tratamento de outras pessoas.",
+      "references": [
+        "Exod.19.10-25",
+        "Exod.40.34-38",
+        "Lev.19.1-18",
+        "1Pet.1.13-25",
+        "Rom.12.1-2"
+      ]
+    },
+    "readings": [
+      {
+        "id": "holiness-preparing-for-the-encounter",
+        "reference": "Exod.19.10-25",
+        "title": {
+          "en": "Preparation and limits at Sinai",
+          "pt-BR": "Preparação e limites no Sinai"
+        },
+        "context": {
+          "en": "Moses receives instructions to prepare the people for the Lord’s descent on Sinai. The passage describes a set time, washing, boundaries and warnings before narrating the encounter. Read these instructions as preparation for this particular event, keeping their sequence with the mountain scene intact.",
+          "pt-BR": "Moisés recebe instruções para preparar o povo para a descida do Senhor sobre o Sinai. A passagem apresenta um tempo definido, lavagem, limites e advertências antes de narrar o encontro. Leia essas instruções como preparação para este acontecimento específico, mantendo sua sequência com a cena do monte."
+        },
+        "observation": {
+          "en": "The people prepare, gather at the foot of the mountain and witness thunder, smoke, fire and a powerful trumpet sound. Moses is called upward, then sent back to warn against breaking through. Even those with recognized religious roles are not exempt from the stated restrictions.",
+          "pt-BR": "O povo se prepara, reúne-se ao pé do monte e presencia trovões, fumaça, fogo e um forte som de trombeta. Moisés é chamado a subir e depois enviado de volta para advertir contra ultrapassar os limites. Nem quem possui funções religiosas reconhecidas fica dispensado das restrições apresentadas."
+        },
+        "significance": {
+          "en": "The encounter combines God’s approach with limits on human approach. Consecration is not permission to control or casually enter the divine presence. The passage’s temporary preparations and boundaries belong to this scene; they should not be converted without explanation into a universal ranking of people’s spiritual worth.",
+          "pt-BR": "O encontro reúne a aproximação de Deus e os limites da aproximação humana. A consagração não autoriza controlar a presença divina nem entrar nela de maneira casual. As preparações temporárias e os limites pertencem a esta cena; não devem se tornar, sem explicação, uma classificação universal do valor espiritual das pessoas."
+        },
+        "question": {
+          "en": "Why are warnings repeated after the people have already prepared, and who is included in those warnings?",
+          "pt-BR": "Por que as advertências são repetidas depois de o povo já estar preparado, e quem é incluído nelas?"
+        }
+      },
+      {
+        "id": "holiness-presence-on-the-journey",
+        "reference": "Exod.40.34-38",
+        "title": {
+          "en": "Glory and guidance at the tabernacle",
+          "pt-BR": "Glória e orientação no tabernáculo"
+        },
+        "context": {
+          "en": "Exodus closes with the cloud covering the tent and divine glory filling the tabernacle. The final verses then look across Israel’s journeys, describing movement and waiting in relation to the cloud. The scene joins a completed dwelling place with a people who still travel.",
+          "pt-BR": "Êxodo termina com a nuvem cobrindo a tenda e a glória divina enchendo o tabernáculo. Os últimos versículos passam a considerar as jornadas de Israel, descrevendo movimento e espera em relação à nuvem. A cena une uma morada concluída a um povo que continua em viagem."
+        },
+        "observation": {
+          "en": "Moses cannot enter because the cloud rests on the tent and the glory fills it. When the cloud lifts, Israel moves; when it remains, the people wait. Cloud by day and fire by night make the presence visible to the whole community throughout its journeys.",
+          "pt-BR": "Moisés não consegue entrar porque a nuvem permanece sobre a tenda e a glória a enche. Quando a nuvem se levanta, Israel avança; quando permanece, o povo espera. Nuvem de dia e fogo à noite tornam a presença visível a toda a comunidade durante suas jornadas."
+        },
+        "significance": {
+          "en": "The tabernacle’s role is not only to mark a sacred location but to accompany the community’s movement under divine direction. Moses’ inability to enter highlights the intensity of the presence, without the text describing it as punishment for him. Nearness and reverence remain together.",
+          "pt-BR": "O tabernáculo não serve apenas para marcar um local sagrado, mas para acompanhar o movimento da comunidade sob direção divina. A impossibilidade de Moisés entrar destaca a intensidade da presença, sem que o texto a descreva como punição a ele. Proximidade e reverência permanecem juntas."
+        },
+        "question": {
+          "en": "How do Moses’ inability to enter and the people’s guidance by the cloud express different aspects of the same presence?",
+          "pt-BR": "Como a impossibilidade de Moisés entrar e a orientação do povo pela nuvem expressam aspectos diferentes da mesma presença?"
+        }
+      },
+      {
+        "id": "holiness-and-the-neighbors-life",
+        "reference": "Lev.19.1-18",
+        "title": {
+          "en": "Holiness in worship and everyday justice",
+          "pt-BR": "Santidade na adoração e na justiça cotidiana"
+        },
+        "context": {
+          "en": "The Lord tells Moses to address the whole congregation with a call to be holy because God is holy. The following instructions range across family, Sabbath, sacrifice, harvest, wages, courts and neighborly relationships. Their variety belongs to the passage’s presentation of holiness.",
+          "pt-BR": "O Senhor manda Moisés dirigir-se a toda a comunidade com o chamado para ser santa porque Deus é santo. As instruções seguintes abrangem família, sábado, sacrifício, colheita, salários, tribunais e relações com o próximo. Essa variedade faz parte da apresentação da santidade na passagem."
+        },
+        "observation": {
+          "en": "The instructions leave harvest portions for poor people and foreigners, forbid withheld wages and exploitation of disability, and require fair judgment. They also reject hatred, revenge and grudges while commanding love for the neighbor. Repeated identification of the Lord links these actions with the opening call.",
+          "pt-BR": "As instruções reservam parte da colheita para pobres e estrangeiros, proíbem reter salários e explorar deficiências e exigem julgamento justo. Também rejeitam ódio, vingança e rancor, ordenando o amor ao próximo. A identificação repetida do Senhor relaciona essas ações ao chamado inicial da passagem."
+        },
+        "significance": {
+          "en": "Holiness cannot be confined here to ritual observance or personal distance from others. The text gives it an economic and social expression in how vulnerable people and neighbors are treated. At the same time, worship instructions remain present, so ethics and ritual should not be separated by ignoring either group.",
+          "pt-BR": "A santidade aqui não pode ser limitada à observância ritual nem ao afastamento pessoal dos outros. O texto lhe dá expressão econômica e social no tratamento de pessoas vulneráveis e do próximo. As instruções de adoração também permanecem presentes; não se deve separar ética e ritual simplesmente ignorando um dos grupos."
+        },
+        "question": {
+          "en": "Choose two commands that protect someone vulnerable: how do they make the opening call to holiness concrete?",
+          "pt-BR": "Escolha dois mandamentos que protegem alguém vulnerável: como tornam concreto o chamado inicial à santidade?"
+        }
+      },
+      {
+        "id": "holiness-hope-and-mutual-love",
+        "reference": "1Pet.1.13-25",
+        "title": {
+          "en": "A holy life shaped by hope and mutual love",
+          "pt-BR": "Uma vida santa orientada pela esperança e pelo amor mútuo"
+        },
+        "context": {
+          "en": "The letter addresses its readers with commands to prepare their minds, remain sober and set their hope on grace associated with Jesus Christ. It then reuses the scriptural call to holiness. The argument links changed conduct with redemption, reverence, enduring divine speech and love for one another.",
+          "pt-BR": "A carta chama seus leitores a preparar a mente, manter a sobriedade e colocar a esperança na graça relacionada a Jesus Cristo. Depois retoma o chamado bíblico à santidade. O argumento une mudança de conduta, redenção, reverência, palavra divina permanente e amor de uns pelos outros."
+        },
+        "observation": {
+          "en": "The readers are told not to return to former desires but to be holy in all conduct. Redemption is described through Christ’s precious blood rather than perishable wealth. The passage then turns to sincere mutual love and contrasts human frailty with the enduring word they have received.",
+          "pt-BR": "Os leitores são orientados a não voltar aos desejos anteriores, mas a ser santos em toda a conduta. A redenção é descrita por meio do sangue precioso de Cristo, e não de riquezas perecíveis. A passagem então trata do amor mútuo sincero e contrasta a fragilidade humana com a palavra permanente recebida."
+        },
+        "significance": {
+          "en": "The holiness command is applied within an explicitly Christ-centered account of hope and redemption. Its ethical direction includes love rather than isolation from fellow believers. Reading it beside Leviticus shows both a reused call and a new literary setting; the surrounding arguments should not be treated as identical.",
+          "pt-BR": "O mandamento da santidade é aplicado dentro de uma apresentação da esperança e da redenção centrada explicitamente em Cristo. Sua direção ética inclui amor, e não isolamento dos demais fiéis. Lê-lo ao lado de Levítico mostra um chamado retomado em novo contexto literário; os argumentos ao redor não são idênticos."
+        },
+        "question": {
+          "en": "How do redemption, hope and the command to love one another explain what holy conduct means in this passage?",
+          "pt-BR": "Como a redenção, a esperança e o mandamento de amar uns aos outros ajudam a explicar a conduta santa nesta passagem?"
+        }
+      },
+      {
+        "id": "holiness-and-renewed-discernment",
+        "reference": "Rom.12.1-2",
+        "title": {
+          "en": "A holy offering expressed through a renewed life",
+          "pt-BR": "Uma oferta santa expressa em uma vida renovada"
+        },
+        "context": {
+          "en": "Paul appeals to God’s mercies and describes the readers’ bodily lives with the language of sacrifice. Holiness appears within this description of an offering acceptable to God. The next verse clarifies the response through a contrast between conformity to the age and renewal of the mind.",
+          "pt-BR": "Paulo apela às misericórdias de Deus e descreve a vida corporal dos leitores pela linguagem do sacrifício. A santidade aparece na descrição de uma oferta agradável a Deus. O versículo seguinte esclarece a resposta pelo contraste entre conformidade com o presente século e renovação da mente."
+        },
+        "observation": {
+          "en": "The sacrifice is living and embodied, and the change described involves the mind’s renewal. The purpose is discernment of God’s will rather than mere difference from surrounding people. The appeal brings what the readers do with their bodies into relation with how they understand and evaluate their choices.",
+          "pt-BR": "O sacrifício é vivo e corporal, e a transformação descrita envolve a renovação da mente. O propósito é discernir a vontade de Deus, não apenas ser diferente das pessoas ao redor. O apelo relaciona o que os leitores fazem com o corpo à maneira como compreendem e avaliam suas escolhas."
+        },
+        "significance": {
+          "en": "In this passage, being holy is connected with offering life to God in response to mercy. Nonconformity has a stated goal: renewed discernment. Studying both verses guards against defining holiness solely by visible separation, while also resisting the idea that inner intention has no consequence for bodily conduct.",
+          "pt-BR": "Nesta passagem, ser santo se relaciona a oferecer a vida a Deus em resposta à misericórdia. A não conformidade tem um objetivo declarado: o discernimento renovado. Estudar os dois versículos evita definir santidade apenas por separação visível e também rejeita a ideia de que a intenção interior não afeta a conduta corporal."
+        },
+        "question": {
+          "en": "What is the purpose of the renewal in verse 2, and how does it clarify the holy offering described in verse 1?",
+          "pt-BR": "Qual é o propósito da renovação no versículo 2, e como esclarece a oferta santa descrita no versículo 1?"
+        }
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "holiness-presence-and-neighbor",
+        "title": {
+          "en": "Reverence before God and responsibility toward neighbors",
+          "pt-BR": "Reverência diante de Deus e responsabilidade pelo próximo"
+        },
+        "references": [
+          "Exod.19.10-25",
+          "Exod.40.34-38",
+          "Lev.19.1-18"
+        ],
+        "explanation": {
+          "en": "The mountain and tabernacle passages portray divine presence as near yet not subject to casual human access. Leviticus directs the call to holiness toward an entire community and includes everyday treatment of others. Together the readings keep reverence, belonging and responsibility within the study, so that holiness is not reduced to either a sacred boundary or a general ethical slogan.",
+          "pt-BR": "As passagens do monte e do tabernáculo apresentam a presença divina como próxima, mas não sujeita a um acesso humano casual. Levítico dirige o chamado à santidade a toda a comunidade e inclui o tratamento cotidiano dos outros. Juntas, as leituras mantêm reverência, pertencimento e responsabilidade no estudo, sem reduzir santidade a uma fronteira sagrada ou a um lema ético geral."
+        },
+        "difference": {
+          "en": "Exodus narrates particular encounters and movements; Leviticus gives varied instructions for communal life. Washing before Sinai is not the same kind of action as paying wages fairly. Their relationship can be studied without making every ritual detail an ethical metaphor or treating ethical commands as optional imagery.",
+          "pt-BR": "Êxodo narra encontros e movimentos específicos; Levítico apresenta instruções variadas para a vida comunitária. Lavar-se antes do encontro no Sinai não é o mesmo tipo de ação que pagar salários corretamente. É possível estudar sua relação sem transformar todo detalhe ritual em metáfora ética nem tratar os mandamentos éticos como imagens opcionais."
+        }
+      },
+      {
+        "id": "holiness-a-call-reused",
+        "title": {
+          "en": "A holiness call reused in later Christian teaching",
+          "pt-BR": "Um chamado à santidade retomado no ensino cristão posterior"
+        },
+        "references": [
+          "Lev.19.1-18",
+          "1Pet.1.13-25",
+          "Rom.12.1-2"
+        ],
+        "explanation": {
+          "en": "Leviticus grounds the community’s holiness in God’s holiness and gives concrete examples of neighborly responsibility. First Peter repeats that scriptural call while grounding its appeal in hope and redemption through Christ. Romans uses sacrificial language for a life responding to mercy. Compare the stated grounds and practical direction of each appeal, including what each says about the person’s relation to God.",
+          "pt-BR": "Levítico fundamenta a santidade da comunidade na santidade de Deus e oferece exemplos concretos de responsabilidade pelo próximo. A primeira carta de Pedro repete esse chamado bíblico, fundamentando seu apelo na esperança e na redenção por Cristo. Romanos usa a linguagem sacrificial para uma vida que responde à misericórdia. Compare os fundamentos declarados e a direção prática de cada apelo, incluindo a relação da pessoa com Deus."
+        },
+        "difference": {
+          "en": "First Peter directly reuses holiness language; Romans 12 offers a thematic parallel, not an explicit quotation of Leviticus 19. The later letters address their own readers and concerns. Their connections do not establish that every instruction in Leviticus is being repeated in the same form.",
+          "pt-BR": "A primeira carta de Pedro retoma diretamente a linguagem da santidade; Romanos 12 oferece um paralelo temático, não uma citação explícita de Levítico 19. As cartas posteriores tratam de seus próprios leitores e questões. As conexões não estabelecem que toda instrução de Levítico esteja sendo repetida da mesma maneira."
+        }
+      }
+    ],
+    "connections": [
+      {
+        "entityId": "step.place.H5514G",
+        "reference": "Exod.19.16-25",
+        "explanation": {
+          "en": "Sinai is the named mountain of the encounter, with boundaries and differentiated access. Its narrative role explains the preparations without making a claim about a specific modern location.",
+          "pt-BR": "O Sinai é o monte nomeado no encontro, com limites e formas distintas de acesso. Seu papel narrativo explica a preparação sem afirmar uma localização moderna específica."
+        }
+      },
+      {
+        "entityId": "editorial.event.tabernacle",
+        "reference": "Exod.40.34-38",
+        "explanation": {
+          "en": "The completion of the tabernacle leads to a scene of glory and guidance. This event links the study of holiness to a people’s continuing journey, not only to a fixed sacred place.",
+          "pt-BR": "A conclusão do tabernáculo leva a uma cena de glória e orientação. Esse acontecimento relaciona o estudo da santidade à jornada contínua de um povo, e não apenas a um lugar sagrado fixo."
+        }
+      },
+      {
+        "entityId": "fixture.person.moses",
+        "reference": "Exod.40.34-35",
+        "explanation": {
+          "en": "Even Moses cannot enter the tent when glory fills it. The explanation given concerns the cloud and divine presence; the passage does not attribute the restriction to a newly committed offense by Moses.",
+          "pt-BR": "Nem Moisés consegue entrar na tenda quando a glória a enche. A explicação dada se refere à nuvem e à presença divina; a passagem não atribui a restrição a uma nova falta cometida por Moisés."
+        }
+      }
+    ]
+  }
+]

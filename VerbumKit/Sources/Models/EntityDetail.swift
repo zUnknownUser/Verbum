@@ -46,6 +46,7 @@ public struct GraphSnapshot: Codable, Equatable, Sendable {
 /// What an entity page shows beyond the graph (spec §9). Fields are optional
 /// because not every kind has every fact, and absent is better than invented.
 public struct EntityDetail: Codable, Equatable, Sendable {
+    public let themeStudy: ThemeStudy?
     public let eventSequence: EventStudySequence?
     public let originalTerm: OriginalTermPresentation?
     public let entity: BibleEntity
@@ -71,8 +72,10 @@ public struct EntityDetail: Codable, Equatable, Sendable {
         keyPassages: [PassageReference] = [],
         sources: [SourceReference] = [],
         originalTerm: OriginalTermPresentation? = nil,
-        eventSequence: EventStudySequence? = nil
+        eventSequence: EventStudySequence? = nil,
+        themeStudy: ThemeStudy? = nil
     ) {
+        self.themeStudy = themeStudy
         self.eventSequence = eventSequence
         self.originalTerm = originalTerm
         self.entity = entity

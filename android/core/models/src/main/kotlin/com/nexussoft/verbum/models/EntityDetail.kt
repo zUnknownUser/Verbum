@@ -30,6 +30,7 @@ data class EntityDetail(
     val sources: List<SourceReference> = emptyList(),
     val originalTerm: OriginalTermPresentation? = null,
     val eventSequence: EventStudySequence? = null,
+    val themeStudy: ThemeStudy? = null,
 )
 
 data class OriginalTermPresentation(val language: String, val transliteration: String, val strong: String)

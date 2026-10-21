@@ -7,6 +7,7 @@ import SwiftUI
 struct VerseStudyView: View {
     @Bindable var store: StoreOf<VerseStudyFeature>
     @Environment(\.dismiss) private var dismiss
+    @State private var entityScrollPosition = LegacyReaderScrollPosition()
     var body: some View {
         VStack(spacing: 0) {
             HStack {
@@ -54,11 +55,19 @@ struct VerseStudyView: View {
                     .frame(maxWidth: Spacing.readingMaxWidth, alignment: .leading)
                     .frame(maxWidth: .infinity)
                     .padding(.horizontal, Spacing.lg).padding(.bottom, Spacing.xxl)
+                    .background(LegacyReaderScrollBridge(position: entityScrollPosition))
                 }.id(store.previewReference)
             }
         }
         .foregroundStyle(Palette.ink).tint(Palette.accent)
         .interactiveDismissDisabled(store.saving || store.annotation.note != store.savedNote)
+        .sheet(item: $store.scope(state: \.guidePreview, action: \.guidePreview)) { preview in
+            PassagePreviewView(store: preview)
+        }
+        .onChange(of: store.entity?.entity.id) { _, id in
+            guard let id else { return }
+            entityScrollPosition.scrollTo(y: store.entityScrollOffsets[id] ?? 0)
+        }
         .task { await store.send(.task).finish() }
     }
     @ViewBuilder private var content: some View {
@@ -108,15 +117,33 @@ struct VerseStudyView: View {
         case .context:
             if store.entityLoading { ProgressView() }
             else if let detail = store.entity {
-                Button { store.send(.closeEntity) } label: { Label(L10n.t("Chapter context"), systemImage: "chevron.left") }.font(Typography.footnote)
+                Button { closeEntity() } label: {
+                    Label(store.entityHistory.isEmpty ? L10n.t("Chapter context") : StudyGuideCopy.back, systemImage: "chevron.left")
+                }.font(Typography.footnote)
                 Text(detail.entity.name).font(Typography.editorialTitle)
                 if let summary = detail.entity.summary { Text(summary).font(Typography.scripture) }
                 if let role = detail.role { Text(role).font(Typography.subheadline) }
                 if let dates = detail.approximateDates { Text(dates).font(Typography.footnote) }
+                if let study = detail.themeStudy {
+                    ThemeStudyView(
+                        study: study, sources: detail.sources.filter { study.sourceReferenceIds.contains($0.id) },
+                        expandedSections: store.expandedThemeSections[detail.entity.id] ?? [],
+                        setExpanded: { store.send(.themeSectionChanged($0, $1)) },
+                        openPassage: { store.send(.previewThemePassage($0)) },
+                        openEntity: { entity in
+                            saveEntityOffset()
+                            store.send(.entityTapped(entity))
+                        }
+                    )
+                }
+                if detail.themeStudy != nil && !store.studyReferences.isEmpty {
+                    Text(StudyGuideCopy.furtherReading).overline()
+                }
                 referenceList
-                sources(detail.sources)
+                let otherSources = detail.sources.filter { !(detail.themeStudy?.sourceReferenceIds.contains($0.id) ?? false) }
+                if detail.themeStudy == nil || !otherSources.isEmpty { sources(otherSources) }
             } else if store.entityFailed {
-                Button { store.send(.closeEntity) } label: { Label(StudyGuideCopy.back, systemImage: "chevron.left") }
+                Button { closeEntity() } label: { Label(StudyGuideCopy.back, systemImage: "chevron.left") }
                 Text(L10n.t("Could not load this study layer.")).font(Typography.subheadline)
                 Button(L10n.t("Try Again")) { store.send(.retryEntity) }
             } else if !store.candidates.isEmpty {
@@ -197,18 +224,13 @@ struct VerseStudyView: View {
         Button { store.send(.closePreview) } label: { Label(StudyGuideCopy.back, systemImage: "chevron.left") }
             .font(Typography.footnote)
         if let reference = store.previewReference {
-            Text(reference.formatted).font(Typography.editorialTitle)
-            if store.previewLoading { ProgressView() }
-            else if let passage = store.preview {
-                Text(HelloAOTranslation.name(for: passage.translationId)).font(Typography.caption).foregroundStyle(Palette.inkSecondary)
-                Text(passage.text).font(Typography.scripture).textSelection(.enabled)
-                Button(StudyGuideCopy.openReader) { store.send(.passageTapped(reference)) }.disabled(store.saving)
-                saveStatus
-            } else if let error = store.previewError {
-                Text(error.title).font(Typography.editorialHeadline)
-                Text(error.message).font(Typography.subheadline).foregroundStyle(Palette.inkSecondary)
-                Button(L10n.t("Try Again")) { store.send(.previewPassage(reference)) }
-            }
+            ScripturePassagePreviewContent(
+                reference: reference, passage: store.preview, loading: store.previewLoading,
+                error: store.previewError, readerDisabled: store.saving,
+                retry: { store.send(.previewPassage(reference)) },
+                openReader: { store.send(.passageTapped(reference)) }
+            )
+            if store.preview != nil { saveStatus }
         }
     }
     @ViewBuilder private var saveStatus: some View {
@@ -230,8 +252,16 @@ struct VerseStudyView: View {
             }.frame(maxWidth: .infinity, alignment: .leading).padding(.vertical, Spacing.xs)
         }.buttonStyle(.plain)
     }
+    private func saveEntityOffset() {
+        guard let id = store.entity?.entity.id, let offset = entityScrollPosition.currentOffset else { return }
+        store.send(.entityScrollOffsetChanged(id, offset))
+    }
+    private func closeEntity() {
+        saveEntityOffset()
+        store.send(.closeEntity)
+    }
     private func passage(_ reference: PassageReference) -> some View {
-        Button { store.send(.previewPassage(reference)) } label: {
+        Button { store.send(store.entity?.themeStudy != nil ? .previewThemePassage(reference) : .previewPassage(reference)) } label: {
             Label(reference.formatted, systemImage: "arrow.turn.down.right").font(Typography.navigationSerif)
         }
     }

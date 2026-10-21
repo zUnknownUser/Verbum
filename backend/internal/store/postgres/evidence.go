@@ -12,5 +12,6 @@ func (s *Store) EntitySources(ctx context.Context, ids []string) ([]domain.Sourc
 	return readJSON[[]domain.SourceReference](ctx, s, `SELECT COALESCE(jsonb_agg(`+localizedSourceJSON("$2")+` ORDER BY s.id),'[]'::jsonb)
  FROM sources s WHERE s.id IN (
  SELECT r.source_id FROM entity_source_records r WHERE r.entity_id=ANY($1::text[])
- UNION SELECT ps.source_id FROM entity_profile_sources ps JOIN entity_profiles ep ON ep.entity_id=ps.entity_id WHERE ps.entity_id=ANY($1::text[]) AND ep.presentations ? $2)`, ids, store.Language(ctx))
+ UNION SELECT ps.source_id FROM entity_profile_sources ps JOIN entity_profiles ep ON ep.entity_id=ps.entity_id WHERE ps.entity_id=ANY($1::text[]) AND ep.presentations ? $2
+ UNION SELECT ss.source_id FROM theme_study_sources ss JOIN theme_studies ts ON ts.entity_id=ss.entity_id WHERE ss.entity_id=ANY($1::text[]) AND ts.presentations ? $2)`, ids, store.Language(ctx))
 }

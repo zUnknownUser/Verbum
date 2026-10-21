@@ -392,8 +392,51 @@ class EntityProfile(Model):
     previousHash: Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")] | None = None
 
 
+class ThemeStudyReading(Model):
+    id: Text
+    title: Text
+    reference: Reference
+    context: Text
+    observation: Text
+    significance: Text
+    question: Text
+
+
+class ThemeStudyComparison(Model):
+    id: Text
+    title: Text
+    references: Annotated[list[Reference], Field(min_length=2, max_length=4)]
+    explanation: Text
+    difference: Text
+
+
+class ThemeStudyConnection(Model):
+    entityId: Text
+    reference: Reference
+    explanation: Text
+
+
+class ThemeStudyOverview(StudyNote):
+    references: Annotated[list[Reference], Field(min_length=1, max_length=5)]
+
+
+class ThemeStudyPresentation(Model):
+    overview: ThemeStudyOverview
+    readings: Annotated[list[ThemeStudyReading], Field(min_length=3, max_length=6)]
+    comparisons: Annotated[list[ThemeStudyComparison], Field(min_length=1, max_length=3)]
+    connections: Annotated[list[ThemeStudyConnection], Field(min_length=1, max_length=4)]
+    sourceReferenceIds: Annotated[list[Text], Field(min_length=2)]
+
+
+class ThemeStudy(Model):
+    entityId: Text
+    presentations: dict[str, ThemeStudyPresentation]
+    previousHash: Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")] | None = None
+
+
 class Bundle(Model):
-    version: Literal[1, 2, 3, 4, 5, 6, 7, 8, 9] = 1
+    version: Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10] = 1
+    themeStudies: list[ThemeStudy] | None = None
     entityProfiles: list[EntityProfile] | None = None
     chapterStudies: list[ChapterStudy] | None = None
     eventSequences: list[EventSequence] | None = None
@@ -412,6 +455,8 @@ class Bundle(Model):
     @model_serializer(mode="wrap")
     def serialize_bundle(self, handler):
         value = handler(self)
+        if self.version != 10:
+            value.pop("themeStudies", None)
         if self.version != 9:
             value.pop("entityProfiles", None)
         if self.version != 8:
@@ -432,6 +477,49 @@ class Bundle(Model):
 
     @model_validator(mode="after")
     def evidence(self) -> Self:
+        if (self.version == 10) != (self.themeStudies is not None):
+            raise ValueError("version 10 requires theme studies")
+        if self.themeStudies is not None:
+            if self.kind != "editorial" or not self.themeStudies or any((
+                self.content.entities, self.content.details, self.content.timeline,
+                self.content.dailyVersePool,
+            )):
+                raise ValueError("theme studies cannot replace other catalogues")
+            unique([s.entityId for s in self.themeStudies], "theme studies")
+            known = set(self.content.referencedEntityIds)
+            sources = {s.id for s in self.content.sources}
+            for study in self.themeStudies:
+                if study.entityId not in known:
+                    raise ValueError("theme study requires an existing identity")
+                if set(study.presentations) != {"en", "pt-BR"}:
+                    raise ValueError("theme studies require both languages")
+                en, pt = study.presentations["en"], study.presentations["pt-BR"]
+                if en.overview.references != pt.overview.references:
+                    raise ValueError("theme overview evidence differs between languages")
+                for language, p in study.presentations.items():
+                    unique([r.id for r in p.readings], "theme reading IDs")
+                    unique([r.id for r in p.comparisons], "theme comparison IDs")
+                    unique([r.entityId for r in p.connections], "theme connected entities")
+                    unique(p.sourceReferenceIds, "theme study sources")
+                    if not set(p.sourceReferenceIds) <= sources:
+                        raise ValueError("theme study references unknown source")
+                    if any(c.entityId not in known or c.entityId == study.entityId
+                           for c in p.connections):
+                        raise ValueError("theme study references unknown or self connection")
+                if ([(r.id, r.reference) for r in en.readings] !=
+                        [(r.id, r.reference) for r in pt.readings] or
+                    [(r.id, r.references) for r in en.comparisons] !=
+                        [(r.id, r.references) for r in pt.comparisons] or
+                    [(c.entityId, c.reference) for c in en.connections] !=
+                        [(c.entityId, c.reference) for c in pt.connections] or
+                    en.sourceReferenceIds != pt.sourceReferenceIds):
+                    raise ValueError("theme study structure differs between languages")
+            theme_ids = {s.entityId for s in self.themeStudies}
+            pairs = [(r.sourceId, r.targetId) for r in self.content.relationships]
+            unique([str(p) for p in pairs], "theme study connections")
+            if any(r.targetId not in theme_ids or r.type != "relatedToTheme"
+                   for r in self.content.relationships):
+                raise ValueError("theme study links must point to a studied theme")
         if (self.version == 9) != (self.entityProfiles is not None):
             raise ValueError("version 9 requires entity profiles")
         if self.entityProfiles is not None:
@@ -544,7 +632,7 @@ class Bundle(Model):
                 raise ValueError("timeline binding references an unknown event")
         if (self.version in (5, 7)) != (self.timelineDiscovery is not None):
             raise ValueError("version 5 requires timeline discovery")
-        if self.content.referencedEntityIds and self.version not in (5, 6, 7, 9):
+        if self.content.referencedEntityIds and self.version not in (5, 6, 7, 9, 10):
             raise ValueError("external graph links require version 5 or 6")
         if self.timelineDiscovery is not None:
             if self.kind != "editorial" or self.content.entities or self.content.relationships or self.content.details or self.content.dailyVersePool:

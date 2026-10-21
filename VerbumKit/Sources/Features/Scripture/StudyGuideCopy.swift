@@ -8,6 +8,7 @@ enum StudyGuideCopy {
     static var chapterScope: String { portuguese ? "Conexões documentadas para este capítulo. Consulte as fontes e as passagens para aprofundar o estudo." : "Documented connections for this chapter. Consult the sources and passages to study further." }
     static var back: String { portuguese ? "Voltar ao estudo" : "Back to study" }
     static var openReader: String { portuguese ? "Abrir na leitura" : "Open in reader" }
+    static var furtherReading: String { portuguese ? "Outras leituras" : "Further reading" }
     static var showMore: String { portuguese ? "Mostrar mais" : "Show more" }
     static func count(_ visible: Int, of total: Int) -> String {
         portuguese ? "\(visible) de \(total)" : "\(visible) of \(total)"

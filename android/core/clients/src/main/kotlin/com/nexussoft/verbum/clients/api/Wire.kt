@@ -72,8 +72,9 @@ internal data class WireEntityDetail(
     val sources: List<WireSourceReference> = emptyList(),
     val originalTerm: WireOriginalTerm? = null,
     val eventSequence: WireEventStudySequence? = null,
+    val themeStudy: WireThemeStudy? = null,
 ) {
-    fun toModel() = EntityDetail(entity.toModel(), aliases, approximateDates, role, modernGeography, keyPassages.map { it.toModel() }, sources.map { it.toModel() }, originalTerm?.toModel(), eventSequence?.toModel())
+    fun toModel() = EntityDetail(entity.toModel(), aliases, approximateDates, role, modernGeography, keyPassages.map { it.toModel() }, sources.map { it.toModel() }, originalTerm?.toModel(), eventSequence?.toModel(), themeStudy?.toModel())
 }
 
 @Serializable

@@ -48,6 +48,7 @@ class ContractTest {
         val live = LiveGraphClient(api("entities/david.json", "/v1/entities/fixture.person.david?lang=${BookLanguage.current.tag}"))
         assertEquals(FixtureGraphClient.detail("fixture.person.david"), live.detail("fixture.person.david"))
         assertEquals(FixtureGraphClient.entity("fixture.person.david"), live.entity("fixture.person.david"))
+        assertTrue(live.detail("fixture.person.david").themeStudy == null, "older details remain compatible")
     }
 
     @Test

@@ -227,7 +227,7 @@ final class LegacyReaderScrollPosition {
     }
 }
 
-private struct LegacyReaderScrollBridge: UIViewRepresentable {
+struct LegacyReaderScrollBridge: UIViewRepresentable {
     let position: LegacyReaderScrollPosition
 
     func makeUIView(context: Context) -> Probe {

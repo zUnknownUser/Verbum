@@ -41,7 +41,7 @@ class EntityDetailFeatureTest {
         val store = TestStore(State(EntityFixtures.david.id), EntityDetailFeature.reducer(StubGraphClient(
             detailStub = { EntityFixtures.page.detail },
             neighborsStub = { id, limit -> assertEquals(EntityFixtures.david.id, id); assertEquals(12, limit); EntityFixtures.page.neighborhood },
-        )))
+        ), StubBibleClient()))
         store.send(Action.Started) { it.copy(content = Content.Loading) }
         store.receive(Action.PageLoaded(EntityFixtures.page)) { it.copy(content = Content.Loaded(EntityFixtures.page)) }
         val page = (store.state.content as Content.Loaded).page
@@ -56,7 +56,7 @@ class EntityDetailFeatureTest {
         val store = TestStore(State("x"), EntityDetailFeature.reducer(StubGraphClient(
             detailStub = { throw IllegalStateException("boom") },
             neighborsStub = { _, _ -> throw IllegalStateException("boom") },
-        )))
+        ), StubBibleClient()))
         store.send(Action.Started) { it.copy(content = Content.Loading) }
         store.receive(Action.PageFailed) { it.copy(content = Content.Failed) }
         store.send(Action.RetryTapped) { it.copy(content = Content.Loading) }
@@ -66,7 +66,7 @@ class EntityDetailFeatureTest {
 
     @Test
     fun passagesAndEntitiesBecomeDelegates() = runTest {
-        val store = TestStore(State(EntityFixtures.david.id), EntityDetailFeature.reducer(StubGraphClient()))
+        val store = TestStore(State(EntityFixtures.david.id), EntityDetailFeature.reducer(StubGraphClient(), StubBibleClient()))
         store.send(Action.PassageTapped(PassageReference("1Sam", 17)))
         store.receive(Action.Delegate(DelegateAction.OpenPassage(PassageReference("1Sam", 17))))
         store.send(Action.EntityTapped(EntityFixtures.goliath))

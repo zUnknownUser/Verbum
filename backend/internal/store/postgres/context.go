@@ -40,6 +40,7 @@ func (s *Store) Context(ctx context.Context, bookID string, chapter int) (domain
  ORDER BY o.book_id,o.chapter,o.verse LIMIT 24
  ), source_ids AS (
  SELECT source_id FROM selected_records
+ UNION SELECT ss.source_id FROM theme_study_sources ss JOIN linked l ON l.id=ss.entity_id JOIN theme_studies ts ON ts.entity_id=ss.entity_id WHERE ts.presentations ? $4
  UNION SELECT source_id FROM chapter_study_sources
  WHERE book_id=$2 AND chapter=$3 AND EXISTS (SELECT 1 FROM study)
  UNION SELECT rs.source_id FROM relationship_sources rs JOIN direct_edges r ON r.id=rs.relationship_id

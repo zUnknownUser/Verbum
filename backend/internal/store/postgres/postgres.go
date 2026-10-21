@@ -187,6 +187,12 @@ func (s *Store) EntitiesForPassages(ctx context.Context, refs []domain.PassageRe
 func (s *Store) Detail(ctx context.Context, id string) (domain.EntityDetail, error) {
 	return readJSON[domain.EntityDetail](ctx, s, `SELECT jsonb_build_object(
  'entity',`+localizedEntityJSON("$2")+`,
+ 'themeStudy',CASE WHEN ts.body IS NOT NULL THEN ts.body || jsonb_build_object(
+ 'connections',COALESCE((SELECT jsonb_agg(jsonb_build_object(
+ 'entity',`+localizedEntityJSON("$2")+`,'reference',c.value->'reference',
+ 'explanation',c.value->>'explanation') ORDER BY c.position)
+ FROM jsonb_array_elements(ts.body->'connections') WITH ORDINALITY c(value,position)
+ JOIN entities e ON e.id=c.value->>'entityId'),'[]'::jsonb)) END,
  'eventSequence',(SELECT jsonb_build_object(
  'eraId',seq.era_id,'title',seq.presentations->$2->>'title','context',seq.presentations->$2->>'context',
  'position',si.position,'total',(SELECT count(*) FROM event_sequence_items x WHERE x.era_id=si.era_id),
@@ -199,8 +205,11 @@ func (s *Store) Detail(ctx context.Context, id string) (domain.EntityDetail, err
  'approximateDates',CASE WHEN ep.body IS NULL THEN COALESCE(dl.fields->>'approximateDates',CASE WHEN $2='en' THEN d.approximate_dates END) END,
  'role',COALESCE(ep.body->>'role',dl.fields->>'role',CASE WHEN $2='en' THEN d.role END),'modernGeography',CASE WHEN ep.body IS NOT NULL THEN ep.body->>'modernGeography' ELSE COALESCE(dl.fields->>'modernGeography',CASE WHEN $2='en' THEN d.modern_geography END) END,
  'keyPassages',COALESCE((SELECT jsonb_agg(`+passageJSON+` ORDER BY p.priority,p.position) FROM (
- SELECT p.*,0 priority FROM entity_profile_passages p WHERE p.entity_id=e.id AND ep.body IS NOT NULL
+ SELECT p.*,-1 priority FROM theme_study_passages p WHERE p.entity_id=e.id AND ts.body IS NOT NULL
+ UNION ALL SELECT p.*,0 priority FROM entity_profile_passages p WHERE p.entity_id=e.id AND ep.body IS NOT NULL
  UNION ALL SELECT p.*,1 priority FROM entity_key_passages p WHERE p.entity_id=e.id AND NOT EXISTS (
+ SELECT 1 FROM theme_study_passages x WHERE x.entity_id=e.id AND ts.body IS NOT NULL AND
+ (x.book_id,x.chapter,x.verse_start,x.verse_end) IS NOT DISTINCT FROM (p.book_id,p.chapter,p.verse_start,p.verse_end)) AND NOT EXISTS (
  SELECT 1 FROM entity_profile_passages x WHERE x.entity_id=e.id AND ep.body IS NOT NULL AND
  (x.book_id,x.chapter,x.verse_start,x.verse_end) IS NOT DISTINCT FROM (p.book_id,p.chapter,p.verse_start,p.verse_end))
  ) p),'[]'::jsonb),
@@ -208,6 +217,7 @@ func (s *Store) Detail(ctx context.Context, id string) (domain.EntityDetail, err
  SELECT ds.source_id FROM entity_detail_sources ds WHERE ds.entity_id=e.id
  UNION SELECT es.source_id FROM entity_sources es WHERE es.entity_id=e.id
  UNION SELECT ps.source_id FROM entity_profile_sources ps WHERE ps.entity_id=e.id AND ep.body IS NOT NULL
+ UNION SELECT ss.source_id FROM theme_study_sources ss WHERE ss.entity_id=e.id AND ts.body IS NOT NULL
  UNION SELECT rs.source_id FROM relationship_sources rs JOIN relationships r ON r.id=rs.relationship_id WHERE ep.body IS NOT NULL AND (r.source_entity_id=e.id OR r.target_entity_id=e.id)
  UNION SELECT sr.source_id FROM entity_source_records sr WHERE sr.entity_id=e.id
  UNION SELECT (SELECT l.source_id FROM entity_localizations l WHERE l.entity_id=e.id AND l.language=$2 ORDER BY (l.source_id LIKE 'step.%'),l.source_id LIMIT 1))),
@@ -223,6 +233,7 @@ func (s *Store) Detail(ctx context.Context, id string) (domain.EntityDetail, err
  ORDER BY sr.id) FROM entity_source_records sr JOIN source_datasets ds
  ON ds.source_id=sr.source_id AND ds.revision=sr.revision WHERE sr.entity_id=e.id))
  FROM entities e LEFT JOIN entity_details d ON d.entity_id=e.id
+ LEFT JOIN LATERAL (SELECT presentations->$2 body FROM theme_studies WHERE entity_id=e.id AND presentations ? $2) ts ON true
  LEFT JOIN LATERAL (SELECT presentations->$2 body FROM entity_profiles WHERE entity_id=e.id AND presentations ? $2) ep ON true
  LEFT JOIN LATERAL (SELECT fields FROM entity_localizations l WHERE l.entity_id=e.id AND l.language=$2
  ORDER BY (l.source_id LIKE 'step.%'),l.source_id LIMIT 1) dl ON true WHERE e.id=$1`, id, store.Language(ctx))

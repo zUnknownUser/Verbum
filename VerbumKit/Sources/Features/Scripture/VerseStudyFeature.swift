@@ -24,6 +24,10 @@ public struct VerseStudyFeature {
         public var preview: BiblePassage?
         public var previewLoading = false
         public var previewError: ReaderError?
+        @Presents public var guidePreview: PassagePreviewFeature.State?
+        public var entityHistory: [EntityDetail] = []
+        public var expandedThemeSections: [EntityID: Set<String>] = [:]
+        public var entityScrollOffsets: [EntityID: Double] = [:]
 
         public var tabs: [Tab] { chapterGuide ? [.context, .references] : Tab.allCases }
         public var resourceEntities: [BibleEntity] {
@@ -42,7 +46,8 @@ public struct VerseStudyFeature {
         public var studyReferences: [PassageReference] {
             var seen = Set<PassageReference>()
             let references = entity?.keyPassages ?? ((context?.study?.connections.map(\.reference) ?? []) + (context?.relatedPassages ?? []))
-            return references.filter { seen.insert($0).inserted }
+            let guideReferences = Set(entity?.themeStudy?.readings.map(\.reference) ?? [])
+            return references.filter { !guideReferences.contains($0) && seen.insert($0).inserted }
         }
         public var context: PassageContext?
         public var contextLoading = false
@@ -77,6 +82,10 @@ public struct VerseStudyFeature {
         case task, save, closeEntity, done, bookmarkToggled
         case categoryChanged(BibleEntityType), moreEntities, moreReferences, retryEntity
         case previewPassage(PassageReference), closePreview
+        case previewThemePassage(PassageReference)
+        case guidePreview(PresentationAction<PassagePreviewFeature.Action>)
+        case themeSectionChanged(String, Bool)
+        case entityScrollOffsetChanged(EntityID, Double)
         case previewResponse(PassageReference, Result<BiblePassage, ReaderError>)
         case highlightStyleChanged(HighlightStyle)
         case tabChanged(Tab), highlightChanged(HighlightColor?), noteChanged(String), questionChanged(String)
@@ -111,6 +120,22 @@ public struct VerseStudyFeature {
             case .moreReferences:
                 state.referenceLimit = min(state.referenceLimit + 6, state.studyReferences.count)
                 return .none
+            case .previewThemePassage(let reference):
+                state.guidePreview = PassagePreviewFeature.State(reference: reference)
+                return .none
+            case .guidePreview(.presented(.delegate(.openReader(let reference)))):
+                state.guidePreview = nil
+                return .send(.passageTapped(reference))
+            case .guidePreview:
+                return .none
+            case .themeSectionChanged(let section, let expanded):
+                guard let id = state.entity?.entity.id else { return .none }
+                if expanded { state.expandedThemeSections[id, default: []].insert(section) }
+                else { state.expandedThemeSections[id, default: []].remove(section) }
+                return .none
+            case .entityScrollOffsetChanged(let id, let offset):
+                state.entityScrollOffsets[id] = max(0, offset)
+                return .none
             case .previewPassage(let reference):
                 state.previewReference = reference; state.preview = nil
                 state.previewLoading = true; state.previewError = nil
@@ -140,12 +165,14 @@ public struct VerseStudyFeature {
                 if state.annotation.note != state.savedNote { state.closeAfterSave = true; return .send(.save) }
                 return .send(.delegate(.close))
             case .task:
+                if state.selectedEntity != nil { return .none }
                 if state.chapterGuide { return .send(.tabChanged(.context)) }
                 if state.candidates.count == 1 { return .send(.entityTapped(state.candidates[0])) }
                 return .none
             case .tabChanged(let tab):
                 guard state.tabs.contains(tab) else { return .none }
                 state.tab = tab; state.entity = nil; state.candidates = []
+                state.entityHistory = []
                 state.selectedEntity = nil; state.entityLoading = false; state.entityFailed = false
                 state.referenceLimit = 6
                 if ((tab == .context && state.context == nil) || (tab == .references && !state.referencesLoaded)), !state.contextLoading {
@@ -193,6 +220,9 @@ public struct VerseStudyFeature {
             case .contextResponse(let context): state.contextLoading = false; state.referencesLoaded = true; state.context = context; return .none
             case .contextFailed: state.contextLoading = false; state.contextFailed = true; return .none
             case .entityTapped(let entity):
+                if let current = state.entity, current.entity.id != entity.id {
+                    state.entityHistory.append(current)
+                }
                 state.selectedEntity = entity; state.referenceLimit = 6
                 state.entity = nil; state.entityLoading = true; state.entityFailed = false
                 return .run { [graphClient] send in
@@ -206,6 +236,11 @@ public struct VerseStudyFeature {
                 guard state.selectedEntity?.id == id else { return .none }
                 state.entityLoading = false; state.entityFailed = true; return .none
             case .closeEntity:
+                if let previous = state.entityHistory.popLast() {
+                    state.entity = previous; state.selectedEntity = previous.entity
+                    state.entityLoading = false; state.entityFailed = false; state.referenceLimit = 6
+                    return .cancel(id: CancelID.entity)
+                }
                 state.entity = nil; state.candidates = []; state.selectedEntity = nil
                 state.entityLoading = false; state.entityFailed = false; state.referenceLimit = 6
                 return .merge(.cancel(id: CancelID.entity), .send(.tabChanged(.context)))
@@ -228,7 +263,9 @@ public struct VerseStudyFeature {
                 state.ask = nil; return .none
             case .ask, .delegate: return .none
             }
-        }.ifLet(\.ask, action: \.ask) { AskFeature() }
+        }
+        .ifLet(\.ask, action: \.ask) { AskFeature() }
+        .ifLet(\.$guidePreview, action: \.guidePreview) { PassagePreviewFeature() }
     }
     private enum CancelID { case context, comparison, entity, save, preview }
 }

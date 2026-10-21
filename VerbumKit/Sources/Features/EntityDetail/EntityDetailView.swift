@@ -7,7 +7,7 @@ import SwiftUI
 /// summary, then the passages and the people, places, events and themes one
 /// hop away. Sources close the page (spec §33).
 public struct EntityDetailView: View {
-    let store: StoreOf<EntityDetailFeature>
+    @Bindable var store: StoreOf<EntityDetailFeature>
 
     public init(store: StoreOf<EntityDetailFeature>) {
         self.store = store
@@ -28,6 +28,9 @@ public struct EntityDetailView: View {
         .navigationTitle(loadedName)
         .toolbarTitleDisplayMode(.inline)
         .toolbarBackground(.hidden, for: .navigationBar)
+        .sheet(item: $store.scope(state: \.passagePreview, action: \.passagePreview)) { preview in
+            PassagePreviewView(store: preview)
+        }
         .task { await store.send(.task).finish() }
     }
 
@@ -40,6 +43,15 @@ public struct EntityDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: Spacing.xxl) {
                 header(page)
+                if let study = page.detail.themeStudy {
+                    ThemeStudyView(
+                        study: study, sources: page.studySources,
+                        expandedSections: store.expandedStudySections,
+                        setExpanded: { store.send(.studySectionChanged($0, $1)) },
+                        openPassage: { store.send(.previewPassage($0)) },
+                        openEntity: { store.send(.entityTapped($0)) }
+                    )
+                }
                 if page.entity.type == .theme || page.entity.type == .event { readings(page) }
                 if let sequence = page.detail.eventSequence {
                     section(L10n.t("Study sequence")) {
@@ -74,7 +86,7 @@ public struct EntityDetailView: View {
                 relatedSection(L10n.t("Places"), page.related(.place), symbol: "mappin.and.ellipse")
                 relatedSection(L10n.t("Events"), page.related(.event), symbol: "clock")
                 relatedSection(L10n.t(page.entity.type == .theme ? "Explore further" : "Themes"), page.related(.theme), symbol: "sparkle")
-                sources(page.sources)
+                if page.detail.themeStudy == nil || !page.otherSources.isEmpty { sources(page.otherSources) }
             }
             .frame(maxWidth: Spacing.readingMaxWidth, alignment: .leading)
             .frame(maxWidth: .infinity)
@@ -87,14 +99,18 @@ public struct EntityDetailView: View {
 
     @ViewBuilder
     private func readings(_ page: EntityDetailFeature.Page) -> some View {
-                if !page.passages.isEmpty {
-                    section(L10n.t(page.entity.type == .theme ? "Start reading" : "Key passages")) {
-                        if page.entity.type == .theme {
+                if !page.additionalPassages.isEmpty {
+                    section(page.detail.themeStudy != nil
+                        ? StudyGuideCopy.furtherReading
+                        : L10n.t(page.entity.type == .theme ? "Start reading" : "Key passages")) {
+                        if page.entity.type == .theme && page.detail.themeStudy == nil {
                             Text(L10n.t("Read these passages in their chapter context, then explore related themes below."))
                                 .font(Typography.footnote).foregroundStyle(Palette.inkSecondary).padding(.vertical, Spacing.sm)
                         }
-                        ForEach(page.passages, id: \.self) { reference in
-                            Row(title: reference.formatted, symbol: "book") { store.send(.passageTapped(reference)) }
+                        ForEach(page.additionalPassages, id: \.self) { reference in
+                            Row(title: reference.formatted, symbol: "book") {
+                                store.send(page.detail.themeStudy != nil ? .previewPassage(reference) : .passageTapped(reference))
+                            }
                         }
                     }
                 }

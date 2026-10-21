@@ -1,0 +1,328 @@
+{
+  "themeStudy": {
+    "overview": {
+      "text": "Faith takes different forms in these passages: trust amid danger, refusal to abandon a promise, honest dependence, endurance and practical care. Begin with Israel at the sea, then compare the fearful response in Numbers. Mark brings the question into a father’s request for his son; Hebrews surveys people who act before receiving everything promised; James examines what a claim to faith means when a neighbor lacks necessities. These texts do not make faith a technique for controlling outcomes. Their situations and arguments differ, but each asks how trust becomes a response. Read the narrative details before drawing an application, and notice who acts, what is promised, what remains unresolved and how another person is affected.",
+      "references": [
+        {
+          "bookId": "Exod",
+          "chapter": 14,
+          "verseStart": 10,
+          "verseEnd": 31
+        },
+        {
+          "bookId": "Num",
+          "chapter": 14,
+          "verseStart": 1,
+          "verseEnd": 9
+        },
+        {
+          "bookId": "Mark",
+          "chapter": 9,
+          "verseStart": 14,
+          "verseEnd": 29
+        },
+        {
+          "bookId": "Heb",
+          "chapter": 11,
+          "verseStart": 1,
+          "verseEnd": 16
+        },
+        {
+          "bookId": "Jas",
+          "chapter": 2,
+          "verseStart": 14,
+          "verseEnd": 26
+        }
+      ]
+    },
+    "readings": [
+      {
+        "id": "faith-at-the-sea",
+        "title": "Trust when escape seems impossible",
+        "reference": {
+          "bookId": "Exod",
+          "chapter": 14,
+          "verseStart": 10,
+          "verseEnd": 31
+        },
+        "context": "Israel sees the Egyptian force approaching and interprets departure from slavery as a fatal mistake. The scene moves from complaints against Moses to instructions for crossing the sea. Read the danger, the command to move and the final response as parts of one narrative.",
+        "observation": "Moses tells the people to stand firm; God then tells them to move forward. The cloud separates the groups, the sea opens, Israel crosses and the pursuing force is overwhelmed. The closing verse describes the people’s fear of the Lord and their trust in him and Moses.",
+        "significance": "The narrative grounds Israel’s trust in an act of deliverance rather than in the people’s initial confidence. Standing firm and moving forward belong to different moments of the same rescue. Their sequence resists turning either stillness or action into a rule for every crisis.",
+        "question": "How does the people’s interpretation of leaving Egypt change between verses 11–12 and verse 31?"
+      },
+      {
+        "id": "faith-and-fear",
+        "title": "Remembering a promise amid fear",
+        "reference": {
+          "bookId": "Num",
+          "chapter": 14,
+          "verseStart": 1,
+          "verseEnd": 9
+        },
+        "context": "The assembly has heard reports about the land and now anticipates defeat, captivity and death. Its proposed solution is to appoint a leader and return to Egypt. The selected passage sets this collective response beside the appeal made by Joshua and Caleb.",
+        "observation": "Moses and Aaron fall facedown; Joshua and Caleb tear their clothes. The two scouts call the land good and connect entry into it with the Lord’s favor and presence. They frame refusal as rebellion and answer the assembly’s fear with a different account of who is with them.",
+        "significance": "Trust here concerns a particular promise within Israel’s story. Joshua and Caleb do not offer a general endorsement of risky plans. Their appeal challenges the wish to return to slavery by interpreting the present danger in relation to the God who has brought the people this far.",
+        "question": "Which reasons does the assembly give for returning, and which reasons do Joshua and Caleb give for continuing?"
+      },
+      {
+        "id": "faith-asking-for-help",
+        "title": "A father asks for help with unbelief",
+        "reference": {
+          "bookId": "Mark",
+          "chapter": 9,
+          "verseStart": 14,
+          "verseEnd": 29
+        },
+        "context": "A father has brought his suffering son to Jesus’ disciples, but they have been unable to help. Jesus enters a scene of argument and distress. The conversation moves from the father’s account of prolonged suffering to his request for compassion and the disciples’ later question.",
+        "observation": "The father expresses trust while asking for help with his lack of trust. Jesus addresses the spirit, takes the boy by the hand and raises him. In private, the disciples ask about their failure, and Jesus directs their attention to prayer rather than to their own competence.",
+        "significance": "The father’s request allows need and imperfect trust to appear together. The scene emphasizes dependence on Jesus, not the achievement of a flawless inner state. It should not be used to blame people whose suffering continues or to infer that every request will have this narrative’s outcome.",
+        "question": "What do the father’s plea and the disciples’ private question reveal about their different forms of dependence?"
+      },
+      {
+        "id": "faith-before-fulfillment",
+        "title": "Acting before the promise is fully received",
+        "reference": {
+          "bookId": "Heb",
+          "chapter": 11,
+          "verseStart": 1,
+          "verseEnd": 16
+        },
+        "context": "Hebrews introduces faith and then moves through examples drawn from earlier biblical narratives. Abel, Enoch, Noah, Abraham and Sarah are presented within a connected argument. Follow both the actions attributed to faith and the author’s statement that some died without receiving the promises in full.",
+        "observation": "The examples include offering, approaching God, preparing an ark, leaving home and living as a foreigner. The passage repeatedly links unseen realities with concrete actions. Its final movement describes people who acknowledge their distance from fulfillment while seeking a better homeland prepared by God.",
+        "significance": "Faith is portrayed across a span of time, not merely at the moment of a successful outcome. The author’s retrospective arrangement helps readers compare responses across different stories. A faithful life, within this argument, can include waiting and dying before the promised future is fully seen.",
+        "question": "How does verse 13 qualify an interpretation of faith that expects every promise to be fulfilled immediately?"
+      },
+      {
+        "id": "faith-and-a-neighbors-need",
+        "title": "Faith that answers a neighbor’s need",
+        "reference": {
+          "bookId": "Jas",
+          "chapter": 2,
+          "verseStart": 14,
+          "verseEnd": 26
+        },
+        "context": "James addresses someone who claims to have faith while lacking corresponding actions. He begins with a brother or sister without adequate clothing and daily food. The argument then uses a dialogue, biblical examples and a final comparison between a body and its animating spirit.",
+        "observation": "Words of goodwill do not meet the hungry person’s needs. James distinguishes a claim or bare acknowledgment from faith working through action. Abraham and Rahab illustrate this connection; the concluding image describes faith without works as lifeless, like a body without its spirit.",
+        "significance": "Start with James’s concrete test: does the profession of faith lead to help? His later use of justification language belongs to this argument about a claim without action. A full comparison with other biblical treatments of justification requires reading their distinct questions and contexts as well.",
+        "question": "Why does James begin with food and clothing before discussing Abraham, Rahab and the relation between faith and works?"
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "faith-danger-and-memory",
+        "title": "Danger, memory and the choice to return",
+        "references": [
+          {
+            "bookId": "Exod",
+            "chapter": 14,
+            "verseStart": 10,
+            "verseEnd": 31
+          },
+          {
+            "bookId": "Num",
+            "chapter": 14,
+            "verseStart": 1,
+            "verseEnd": 9
+          }
+        ],
+        "explanation": "Both scenes place fear beside the temptation to interpret Egypt as preferable to the present danger. At the sea, the narrative ends with deliverance and trust; in Numbers, Joshua and Caleb appeal to the Lord’s presence while the assembly proposes returning. Compare how the memory of rescue could shape the interpretation of a new threat.",
+        "difference": "Exodus narrates an accomplished crossing. The selected verses of Numbers present a contested appeal before the outcome. They are different stages of Israel’s journey, not two reports of the same event or a promise that every fearful situation ends identically."
+      },
+      {
+        "id": "faith-dependence-and-action",
+        "title": "Dependence and action belong in the same study",
+        "references": [
+          {
+            "bookId": "Mark",
+            "chapter": 9,
+            "verseStart": 14,
+            "verseEnd": 29
+          },
+          {
+            "bookId": "Heb",
+            "chapter": 11,
+            "verseStart": 1,
+            "verseEnd": 16
+          },
+          {
+            "bookId": "Jas",
+            "chapter": 2,
+            "verseStart": 14,
+            "verseEnd": 26
+          }
+        ],
+        "explanation": "Mark portrays an honest request for help; Hebrews traces actions and endurance; James challenges a profession that leaves a needy neighbor unaided. Read together, these passages give questions for examining faith: on whom does the person depend, how does that trust shape action, and what happens when fulfillment remains beyond sight?",
+        "difference": "The father is not the inactive claimant confronted by James, and Hebrews is not prescribing one action for everyone. A healing narrative, a retrospective survey and an ethical argument each contribute a distinct perspective; their differences prevent measuring faith by one visible outcome."
+      }
+    ],
+    "connections": [
+      {
+        "entity": {
+          "id": "fixture.person.moses",
+          "type": "person",
+          "name": "Moses",
+          "nameLanguage": "en",
+          "summary": "Moses is the Hebrew child rescued and adopted by Pharaoh’s daughter. As an adult he kills an Egyptian who is beating a Hebrew and flees to Midian. At the burning bush, God calls him to return to Egypt and bring Israel out; the narrative includes his questions and reluctance, rather than presenting an effortless vocation.\n\nAt the sea he addresses the frightened people and acts at God’s command. After the golden calf, he intercedes for the people but also confronts their worship. Read these scenes together: leadership involves both delivering a message and answering for a community in crisis.\n\nThe closing chapter places his death in Moab and the transition to Joshua before entry into the land. Its tribute concerns his unique prophetic relationship with God. It does not supply a modern calendar date or locate his tomb for the reader."
+        },
+        "reference": {
+          "bookId": "Exod",
+          "chapter": 14,
+          "verseStart": 13,
+          "verseEnd": 16
+        },
+        "explanation": "Moses voices reassurance and receives the command to lead Israel forward. His role can be followed within the scene without treating him as the source of the rescue."
+      },
+      {
+        "entity": {
+          "id": "step.person.H3091G",
+          "type": "person",
+          "name": "Joshua, son of Nun",
+          "nameLanguage": "en",
+          "summary": "Joshua leads the fighting against Amalek while Moses, Aaron and Hur remain on the hill. Later he hears the sound from the camp and thinks it is battle; Moses distinguishes it from a victory or defeat cry. These scenes place him beside Moses before the succession.\n\nThe list of scouts identifies him as Hoshea son of Nun, whom Moses calls Joshua. With Caleb he urges the congregation not to rebel or fear the inhabitants of the land. Their disagreement concerns how to respond to the same land, not a different expedition.\n\nAt Moses’ death, Joshua is described as filled with the spirit of wisdom, and Israel listens to him. The transfer of leadership does not erase the chapter’s distinct tribute to Moses."
+        },
+        "reference": {
+          "bookId": "Num",
+          "chapter": 14,
+          "verseStart": 6,
+          "verseEnd": 9
+        },
+        "explanation": "Joshua joins Caleb in interpreting the land and its dangers in light of the Lord’s presence. His appeal offers a concrete contrast to the assembly’s plan to return."
+      },
+      {
+        "entity": {
+          "id": "step.person.H3612G",
+          "type": "person",
+          "name": "Caleb, son of Jephunneh",
+          "nameLanguage": "en",
+          "summary": "Caleb son of Jephunneh represents Judah in the exploration of Canaan. When the report of strong inhabitants unsettles the people, he calls for going up and taking the land. His response contrasts with the fear expressed by the other speakers.\n\nTogether with Joshua he appeals to the LORD’s presence and warns against rebellion. The following judgment singles out his different spirit and wholehearted following; Caleb and Joshua are excepted from the exclusion of that generation. This profile concerns this named scout, not every Caleb in biblical genealogies."
+        },
+        "reference": {
+          "bookId": "Num",
+          "chapter": 14,
+          "verseStart": 6,
+          "verseEnd": 9
+        },
+        "explanation": "Caleb’s appeal belongs alongside Joshua’s, rather than to an unnamed heroic individual. The passage presents their shared response to the community’s fear and proposed retreat."
+      }
+    ],
+    "sourceReferenceIds": [
+      "editorial.theme-studies.2026-10",
+      "study.scripture.Exod.14",
+      "study.scripture.Heb.11",
+      "study.scripture.Jas.2",
+      "study.scripture.Mark.9",
+      "study.scripture.Num.14"
+    ]
+  },
+  "localizations": [
+    {
+      "language": "en",
+      "sourceId": "editorial.themes.2026-10",
+      "name": "Faith",
+      "aliases": [],
+      "description": "Trusting God and responding to his word with perseverance and action."
+    },
+    {
+      "language": "pt-BR",
+      "sourceId": "editorial.themes.2026-10",
+      "name": "Fé",
+      "aliases": [],
+      "description": "Confiar em Deus e responder à sua palavra com perseverança e ações."
+    }
+  ],
+  "entity": {
+    "id": "fixture.theme.faith",
+    "type": "theme",
+    "name": "Faith",
+    "nameLanguage": "en",
+    "summary": "Trusting God and responding to his word with perseverance and action."
+  },
+  "aliases": [],
+  "approximateDates": null,
+  "role": null,
+  "modernGeography": null,
+  "keyPassages": [
+    {
+      "bookId": "Exod",
+      "chapter": 14,
+      "verseStart": 10,
+      "verseEnd": 31
+    },
+    {
+      "bookId": "Num",
+      "chapter": 14,
+      "verseStart": 1,
+      "verseEnd": 9
+    },
+    {
+      "bookId": "Mark",
+      "chapter": 9,
+      "verseStart": 14,
+      "verseEnd": 29
+    },
+    {
+      "bookId": "Heb",
+      "chapter": 11,
+      "verseStart": 1,
+      "verseEnd": 16
+    },
+    {
+      "bookId": "Jas",
+      "chapter": 2,
+      "verseStart": 14,
+      "verseEnd": 26
+    }
+  ],
+  "sources": [
+    {
+      "id": "editorial.themes.2026-10",
+      "citation": "Verbum — seleção temática e resumos editoriais / thematic selection and editorial summaries (2026-10).",
+      "url": null
+    },
+    {
+      "id": "editorial.theme-studies.2026-10",
+      "citation": "Verbum · Five theme study guides / Cinco guias de estudo temático · 2026-10",
+      "url": null
+    },
+    {
+      "id": "scripture.theme.Heb.11.1-16",
+      "citation": "Heb 11:1-16",
+      "url": "https://www.biblegateway.com/passage/?search=Heb+11%3A1-16"
+    },
+    {
+      "id": "study.scripture.Exod.14",
+      "citation": "Exodus 14 · World English Bible",
+      "url": "https://ebible.org/engwebp/EXO14.htm"
+    },
+    {
+      "id": "scripture.theme.Mark.9.14-29",
+      "citation": "Mark 9:14-29",
+      "url": "https://www.biblegateway.com/passage/?search=Mark+9%3A14-29"
+    },
+    {
+      "id": "study.scripture.Num.14",
+      "citation": "Numbers 14 · World English Bible",
+      "url": "https://ebible.org/engwebp/NUM14.htm"
+    },
+    {
+      "id": "scripture.theme.Jas.2.14-26",
+      "citation": "Jas 2:14-26",
+      "url": "https://www.biblegateway.com/passage/?search=Jas+2%3A14-26"
+    },
+    {
+      "id": "study.scripture.Mark.9",
+      "citation": "Mark 9 · World English Bible",
+      "url": "https://ebible.org/engwebp/MRK09.htm"
+    },
+    {
+      "id": "study.scripture.Heb.11",
+      "citation": "Hebrews 11 · World English Bible",
+      "url": "https://ebible.org/engwebp/HEB11.htm"
+    },
+    {
+      "id": "study.scripture.Jas.2",
+      "citation": "James 2 · World English Bible",
+      "url": "https://ebible.org/engwebp/JAS02.htm"
+    }
+  ]
+}
