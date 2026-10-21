@@ -563,638 +563,6 @@
       }
     }
   },
-"Follow the story. Explore its connections.": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Acompanhe a história. Explore suas conexões."
-        }
-      }
-    }
-  },
-  "Choose an era to study its events and read the biblical accounts.": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Escolha uma época para estudar seus acontecimentos e ler os relatos bíblicos."
-        }
-      }
-    }
-  },
-  "Search events and eras": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Buscar acontecimentos e épocas"
-        }
-      }
-    }
-  },
-  "All eras": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Todas as épocas"
-        }
-      }
-    }
-  },
-  "Previous era": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Época anterior"
-        }
-      }
-    }
-  },
-  "Next era": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Próxima época"
-        }
-      }
-    }
-  },
-  "No events found": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Nenhum acontecimento encontrado"
-        }
-      }
-    }
-  },
-  "How it connects": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Como se conecta"
-        }
-      }
-    }
-  },
-  "Study in Scripture": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Estude nas Escrituras"
-        }
-      }
-    }
-  },
-  "Study this event": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Estudar este acontecimento"
-        }
-      }
-    }
-  },
-  "Close study": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Fechar estudo"
-        }
-      }
-    }
-  },
-  "Verbum study notes · Read the linked accounts in context.": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Notas de estudo Verbum · Leia os relatos indicados em seu contexto."
-        }
-      }
-    }
-  },
-  "A study guide to the biblical narrative, not an exact calendar. Some readings are grouped by context; the Gospels do not always present episodes in the same order.": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Um guia de estudo da narrativa bíblica, não um calendário exato. Algumas leituras são agrupadas por contexto; os Evangelhos nem sempre apresentam os episódios na mesma ordem."
-        }
-      }
-    }
-  },
-  "Narrative sequence": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Sequência narrativa"
-        }
-      }
-    }
-  },
-  "%lld events": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "%lld acontecimentos"
-        }
-      }
-    }
-  },
-  "Explore biblical eras, connected events and readings for study.": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Explore épocas bíblicas, acontecimentos conectados e leituras para estudo."
-        }
-      }
-    }
-  },
-  "All letters": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Todas as letras"
-        }
-      }
-    }
-  },
-  "What would you like to explore?": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Qual assunto você quer explorar?"
-        }
-      }
-    }
-  },
-  "Browse categories": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Explorar categorias"
-        }
-      }
-    }
-  },
-  "All themes": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Todos os temas"
-        }
-      }
-    }
-  },
-  "Themes could not be loaded. Please try again.": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Não foi possível carregar os temas. Tente novamente."
-        }
-      }
-    }
-  },
-  "No themes found": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Nenhum tema encontrado"
-        }
-      }
-    }
-  },
-  "Loading themes": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Carregando temas"
-        }
-      }
-    }
-  },
-  "Explore by subject": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Explore por assunto"
-        }
-      }
-    }
-  },
-  "Find a starting point for what you are living or want to understand.": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Encontre um ponto de partida para o que você está vivendo ou quer entender."
-        }
-      }
-    }
-  },
-  "Where to begin": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Por onde começar"
-        }
-      }
-    }
-  },
-  "Hope": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Esperança"
-        }
-      }
-    }
-  },
-  "Start reading": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Comece por aqui"
-        }
-      }
-    }
-  },
-  "Read these passages in their chapter context, then explore related themes below.": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Leia os trechos no contexto do capítulo e depois explore os temas relacionados abaixo."
-        }
-      }
-    }
-  },
-  "Life with God": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Vida com Deus"
-        }
-      }
-    }
-  },
-  "Faith, prayer and worship": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Fé, oração e adoração"
-        }
-      }
-    }
-  },
-  "Emotions and difficulties": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Emoções e dificuldades"
-        }
-      }
-    }
-  },
-  "Anxiety, grief and hope": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Ansiedade, luto e esperança"
-        }
-      }
-    }
-  },
-  "Relationships": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Relacionamentos"
-        }
-      }
-    }
-  },
-  "Love, family and forgiveness": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Amor, família e perdão"
-        }
-      }
-    }
-  },
-  "Character and choices": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Caráter e escolhas"
-        }
-      }
-    }
-  },
-  "Wisdom, humility and courage": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Sabedoria, humildade e coragem"
-        }
-      }
-    }
-  },
-  "Everyday life": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Vida cotidiana"
-        }
-      }
-    }
-  },
-  "Work, money and rest": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Trabalho, dinheiro e descanso"
-        }
-      }
-    }
-  },
-  "Foundations of faith": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Fundamentos da fé"
-        }
-      }
-    }
-  },
-  "Grace, salvation and covenant": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Graça, salvação e aliança"
-        }
-      }
-    }
-  },
-  "Life in community": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Vida em comunidade"
-        }
-      }
-    }
-  },
-  "Service, unity and mission": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Serviço, unidade e missão"
-        }
-      }
-    }
-  },
-  "Life and eternity": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Vida e eternidade"
-        }
-      }
-    }
-  },
-  "Resurrection and new creation": {
-    "localizations": {
-      "pt-BR": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Ressurreição e nova criação"
-        }
-      }
-    }
-  },
-    "Search places" : {
-      "localizations" : {
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buscar lugares"
-          }
-        }
-      }
-    },
-    "No places found" : {
-      "localizations" : {
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nenhum lugar encontrado"
-          }
-        }
-      }
-    },
-    "Places could not be loaded. Please try again." : {
-      "localizations" : {
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Não foi possível carregar os lugares. Tente novamente."
-          }
-        }
-      }
-    },
-    "Loading places" : {
-      "localizations" : {
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Carregando lugares"
-          }
-        }
-      }
-    },
-    "All places" : {
-      "localizations" : {
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Todos"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All"
-          }
-        }
-      }
-    },
-    "All people" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "All" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Todas" } }
-      }
-    },
-    "Try another name or letter." : {
-      "localizations" : {
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tente outro nome ou letra."
-          }
-        }
-      }
-    },
-    "No people found" : {
-      "localizations" : {
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nenhuma pessoa encontrada"
-          }
-        }
-      }
-    },
-    "People could not be loaded. Please try again." : {
-      "localizations" : {
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Não foi possível carregar as pessoas. Tente novamente."
-          }
-        }
-      }
-    },
-    "Loading people" : {
-      "localizations" : {
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Carregando pessoas"
-          }
-        }
-      }
-    },
-    "Search people" : {
-      "localizations" : {
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buscar pessoas"
-          }
-        }
-      }
-    },
-    "Yesterday" : {
-      "localizations" : {
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ontem"
-          }
-        }
-      }
-    },
-    "Try another book or chapter reference." : {
-      "localizations" : {
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tente outro livro ou referência de capítulo."
-          }
-        }
-      }
-    },
-    "No chapters found" : {
-      "localizations" : {
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nenhum capítulo encontrado"
-          }
-        }
-      }
-    },
-    "Search by book or chapter" : {
-      "localizations" : {
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buscar por livro ou capítulo"
-          }
-        }
-      }
-    },
-    "Show more" : {
-      "localizations" : {
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mostrar mais"
-          }
-        }
-      }
-    },
-    "Reading history" : {
-      "localizations" : {
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Histórico de leitura"
-          }
-        }
-      }
-    },
-    "View full history" : {
-      "localizations" : {
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ver histórico completo"
-          }
-        }
-      }
-    },
     ". " : {
       "comment" : "A period.",
       "isCommentAutoGenerated" : true
@@ -1325,12 +693,32 @@
         }
       }
     },
+    "%lld events" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld acontecimentos"
+          }
+        }
+      }
+    },
     "A starting point for exploring Scripture, at your own pace." : {
       "localizations" : {
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Um ponto de partida para explorar a Bíblia, no seu ritmo."
+          }
+        }
+      }
+    },
+    "A study guide to the biblical narrative, not an exact calendar. Some readings are grouped by context; the Gospels do not always present episodes in the same order." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Um guia de estudo da narrativa bíblica, não um calendário exato. Algumas leituras são agrupadas por contexto; os Evangelhos nem sempre apresentam os episódios na mesma ordem."
           }
         }
       }
@@ -1377,6 +765,68 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tudo"
+          }
+        }
+      }
+    },
+    "All eras" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todas as épocas"
+          }
+        }
+      }
+    },
+    "All letters" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todas as letras"
+          }
+        }
+      }
+    },
+    "All people" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todas"
+          }
+        }
+      }
+    },
+    "All places" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todos"
+          }
+        }
+      }
+    },
+    "All themes" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todos os temas"
           }
         }
       }
@@ -1428,6 +878,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ansiedade"
+          }
+        }
+      }
+    },
+    "Anxiety, grief and hope" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ansiedade, luto e esperança"
           }
         }
       }
@@ -1667,6 +1127,16 @@
         }
       }
     },
+    "Browse categories" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Explorar categorias"
+          }
+        }
+      }
+    },
     "c." : {
       "localizations" : {
         "pt-BR" : {
@@ -1719,12 +1189,32 @@
         }
       }
     },
+    "Character and choices" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Caráter e escolhas"
+          }
+        }
+      }
+    },
     "Choose a starting point, at your own pace. This choice is optional and is not saved to a profile." : {
       "localizations" : {
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Escolha um ponto de partida, no seu ritmo. Essa escolha é opcional e não fica salva em um perfil."
+          }
+        }
+      }
+    },
+    "Choose an era to study its events and read the biblical accounts." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escolha uma época para estudar seus acontecimentos e ler os relatos bíblicos."
           }
         }
       }
@@ -1776,6 +1266,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fechar busca"
+          }
+        }
+      }
+    },
+    "Close study" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fechar estudo"
           }
         }
       }
@@ -2111,6 +1611,7 @@
       }
     },
     "Dates are the ones commonly given; “debated” marks where scholarship is split, and the span shows both positions." : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt-BR" : {
           "stringUnit" : {
@@ -2197,6 +1698,16 @@
         }
       }
     },
+    "Emotions and difficulties" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emoções e dificuldades"
+          }
+        }
+      }
+    },
     "End" : {
       "localizations" : {
         "pt-BR" : {
@@ -2248,6 +1759,16 @@
         }
       }
     },
+    "Everyday life" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vida cotidiana"
+          }
+        }
+      }
+    },
     "Expand" : {
       "localizations" : {
         "pt-BR" : {
@@ -2294,6 +1815,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Explore no seu ritmo"
+          }
+        }
+      }
+    },
+    "Explore biblical eras, connected events and readings for study." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Explore épocas bíblicas, acontecimentos conectados e leituras para estudo."
+          }
+        }
+      }
+    },
+    "Explore by subject" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Explore por assunto"
           }
         }
       }
@@ -2349,12 +1890,31 @@
       }
     },
     "Faith" : {
-      "extractionState" : "stale",
       "localizations" : {
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fé"
+          }
+        }
+      }
+    },
+    "Faith, prayer and worship" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fé, oração e adoração"
+          }
+        }
+      }
+    },
+    "Find a starting point for what you are living or want to understand." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encontre um ponto de partida para o que você está vivendo ou quer entender."
           }
         }
       }
@@ -2389,6 +1949,16 @@
         }
       }
     },
+    "Follow the story. Explore its connections." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acompanhe a história. Explore suas conexões."
+          }
+        }
+      }
+    },
     "Forgiveness" : {
       "localizations" : {
         "pt-BR" : {
@@ -2405,6 +1975,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Avançar 15 segundos"
+          }
+        }
+      }
+    },
+    "Foundations of faith" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fundamentos da fé"
           }
         }
       }
@@ -2465,6 +2045,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bom dia"
+          }
+        }
+      }
+    },
+    "Grace, salvation and covenant" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Graça, salvação e aliança"
           }
         }
       }
@@ -2596,12 +2186,32 @@
         }
       }
     },
+    "Hope" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esperança"
+          }
+        }
+      }
+    },
     "How are you feeling today?" : {
       "localizations" : {
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Como você está se sentindo hoje?"
+          }
+        }
+      }
+    },
+    "How it connects" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Como se conecta"
           }
         }
       }
@@ -2722,6 +2332,36 @@
         }
       }
     },
+    "Life and eternity" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vida e eternidade"
+          }
+        }
+      }
+    },
+    "Life in community" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vida em comunidade"
+          }
+        }
+      }
+    },
+    "Life with God" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vida com Deus"
+          }
+        }
+      }
+    },
     "List" : {
       "localizations" : {
         "pt-BR" : {
@@ -2798,6 +2438,36 @@
         }
       }
     },
+    "Loading people" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carregando pessoas"
+          }
+        }
+      }
+    },
+    "Loading places" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carregando lugares"
+          }
+        }
+      }
+    },
+    "Loading themes" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carregando temas"
+          }
+        }
+      }
+    },
     "Looking it up in Scripture" : {
       "localizations" : {
         "pt-BR" : {
@@ -2825,6 +2495,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Amor"
+          }
+        }
+      }
+    },
+    "Love, family and forgiveness" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amor, família e perdão"
           }
         }
       }
@@ -2879,6 +2559,16 @@
         }
       }
     },
+    "Narrative sequence" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sequência narrativa"
+          }
+        }
+      }
+    },
     "New Testament" : {
       "localizations" : {
         "pt-BR" : {
@@ -2895,6 +2585,37 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Próximo capítulo"
+          }
+        }
+      }
+    },
+    "Next era" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Próxima época"
+          }
+        }
+      }
+    },
+    "No chapters found" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nenhum capítulo encontrado"
+          }
+        }
+      }
+    },
+    "No events found" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nenhum acontecimento encontrado"
           }
         }
       }
@@ -2921,6 +2642,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nenhuma referência encontrada. Tente João 3:16."
+          }
+        }
+      }
+    },
+    "No people found" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nenhuma pessoa encontrada"
+          }
+        }
+      }
+    },
+    "No places found" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nenhum lugar encontrado"
           }
         }
       }
@@ -2961,6 +2702,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ainda não há referências com fontes disponíveis aqui."
+          }
+        }
+      }
+    },
+    "No themes found" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nenhum tema encontrado"
           }
         }
       }
@@ -3284,6 +3035,16 @@
         }
       }
     },
+    "People could not be loaded. Please try again." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível carregar as pessoas. Tente novamente."
+          }
+        }
+      }
+    },
     "Period" : {
       "localizations" : {
         "pt-BR" : {
@@ -3295,6 +3056,7 @@
       }
     },
     "Periods and events in order, with how sure the dates are." : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt-BR" : {
           "stringUnit" : {
@@ -3344,6 +3106,16 @@
         }
       }
     },
+    "Places could not be loaded. Please try again." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível carregar os lugares. Tente novamente."
+          }
+        }
+      }
+    },
     "Play" : {
       "localizations" : {
         "pt-BR" : {
@@ -3371,7 +3143,6 @@
       }
     },
     "Prayer" : {
-      "extractionState" : "stale",
       "localizations" : {
         "pt-BR" : {
           "stringUnit" : {
@@ -3449,6 +3220,16 @@
         }
       }
     },
+    "Previous era" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Época anterior"
+          }
+        }
+      }
+    },
     "Prophecy" : {
       "localizations" : {
         "pt-BR" : {
@@ -3519,12 +3300,32 @@
         }
       }
     },
+    "Read these passages in their chapter context, then explore related themes below." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leia os trechos no contexto do capítulo e depois explore os temas relacionados abaixo."
+          }
+        }
+      }
+    },
     "Reading" : {
       "localizations" : {
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Leitura"
+          }
+        }
+      }
+    },
+    "Reading history" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Histórico de leitura"
           }
         }
       }
@@ -3635,6 +3436,16 @@
         }
       }
     },
+    "Relationships" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Relacionamentos"
+          }
+        }
+      }
+    },
     "Reminder time" : {
       "localizations" : {
         "pt-BR" : {
@@ -3651,6 +3462,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Remover destaque"
+          }
+        }
+      }
+    },
+    "Resurrection and new creation" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ressurreição e nova criação"
           }
         }
       }
@@ -3774,6 +3595,46 @@
         }
       }
     },
+    "Search by book or chapter" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar por livro ou capítulo"
+          }
+        }
+      }
+    },
+    "Search events and eras" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar acontecimentos e épocas"
+          }
+        }
+      }
+    },
+    "Search people" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar pessoas"
+          }
+        }
+      }
+    },
+    "Search places" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar lugares"
+          }
+        }
+      }
+    },
     "Search references or your notes" : {
       "localizations" : {
         "en" : {
@@ -3863,6 +3724,16 @@
         }
       }
     },
+    "Service, unity and mission" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serviço, unidade e missão"
+          }
+        }
+      }
+    },
     "Share verse" : {
       "localizations" : {
         "pt-BR" : {
@@ -3879,6 +3750,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Resposta curta"
+          }
+        }
+      }
+    },
+    "Show more" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar mais"
           }
         }
       }
@@ -3934,6 +3815,7 @@
       }
     },
     "Source: Verbum editorial notes (fixture)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt-BR" : {
           "stringUnit" : {
@@ -3959,6 +3841,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Falando"
+          }
+        }
+      }
+    },
+    "Start reading" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comece por aqui"
           }
         }
       }
@@ -3996,6 +3888,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Estudo"
+          }
+        }
+      }
+    },
+    "Study in Scripture" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estude nas Escrituras"
+          }
+        }
+      }
+    },
+    "Study this event" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estudar este acontecimento"
           }
         }
       }
@@ -4161,6 +4073,16 @@
         }
       }
     },
+    "Themes could not be loaded. Please try again." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível carregar os temas. Tente novamente."
+          }
+        }
+      }
+    },
     "This build includes a curated set of chapters. More Scripture arrives with the content service." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -4262,6 +4184,16 @@
         }
       }
     },
+    "Try another book or chapter reference." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tente outro livro ou referência de capítulo."
+          }
+        }
+      }
+    },
     "Try another filter or search for a book, reference or note." : {
       "localizations" : {
         "en" : {
@@ -4274,6 +4206,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Experimente outro filtro ou busque um livro, referência ou nota."
+          }
+        }
+      }
+    },
+    "Try another name or letter." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tente outro nome ou letra."
           }
         }
       }
@@ -4346,6 +4288,16 @@
         }
       }
     },
+    "Verbum study notes · Read the linked accounts in context." : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notas de estudo Verbum · Leia os relatos indicados em seu contexto."
+          }
+        }
+      }
+    },
     "Verse %lld" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -4374,6 +4326,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Versículo do dia"
+          }
+        }
+      }
+    },
+    "View full history" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver histórico completo"
           }
         }
       }
@@ -4454,6 +4416,16 @@
         }
       }
     },
+    "What would you like to explore?" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qual assunto você quer explorar?"
+          }
+        }
+      }
+    },
     "What would you like to understand?" : {
       "localizations" : {
         "pt-BR" : {
@@ -4494,6 +4466,16 @@
         }
       }
     },
+    "Where to begin" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por onde começar"
+          }
+        }
+      }
+    },
     "Who they were, where they appear, who they knew." : {
       "localizations" : {
         "pt-BR" : {
@@ -4511,6 +4493,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sabedoria"
+          }
+        }
+      }
+    },
+    "Wisdom, humility and courage" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sabedoria, humildade e coragem"
           }
         }
       }
@@ -4535,6 +4527,16 @@
         }
       }
     },
+    "Work, money and rest" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trabalho, dinheiro e descanso"
+          }
+        }
+      }
+    },
     "World English Bible" : {
 
     },
@@ -4544,6 +4546,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Escrita a partir das passagens acima por um modelo de linguagem e depois verificada para que toda referência seja real. É um apoio ao estudo, não uma palavra de Deus."
+          }
+        }
+      }
+    },
+    "Yesterday" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ontem"
           }
         }
       }
