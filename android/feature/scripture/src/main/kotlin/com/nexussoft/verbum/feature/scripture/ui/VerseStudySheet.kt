@@ -195,7 +195,7 @@ internal fun VerseStudySheet(state: VerseStudyFeature.State, send: (Action)->Uni
     TextButton(onClick={expanded=!expanded}) {Text(stringResource(R.string.sources))}
     if(expanded) sources.forEach {source->
         Text(source.citation,style=MaterialTheme.typography.bodySmall)
-        source.url?.takeIf {it.startsWith("https://")}?.let {SourceLink(it)}
+        source.webUrl?.let {SourceLink(it)}
     }
 }
 @Composable private fun SourceLink(url:String) {

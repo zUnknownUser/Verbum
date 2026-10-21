@@ -166,10 +166,22 @@ public struct EntityDetailView: View {
     private func sources(_ sources: [SourceReference]) -> some View {
         VStack(alignment: .leading, spacing: Spacing.sm) {
             Text(L10n.t("Sources")).overline()
-            ForEach(sources) { source in
-                Text(source.citation)
+            if sources.isEmpty {
+                Text(L10n.t("No sources are listed for this content yet."))
                     .font(Typography.footnote)
                     .foregroundStyle(Palette.inkSecondary)
+            }
+            ForEach(sources) { source in
+                VStack(alignment: .leading, spacing: Spacing.xs) {
+                    Text(source.citation)
+                        .font(Typography.footnote)
+                        .foregroundStyle(Palette.inkSecondary)
+                    if let url = source.webURL {
+                        Link(L10n.t("Open source"), destination: url)
+                            .font(Typography.footnote)
+                            .tint(Palette.accent)
+                    }
+                }
             }
         }
         .padding(.top, Spacing.md)

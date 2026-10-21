@@ -2609,6 +2609,17 @@
         }
       }
     },
+    "No sources are listed for this content yet." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ainda não há fontes listadas para este conteúdo."
+          }
+        }
+      }
+    },
     "No events found" : {
       "extractionState" : "stale",
       "localizations" : {

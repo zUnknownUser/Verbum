@@ -1,7 +1,17 @@
 package com.nexussoft.verbum.models
 
 /** Provenance for a contextual claim (docs/PRODUCT.md §33). */
-data class SourceReference(val id: String, val citation: String, val url: String?)
+data class SourceReference(val id: String, val citation: String, val url: String?) {
+    /** Only complete HTTPS references can be opened from a source citation. */
+    val webUrl: String?
+        get() = url?.takeIf { address ->
+            !address.any { it.isWhitespace() } && runCatching {
+                val uri = java.net.URI(address)
+                uri.scheme.equals("https", ignoreCase = true) &&
+                    !uri.host.isNullOrEmpty() && uri.rawUserInfo == null
+            }.getOrDefault(false)
+        }
+}
 
 /** One entity's neighbourhood (§44): the root, the nodes one hop away, and the edges between them. */
 data class GraphSnapshot(val root: BibleEntity, val nodes: List<BibleEntity>, val edges: List<BibleRelationship>) {

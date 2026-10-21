@@ -53,8 +53,9 @@ Builds e testes automatizados não equivalem ao aceite em aparelhos físicos.
    sincronização sem registrar notas, transcrições, tokens ou credenciais.
 5. Validar App Attest/Play Integrity em builds distribuídos antes de enforcement.
    A configuração de produção não foi alterada por esta rodada.
-6. Auditar fontes de demonstração ainda explicitamente vinculadas no banco.
-   Remover o fallback não remove associações existentes nem publica conteúdo.
+6. Implantar a limpeza de fontes de demonstração preparada na rodada de conteúdo.
+   A migração `0013`, as proteções para conteúdo posterior e os testes estão em
+   [CONTENT_CLOSURE_2026-10-21.md](CONTENT_CLOSURE_2026-10-21.md).
 7. Confirmar política de privacidade publicada, declarações de dados, assinatura
    e metadados das lojas; revisar amostra delimitada do conteúdo com leitor humano.
 

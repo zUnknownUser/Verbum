@@ -72,8 +72,8 @@ internal fun ContextPane(state: ContextFeature.State, onBack: () -> Unit, send: 
                     items(content.page.sources, key = { it.id }) { source ->
                         Column {
                             Text(source.citation, style = MaterialTheme.typography.bodySmall)
-                            val address = source.url
-                            if (address?.startsWith("https://") == true) {
+                            val address = source.webUrl
+                            if (address != null) {
                                 TextButton(onClick = {
                                     sourceFailed = runCatching { uriHandler.openUri(address) }.isFailure
                                 }) { Text(stringResource(R.string.context_source)) }

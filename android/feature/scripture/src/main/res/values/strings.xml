@@ -362,4 +362,5 @@
     <string name="study_prophecies">Prophecies</string>
     <string name="study_periods">Historical periods</string>
     <string name="reader_guide_scope">Explore the people, places and subjects documented for this chapter.</string>
+    <string name="sources_unavailable">No sources are listed for this content yet.</string>
 </resources>

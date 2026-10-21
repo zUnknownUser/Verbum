@@ -40,7 +40,7 @@ func (s *Store) Context(ctx context.Context, bookID string, chapter int) (domain
  UNION SELECT rs.source_id FROM relationship_sources rs JOIN direct_edges r ON r.id=rs.relationship_id
  UNION SELECT ds.source_id FROM entity_detail_sources ds JOIN details d ON d.entity_id=ds.entity_id
  UNION SELECT sr.source_id FROM entity_source_records sr JOIN entity_occurrences o ON o.record_id=sr.id WHERE o.book_id=$2 AND o.chapter=$3
- UNION SELECT l.source_id FROM entity_localizations l WHERE l.entity_id IN (SELECT id FROM linked) AND l.language IN ($4,'en')
+ UNION SELECT (SELECT l.source_id FROM entity_localizations l WHERE l.entity_id=linked.id AND l.language=$4 ORDER BY (l.source_id LIKE 'step.%'),l.source_id LIMIT 1) FROM linked
  UNION SELECT rs.source_id FROM relationship_sources rs JOIN related r ON r.id=rs.relationship_id
  ) SELECT jsonb_build_object('reference',jsonb_build_object('bookId',$2::text,'chapter',$3::int),
  'entities',COALESCE((SELECT jsonb_agg(`+localizedEntityJSON("$4")+` ORDER BY e.position,e.id) FROM entities e WHERE e.id IN (SELECT id FROM linked) AND e.type<>'passage'),'[]'::jsonb),

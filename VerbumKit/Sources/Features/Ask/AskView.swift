@@ -102,7 +102,7 @@ public struct AskView: View {
             ForEach(answer.sourceReferences) { source in
                 VStack(alignment: .leading, spacing: Spacing.xs) {
                     Text(source.citation).font(Typography.footnote)
-                    if let address = source.url, let url = URL(string: address), url.scheme == "https" {
+                    if let url = source.webURL {
                         Link(L10n.t("Open source"), destination: url).font(Typography.footnote)
                     }
                 }

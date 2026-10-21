@@ -199,7 +199,7 @@ func (s *Store) Detail(ctx context.Context, id string) (domain.EntityDetail, err
  SELECT ds.source_id FROM entity_detail_sources ds WHERE ds.entity_id=e.id
  UNION SELECT es.source_id FROM entity_sources es WHERE es.entity_id=e.id
  UNION SELECT sr.source_id FROM entity_source_records sr WHERE sr.entity_id=e.id
- UNION SELECT l.source_id FROM entity_localizations l WHERE l.entity_id=e.id AND l.language IN ($2,'en'))),
+ UNION SELECT (SELECT l.source_id FROM entity_localizations l WHERE l.entity_id=e.id AND l.language=$2 ORDER BY (l.source_id LIKE 'step.%'),l.source_id LIMIT 1))),
  '[]'::jsonb),
  'localizations',(SELECT jsonb_agg(jsonb_build_object('language',l.language,'sourceId',l.source_id,
  'name',l.name,'aliases',l.aliases,'description',l.description) ORDER BY l.language,l.source_id)

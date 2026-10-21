@@ -237,7 +237,7 @@ struct VerseStudyView: View {
             ForEach(values) { source in
                 VStack(alignment: .leading, spacing: Spacing.xs) {
                     Text(source.citation).font(Typography.footnote)
-                    if let address = source.url, let url = URL(string: address), url.scheme == "https" { Link(L10n.t("Open source"), destination: url).font(Typography.footnote) }
+                    if let url = source.webURL { Link(L10n.t("Open source"), destination: url).font(Typography.footnote) }
                 }.frame(maxWidth: .infinity, alignment: .leading).padding(.vertical, Spacing.sm)
             }
         }.font(Typography.subheadline)

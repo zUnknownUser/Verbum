@@ -117,8 +117,8 @@ private fun androidx.compose.foundation.lazy.LazyListScope.answered(page: AskFea
     items(answer.sourceReferences, key = { it.id }) { source ->
         Column {
             Text(source.citation, style = MaterialTheme.typography.bodySmall)
-            val address = source.url
-            if (address?.startsWith("https://") == true) {
+            val address = source.webUrl
+            if (address != null) {
                 TextButton(onClick = { openSource(address) }) { Text(stringResource(R.string.context_source)) }
             }
         }

@@ -23,10 +23,16 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -173,8 +179,19 @@ internal fun EntityRow(title: String, subtitle: String?, onTap: () -> Unit) {
 
 @Composable
 private fun Sources(sources: List<SourceReference>) {
+    val uriHandler = LocalUriHandler.current
+    var sourceFailed by remember(sources) { mutableStateOf(false) }
     Column(Modifier.padding(top = Spacing.xl), verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {
         Text(stringResource(R.string.sources).uppercase(), style = VerbumTypography.overline, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        for (source in sources) Text(source.citation, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        if (sources.isEmpty()) Text(stringResource(R.string.sources_unavailable), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        for (source in sources) {
+            Text(source.citation, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            source.webUrl?.let { address ->
+                TextButton(onClick = {
+                    sourceFailed = runCatching { uriHandler.openUri(address) }.isFailure
+                }) { Text(stringResource(R.string.context_source)) }
+            }
+        }
+        if (sourceFailed) Text(stringResource(R.string.context_source_failed), style = MaterialTheme.typography.bodySmall)
     }
 }

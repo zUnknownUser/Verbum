@@ -1,3 +1,5 @@
+import Foundation
+
 /// Provenance for a contextual claim (spec §33). Every relationship and every
 /// detail field shown to users points at one of these.
 public struct SourceReference: Identifiable, Codable, Equatable, Hashable, Sendable {
@@ -9,6 +11,17 @@ public struct SourceReference: Identifiable, Codable, Equatable, Hashable, Senda
         self.id = id
         self.citation = citation
         self.url = url
+    }
+
+    /// Only complete HTTPS references can be opened from a source citation.
+    public var webURL: URL? {
+        guard let url, !url.contains(where: { $0.isWhitespace }),
+              let components = URLComponents(string: url),
+              components.scheme?.lowercased() == "https",
+              let host = components.host, !host.isEmpty,
+              components.user == nil, components.password == nil
+        else { return nil }
+        return components.url
     }
 }
 
