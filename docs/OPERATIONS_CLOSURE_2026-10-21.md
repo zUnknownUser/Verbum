@@ -9,13 +9,14 @@ antes da compilação: Xcode 26.6 não abre o formato 110 do projeto atual.
 
 O workflow passa a usar `xcode-27` e seleciona explicitamente
 `/Applications/Xcode_27.0.app/Contents/Developer`. Mantém versões do app,
-formato do projeto, SDKs e testes. YAML e diff foram validados localmente;
+formato do projeto, SDKs e testes. YAML e diff foram validados localmente.
 O run `39627865047` confirmou que Xcode 27 abre o projeto, mas revelou a falta
 de autorização das macros no runner limpo. `.github/swift-macros.json` registra
 somente os cinco targets e commits já autorizados localmente; o workflow confere
 origem e revisão nos dois lockfiles antes de instalar essa lista no runner.
 A validação global de macros permanece ativa e a resolução automática de versões
-é desabilitada. A execução remota dessa correção ainda está pendente.
+é desabilitada. O run `39630239688`, no commit `78cfd5a`, concluiu com sucesso
+o build do app e os testes do pacote Swift no simulador iOS.
 
 Referências do fornecedor: [runner Xcode 27](https://github.com/actions/runner-images/issues/14404)
 e [ferramentas da imagem](https://github.com/actions/runner-images/blob/main/images/macos/xcode-27-arm64-Readme.md).
@@ -36,7 +37,7 @@ e [ferramentas da imagem](https://github.com/actions/runner-images/blob/main/ima
   relatório anterior permanece.
 - O backup local completo foi bloqueado pela revisão automática de permissões
   por poder conter dados pessoais. Lucas escolheu explicitamente enviar o código
-  sem criar esse backup. Os commits `d6f704b` e `529c00a` foram enviados à main;
+  sem criar esse backup. Os commits até `78cfd5a` foram enviados à main;
   nenhum backup novo foi criado e nenhuma credencial foi exibida.
 
 ## Distribuição e pendências
@@ -51,5 +52,15 @@ e [ferramentas da imagem](https://github.com/actions/runner-images/blob/main/ima
   assinatura e não publica aplicativos.
 - App Attest está declarado para produção no iOS. Enforcement de App Check deve
   aguardar validação dos builds distribuídos, como já previsto.
-- Próximos fechamentos: push/deploy com decisão sobre backup, CI remoto verde,
+- O push foi concluído até `78cfd5a`, incluindo a correção de macros. A execução
+  [39630239688](https://github.com/zUnknownUser/Verbum/actions/runs/39630239688)
+  concluiu com sucesso em iOS, Android e backend/conteúdo. Essa validação corresponde
+  ao commit de código `78cfd5a`; o registro documental posterior não altera código.
+- O gatilho da main está ativo e não aguarda checks (`checkSuites=false`).
+  A tentativa de implantar o commit exato pelo serviço conectado foi recusada:
+  `Deploys have been paused temporarily`. A [página oficial do Railway](https://status.railway.com/)
+  confirma o incidente de 21/10/2026 com builds pausados em todas as regiões.
+  A migração `0013` não foi aplicada por esta rodada. A API existente respondeu
+  HTTP 200 em `/readyz`; não foi tentado contornar a suspensão do fornecedor.
+- Próximos fechamentos: retomar o deploy após a recuperação do Railway,
   política de privacidade/metadados e assinatura das lojas; homologação por último.

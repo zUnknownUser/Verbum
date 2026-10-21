@@ -65,10 +65,11 @@ não foram reescritos, nem foi fabricada uma nova aprovação editorial humana.
 
 ## Pendências delimitadas
 
-1. Implantar API/migração `0013` e distribuir os builds mobile. Esta rodada foi
-   validada localmente; não executou SQL de escrita na produção. O deploy da main
-   pode executar a migração pelo pre-deploy existente: guardar backup antes de
-   atualizar e conferir contagens/fontes após a implantação.
+1. Implantar API/migração `0013` e distribuir os builds mobile. O código foi enviado
+   à main; Lucas escolheu explicitamente seguir sem o backup local proposto.
+   O Railway recusou o deploy durante o incidente de 21/10, portanto a migração
+   permanece pendente. Retomar a implantação e conferir contagens/fontes quando
+   o fornecedor liberar builds; ver `OPERATIONS_CLOSURE_2026-10-21.md`.
 2. Cache de conteúdo tem validade de uma hora; offline pode continuar exibindo a
    cópia anterior até uma atualização online. Não foram apagados dados do leitor.
 3. Revisão humana final de uma amostra delimitada das interpretações e traduções
