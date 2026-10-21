@@ -80,8 +80,12 @@ jobs:
             android/**/build/test-results/
 
   ios:
-    runs-on: macos-latest
+    # Project format 110 and the iOS 27 SDK require Xcode 27.
+    # macos-latest currently defaults to Xcode 26.6.
+    runs-on: xcode-27
     timeout-minutes: 45
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_27.0.app/Contents/Developer
     steps:
       - uses: actions/checkout@v7
       - name: Report installed toolchain
