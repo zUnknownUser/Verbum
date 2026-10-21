@@ -67,7 +67,7 @@ jobs:
       - uses: gradle/actions/setup-gradle@v6
       - uses: android-actions/setup-android@v4
       - name: Install the SDK required by the project
-        run: sdkmanager "platforms;android-37"
+        run: sdkmanager "platforms;android-37.0"
       - name: Unit tests and debug build
         working-directory: android
         run: bash ./gradlew :core:models:test :core:common:test :core:clients:test testDebugUnitTest assembleDebug --no-daemon
