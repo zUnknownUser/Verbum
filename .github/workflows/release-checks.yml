@@ -92,11 +92,30 @@ jobs:
         run: |
           xcodebuild -version
           xcrun swift --version
+      - name: Trust the pinned Swift macros
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          approvals = json.loads(Path(".github/swift-macros.json").read_text())
+          for lockfile in ("VerbumKit/Package.resolved", "Verbum.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved"):
+              pins = {p["identity"]: p for p in json.loads(Path(lockfile).read_text())["pins"]}
+              for approval in approvals:
+                  identity = approval["packageIdentity"]
+                  pin = pins[identity]
+                  if (pin["state"]["revision"] != approval["fingerprint"] or
+                      pin["location"] != "https://github.com/pointfreeco/" + identity):
+                      raise SystemExit(f"Review macro approval after dependency change: {identity}")
+          destination = Path.home() / "Library/org.swift.swiftpm/security/macros.json"
+          destination.parent.mkdir(parents=True, exist_ok=True)
+          destination.write_text(json.dumps(approvals))
+          PY
       - name: Build iOS app without distribution signing
         run: >-
           xcodebuild -project Verbum.xcodeproj -scheme Verbum
           -configuration Debug -destination 'generic/platform=iOS Simulator'
           -derivedDataPath "${RUNNER_TEMP}/verbum-derived"
+          -disableAutomaticPackageResolution
           CODE_SIGNING_ALLOWED=NO build
       - name: Select an available iPhone simulator
         run: |
@@ -119,6 +138,7 @@ jobs:
           -destination "platform=iOS Simulator,id=${VERBUM_TEST_SIMULATOR}"
           -derivedDataPath "${RUNNER_TEMP}/verbum-derived"
           -resultBundlePath "${RUNNER_TEMP}/verbum-tests.xcresult"
+          -disableAutomaticPackageResolution
           CODE_SIGNING_ALLOWED=NO test
       - uses: actions/upload-artifact@v7
         if: failure()

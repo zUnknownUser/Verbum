@@ -10,7 +10,12 @@ antes da compilação: Xcode 26.6 não abre o formato 110 do projeto atual.
 O workflow passa a usar `xcode-27` e seleciona explicitamente
 `/Applications/Xcode_27.0.app/Contents/Developer`. Mantém versões do app,
 formato do projeto, SDKs e testes. YAML e diff foram validados localmente;
-o resultado remoto desta correção ainda depende do push.
+O run `39627865047` confirmou que Xcode 27 abre o projeto, mas revelou a falta
+de autorização das macros no runner limpo. `.github/swift-macros.json` registra
+somente os cinco targets e commits já autorizados localmente; o workflow confere
+origem e revisão nos dois lockfiles antes de instalar essa lista no runner.
+A validação global de macros permanece ativa e a resolução automática de versões
+é desabilitada. A execução remota dessa correção ainda está pendente.
 
 Referências do fornecedor: [runner Xcode 27](https://github.com/actions/runner-images/issues/14404)
 e [ferramentas da imagem](https://github.com/actions/runner-images/blob/main/images/macos/xcode-27-arm64-Readme.md).
@@ -29,10 +34,10 @@ e [ferramentas da imagem](https://github.com/actions/runner-images/blob/main/ima
 - PITR é diferente dos snapshots agendados do volume. Esta consulta não confirma
   a presença ou ausência desses snapshots; a pendência de backups automáticos do
   relatório anterior permanece.
-- O backup local completo solicitado antes do push foi bloqueado pela revisão
-  automática de permissões porque pode conter dados pessoais. Foi solicitada
-  autorização explícita para o arquivo local, privado e fora do Git. Nenhuma
-  credencial foi exibida e nenhum backup novo é declarado concluído.
+- O backup local completo foi bloqueado pela revisão automática de permissões
+  por poder conter dados pessoais. Lucas escolheu explicitamente enviar o código
+  sem criar esse backup. Os commits `d6f704b` e `529c00a` foram enviados à main;
+  nenhum backup novo foi criado e nenhuma credencial foi exibida.
 
 ## Distribuição e pendências
 
