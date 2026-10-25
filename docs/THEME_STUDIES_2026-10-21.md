@@ -1,5 +1,9 @@
 # Cinco temas aprofundados — 21/10/2026
 
+Atualização em 24/10: API, migrações e este lote foram publicados em produção.
+Veja [o registro de implantação e verificação](DEPLOY_PUBLICATION_2026-10-24.md).
+O relato abaixo preserva o estado da entrega original.
+
 ## Escopo entregue
 
 Aliança, Fé, Adoração, Obediência e Santidade, nas cinco fichas já existentes.

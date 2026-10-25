@@ -1,5 +1,9 @@
 # Contexto editorial do Êxodo — 21/10/2026
 
+Atualização em 24/10: API, migrações e este lote foram publicados em produção.
+Veja [o registro de implantação e verificação](DEPLOY_PUBLICATION_2026-10-24.md).
+O relato abaixo preserva o estado da entrega original.
+
 ## Recorte entregue
 
 21 estudos de capítulos, em inglês e português brasileiro, sobre as leituras da
