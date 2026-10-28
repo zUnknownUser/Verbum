@@ -1,0 +1,552 @@
+{
+  "checkedAt": "2026-10-28T19:29:16.839969+00:00",
+  "commit": "0ff9e864ff0b16fc778729f175a2a8d427e744ad",
+  "totals": [
+    {
+      "type": "event",
+      "n": 137
+    },
+    {
+      "type": "originalTerm",
+      "n": 22716
+    },
+    {
+      "type": "passage",
+      "n": 8
+    },
+    {
+      "type": "person",
+      "n": 3041
+    },
+    {
+      "type": "place",
+      "n": 1003
+    },
+    {
+      "type": "theme",
+      "n": 80
+    }
+  ],
+  "guides": [
+    {
+      "book_id": "Deut",
+      "chapter": 34,
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "book_id": "Exod",
+      "chapter": 2,
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "book_id": "Exod",
+      "chapter": 3,
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "book_id": "Exod",
+      "chapter": 7,
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "book_id": "Exod",
+      "chapter": 8,
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "book_id": "Exod",
+      "chapter": 9,
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "book_id": "Exod",
+      "chapter": 10,
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "book_id": "Exod",
+      "chapter": 12,
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "book_id": "Exod",
+      "chapter": 14,
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "book_id": "Exod",
+      "chapter": 15,
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "book_id": "Exod",
+      "chapter": 16,
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "book_id": "Exod",
+      "chapter": 17,
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "book_id": "Exod",
+      "chapter": 18,
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "book_id": "Exod",
+      "chapter": 19,
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "book_id": "Exod",
+      "chapter": 20,
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "book_id": "Exod",
+      "chapter": 32,
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "book_id": "Exod",
+      "chapter": 40,
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "book_id": "Num",
+      "chapter": 13,
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "book_id": "Num",
+      "chapter": 14,
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "book_id": "Num",
+      "chapter": 21,
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "book_id": "Num",
+      "chapter": 22,
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    }
+  ],
+  "profiles": [
+    {
+      "entity_id": "fixture.person.moses",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "fixture.place.egypt",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.person.H0175",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.person.H0461H",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.person.H1109A",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.person.H1111",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.person.H1647G",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.person.H2354G",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.person.H3091G",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.person.H3503",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.person.H3612G",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.person.H4813G",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.person.H6547I",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.person.H6547J",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.person.H6547O",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.person.H6855",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.place.H0362",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.place.H1316",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.place.H2809",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.place.H3667A",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.place.H4080H",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.place.H4124G",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.place.H4785",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.place.H5015H",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.place.H5488G",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.place.H5512B",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.place.H5514G",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.place.H6290G",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.place.H6946G",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "step.place.H7508",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    }
+  ],
+  "themes": [
+    {
+      "entity_id": "editorial.theme.covenant",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "editorial.theme.holiness",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "editorial.theme.obedience",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "editorial.theme.worship",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    },
+    {
+      "entity_id": "fixture.theme.faith",
+      "languages": [
+        "en",
+        "pt-BR"
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "n": 98
+    }
+  ],
+  "sequences": [
+    {
+      "era_id": "exodus",
+      "n": 16
+    }
+  ],
+  "source_quality": [
+    {
+      "metric": "edges_without_sources",
+      "n": 0
+    },
+    {
+      "metric": "demo_sources",
+      "n": 0
+    }
+  ],
+  "entity_summary_coverage": [
+    {
+      "type": "person",
+      "language": "en",
+      "total": 3041,
+      "without_summary": 3014,
+      "without_source": 0,
+      "placeholder_names": 0
+    },
+    {
+      "type": "person",
+      "language": "pt-BR",
+      "total": 3041,
+      "without_summary": 3014,
+      "without_source": 0,
+      "placeholder_names": 0
+    },
+    {
+      "type": "place",
+      "language": "en",
+      "total": 1003,
+      "without_summary": 979,
+      "without_source": 0,
+      "placeholder_names": 0
+    },
+    {
+      "type": "place",
+      "language": "pt-BR",
+      "total": 1003,
+      "without_summary": 979,
+      "without_source": 0,
+      "placeholder_names": 0
+    },
+    {
+      "type": "theme",
+      "language": "en",
+      "total": 80,
+      "without_summary": 0,
+      "without_source": 0,
+      "placeholder_names": 0
+    },
+    {
+      "type": "theme",
+      "language": "pt-BR",
+      "total": 80,
+      "without_summary": 0,
+      "without_source": 0,
+      "placeholder_names": 0
+    },
+    {
+      "type": "event",
+      "language": "en",
+      "total": 137,
+      "without_summary": 0,
+      "without_source": 0,
+      "placeholder_names": 0
+    },
+    {
+      "type": "event",
+      "language": "pt-BR",
+      "total": 137,
+      "without_summary": 0,
+      "without_source": 0,
+      "placeholder_names": 0
+    },
+    {
+      "type": "originalTerm",
+      "language": "en",
+      "total": 22716,
+      "without_summary": 1,
+      "without_source": 0,
+      "placeholder_names": 0
+    },
+    {
+      "type": "originalTerm",
+      "language": "pt-BR",
+      "total": 22716,
+      "without_summary": 1,
+      "without_source": 0,
+      "placeholder_names": 0
+    }
+  ]
+}

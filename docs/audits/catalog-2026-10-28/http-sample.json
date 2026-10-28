@@ -1,0 +1,240 @@
+[
+  {
+    "path": "/v1/passages/Exod.14/context?lang=en",
+    "status": 200,
+    "keys": [
+      "reference",
+      "entities",
+      "relatedPassages",
+      "sources",
+      "study"
+    ],
+    "study": true,
+    "entities": 10,
+    "sources": 26,
+    "summary": null
+  },
+  {
+    "path": "/v1/passages/Exod.14/context?lang=pt-BR",
+    "status": 200,
+    "keys": [
+      "reference",
+      "entities",
+      "relatedPassages",
+      "sources",
+      "study"
+    ],
+    "study": true,
+    "entities": 10,
+    "sources": 27,
+    "summary": null
+  },
+  {
+    "path": "/v1/passages/Ps.23/context?lang=en",
+    "status": 200,
+    "keys": [
+      "reference",
+      "entities",
+      "relatedPassages",
+      "sources"
+    ],
+    "study": false,
+    "entities": 1,
+    "sources": 2,
+    "summary": null
+  },
+  {
+    "path": "/v1/passages/Ps.23/context?lang=pt-BR",
+    "status": 200,
+    "keys": [
+      "reference",
+      "entities",
+      "relatedPassages",
+      "sources"
+    ],
+    "study": false,
+    "entities": 1,
+    "sources": 3,
+    "summary": null
+  },
+  {
+    "path": "/v1/passages/Ps.91/context?lang=en",
+    "status": 404,
+    "body": "{\"code\":\"content_unavailable\",\"message\":\"not found\"}\n"
+  },
+  {
+    "path": "/v1/passages/Ps.91/context?lang=pt-BR",
+    "status": 404,
+    "body": "{\"code\":\"content_unavailable\",\"message\":\"not found\"}\n"
+  },
+  {
+    "path": "/v1/passages/Isa.53/context?lang=en",
+    "status": 404,
+    "body": "{\"code\":\"content_unavailable\",\"message\":\"not found\"}\n"
+  },
+  {
+    "path": "/v1/passages/Isa.53/context?lang=pt-BR",
+    "status": 404,
+    "body": "{\"code\":\"content_unavailable\",\"message\":\"not found\"}\n"
+  },
+  {
+    "path": "/v1/passages/Matt.5/context?lang=en",
+    "status": 200,
+    "keys": [
+      "reference",
+      "entities",
+      "relatedPassages",
+      "sources"
+    ],
+    "study": false,
+    "entities": 4,
+    "sources": 13,
+    "summary": null
+  },
+  {
+    "path": "/v1/passages/Matt.5/context?lang=pt-BR",
+    "status": 200,
+    "keys": [
+      "reference",
+      "entities",
+      "relatedPassages",
+      "sources"
+    ],
+    "study": false,
+    "entities": 4,
+    "sources": 14,
+    "summary": null
+  },
+  {
+    "path": "/v1/passages/John.3/context?lang=en",
+    "status": 200,
+    "keys": [
+      "reference",
+      "entities",
+      "relatedPassages",
+      "sources"
+    ],
+    "study": false,
+    "entities": 13,
+    "sources": 17,
+    "summary": null
+  },
+  {
+    "path": "/v1/passages/John.3/context?lang=pt-BR",
+    "status": 200,
+    "keys": [
+      "reference",
+      "entities",
+      "relatedPassages",
+      "sources"
+    ],
+    "study": false,
+    "entities": 13,
+    "sources": 18,
+    "summary": null
+  },
+  {
+    "path": "/v1/passages/Rom.8/context?lang=en",
+    "status": 200,
+    "keys": [
+      "reference",
+      "entities",
+      "relatedPassages",
+      "sources"
+    ],
+    "study": false,
+    "entities": 6,
+    "sources": 12,
+    "summary": null
+  },
+  {
+    "path": "/v1/passages/Rom.8/context?lang=pt-BR",
+    "status": 200,
+    "keys": [
+      "reference",
+      "entities",
+      "relatedPassages",
+      "sources"
+    ],
+    "study": false,
+    "entities": 6,
+    "sources": 13,
+    "summary": null
+  },
+  {
+    "path": "/v1/passages/Heb.1/context?lang=en",
+    "status": 404,
+    "body": "{\"code\":\"content_unavailable\",\"message\":\"not found\"}\n"
+  },
+  {
+    "path": "/v1/passages/Heb.1/context?lang=pt-BR",
+    "status": 404,
+    "body": "{\"code\":\"content_unavailable\",\"message\":\"not found\"}\n"
+  },
+  {
+    "path": "/v1/passages/Rev.21/context?lang=en",
+    "status": 200,
+    "keys": [
+      "reference",
+      "entities",
+      "relatedPassages",
+      "sources"
+    ],
+    "study": false,
+    "entities": 5,
+    "sources": 8,
+    "summary": null
+  },
+  {
+    "path": "/v1/passages/Rev.21/context?lang=pt-BR",
+    "status": 200,
+    "keys": [
+      "reference",
+      "entities",
+      "relatedPassages",
+      "sources"
+    ],
+    "study": false,
+    "entities": 5,
+    "sources": 9,
+    "summary": null
+  },
+  {
+    "path": "/v1/entities/fixture.person.jesus?lang=en",
+    "status": 200,
+    "keys": [
+      "sourceRecords",
+      "localizations",
+      "entity",
+      "aliases",
+      "approximateDates",
+      "role",
+      "modernGeography",
+      "keyPassages",
+      "sources"
+    ],
+    "study": false,
+    "entities": 0,
+    "sources": 2,
+    "summary": "Central figure of the New Testament."
+  },
+  {
+    "path": "/v1/entities/fixture.person.jesus?lang=pt-BR",
+    "status": 200,
+    "keys": [
+      "sourceRecords",
+      "localizations",
+      "entity",
+      "aliases",
+      "approximateDates",
+      "role",
+      "modernGeography",
+      "keyPassages",
+      "sources"
+    ],
+    "study": false,
+    "entities": 0,
+    "sources": 3,
+    "summary": "Figura central do Novo Testamento."
+  }
+]
