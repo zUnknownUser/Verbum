@@ -1,0 +1,54 @@
+{
+  "source": "book-orientations/catalog.json",
+  "status": "published",
+  "bundleHash": "e75c823b9dddf85481c0da3efe02594ff55ea638047f3c6600ecb54f09bf1756",
+  "verifiedAt": "2026-10-28T20:12:48.457102+00:00",
+  "deploymentId": "1b315bee-bf17-47eb-97a4-c38edce0ac4f",
+  "deploymentCommit": "2975a71e8cf58332536e7bc86cbafede1893a0f4",
+  "books": 66,
+  "presentations": 132,
+  "before": {
+    "entities": 26985,
+    "entity_source_records": 26760,
+    "entity_occurrences": 29763,
+    "timeline_events": 98,
+    "scripture_verses": 31098,
+    "daily_verse_pool": 101,
+    "chapter_studies": 21,
+    "entity_profiles": 30,
+    "theme_studies": 5,
+    "relationships": 4933,
+    "book_orientations": 0,
+    "book_orientation_sources": 0
+  },
+  "after": {
+    "entities": 26985,
+    "entity_source_records": 26760,
+    "entity_occurrences": 29763,
+    "timeline_events": 98,
+    "scripture_verses": 31098,
+    "daily_verse_pool": 101,
+    "chapter_studies": 21,
+    "entity_profiles": 30,
+    "theme_studies": 5,
+    "relationships": 4933,
+    "book_orientations": 66,
+    "book_orientation_sources": 132
+  },
+  "databaseContentMatchesApprovedCatalog": true,
+  "httpVerifiedAt": "2026-10-28T20:13:21.381662+00:00",
+  "httpChecks": 144,
+  "httpAllBooksBothLanguages": true,
+  "existingChapterStudyPreserved": true,
+  "readiness": "ready",
+  "releaseChecks": {
+    "runId": 40760276991,
+    "commit": "2975a71e8cf58332536e7bc86cbafede1893a0f4",
+    "conclusion": "success",
+    "jobs": {
+      "ios": "success",
+      "android": "success",
+      "backend-and-content": "success"
+    }
+  }
+}
