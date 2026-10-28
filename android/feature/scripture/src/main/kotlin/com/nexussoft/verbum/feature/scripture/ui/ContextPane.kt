@@ -46,13 +46,16 @@ internal fun ContextPane(state: ContextFeature.State, onBack: () -> Unit, send: 
                     TextButton(onClick = { send(ContextFeature.Action.RetryTapped) }) { Text(stringResource(R.string.try_again)) }
                 }
                 is ContextFeature.Content.Loaded -> {
+                    content.page.bookOrientation?.let { orientation ->
+                        item { BookOrientationContent(orientation, content.page.reference.bookId, content.page.sources) { send(ContextFeature.Action.PassageTapped(it)) } }
+                    }
                     content.page.study?.let { study ->
                         item { ChapterStudyContent(study, content.page.sources) { send(ContextFeature.Action.PassageTapped(it)) } }
                     }
                     if (content.page.isFixture) item {
                         Text(stringResource(R.string.context_fixture), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
-                    item { Text(stringResource(R.string.context_intro)) }
+                    if (content.page.entities.isNotEmpty()) item { Text(stringResource(R.string.context_intro)) }
                     for ((type, title) in listOf(BibleEntityType.PERSON to R.string.people, BibleEntityType.PLACE to R.string.places, BibleEntityType.EVENT to R.string.events, BibleEntityType.THEME to R.string.themes)) {
                         val entities = content.page.entities.filter { it.type == type }
                         if (entities.isNotEmpty()) {

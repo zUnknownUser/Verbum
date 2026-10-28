@@ -44,11 +44,12 @@ extension VerbumAPI {
             let entities: [BibleEntity]
             let relatedPassages: [PassageReference]
             let sources: [SourceReference]
+            let bookOrientation: BookOrientation?
             let study: ChapterStudy?
         }
         do {
             let wire: Wire = try await get("/v1/passages/\(reference.bookId).\(reference.chapter)/context", query: [Self.lang(language)] + (reference.verses.map { [URLQueryItem(name: "verse", value: String($0.lowerBound))] } ?? []))
-            return PassageContext(reference: wire.reference, entities: wire.entities, relatedPassages: wire.relatedPassages, sources: wire.sources, isFixture: false, study: wire.study)
+            return PassageContext(reference: wire.reference, entities: wire.entities, relatedPassages: wire.relatedPassages, sources: wire.sources, isFixture: false, study: wire.study, bookOrientation: wire.bookOrientation)
         } catch VerbumAPIError.problem(.contentUnavailable, _) {
             return nil
         }

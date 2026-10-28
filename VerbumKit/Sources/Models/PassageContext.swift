@@ -6,15 +6,17 @@ public struct PassageContext: Equatable, Sendable, Codable {
     public let relatedPassages: [PassageReference]
     public let sources: [SourceReference]
     public let isFixture: Bool
+    public let bookOrientation: BookOrientation?
     public let study: ChapterStudy?
 
-    public init(reference: PassageReference, entities: [BibleEntity], relatedPassages: [PassageReference], sources: [SourceReference], isFixture: Bool, study: ChapterStudy? = nil) {
+    public init(reference: PassageReference, entities: [BibleEntity], relatedPassages: [PassageReference], sources: [SourceReference], isFixture: Bool, study: ChapterStudy? = nil, bookOrientation: BookOrientation? = nil) {
         self.reference = reference
         self.entities = entities
         self.relatedPassages = relatedPassages
         self.sources = sources
         self.isFixture = isFixture
         self.study = study
+        self.bookOrientation = bookOrientation
     }
 }
 

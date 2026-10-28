@@ -1,0 +1,66 @@
+{
+  "reference": {
+    "bookId": "Heb",
+    "chapter": 1
+  },
+  "entities": [],
+  "relatedPassages": [],
+  "sources": [
+    {
+      "id": "editorial.book-orientations.2026-10",
+      "citation": "Verbum · Book orientations / Orientações dos livros · 2026-10",
+      "url": null
+    },
+    {
+      "id": "orientation.scripture.Heb",
+      "citation": "Hebrews 1–13 · World English Bible",
+      "url": "https://ebible.org/engwebp/HEB.htm"
+    }
+  ],
+  "bookOrientation": {
+    "genre": "Exortação e argumentação teológica",
+    "context": "A obra se dirige a ouvintes que precisam perseverar, interpretando as Escrituras de Israel por meio do sacerdócio, do sacrifício de Jesus e do acesso a Deus. Ela não nomeia seu autor.",
+    "purpose": "Acompanhe exposição e advertência em conjunto. Os exemplos de fé sustentam a perseverança, enquanto as imagens do santuário desenvolvem um argumento contínuo, não comparações isoladas.",
+    "outline": [
+      {
+        "title": "O Filho e a escuta fiel",
+        "chapterStart": 1,
+        "chapterEnd": 4
+      },
+      {
+        "title": "Sacerdócio e aliança",
+        "chapterStart": 5,
+        "chapterEnd": 10
+      },
+      {
+        "title": "Fé e perseverança",
+        "chapterStart": 11,
+        "chapterEnd": 13
+      }
+    ],
+    "readings": [
+      {
+        "bookId": "Heb",
+        "chapter": 4,
+        "verseStart": null,
+        "verseEnd": null
+      },
+      {
+        "bookId": "Heb",
+        "chapter": 10,
+        "verseStart": null,
+        "verseEnd": null
+      },
+      {
+        "bookId": "Heb",
+        "chapter": 11,
+        "verseStart": null,
+        "verseEnd": null
+      }
+    ],
+    "sourceReferenceIds": [
+      "editorial.book-orientations.2026-10",
+      "orientation.scripture.Heb"
+    ]
+  }
+}

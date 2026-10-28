@@ -28,6 +28,9 @@ public struct ContextView: View {
                         Button(L10n.t("Try Again")) { store.send(.retryTapped) }
                     }
                 case .loaded(let context):
+                    if let orientation = context.bookOrientation {
+                        BookOrientationView(orientation: orientation, bookId: context.reference.bookId, sources: context.sources) { store.send(.passageTapped($0)) }
+                    }
                     if let study = context.study {
                         ChapterStudyView(study: study, sources: context.sources) { store.send(.passageTapped($0)) }
                     }
@@ -35,8 +38,10 @@ public struct ContextView: View {
                         Text(L10n.t("Demonstration content · Connections from the sample collection; not a complete or reviewed commentary."))
                             .font(Typography.footnote).foregroundStyle(Palette.inkSecondary)
                     }
+                    if !context.entities.isEmpty {
                     Text(L10n.t("Explore the people, places and themes connected to this chapter. Related readings below share an entity in this collection; they are not necessarily parallel accounts."))
                         .font(Typography.subheadline)
+                    }
                     entities(context, type: .person, title: L10n.t("People"), symbol: "person")
                     entities(context, type: .place, title: L10n.t("Places"), symbol: "mappin.and.ellipse")
                     entities(context, type: .event, title: L10n.t("Events"), symbol: "clock")

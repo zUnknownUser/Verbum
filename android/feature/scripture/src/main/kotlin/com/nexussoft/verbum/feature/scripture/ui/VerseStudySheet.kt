@@ -145,6 +145,9 @@ internal fun VerseStudySheet(state: VerseStudyFeature.State, send: (Action)->Uni
                             if(state.contextLoading) CircularProgressIndicator()
                             else if(state.context != null || state.contextEntities.isNotEmpty()) {
                                 state.context?.let {context->
+                                    context.bookOrientation?.let { orientation ->
+                                        BookOrientationContent(orientation, context.reference.bookId, context.sources) { send(Action.PreviewPassage(it)) }
+                                    }
                                     context.study?.let {study->
                                         ChapterStudyContent(study,context.sources) {send(Action.PreviewPassage(it))}
                                     }
@@ -157,7 +160,7 @@ internal fun VerseStudySheet(state: VerseStudyFeature.State, send: (Action)->Uni
                                     }
                                     state.visibleEntities.forEach {StudyEntity(it,send)}
                                     if(state.matchingEntities.size>state.entityLimit) TextButton(onClick={send(Action.MoreEntities)}) {Text(stringResource(R.string.history_more))}
-                                } else if(state.context?.study==null) Text(stringResource(R.string.reader_no_context))
+                                } else if(state.context?.study==null && state.context?.bookOrientation==null) Text(stringResource(R.string.reader_no_context))
                                 state.context?.let {StudySources(it.sources)}
                             } else if(state.contextFailed) LayerRetry {send(Action.TabChanged(Tab.CONTEXT))}
                             else Text(stringResource(R.string.reader_no_context))

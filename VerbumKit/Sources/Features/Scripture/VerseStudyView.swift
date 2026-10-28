@@ -154,10 +154,13 @@ struct VerseStudyView: View {
                 Text(store.chapterGuide ? StudyGuideCopy.chapterScope : L10n.t("Connections documented for this chapter; not every link is a direct parallel to this verse.")).font(Typography.footnote).foregroundStyle(Palette.inkSecondary)
                 if store.contextLoading { ProgressView() }
                 else if let context = store.context {
+                    if let orientation = context.bookOrientation {
+                        BookOrientationView(orientation: orientation, bookId: context.reference.bookId, sources: context.sources) { store.send(.previewPassage($0)) }
+                    }
                     if let study = context.study {
                         ChapterStudyView(study: study, sources: context.sources) { store.send(.previewPassage($0)) }
                     }
-                    if store.resourceTypes.isEmpty && context.study == nil {
+                    if store.resourceTypes.isEmpty && context.study == nil && context.bookOrientation == nil {
                         Text(L10n.t("No sourced context is available for this passage yet.")).font(Typography.subheadline)
                     } else if !store.resourceTypes.isEmpty {
                         resourceBrowser

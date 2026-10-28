@@ -1,0 +1,10 @@
+<resources>
+    <string name="book_orientation_title">Orientação do livro</string>
+    <string name="book_orientation_scope">Uma introdução editorial ao livro inteiro, não um comentário deste capítulo.</string>
+    <string name="book_orientation_focus">Foco da leitura</string>
+    <string name="book_orientation_structure">Estrutura do livro</string>
+    <string name="book_orientation_begin">Por onde começar</string>
+    <string name="book_orientation_sources">Fontes desta orientação</string>
+    <string name="book_orientation_chapters">Capítulos %1$d–%2$d</string>
+    <string name="book_orientation_source_scope">Síntese editorial original do livro bíblico citado. Fonte externa: inglês (WEB). As leituras usam sua tradução bíblica selecionada.</string>
+</resources>

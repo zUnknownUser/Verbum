@@ -9,7 +9,10 @@ import (
 
 // Context follows only existing, sourced associations, as the fixture store does.
 func (s *Store) Context(ctx context.Context, bookID string, chapter int) (domain.PassageContext, error) {
-	return readJSON[domain.PassageContext](ctx, s, `WITH study AS (
+	return readJSON[domain.PassageContext](ctx, s, `WITH orientation AS (
+ SELECT presentations->$4 AS body FROM book_orientations
+ WHERE book_id=$2 AND $3 BETWEEN 1 AND chapter_count AND presentations ? $4
+ ), study AS (
  SELECT presentations->$4 AS body FROM chapter_studies
  WHERE book_id=$2 AND chapter=$3 AND presentations ? $4
  ), direct_edges AS (
@@ -39,7 +42,8 @@ func (s *Store) Context(ctx context.Context, bookID string, chapter int) (domain
  ) o
  ORDER BY o.book_id,o.chapter,o.verse LIMIT 24
  ), source_ids AS (
- SELECT source_id FROM selected_records
+ SELECT source_id FROM book_orientation_sources WHERE book_id=$2 AND EXISTS (SELECT 1 FROM orientation)
+ UNION SELECT source_id FROM selected_records
  UNION SELECT ss.source_id FROM theme_study_sources ss JOIN linked l ON l.id=ss.entity_id JOIN theme_studies ts ON ts.entity_id=ss.entity_id WHERE ts.presentations ? $4
  UNION SELECT source_id FROM chapter_study_sources
  WHERE book_id=$2 AND chapter=$3 AND EXISTS (SELECT 1 FROM study)
@@ -51,8 +55,9 @@ func (s *Store) Context(ctx context.Context, bookID string, chapter int) (domain
  UNION SELECT rs.source_id FROM relationship_sources rs JOIN related r ON r.id=rs.relationship_id
  ) SELECT jsonb_build_object('reference',jsonb_build_object('bookId',$2::text,'chapter',$3::int),
  'study',(SELECT body FROM study),
+ 'bookOrientation',(SELECT body FROM orientation),
  'entities',COALESCE((SELECT jsonb_agg(`+localizedEntityJSON("$4")+` ORDER BY e.position,e.id) FROM entities e WHERE e.id IN (SELECT id FROM linked) AND e.type<>'passage'),'[]'::jsonb),
  'relatedPassages',COALESCE((SELECT jsonb_agg(jsonb_build_object('bookId',o.book_id,'chapter',o.chapter,'verseStart',o.verse,'verseEnd',o.verse) ORDER BY o.book_id,o.chapter,o.verse) FROM occurrence_refs o),'[]'::jsonb) || COALESCE((SELECT jsonb_agg(jsonb_build_object('bookId',split_part(p.other,'.',2),'chapter',split_part(p.other,'.',3)::int) ORDER BY p.position,p.other) FROM related_passages p),'[]'::jsonb),
  'sources',COALESCE((SELECT jsonb_agg(`+localizedSourceJSON("$4")+` ORDER BY s.position,s.id) FROM sources s WHERE s.id IN (SELECT source_id FROM source_ids)),'[]'::jsonb))
- WHERE EXISTS (SELECT 1 FROM linked) OR EXISTS (SELECT 1 FROM study)`, fmt.Sprintf("passage.%s.%d", bookID, chapter), bookID, chapter, store.Language(ctx), store.Verse(ctx))
+ WHERE EXISTS (SELECT 1 FROM linked) OR EXISTS (SELECT 1 FROM study) OR EXISTS (SELECT 1 FROM orientation)`, fmt.Sprintf("passage.%s.%d", bookID, chapter), bookID, chapter, store.Language(ctx), store.Verse(ctx))
 }

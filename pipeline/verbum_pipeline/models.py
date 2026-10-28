@@ -434,8 +434,31 @@ class ThemeStudy(Model):
     previousHash: Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")] | None = None
 
 
+class BookSection(Model):
+    title: Text
+    chapterStart: Annotated[int, Field(ge=1)]
+    chapterEnd: Annotated[int, Field(ge=1)]
+
+
+class BookOrientationPresentation(Model):
+    genre: Text
+    context: Text
+    purpose: Text
+    outline: Annotated[list[BookSection], Field(min_length=1, max_length=5)]
+    readings: Annotated[list[Reference], Field(min_length=1, max_length=3)]
+    sourceReferenceIds: Annotated[list[Text], Field(min_length=1)]
+
+
+class BookOrientation(Model):
+    bookId: Text
+    chapterCount: Annotated[int, Field(ge=1)]
+    presentations: dict[str, BookOrientationPresentation]
+    previousHash: Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")] | None = None
+
+
 class Bundle(Model):
-    version: Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10] = 1
+    version: Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] = 1
+    bookOrientations: list[BookOrientation] | None = None
     themeStudies: list[ThemeStudy] | None = None
     entityProfiles: list[EntityProfile] | None = None
     chapterStudies: list[ChapterStudy] | None = None
@@ -455,6 +478,8 @@ class Bundle(Model):
     @model_serializer(mode="wrap")
     def serialize_bundle(self, handler):
         value = handler(self)
+        if self.version != 11:
+            value.pop("bookOrientations", None)
         if self.version != 10:
             value.pop("themeStudies", None)
         if self.version != 9:
@@ -477,6 +502,11 @@ class Bundle(Model):
 
     @model_validator(mode="after")
     def evidence(self) -> Self:
+        if (self.version == 11) != (self.bookOrientations is not None):
+            raise ValueError("version 11 requires book orientations")
+        if self.bookOrientations is not None:
+            from .book_orientations import validate_catalog
+            validate_catalog(self)
         if (self.version == 10) != (self.themeStudies is not None):
             raise ValueError("version 10 requires theme studies")
         if self.themeStudies is not None:

@@ -8,6 +8,7 @@ data class PassageContext(
     val sources: List<SourceReference>,
     val isFixture: Boolean,
     val study: ChapterStudy? = null,
+    val bookOrientation: BookOrientation? = null,
 )
 
 data class StudyNote(val text: String, val references: List<PassageReference>)

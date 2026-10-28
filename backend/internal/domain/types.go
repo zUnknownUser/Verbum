@@ -102,6 +102,7 @@ type GraphSnapshot struct {
 
 // PassageContext is chapter-level context (§10, §22.4).
 type PassageContext struct {
+	BookOrientation *BookOrientation   `json:"bookOrientation,omitempty"`
 	Reference       PassageReference   `json:"reference"`
 	Entities        []Entity           `json:"entities"`
 	RelatedPassages []PassageReference `json:"relatedPassages"`

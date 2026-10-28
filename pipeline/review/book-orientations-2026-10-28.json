@@ -1,0 +1,944 @@
+{
+  "version": 1,
+  "bundleHash": "e75c823b9dddf85481c0da3efe02594ff55ea638047f3c6600ecb54f09bf1756",
+  "items": [
+    {
+      "key": "sources:editorial.book-orientations.2026-10",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Gen",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Exod",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Lev",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Num",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Deut",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Josh",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Judg",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Ruth",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.1Sam",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.2Sam",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.1Kgs",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.2Kgs",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.1Chr",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.2Chr",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Ezra",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Neh",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Esth",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Job",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Ps",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Prov",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Eccl",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Song",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Isa",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Jer",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Lam",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Ezek",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Dan",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Hos",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Joel",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Amos",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Obad",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Jonah",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Mic",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Nah",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Hab",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Zeph",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Hag",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Zech",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Mal",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Matt",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Mark",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Luke",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.John",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Acts",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Rom",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.1Cor",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.2Cor",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Gal",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Eph",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Phil",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Col",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.1Thess",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.2Thess",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.1Tim",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.2Tim",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Titus",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Phlm",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Heb",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Jas",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.1Pet",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.2Pet",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.1John",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.2John",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.3John",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Jude",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "sources:orientation.scripture.Rev",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "dailyVersePool",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Gen",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Exod",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Lev",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Num",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Deut",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Josh",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Judg",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Ruth",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:1Sam",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:2Sam",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:1Kgs",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:2Kgs",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:1Chr",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:2Chr",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Ezra",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Neh",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Esth",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Job",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Ps",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Prov",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Eccl",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Song",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Isa",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Jer",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Lam",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Ezek",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Dan",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Hos",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Joel",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Amos",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Obad",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Jonah",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Mic",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Nah",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Hab",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Zeph",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Hag",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Zech",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Mal",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Matt",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Mark",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Luke",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:John",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Acts",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Rom",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:1Cor",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:2Cor",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Gal",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Eph",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Phil",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Col",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:1Thess",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:2Thess",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:1Tim",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:2Tim",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Titus",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Phlm",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Heb",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Jas",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:1Pet",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:2Pet",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:1John",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:2John",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:3John",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Jude",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    },
+    {
+      "key": "bookOrientation:Rev",
+      "status": "approved",
+      "reviewer": "Lucas — explicit publication approval via Codex",
+      "reviewedAt": "2026-10-28T20:05:54.497465+00:00",
+      "note": "Lucas explicitly authorized commit, push, publication of these 66 orientations and deployment in this chat. Codex recorded that batch authorization after local content, API and native-client checks. This records publication approval, not a claim of independent human editorial or theological review. External source availability limitations remain documented in the batch README."
+    }
+  ]
+}

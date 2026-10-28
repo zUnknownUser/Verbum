@@ -1104,10 +1104,42 @@ components:
         edges: { type: array, items: { $ref: '#/components/schemas/BibleRelationship' } }
 
     # ---- §10 / §22.4
+    BookSection:
+      type: object
+      required: [title, chapterStart, chapterEnd]
+      properties:
+        title: { type: string }
+        chapterStart: { type: integer, minimum: 1 }
+        chapterEnd: { type: integer, minimum: 1 }
+    BookOrientation:
+      type: object
+      description: Authored whole-book introduction; separate from chapter commentary. Available only in the requested language.
+      required: [genre, context, purpose, outline, readings, sourceReferenceIds]
+      properties:
+        genre: { type: string }
+        context: { type: string }
+        purpose: { type: string }
+        outline:
+          type: array
+          minItems: 1
+          maxItems: 5
+          items: { $ref: '#/components/schemas/BookSection' }
+        readings:
+          type: array
+          minItems: 1
+          maxItems: 3
+          items: { $ref: '#/components/schemas/PassageReference' }
+        sourceReferenceIds:
+          type: array
+          items: { type: string }
     PassageContext:
       type: object
       required: [reference, entities, relatedPassages, sources]
       properties:
+        bookOrientation:
+          oneOf:
+            - { $ref: '#/components/schemas/BookOrientation' }
+            - { type: 'null' }
         study:
           description: Optional reviewed chapter study in the requested language. Absence does not hide existing entity context.
           anyOf:

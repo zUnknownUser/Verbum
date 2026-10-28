@@ -102,8 +102,9 @@ internal data class WirePassageContext(
     val relatedPassages: List<WirePassageReference>,
     val sources: List<WireSourceReference>,
     val study: WireChapterStudy? = null,
+    val bookOrientation: WireBookOrientation? = null,
 ) {
-    fun toModel() = PassageContext(reference.toModel(), entities.map { it.toModel() }, relatedPassages.map { it.toModel() }, sources.map { it.toModel() }, isFixture = false, study = study?.toModel())
+    fun toModel() = PassageContext(reference.toModel(), entities.map { it.toModel() }, relatedPassages.map { it.toModel() }, sources.map { it.toModel() }, isFixture = false, study = study?.toModel(), bookOrientation = bookOrientation?.toModel())
 }
 
 @Serializable

@@ -1,0 +1,10 @@
+<resources>
+    <string name="book_orientation_title">About this book</string>
+    <string name="book_orientation_scope">An editorial introduction to the whole book, not a commentary on this chapter.</string>
+    <string name="book_orientation_focus">Reading focus</string>
+    <string name="book_orientation_structure">Book structure</string>
+    <string name="book_orientation_begin">Where to begin</string>
+    <string name="book_orientation_sources">Sources for this introduction</string>
+    <string name="book_orientation_chapters">Chapters %1$d–%2$d</string>
+    <string name="book_orientation_source_scope">Original editorial synthesis of the cited biblical book. External source: English (WEB). Reading links use your selected Bible translation.</string>
+</resources>

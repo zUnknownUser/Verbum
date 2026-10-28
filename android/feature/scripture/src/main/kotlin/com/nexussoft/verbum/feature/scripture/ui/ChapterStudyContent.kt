@@ -66,14 +66,14 @@ private fun StudyNoteContent(note: StudyNote, openPassage: (PassageReference) ->
 }
 
 @Composable
-private fun StudyReading(reference: PassageReference, openPassage: (PassageReference) -> Unit) {
+internal fun StudyReading(reference: PassageReference, openPassage: (PassageReference) -> Unit) {
     TextButton(onClick = { openPassage(reference) }) {
         Text(reference.formatted, style = VerbumTypography.navigationSerif)
     }
 }
 
 @Composable
-private fun StudySection(title: String, content: @Composable ColumnScope.() -> Unit) {
+internal fun StudySection(title: String, content: @Composable ColumnScope.() -> Unit) {
     var expanded by rememberSaveable { mutableStateOf(false) }
     val description = stringResource(if (expanded) R.string.chapter_study_expanded else R.string.chapter_study_collapsed)
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {

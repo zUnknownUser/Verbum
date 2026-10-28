@@ -1,0 +1,66 @@
+{
+  "reference": {
+    "bookId": "Heb",
+    "chapter": 1
+  },
+  "entities": [],
+  "relatedPassages": [],
+  "sources": [
+    {
+      "id": "editorial.book-orientations.2026-10",
+      "citation": "Verbum · Book orientations / Orientações dos livros · 2026-10",
+      "url": null
+    },
+    {
+      "id": "orientation.scripture.Heb",
+      "citation": "Hebrews 1–13 · World English Bible",
+      "url": "https://ebible.org/engwebp/HEB.htm"
+    }
+  ],
+  "bookOrientation": {
+    "genre": "Exhortation and theological argument",
+    "context": "The work addresses hearers needing endurance, interpreting Israel's Scriptures through Jesus' priesthood, sacrifice and access to God. It does not name its author.",
+    "purpose": "Follow exposition and warning together. The examples of faith support perseverance, while the sanctuary imagery develops a sustained argument rather than isolated comparisons.",
+    "outline": [
+      {
+        "title": "The Son and faithful hearing",
+        "chapterStart": 1,
+        "chapterEnd": 4
+      },
+      {
+        "title": "Priesthood and covenant",
+        "chapterStart": 5,
+        "chapterEnd": 10
+      },
+      {
+        "title": "Faith and perseverance",
+        "chapterStart": 11,
+        "chapterEnd": 13
+      }
+    ],
+    "readings": [
+      {
+        "bookId": "Heb",
+        "chapter": 4,
+        "verseStart": null,
+        "verseEnd": null
+      },
+      {
+        "bookId": "Heb",
+        "chapter": 10,
+        "verseStart": null,
+        "verseEnd": null
+      },
+      {
+        "bookId": "Heb",
+        "chapter": 11,
+        "verseStart": null,
+        "verseEnd": null
+      }
+    ],
+    "sourceReferenceIds": [
+      "editorial.book-orientations.2026-10",
+      "orientation.scripture.Heb"
+    ]
+  }
+}
